@@ -81,4 +81,16 @@ Rails.application.configure do
     event = ActiveSupport::Notifications::Event.new(*args)
     Rails.logger.info("[SolidCable] Message created - Channel: #{event.payload[:channel]}, Payload: #{event.payload[:payload]}")
   end
+
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :queue } }
+
+  ######## bundle exec rake solid_queue:start
+  # First check what this looks like with and without the logs
+  # solid_queue_logger = ActiveSupport::Logger.new(Rails.root.join("log", "solid_queue.log"))
+  # solid_queue_logger.formatter = Logger::Formatter.new
+  # solid_queue_logger.level = Logger::DEBUG
+  #
+  # # Assign the custom logger to SolidQueue
+  # config.solid_queue.logger = solid_queue_logger
 end
