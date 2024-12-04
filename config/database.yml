@@ -23,14 +23,14 @@ development:
   primary:
     <<: *default
     database: fluency_journal_development
+  queue:
+    <<: *default
+    database: fluency_journal_development_queue
+    migrations_paths: db/queue_migrate
   cable:
     <<: *default
     database: fluency_journal_development_cable
     migrations_paths: db/cable_migrate
-  queue:
-    <<: *default
-    database: rails_anki8_development_queue
-    migrations_paths: db/queue_migrate
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.

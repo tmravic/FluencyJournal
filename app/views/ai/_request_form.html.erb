@@ -1,0 +1,9 @@
+<%= form_for :ai_request, url: ai_request_path, method: :post, remote: true do |f| %>
+  <%= f.hidden_field :uuid, value: @uuid %>
+  <div class="form-group">
+    <%= f.label :prompt, "Journal Entry:" %>
+    <%= f.text_area :prompt, class: "form-control", placeholder: "Type your journal entry" %>
+  </div>
+  <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o"), {}, class:"form-control" %>
+  <%= f.submit "Send", class:"btn btn-primary" %>
+<% end %>
