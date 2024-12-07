@@ -1,0 +1,99 @@
+
+x-app: &default-app
+  build:
+    context: "."
+    target: "app"
+    args:
+      - "RUBY_VERSION=${RUBY_VERSION:-3.3.6}"
+      - "UID=${UID:-1000}"
+      - "GID=${GID:-1000}"
+      - "RAILS_ENV=${RAILS_ENV:-development}"
+      - "NODE_ENV=${NODE_ENV:-development}"
+  depends_on:
+    db:
+      condition: "service_healthy"
+      required: false
+    redis:
+      condition: "service_healthy"
+      required: false
+  env_file:
+    - ".env"
+  volumes:
+    - "${DOCKER_WEB_VOLUME:-.:/app}"
+    - node_modules:/usr/local/node_modules
+    - bundle:/usr/local/bundle
+  stdin_open: true
+  tty: true
+
+x-assets: &default-assets
+  build:
+    context: "."
+    target: "assets"
+    args:
+      - "UID=${UID:-1000}"
+      - "GID=${GID:-1000}"
+      - "RAILS_ENV=${RAILS_ENV:-development}"
+      - "NODE_ENV=${NODE_ENV:-development}"
+  env_file:
+    - ".env"
+  profiles: [ "assets" ]
+  restart: no
+  stop_grace_period: "3s"
+  volumes:
+    - ".:/app"
+
+services:
+  postgres:
+    image: "postgres:17.0-bookworm"
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d ${POSTGRES_DB:-fluency_journal_development}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles: [ "db" ]
+
+  web:
+    <<: *default-app
+    healthcheck:
+      test: "${DOCKER_WEB_HEALTHCHECK_TEST:-curl localhost:3000/up}"
+      interval: "60s"
+      timeout: "3s"
+      start_period: "5s"
+      retries: 3
+    command: [ "sh", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0" ]
+    ports:
+      - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:3000}:${PORT:-3000}"
+    profiles: ["web"]
+
+  solid_cable:
+    <<: *default-app
+    command: ["puma", "-p", "28080", "cable/config.ru"] # Is this working?
+    entrypoint: []
+    ports:
+      - "${DOCKER_CABLE_PORT_FORWARD:-127.0.0.1:28080}:${CABLE_PORT:-28080}"
+    profiles: ["solid_cable"]
+
+  solid_queue:
+    <<: *default-app
+    command: ["bundle", "exec", "rake", "solid_queue:start"]
+    entrypoint: []
+    profiles: ["solid_queue"]
+
+  js:
+    <<: *default-assets
+    command: "yarn build"
+
+  css:
+    <<: *default-assets
+    command: "yarn build:css"
+
+volumes:
+  postgres: {}
+  redis: {}
+  node_modules: {}
+  bundle: {}
