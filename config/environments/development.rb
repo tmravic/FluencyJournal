@@ -87,10 +87,10 @@ Rails.application.configure do
 
   ######## bundle exec rake solid_queue:start
   # First check what this looks like with and without the logs
-  # solid_queue_logger = ActiveSupport::Logger.new(Rails.root.join("log", "solid_queue.log"))
-  # solid_queue_logger.formatter = Logger::Formatter.new
-  # solid_queue_logger.level = Logger::DEBUG
-  #
-  # # Assign the custom logger to SolidQueue
-  # config.solid_queue.logger = solid_queue_logger
+  solid_queue_logger = ActiveSupport::Logger.new(Rails.root.join("log", "solid_queue.log"))
+  solid_queue_logger.formatter = Logger::Formatter.new
+  solid_queue_logger.level = Logger::DEBUG
+
+  # Assign the custom logger to SolidQueue
+  config.solid_queue.logger = solid_queue_logger
 end
