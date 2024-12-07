@@ -23,7 +23,7 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: 'Include json marker and return json in this exact format (matching the number of changes) { { change_1: { usage: {"prompt_tokens": ..., "completion_tokens": ..., "total_tokens": ... }, content: "... → ...", explanation_en: "...", change_2: { content: "... → ...", explanation_en: "...", change_3: { content: "... → ...", explanation_en: "...", ..., corrected_text: { "..." }, } }'
+            content: 'Include json marker and return json in this exact format (matching the number of changes) { { change_1: { content: "... → ...", explanation_en: "...", change_2: { content: "... → ...", explanation_en: "...", change_3: { content: "... → ...", explanation_en: "...", ..., corrected_text: { "..." }, } }'
           }
         ],
       }.to_json
