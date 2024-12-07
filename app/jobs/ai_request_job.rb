@@ -15,7 +15,7 @@ class AiRequestJob < ApplicationJob
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful Japanese teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct Japanese.'
+            content: "You are a helpful Japanese teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct Japanese. The journal entry may contain English in 'Original Language' to clarify the student's intended meaning, but ignore this if no English is in the prompt. If 'Learning Language contains no Japanese, but 'Original Language' has an English entry then simply translate without any changes."
           },
           {
             role: 'user',
@@ -23,7 +23,7 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: 'Include json marker and return json in this exact format (matching the number of changes) { { change_1: { content: "... → ...", explanation_en: "...", change_2: { content: "... → ...", explanation_en: "...", change_3: { content: "... → ...", explanation_en: "...", ..., corrected_text: { "..." }, } }'
+            content: 'Include json marker and return json in this exact format (matching the number of changes) { { change_1: { usage: {"prompt_tokens": ..., "completion_tokens": ..., "total_tokens": ... }, content: "... → ...", explanation_en: "...", change_2: { content: "... → ...", explanation_en: "...", change_3: { content: "... → ...", explanation_en: "...", ..., corrected_text: { "..." }, } }'
           }
         ],
       }.to_json
