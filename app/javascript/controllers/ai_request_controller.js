@@ -8,6 +8,7 @@ export default class extends Controller {
     const originalLanguage = this.originalLanguageTarget.value.trim();
     const learningLanguage = this.learningLanguageTarget.value.trim();
 
+    // Also later add any notes sent
     const combinedPrompt = `Original Language: ${originalLanguage}\nLearning Language: ${learningLanguage}`;
 
     this.promptTarget.value = combinedPrompt;

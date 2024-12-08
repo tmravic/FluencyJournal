@@ -1,0 +1,3 @@
+class JournalQuery < AiQuery
+
+end

@@ -49,7 +49,29 @@ class AiRequestJob < ApplicationJob
 
     response_from_open_ai = json_response['choices'][0]['message'].dig("content")
     # {"corrected_text"=>"伊藤さん、いつもお世話になっております。お休みの日にご連絡して申し訳ございません。昨日、マイページの日程調整画面でフレクトの最終面談の候補日（5月1日、5月7日の19:30）を入力しました。ただし、5月2日に別の予定が入ってしまったため、その日はフレクトの最終面談を行えません。代わりに5月8日を候補日として提案したいと思います。5月2日を除外しても可能でしょうか。ご連絡お待ちしております。"}
-    generated_idea = JSON.parse(response_from_open_ai)#.dig("corrected_text")
+
+    full_token_details = json_response['usage']
+    # {
+    #   "prompt_tokens"=>206,
+    #   "completion_tokens"=>174,
+    #   "total_tokens"=>380,
+    #   "prompt_tokens_details"=> {
+    #       "cached_tokens"=>0,
+    #       "audio_tokens"=>0
+    #     },
+    #   "completion_tokens_details"=> {
+    #     "reasoning_tokens"=>0,
+    #     "audio_tokens"=>0,
+    #     "accepted_prediction_tokens"=>0,
+    #     "rejected_prediction_tokens"=>0
+    #   }
+    # }
+    token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
+    puts "\n\n\n\n#{token_data}\n\n\n\n"
+    # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
+
+
+    generated_idea = JSON.parse(response_from_open_ai)
     uuid = ai_request_params[:uuid]
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{uuid}",

@@ -1,0 +1,3 @@
+class FollowupQuery < AiQuery
+
+end
