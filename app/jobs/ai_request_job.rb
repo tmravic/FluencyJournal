@@ -2,20 +2,32 @@ class AiRequestJob < ApplicationJob
   queue_as :default
 
   def perform(ai_request_params, api_key)
+    # params
+    # ai_request_params["prompt"]
+    # ai_request_params["ai_model"]
+    # ai_request_params["uuid"]
+
+    # make a new CommitPrompt using the ai_request_params as raw_content
+    commit_prompt = CommitPrompt.create(
+      raw_prompt: ai_request_params["prompt"],
+      ai_model: ai_request_params["ai_model"],
+      uuid: ai_request_params["uuid"]
+    )
+
     connection = Faraday.new(url: 'https://api.openai.com')
     response = connection.post do |req|
       req.url "/v1/chat/completions"
-      req.options.timeout = 120         # Increase timeout to 120 seconds
-      req.options.open_timeout = 30    # Set an open timeout
+      req.options.timeout = 120
+      req.options.open_timeout = 30
       req.headers['Content-Type'] = 'application/json'
       req.headers['Authorization'] = "Bearer #{api_key}"
       req.body = {
-        model: "gpt-4o",
+        model: commit_prompt.ai_model,
         response_format: { type: "json_object" },
         messages: [
           {
             role: 'system',
-            content: "You are a helpful Japanese teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct Japanese. The journal entry may contain English in 'Original Language' to clarify the student's intended meaning, but ignore this if no English is in the prompt. If 'Learning Language contains no Japanese, but 'Original Language' has an English entry then simply translate without any changes."
+            content: CommitPrompt.system_prompt
           },
           {
             role: 'user',
@@ -23,32 +35,37 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: 'Include json marker and return json in this exact format (matching the number of changes) { { change_1: { content: "... → ...", explanation_en: "...", change_2: { content: "... → ...", explanation_en: "...", change_3: { content: "... → ...", explanation_en: "...", ..., corrected_text: { "..." }, } }'
+            content: CommitPrompt.response_format
           }
         ],
       }.to_json
     end
 
     json_response = JSON.parse(response.body)
-    # {"id"=>"chatcmpl-APprvO8a1j6L0MTXFdzduLl9802KC",
+    # {"id"=>"chatcmpl-Ac46SBbYGN9RVs1rflKYPNv6l1scE",
     #  "object"=>"chat.completion",
-    #  "created"=>1730720947,
+    #  "created"=>1733635600,
     #  "model"=>"gpt-4o-2024-08-06",
     #  "choices"=>
     #    [{"index"=>0,
-    #      "message"=>{"role"=>"assistant", "content"=>"{ \"corrected_text\": \"今日は弁当を作りました。風邪気味だったので、家で休みました。\" }", "refusal"=>nil},
+    #      "message"=>
+    #        {"role"=>"assistant",
+    #         "content"=>
+    #           "{\n  \"change_1\": {\n    \"content\": \"何年間のニキビ跡と太陽からの被害を治療したいです。→ 長年のニキビ跡や日焼けによる肌のダメージを改善したいです。\",\n    \"explanation_en\": \"The phrase '長年のニキビ跡や日焼けによる肌のダメージ' is more natural and concise to express 'years of acne scars and sun damage'. '改善したいです' is a more appropriate term to convey the intention to improve skin condition.\"\n  },\n  \"corrected_text\": \"今日はシルファームという肌の施術を受けます。小さい針とケミカルピーリングで長年のニキビ跡や日焼けによる肌のダメージを改善したいです。\"\n}",
+    #         "refusal"=>nil},
     #      "logprobs"=>nil,
     #      "finish_reason"=>"stop"}],
     #  "usage"=>
-    #    {"prompt_tokens"=>80,
-    #     "completion_tokens"=>29,
-    #     "total_tokens"=>109,
-    #     "prompt_tokens_details"=>{"cached_tokens"=>0},
-    #     "completion_tokens_details"=>{"reasoning_tokens"=>0}},
-    #  "system_fingerprint"=>"fp_159d8341cc"}
-
-    response_from_open_ai = json_response['choices'][0]['message'].dig("content")
-    # {"corrected_text"=>"伊藤さん、いつもお世話になっております。お休みの日にご連絡して申し訳ございません。昨日、マイページの日程調整画面でフレクトの最終面談の候補日（5月1日、5月7日の19:30）を入力しました。ただし、5月2日に別の予定が入ってしまったため、その日はフレクトの最終面談を行えません。代わりに5月8日を候補日として提案したいと思います。5月2日を除外しても可能でしょうか。ご連絡お待ちしております。"}
+    #    {"prompt_tokens"=>260,
+    #     "completion_tokens"=>189,
+    #     "total_tokens"=>449,
+    #     "prompt_tokens_details"=>{"cached_tokens"=>0, "audio_tokens"=>0},
+    #     "completion_tokens_details"=>
+    #       {"reasoning_tokens"=>0,
+    #        "audio_tokens"=>0,
+    #        "accepted_prediction_tokens"=>0,
+    #        "rejected_prediction_tokens"=>0}},
+    #  "system_fingerprint"=>"fp_c7ca0ebaca"}
 
     full_token_details = json_response['usage']
     # {
@@ -67,11 +84,29 @@ class AiRequestJob < ApplicationJob
     #   }
     # }
     token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
-    puts "\n\n\n\n#{token_data}\n\n\n\n"
     # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
 
+    response_from_open_ai = json_response['choices'][0]['message'].dig("content")
 
-    generated_idea = JSON.parse(response_from_open_ai)
+    # Use this to create a JournalQuery
+    journal_query = JournalQuery.create(
+      prompt_tokens: token_data["prompt_tokens"],
+      completion_tokens: token_data["completion_tokens"],
+      total_tokens: token_data["total_tokens"],
+      raw_response: response_from_open_ai
+    ).tap do |journal_query|
+      journal_query.prompt = commit_prompt
+    end
+
+    generated_idea = JSON.parse(journal_query.raw_response)
+    # {"change_1"=>
+    #    {"content"=>"小さい針 → マイクロニードル",
+    #     "explanation_en"=>"Changed '小さい針' to 'マイクロニードル' to use the correct term in Japanese."},
+    #  "change_2"=>
+    #    {"content"=>"太陽からの被害 → 日焼けによるダメージ",
+    #     "explanation_en"=>"Changed '太陽からの被害' to '日焼けによるダメージ' to sound more natural in Japanese."},
+    #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
+
     uuid = ai_request_params[:uuid]
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{uuid}",

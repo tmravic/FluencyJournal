@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_08_031717) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,11 +63,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_031717) do
   end
 
   create_table "prompts", force: :cascade do |t|
-    t.bigint "ai_query_id", null: false
-    t.bigint "commit_id", null: false
-    t.bigint "followup_id", null: false
+    t.bigint "ai_query_id"
+    t.bigint "commit_id"
+    t.bigint "followup_id"
     t.text "raw_prompt"
     t.string "type"
+    t.string "ai_model"
+    t.string "uuid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ai_query_id"], name: "index_prompts_on_ai_query_id"

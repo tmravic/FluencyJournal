@@ -6,13 +6,13 @@
     <%= f.text_area :original_language_prompt,
                     placeholder: "Type your journal entry in your native language to confirm its meaning",
                     data: { ai_request_target: "originalLanguage" },
-                    name: nil %>
+                    name: nil, style: "height:100px;width:300px;display:block;" %>
 
     <%= f.label :learning_language_prompt, "Learning Language Journal Entry:" %>
     <%= f.text_area :learning_language_prompt,
                     placeholder: "Type your journal entry in the language you're studying",
                     data: { ai_request_target: "learningLanguage" },
-                    name: nil %>
+                    name: nil, style: "height:100px;width:300px;display:block;" %>
   </div>
   <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o"), {} %>
   <%= f.submit "Send" %>
