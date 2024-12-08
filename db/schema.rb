@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_07_101848) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_08_031717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,19 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_07_101848) do
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
+  create_table "prompts", force: :cascade do |t|
+    t.bigint "ai_query_id", null: false
+    t.bigint "commit_id", null: false
+    t.bigint "followup_id", null: false
+    t.text "raw_prompt"
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ai_query_id"], name: "index_prompts_on_ai_query_id"
+    t.index ["commit_id"], name: "index_prompts_on_commit_id"
+    t.index ["followup_id"], name: "index_prompts_on_followup_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -86,5 +99,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_07_101848) do
   add_foreign_key "followups", "commits"
   add_foreign_key "notes", "entries"
   add_foreign_key "notes", "users"
+  add_foreign_key "prompts", "ai_queries"
+  add_foreign_key "prompts", "commits"
+  add_foreign_key "prompts", "followups"
   add_foreign_key "sessions", "users"
 end
