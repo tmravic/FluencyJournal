@@ -1,0 +1,11 @@
+<% content_for :title, "New commit" %>
+
+<h1>New commit</h1>
+
+<%= render "form", commit: @commit %>
+
+<br>
+
+<div>
+  <%= link_to "Back to commits", commits_path %>
+</div>

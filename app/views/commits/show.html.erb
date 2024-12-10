@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @commit %>
+
+<div>
+  <%= link_to "Edit this commit", edit_commit_path(@commit) %> |
+  <%= link_to "Back to commits", commits_path %>
+
+  <%= button_to "Destroy this commit", @commit, method: :delete %>
+</div>
