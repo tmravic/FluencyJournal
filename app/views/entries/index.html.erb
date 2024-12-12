@@ -1,16 +1,13 @@
-<p style="color: green"><%= notice %></p>
+<!--<p style="color: green"><%#= notice %></p>-->
 
 <% content_for :title, "Entries" %>
 
-<h1>Entries</h1>
+<main class="container">
+  <div class="header">
+    <h1>Entries</h1>
+    <%= link_to "New entry",
+                new_entry_path, class: "btn btn--primary" %>
+  </div>
 
-<div id="entries">
-  <% @entries.each do |entry| %>
-    <%= render entry %>
-    <p>
-      <%= link_to "Show this entry", entry %>
-    </p>
-  <% end %>
-</div>
-
-<%= link_to "New entry", new_entry_path %>
+  <%= render @entries %>
+</main>

@@ -62,3 +62,4 @@ end
 
 
 gem "faraday", "~> 2.12"
+gem "simple_form"

@@ -1,11 +1,10 @@
 <% content_for :title, "New entry" %>
+<main class="container">
+  <%= link_to sanitize("&larr; Back to entries"), entries_path %>
 
-<h1>New entry</h1>
+  <div class="header">
+    <h1>New entry</h1>
+  </div>
 
-<%= render "form", entry: @entry %>
-
-<br>
-
-<div>
-  <%= link_to "Back to entries", entries_path %>
-</div>
+  <%= render "form", entry: @entry %>
+</main>

@@ -27,10 +27,11 @@ class EntriesController < ApplicationController
     respond_to do |format|
       if @entry.save
         format.html { redirect_to @entry, notice: "Entry was successfully created." }
-        format.json { render :show, status: :created, location: @entry }
+        # format.json { render :index, status: :created, location: @entry }
+        # format.turbo_stream { flash.now[:notice] = "Entry was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @entry.errors, status: :unprocessable_entity }
+        # format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -40,10 +41,10 @@ class EntriesController < ApplicationController
     respond_to do |format|
       if @entry.update(entry_params)
         format.html { redirect_to @entry, notice: "Entry was successfully updated." }
-        format.json { render :show, status: :ok, location: @entry }
+        # format.json { render :show, status: :ok, location: @entry }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @entry.errors, status: :unprocessable_entity }
+        # format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,18 +55,19 @@ class EntriesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to entries_path, status: :see_other, notice: "Entry was successfully destroyed." }
-      format.json { head :no_content }
+      # format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_entry
-      @entry = Entry.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def entry_params
-      params.expect(entry: [ :title, :content, :user_id ])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_entry
+    @entry = Entry.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def entry_params
+    params.expect(entry: [ :title, :content, :user_id ])
+  end
 end
