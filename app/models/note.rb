@@ -4,9 +4,5 @@ class Note < ApplicationRecord
 
   validates :content, presence: true
 
-  enum :category, [:vocab, :grammar_rule, :free_note]
-  validates :category, presence: true, inclusion: {
-    in: category.keys,
-    message: "%{value} is not a valid category"
-  }
+  enum :category, { vocabulary: 0, grammar_rule: 1, free_note: 2 }
 end

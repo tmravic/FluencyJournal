@@ -1,0 +1,14 @@
+jp:
+  simple_form:
+    placeholders:
+      entry:
+        title: 記入の題名
+    labels:
+      entry:
+        title: 題名
+
+  helpers:
+    submit:
+      entry:
+        create: 記入を作成
+        update: 記入を更新

@@ -1,13 +1,15 @@
-<!--<p style="color: green"><%#= notice %></p>-->
-
 <% content_for :title, "Entries" %>
 
 <main class="container">
-  <div class="header">
-    <h1>Entries</h1>
-    <%= link_to "New entry",
-                new_entry_path, class: "btn btn--primary" %>
-  </div>
+  <%= turbo_frame_tag "first_turbo_frame" do %>
+    <div class="header">
+      <h1>Entries</h1>
+      <%= link_to "New entry",
+        new_entry_path,
+        data: { turbo_frame: "_top" },
+        class: "btn btn--primary" %>
+    </div>
+  <% end %>
 
   <%= render @entries %>
 </main>

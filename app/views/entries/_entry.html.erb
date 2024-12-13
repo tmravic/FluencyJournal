@@ -1,17 +1,17 @@
-<div id="<%= dom_id entry %>">
-  <p>
-    <strong>Title:</strong>
-    <%= entry.title %>
-  </p>
-
-  <p>
-    <strong>Content:</strong>
-    <%= entry.content %>
-  </p>
-
-  <p>
-    <strong>User:</strong>
-    <%= entry.user_id %>
-  </p>
-
-</div>
+<%= turbo_frame_tag entry do %>
+  <div class="entry">
+    <%= link_to entry.title,
+                entry_path(entry),
+                data: { turbo_frame: "_top" } %>
+    <%= entry.created_at %>
+    <div class="entry__actions">
+      <%= button_to "Delete",
+                    entry_path(entry),
+                    method: :delete,
+                    class: "btn btn--light" %>
+      <%= link_to "Edit",
+                  edit_entry_path(entry),
+                  class: "btn btn--light" %>
+    </div>
+  </div>
+<% end %>

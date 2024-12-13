@@ -1,38 +1,14 @@
 <%= simple_form_for entry, html: { class: "entry form" } do |f| %>
-  <% if quote.errors.any? %>
+  <% if entry.errors.any? %>
     <div class="error-message">
-      <%= quote.error.full_messages.to_sentence.capitalize %>
+      <h3><%= pluralize(entry.errors.count, "error") %> prohibited this entry from being saved:</h3>
+      <%= entry.errors.full_messages.to_sentence.capitalize %>
     </div>
   <% end %>
   <%= f.input :title, input_html: { autofocus: true } %>
   <%= f.input :content, input_html: { autofocus: true } %>
+  <!--Think I need accepts_nested_attributes_for commit-->
+  <!--And to target a Turbo Frame on the commits/new page-->
+  <!--which itself renders the ai_request form-->
   <%= f.submit class: "btn btn--secondary" %>
 <% end %>
-
-<%#= form_with(model: entry) do |form| %>
-  <%# if entry.errors.any? %>
-<!--    <div style="color: red">-->
-<!--      <h2><%#= pluralize(entry.errors.count, "error") %> prohibited this entry from being saved:</h2>-->
-
-<!--      <ul>-->
-        <%# entry.errors.each do |error| %>
-<!--          <li><%#= error.full_message %></li>-->
-        <%# end %>
-<!--      </ul>-->
-<!--    </div>-->
-  <%# end %>
-
-<!--  <div>-->
-    <%#= form.label :title, style: "display: block" %>
-    <%#= form.text_field :title %>
-<!--  </div>-->
-
-<!--  <div>-->
-    <%#= form.label :content, style: "display: block" %>
-    <%#= form.textarea :content %>
-<!--  </div>-->
-
-<!--  <div>-->
-    <%#= form.submit %>
-<!--  </div>-->
-<%# end %>

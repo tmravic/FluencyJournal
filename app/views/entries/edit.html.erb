@@ -7,5 +7,7 @@
     <h1>Editing entry</h1>
   </div>
 
-  <%= render "form", entry: @entry %>
+  <%= turbo_frame_tag @entry do %>
+    <%= render "form", entry: @entry %>
+  <% end %>
 </main>

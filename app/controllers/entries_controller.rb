@@ -22,11 +22,11 @@ class EntriesController < ApplicationController
   # POST /entries or /entries.json
   def create
     @entry = Entry.new(entry_params)
-    @entry.user = current_user
+    @entry.user = Current.user
 
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to @entry, notice: "Entry was successfully created." }
+        format.html { redirect_to entries_path, notice: "Entry was successfully created." }
         # format.json { render :index, status: :created, location: @entry }
         # format.turbo_stream { flash.now[:notice] = "Entry was successfully created." }
       else
@@ -40,7 +40,7 @@ class EntriesController < ApplicationController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
-        format.html { redirect_to @entry, notice: "Entry was successfully updated." }
+        format.html { redirect_to entries_path, notice: "Entry was successfully updated." }
         # format.json { render :show, status: :ok, location: @entry }
       else
         format.html { render :edit, status: :unprocessable_entity }
