@@ -3,7 +3,7 @@
     <%= link_to entry.title,
                 entry_path(entry),
                 data: { turbo_frame: "_top" } %>
-    <%= entry.created_at %>
+    <%= entry.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
     <div class="entry__actions">
       <%= button_to "Delete",
                     entry_path(entry),

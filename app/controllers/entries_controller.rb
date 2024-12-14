@@ -1,9 +1,13 @@
 class EntriesController < ApplicationController
+  require 'securerandom'
   before_action :set_entry, only: %i[ show edit update destroy ]
+  before_action :set_api_key
+  before_action :get_ai_models
 
   # GET /entries or /entries.json
   def index
-    @entries = Entry.all
+    @uuid = SecureRandom.uuid
+    @entries = Entry.ordered
   end
 
   # GET /entries/1 or /entries/1.json
@@ -28,7 +32,7 @@ class EntriesController < ApplicationController
       if @entry.save
         format.html { redirect_to entries_path, notice: "Entry was successfully created." }
         # format.json { render :index, status: :created, location: @entry }
-        # format.turbo_stream { flash.now[:notice] = "Entry was successfully created." }
+        format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
         # format.json { render json: @entry.errors, status: :unprocessable_entity }
@@ -55,8 +59,46 @@ class EntriesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to entries_path, status: :see_other, notice: "Entry was successfully destroyed." }
-      # format.json { head :no_content }
+      format.json { head :no_content }
+      format.turbo_stream
     end
+  end
+
+  def ai_request
+    AiRequestJob.perform_later(ai_request_params, @api_key)
+  end
+
+  private
+
+  def ai_request_params
+    params.require(:ai_request).permit(:prompt, :ai_model, :uuid)
+  end
+
+  def get_ai_models
+    @ai_models = list_models(@api_key).map { |ai_model| ai_model['id'] }
+  end
+
+  def list_models(api_key)
+    connection = set_faraday_connection(api_key)
+    response = connection.get('/v1/models')
+
+    if response.success?
+      JSON.parse(response.body)["data"]
+    else
+      puts "Error: #{response.status} - #{response.body}"
+    end
+  end
+
+  def set_faraday_connection(api_key)
+    Faraday.new(url: 'https://api.openai.com') do |faraday|
+      faraday.headers['Authorization'] = "Bearer #{api_key}"
+      faraday.headers['Content-Type'] = 'application/json'
+      faraday.adapter Faraday.default_adapter
+    end
+  end
+
+  def set_api_key
+    @api_key = Rails.application.credentials.openai[:api_key]
   end
 
   private

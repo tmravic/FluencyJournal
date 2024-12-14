@@ -10,5 +10,13 @@
   <!--Think I need accepts_nested_attributes_for commit-->
   <!--And to target a Turbo Frame on the commits/new page-->
   <!--which itself renders the ai_request form-->
+  <%= render partial: "ai/request_form", locals: { uuid: @uuid } %>
+
+  <%= turbo_stream_from "channel_#{@uuid}" %>
+
+  <div id="ai_output">
+    <%= render partial: "ai/output", locals: { generated_idea: "" } %>
+  </div>
+  <%= link_to "Cancel", entries_path, class: "btn btn--light" %>
   <%= f.submit class: "btn btn--secondary" %>
 <% end %>
