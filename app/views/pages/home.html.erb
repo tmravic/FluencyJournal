@@ -1,10 +1,10 @@
-<div class="container">
-  <%= render partial: "ai/request_form", locals: { uuid: @uuid } %>
-
-  <%= turbo_stream_from "channel_#{@uuid}" %>
-
-  <div id="ai_output">
-    <%= render partial: "ai/output", locals: { generated_idea: "" } %>
-  </div>
-
-</div>
+<main class="container">
+  <h1>Fluency Journal</h1>
+  <p>Your AI-powered foreign-language daily diary</p>
+  <br>
+  <% if Current.user.present? %>
+    <%= link_to "View entries", entries_path, class: "btn btn--dark" %>
+  <% else %>
+    <%= link_to "Sign in", new_session_path, class: "btn btn--dark" %>
+  <% end %>
+</main>

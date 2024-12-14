@@ -1,5 +1,6 @@
 class Entry < ApplicationRecord
-  belongs_to :user, optional: true
+  belongs_to :user
+  belongs_to :group, optional: true
   has_many :commits, dependent: :destroy
   has_many :notes, dependent: :destroy
 

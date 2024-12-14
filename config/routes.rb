@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root "pages#home"
-  post "ai_request", to: "pages#ai_request"
+  get "/journal", to: "pages#journal"
+  post "ai_request", to: "entries#ai_request"
   get "/up/", to: "up#index", as: :up
   get "/up/databases", to: "up#databases", as: :up_databases
 

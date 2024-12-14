@@ -93,4 +93,6 @@ Rails.application.configure do
 
   # Assign the custom logger to SolidQueue
   config.solid_queue.logger = solid_queue_logger
+
+  config.hosts << /.*\.ngrok-free\.app/
 end

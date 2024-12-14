@@ -23,11 +23,8 @@
   </head>
 
   <body>
-    <%= yield %>
-    <footer class="container">
-      <% if Current.user %>
-        <%= button_to "Logout", session_path, method: :delete %>
-      <% end %>
-    </footer>
+    <%= render "layouts/navbar" %>
+      <%= yield %>
+    <%#= render "layouts/footer" %>
   </body>
 </html>

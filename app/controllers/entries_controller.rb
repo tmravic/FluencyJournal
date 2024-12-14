@@ -66,6 +66,11 @@ class EntriesController < ApplicationController
 
   def ai_request
     AiRequestJob.perform_later(ai_request_params, @api_key)
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.update("ai_output", partial: "ai/output", locals: { generated_idea: "Processing..." }) }
+      format.html { redirect_to entries_path, notice: "AI request sent." }
+    end
   end
 
   private

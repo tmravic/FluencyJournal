@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_14_003216) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "group_id"
+    t.index ["group_id"], name: "index_entries_on_group_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
@@ -50,6 +52,12 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["commit_id"], name: "index_followups_on_commit_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "notes", force: :cascade do |t|
@@ -92,12 +100,15 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "group_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["group_id"], name: "index_users_on_group_id"
   end
 
   add_foreign_key "ai_queries", "commits"
   add_foreign_key "ai_queries", "followups"
   add_foreign_key "commits", "entries"
+  add_foreign_key "entries", "groups"
   add_foreign_key "entries", "users"
   add_foreign_key "followups", "commits"
   add_foreign_key "notes", "entries"
@@ -106,4 +117,5 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
   add_foreign_key "prompts", "commits"
   add_foreign_key "prompts", "followups"
   add_foreign_key "sessions", "users"
+  add_foreign_key "users", "groups"
 end

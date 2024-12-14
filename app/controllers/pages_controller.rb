@@ -4,6 +4,9 @@ class PagesController < ApplicationController
   before_action :get_ai_models
 
   def home
+  end
+
+  def journal
     # This uuid is used to create a unique turbo stream for whomever is on this webpage
     @uuid = SecureRandom.uuid
   end

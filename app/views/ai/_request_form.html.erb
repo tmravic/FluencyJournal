@@ -1,19 +1,19 @@
 <%= form_for :ai_request, url: ai_request_path, method: :post, remote: true, id: "aiRequestForm", data: { controller: "ai-request", action: "submit->ai-request#combineFields" } do |f| %>
-  <%= f.hidden_field :uuid, value: @uuid %>
-  <%= f.hidden_field :prompt, value: "", data: { ai_request_target: "prompt" } %>
-  <div>
-    <%= f.label :original_language_prompt, "Original Language Journal Entry:" %>
-    <%= f.text_area :original_language_prompt,
-                    placeholder: "Type your journal entry in your native language to confirm its meaning",
-                    data: { ai_request_target: "originalLanguage" },
-                    name: nil, style: "height:100px;width:300px;display:block;" %>
+<%= f.hidden_field :uuid, value: @uuid %>
+<%= f.hidden_field :prompt, value: "", data: { ai_request_target: "prompt" } %>
+<div>
+  <%= f.label :original_language_prompt, "Original Language Journal Entry:" %>
+  <%= f.text_area :original_language_prompt,
+                  placeholder: " Type your journal entry in your native language to confirm its meaning",
+                  data: { ai_request_target: "originalLanguage" },
+                  name: nil, style: "height:100px;width:300px;display:block;" %>
 
-    <%= f.label :learning_language_prompt, "Learning Language Journal Entry:" %>
-    <%= f.text_area :learning_language_prompt,
-                    placeholder: "Type your journal entry in the language you're studying",
-                    data: { ai_request_target: "learningLanguage" },
-                    name: nil, style: "height:100px;width:300px;display:block;" %>
-  </div>
-  <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o"), {} %>
-  <%= f.submit "Send" %>
+  <%= f.label :learning_language_prompt, "Learning Language Journal Entry:" %>
+  <%= f.text_area :learning_language_prompt,
+                  placeholder: " Type your journal entry in the language you're studying",
+                  data: { ai_request_target: "learningLanguage" },
+                  name: nil, style: "height:100px;width:300px;display:block;" %>
+</div>
+<%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
+<%= f.submit "Send" %>
 <% end %>
