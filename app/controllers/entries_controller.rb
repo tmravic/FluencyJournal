@@ -32,11 +32,11 @@ class EntriesController < ApplicationController
       if @entry.save
         # flash[:notice] = "..."
         format.html { redirect_to entries_path, notice: "Entry was successfully created." }
-        # format.json { render :index, status: :created, location: @entry }
-        format.turbo_stream
+        format.json { render :index, status: :created, location: @entry }
+        format.turbo_stream { flash.now[:notice] = "Entry was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        # format.json { render json: @entry.errors, status: :unprocessable_entity }
+        format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -47,10 +47,11 @@ class EntriesController < ApplicationController
       if @entry.update(entry_params)
         # flash[:notice] = "..."
         format.html { redirect_to entries_path, notice: "Entry was successfully updated." }
-        # format.json { render :show, status: :ok, location: @entry }
+        format.json { render :show, status: :ok, location: @entry }
+        format.turbo_stream { flash.now[:notice] = "Entry was successfully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        # format.json { render json: @entry.errors, status: :unprocessable_entity }
+        format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -63,7 +64,7 @@ class EntriesController < ApplicationController
       # flash[:notice] = "..."
       format.html { redirect_to entries_path, status: :see_other, notice: "Entry was successfully destroyed." }
       format.json { head :no_content }
-      # format.turbo_stream
+      format.turbo_stream { flash.now[:notice] = "Entry was successfully destroyed." }
     end
   end
 

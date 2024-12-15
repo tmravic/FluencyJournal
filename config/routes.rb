@@ -8,9 +8,10 @@ Rails.application.routes.draw do
   root "pages#home"
   get "/journal", to: "pages#journal"
   post "ai_request", to: "entries#ai_request"
+
   get "/up/", to: "up#index", as: :up
   get "/up/databases", to: "up#databases", as: :up_databases
-
+  mount ActionCable.server, at: '/cable'
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

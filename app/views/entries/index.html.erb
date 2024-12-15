@@ -14,6 +14,7 @@
   <%= turbo_frame_tag Entry.new %>
 
   <%= turbo_frame_tag "entries" do %>
+      <%= render "entries/empty_state" %>
     <%= render @entries %>
   <% end %>
 </div>

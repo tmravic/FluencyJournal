@@ -1,23 +1,37 @@
 // Sassy
 
+// In Dart Sass @use only includes into the file directly
+// it does not make it globally available to all files
+
+// You can create a namespace like this:
+// @use '../colors' as c;
+// Or skip using a namespace like this:
+// @use '../fonts' as *;
+
+//.card {
+//  color: c.$blue;
+//  font-size: $font-size;
+//}
+
 // Mixins
-@import "mixins/media";
+@use "mixins/media";
 
 // Configuration
-@import "config/variables";
-@import "config/reset";
+@use "config/variables";
+@use "config/reset";
 
 // Components
-@import "components/btn";
-@import "components/error_message";
-@import "components/form";
-@import "components/visually_hidden";
-@import "components/entry";
-@import "components/turbo_progress_bar";
-@import "components/navbar";
-@import "components/flash";
-@import "config/animations";
+@use "components/btn";
+@use "components/error_message";
+@use "components/form";
+@use "components/visually_hidden";
+@use "components/entry";
+@use "components/turbo_progress_bar";
+@use "components/navbar";
+@use "components/flash";
+@use "components/empty_state";
+@use "config/animations";
 
 // Layouts
-@import "layouts/container";
-@import "layouts/header";
+@use "layouts/container";
+@use "layouts/header";

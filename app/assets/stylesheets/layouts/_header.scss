@@ -1,3 +1,5 @@
+@use '../components';
+
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -6,7 +8,7 @@
   margin-top: var(--space-m);
   margin-bottom: var(--space-l);
 
-  @include media(tabletAndUp) {
+  @include components.media(tabletAndUp) {
     margin-bottom: var(--space-xl);
   }
 }

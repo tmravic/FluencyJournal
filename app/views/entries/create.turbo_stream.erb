@@ -1,2 +1,11 @@
+<!--When we submit the form, an entry is created,-->
+<!--and this view is rendered which instructs Turbo to:-->
+
 <%= turbo_stream.prepend "entries", @entry %>
+<!--Prepend the created entry to the DOM node with id #entries-->
+
 <%= turbo_stream.update Entry.new, "" %>
+<!--Empty the content of the DOM node with id #new_entry-->
+
+<%= render_turbo_stream_flash_messages %>
+<!--Prepend the content of the flash message partial to the DOM node with id #flash-->
