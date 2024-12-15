@@ -10,5 +10,5 @@ en:
   helpers:
     submit:
       entry:
-        create: Create entry
-        update: Update entry
+        create: Start writing
+        update: Change title

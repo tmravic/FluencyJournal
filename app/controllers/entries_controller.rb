@@ -31,7 +31,7 @@ class EntriesController < ApplicationController
     respond_to do |format|
       if @entry.save
         # flash[:notice] = "..."
-        format.html { redirect_to entries_path, notice: "Entry was successfully created." }
+        format.html { redirect_to entry_path(@entry), notice: "Entry was successfully created." }
         format.json { render :index, status: :created, location: @entry }
         format.turbo_stream { flash.now[:notice] = "Entry was successfully created." }
       else

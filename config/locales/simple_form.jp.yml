@@ -10,5 +10,5 @@ jp:
   helpers:
     submit:
       entry:
-        create: 記入を作成
-        update: 記入を更新
+        create: 記入を始める
+        update: 題名を変更
