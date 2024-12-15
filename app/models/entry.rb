@@ -5,7 +5,6 @@ class Entry < ApplicationRecord
   has_many :notes, dependent: :destroy
 
   validates :title, presence: true
-  validates :content, presence: true
 
   scope :ordered, -> { order(created_at: :desc) }
   # scope :personal, -> {  }

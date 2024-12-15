@@ -1,4 +1,4 @@
-<%= simple_form_for entry, html: { class: "entry form" }, data: { turbo: false } do |f| %>
+<%= simple_form_for entry, html: { class: "entry form" }, data: { turbo: true } do |f| %>
   <% if entry.errors.any? %>
     <div class="error-message">
       <h3><%= pluralize(entry.errors.count, "error") %> prohibited this entry from being saved:</h3>
@@ -6,7 +6,6 @@
     </div>
   <% end %>
   <%= f.input :title, input_html: { autofocus: true } %>
-  <%= f.input :content, input_html: { autofocus: true } %>
 
   <%= link_to "Cancel", entries_path, class: "btn btn--light" %>
   <%= f.submit class: "btn btn--secondary" %>

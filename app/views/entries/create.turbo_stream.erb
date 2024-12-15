@@ -4,7 +4,7 @@
 <%= turbo_stream.prepend "entries", @entry %>
 <!--Prepend the created entry to the DOM node with id #entries-->
 
-<%= turbo_stream.update Entry.new, "" %>
+<%= turbo_stream.update Entry.new, partial: "entries/entry_content", locals: { entry: @entry } %>
 <!--Empty the content of the DOM node with id #new_entry-->
 
 <%= render_turbo_stream_flash_messages %>
