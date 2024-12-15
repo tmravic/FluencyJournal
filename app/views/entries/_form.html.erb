@@ -1,4 +1,4 @@
-<%= simple_form_for entry, html: { class: "entry form" } do |f| %>
+<%= simple_form_for entry, html: { class: "entry form" }, data: { turbo: false } do |f| %>
   <% if entry.errors.any? %>
     <div class="error-message">
       <h3><%= pluralize(entry.errors.count, "error") %> prohibited this entry from being saved:</h3>

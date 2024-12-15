@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_14_003216) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "group_id"
+    t.bigint "group_id", null: false
     t.index ["group_id"], name: "index_entries_on_group_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
@@ -100,7 +100,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_14_003216) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "group_id"
+    t.bigint "group_id", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
   end

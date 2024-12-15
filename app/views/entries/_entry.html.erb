@@ -8,9 +8,11 @@
       <%= button_to "Delete",
                     entry_path(entry),
                     method: :delete,
+                    data: { turbo: false },
                     class: "btn btn--light" %>
       <%= link_to "Edit",
                   edit_entry_path(entry),
+                  data: { turbo: false },
                   class: "btn btn--light" %>
     </div>
   </div>

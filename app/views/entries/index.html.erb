@@ -1,6 +1,6 @@
 <% content_for :title, "Entries" %>
 
-<%= turbo_stream_from "entries" %>
+<%= turbo_stream_from current_group, "entries" %>
 
 <div class="container">
   <div class="header">

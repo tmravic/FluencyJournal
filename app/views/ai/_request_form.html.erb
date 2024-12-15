@@ -2,17 +2,21 @@
 <%= f.hidden_field :uuid, value: @uuid %>
 <%= f.hidden_field :prompt, value: "", data: { ai_request_target: "prompt" } %>
 <div>
-  <%= f.label :original_language_prompt, "Original Language Journal Entry:" %>
-  <%= f.text_area :original_language_prompt,
-                  placeholder: " Type your journal entry in your native language to confirm its meaning",
-                  data: { ai_request_target: "originalLanguage" },
-                  name: nil, style: "height:100px;width:300px;display:block;" %>
+  <div style="display:flex;justify-content:space-evenly">
+    <%= f.label :original_language_prompt, "Original Language:" %>
+    <%= f.label :learning_language_prompt, "Learning Language:" %>
+  </div>
+  <div style="margin-left:5px">
+    <%= f.text_area :original_language_prompt,
+                    placeholder: " Type your journal entry in your native language to confirm its meaning.",
+                    data: { ai_request_target: "originalLanguage" },
+                    name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:14px;" %>
 
-  <%= f.label :learning_language_prompt, "Learning Language Journal Entry:" %>
-  <%= f.text_area :learning_language_prompt,
-                  placeholder: " Type your journal entry in the language you're studying",
-                  data: { ai_request_target: "learningLanguage" },
-                  name: nil, style: "height:100px;width:300px;display:block;" %>
+    <%= f.text_area :learning_language_prompt,
+                    placeholder: " Type your journal entry in the language you're studying.",
+                    data: { ai_request_target: "learningLanguage" },
+                    name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:14px;" %>
+  </div>
 </div>
 <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
 <%= f.submit "Send" %>

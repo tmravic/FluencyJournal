@@ -6,10 +6,7 @@ class ApplicationController < ActionController::Base
   private
 
   def current_group
-    if Current.user&.group
-      group_name = "Current group: #{Current.user&.group&.name}"
-      @current_group ||= group_name if group_name && Current.user
-    end
+    @current_group ||= Current.user&.group if Current.user
   end
 
   helper_method :current_group

@@ -1,5 +1,5 @@
 class AddGroupReferenceToEntries < ActiveRecord::Migration[8.0]
   def change
-    add_reference :entries, :group, null: true, foreign_key: true
+    add_reference :entries, :group, null: false, foreign_key: true
   end
 end

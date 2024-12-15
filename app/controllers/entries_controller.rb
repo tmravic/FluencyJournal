@@ -7,7 +7,7 @@ class EntriesController < ApplicationController
   # GET /entries or /entries.json
   def index
     @uuid = SecureRandom.uuid
-    @entries = Entry.ordered
+    @entries = current_group.entries.ordered
   end
 
   # GET /entries/1 or /entries/1.json
@@ -25,11 +25,12 @@ class EntriesController < ApplicationController
 
   # POST /entries or /entries.json
   def create
-    @entry = Entry.new(entry_params)
+    @entry = current_group.entries.build(entry_params)
     @entry.user = Current.user
 
     respond_to do |format|
       if @entry.save
+        # flash[:notice] = "..."
         format.html { redirect_to entries_path, notice: "Entry was successfully created." }
         # format.json { render :index, status: :created, location: @entry }
         format.turbo_stream
@@ -44,6 +45,7 @@ class EntriesController < ApplicationController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
+        # flash[:notice] = "..."
         format.html { redirect_to entries_path, notice: "Entry was successfully updated." }
         # format.json { render :show, status: :ok, location: @entry }
       else
@@ -58,9 +60,10 @@ class EntriesController < ApplicationController
     @entry.destroy!
 
     respond_to do |format|
+      # flash[:notice] = "..."
       format.html { redirect_to entries_path, status: :see_other, notice: "Entry was successfully destroyed." }
       format.json { head :no_content }
-      format.turbo_stream
+      # format.turbo_stream
     end
   end
 
@@ -69,6 +72,7 @@ class EntriesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.update("ai_output", partial: "ai/output", locals: { generated_idea: "Processing..." }) }
+      # flash[:notice] = "..."
       format.html { redirect_to entries_path, notice: "AI request sent." }
     end
   end
@@ -110,7 +114,7 @@ class EntriesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_entry
-    @entry = Entry.find(params.expect(:id))
+    @entry = current_group.entries.find(params.expect(:id))
   end
 
   # Only allow a list of trusted parameters through.

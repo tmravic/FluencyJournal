@@ -1,7 +1,8 @@
 <header class="navbar">
   <% if Current.user %>
     <div class="navbar__brand">
-      <%= current_group %>
+      <%= "Current group: #{current_group.name}" %>
+        <!--Member count: -->
     </div>
 
     <div class="navbar__name">
