@@ -1,8 +1,26 @@
 <div class="header">
-  <h1>
-    <%= @entry.title %>
-  </h1>
+  <h3><%= @entry.title %></h3>
+  <p><%= @entry.content %></p>
 </div>
-<p>
-  <%= @entry.content %>
-</p>
+
+<%= turbo_frame_tag Commit.new do %>
+  <%= render 'commits/empty_state' unless @commits.present? %>
+<% end %>
+
+<%= turbo_frame_tag "commits" do %>
+  <% if @commits.present? %>
+    <%= render 'commits/empty_state' %>
+    <%= render @commits, entry: @entry %>
+  <% end %>
+<% end %>
+
+<%= turbo_frame_tag "journal" do %>
+  <p>test</p>
+<% end %>
+<br>
+
+<%= link_to "Start commit",
+            new_entry_commit_path(@entry),
+            class: "btn btn--primary",
+            data: { turbo_frame: dom_id(Commit.new), turbo_stream: true } %>
+<br>

@@ -1,0 +1,2 @@
+<%= turbo_stream.replace dom_id(@commit), partial: "commits/commit", locals: { commit: @commit, entry: @entry } %>
+<%= render_turbo_stream_flash_messages %>

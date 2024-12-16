@@ -1,0 +1,3 @@
+<%= turbo_stream.update Commit.new, "" %>
+<%= turbo_stream.append "commits", partial: "commits/commit", locals: { commit: @commit, entry: @entry } %>
+<%= render_turbo_stream_flash_messages %>

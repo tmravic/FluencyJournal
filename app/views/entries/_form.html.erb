@@ -1,10 +1,6 @@
 <%= simple_form_for entry, html: { class: "entry form" }, data: { turbo: true } do |f| %>
-  <% if entry.errors.any? %>
-    <div class="error-message">
-      <h3><%= pluralize(entry.errors.count, "error") %> prohibited this entry from being saved:</h3>
-      <%= entry.errors.full_messages.to_sentence.capitalize %>
-    </div>
-  <% end %>
+  <%= form_error_notification(entry) %>
+
   <%= f.input :title, input_html: { autofocus: true } %>
 
   <%= link_to "Cancel", entries_path, class: "btn btn--light" %>

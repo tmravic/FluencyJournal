@@ -1,27 +1,9 @@
-<%= form_with(model: commit) do |form| %>
-  <% if commit.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(commit.errors.count, "error") %> prohibited this commit from being saved:</h2>
+<!--Commit form-->
 
-      <ul>
-        <% commit.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= simple_form_for [entry, commit], html: { class: "form commit" } do |f| %>
+  <%= form_error_notification(commit) %>
 
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.textarea :content %>
-  </div>
-
-  <div>
-    <%= form.label :entry_id, style: "display: block" %>
-    <%= form.text_field :entry_id %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.input :content, html5: true, input_html: { autofocus: true } %>
+  <%= link_to "Cancel", entry_path(entry), class: "btn btn--light" %>
+  <%= f.submit class: "btn btn--secondary", name: nil %>
 <% end %>

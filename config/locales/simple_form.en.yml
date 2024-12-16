@@ -6,9 +6,14 @@ en:
     labels:
       entry:
         title: Title
+      commit:
+        content: Content
 
   helpers:
     submit:
       entry:
         create: Start writing
         update: Change title
+      commit:
+        create: Add commit
+        update: Edit content

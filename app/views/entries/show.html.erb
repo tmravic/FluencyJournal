@@ -1,4 +1,6 @@
+<!--Entry show-->
+
 <main class="container">
   <%= link_to sanitize("&larr; Back to entries"), entries_path %>
-  <%= render "entries/entry_content", entry: @entry %>
+  <%= render "entries/entry_content", entry: @entry, commits: @commits %>
 </main>

@@ -1,12 +1,21 @@
-<div id="<%= dom_id commit %>">
-  <p>
-    <strong>Content:</strong>
-    <%= commit.content %>
-  </p>
+<%= turbo_frame_tag commit do %>
+  <div class="commit">
+    <div class="commit__header">
+      <h2 class="commit__title">
+        Commit <%= commit.commit_number %>
+      </h2>
 
-  <p>
-    <strong>Entry:</strong>
-    <%= commit.entry_id %>
-  </p>
-
-</div>
+      <div class="commit__actions">
+        <%= link_to "Edit",
+                    [:edit, entry, commit], # edit_entry_commit_path(entry, commit)
+                    class: "btn btn--light" %>
+        <%= button_to "Delete",
+                      [entry, commit],
+                      method: :delete,
+                      form: { data: { turbo_confirm: "Are you sure?" } },
+                      class: "btn btn--light" %>
+      </div>
+    </div>
+    <p><%= commit.content %></p>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<div class="container">
+  <%= render partial: "ai/request_form", locals: { uuid: @uuid } %>
+
+  <%= turbo_stream_from "channel_#{@uuid}" %>
+
+  <div id="ai_output">
+    <%= render partial: "ai/output", locals: { generated_idea: "" } %>
+  </div>
+
+</div>

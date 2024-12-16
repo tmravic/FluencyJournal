@@ -32,3 +32,7 @@ entries = Entry.create([
   { title: 'title4', content: 'content4', user_id: 4, group: Group.find_by(name: "PwC") }
 ])
 
+commits = Commit.create([
+  { entry_id: 1, content: "commit content 1" },
+  { entry_id: 2, content: "commit content 2" }
+])

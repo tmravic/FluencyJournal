@@ -1,0 +1,2 @@
+<%= turbo_stream.update "journal", partial: "commits/journal" %>
+<%= turbo_stream.update "new_commit", partial: "commits/form", locals: { commit: @commit, entry: @entry } %>
