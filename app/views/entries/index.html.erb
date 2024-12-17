@@ -3,6 +3,8 @@
 <%= turbo_stream_from current_group, "entries" %>
 
 <div class="container">
+  <%= turbo_frame_tag "workspace" %>
+
   <div class="header">
     <h1>Entries</h1>
     <%= link_to "Start entry",

@@ -4,6 +4,7 @@
   <%= form_error_notification(commit) %>
 
   <%= f.input :content, html5: true, input_html: { autofocus: true } %>
+  <br>
   <%= link_to "Cancel", entry_path(entry), class: "btn btn--light" %>
   <%= f.submit class: "btn btn--secondary", name: nil %>
 <% end %>

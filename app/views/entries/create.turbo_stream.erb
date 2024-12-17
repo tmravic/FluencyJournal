@@ -1,3 +1,4 @@
 <%= turbo_stream.prepend "entries", @entry %>
-<%= turbo_stream.update Entry.new, partial: "entries/entry_content", locals: { entry: @entry } %>
+<%= turbo_stream.update Entry.new, "" %>
+<%= turbo_stream.update "workspace", partial: "entries/entry_content", locals: { entry: @entry } %>
 <%= render_turbo_stream_flash_messages %>
