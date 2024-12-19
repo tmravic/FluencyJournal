@@ -20,11 +20,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_14_003216) do
     t.integer "total_tokens"
     t.string "type"
     t.text "raw_response"
-    t.bigint "commit_id"
+    t.bigint "entry_id"
     t.bigint "followup_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["commit_id"], name: "index_ai_queries_on_commit_id"
+    t.index ["entry_id"], name: "index_ai_queries_on_entry_id"
     t.index ["followup_id"], name: "index_ai_queries_on_followup_id"
   end
 
@@ -105,7 +105,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_14_003216) do
     t.index ["group_id"], name: "index_users_on_group_id"
   end
 
-  add_foreign_key "ai_queries", "commits"
+  add_foreign_key "ai_queries", "entries"
   add_foreign_key "ai_queries", "followups"
   add_foreign_key "commits", "entries"
   add_foreign_key "entries", "groups"

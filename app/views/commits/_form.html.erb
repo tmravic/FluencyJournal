@@ -4,7 +4,10 @@
   <%= form_error_notification(commit) %>
 
   <%= f.input :content, html5: true, input_html: { autofocus: true } %>
-  <br>
-  <%= link_to "Cancel", entry_path(entry), class: "btn btn--light" %>
-  <%= f.submit class: "btn btn--secondary", name: nil %>
+
+  <div class="form__input__button_block">
+    <%= link_to "Cancel", entry_path(entry), class: "btn btn--light",
+                data: { turbo_method: :get, turbo_frame: "_top" } %>
+    <%= f.submit class: "btn btn--secondary", name: nil %>
+  </div>
 <% end %>

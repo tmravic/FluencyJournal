@@ -37,3 +37,9 @@
 // Layouts
 @use "layouts/container";
 @use "layouts/header";
+
+.card {
+  background-color: var(--color-glint);
+  padding: var(--space-xxs) var(--space-m);
+  border-radius: var(--border-radius);
+}

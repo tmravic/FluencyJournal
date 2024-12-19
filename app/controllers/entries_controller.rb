@@ -1,5 +1,5 @@
 class EntriesController < ApplicationController
-  before_action :set_entry, only: %i[ show edit update destroy ]
+  before_action :set_entry, only: %i[ show edit update destroy]
 
   # GET /entries or /entries.json
   def index
@@ -9,6 +9,15 @@ class EntriesController < ApplicationController
   # GET /entries/1 or /entries/1.json
   def show
     @commits = @entry.commits.ordered
+    respond_to do |format|
+      format.html # Renders the default HTML view for regular requests
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace("new_commit", ""),
+          turbo_stream.replace("journal", "")
+        ]
+      end
+    end
   end
 
   # GET /entries/new
@@ -78,7 +87,7 @@ class EntriesController < ApplicationController
   private
 
   def ai_request_params
-    params.expect(ai_request: [ :prompt, :ai_model, :uuid ])
+    params.expect(ai_request: [ :prompt, :ai_model, :uuid, :entry_id ])
   end
 
 

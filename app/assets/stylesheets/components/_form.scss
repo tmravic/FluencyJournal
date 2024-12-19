@@ -1,6 +1,6 @@
 .form {
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: wrap;
   gap: var(--space-xs);
 
   &__group {
@@ -23,6 +23,10 @@
 
     &--invalid {
       border-color: var(--color-primary);
+    }
+
+    &__button_block {
+      flex-basis: 100%;
     }
   }
 }

@@ -1,7 +1,7 @@
 class AiQuery < ApplicationRecord
-  belongs_to :commit, optional: true
+  belongs_to :entry, optional: true
   belongs_to :followup, optional: true
-  has_one :prompt
+  has_one :prompt, dependent: :destroy
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
   validates :type, presence: true

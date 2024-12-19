@@ -6,7 +6,7 @@ class CreateAiQueries < ActiveRecord::Migration[8.0]
       t.integer :total_tokens
       t.string :type
       t.text :raw_response
-      t.references :commit, foreign_key: true
+      t.references :entry, foreign_key: true
       t.references :followup, foreign_key: true
 
       t.timestamps

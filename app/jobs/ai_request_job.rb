@@ -89,30 +89,26 @@ class AiRequestJob < ApplicationJob
     response_from_open_ai = json_response['choices'][0]['message'].dig("content")
 
     # Use this to create a JournalQuery
-    journal_query = JournalQuery.create(
+    journal_query = JournalQuery.build(
       prompt_tokens: token_data["prompt_tokens"],
       completion_tokens: token_data["completion_tokens"],
       total_tokens: token_data["total_tokens"],
       raw_response: response_from_open_ai
-    ).tap do |journal_query|
-      journal_query.prompt = commit_prompt
-    end
+    )
 
-    generated_idea = JSON.parse(journal_query.raw_response)
-    # {"change_1"=>
-    #    {"content"=>"小さい針 → マイクロニードル",
-    #     "explanation_en"=>"Changed '小さい針' to 'マイクロニードル' to use the correct term in Japanese."},
-    #  "change_2"=>
-    #    {"content"=>"太陽からの被害 → 日焼けによるダメージ",
-    #     "explanation_en"=>"Changed '太陽からの被害' to '日焼けによるダメージ' to sound more natural in Japanese."},
-    #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
+    journal_query.prompt = commit_prompt
+    journal_query.entry = Entry.find(ai_request_params['entry_id'])
+    journal_query.save!
+
+    generated_idea = journal_query.corrected_text
+    change_list = journal_query.id
 
     uuid = ai_request_params[:uuid]
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{uuid}",
       target: 'ai_output',
       partial: 'ai/output',
-      locals: { generated_idea: }
+      locals: { generated_idea:, change_list: }
     )
   end
 end

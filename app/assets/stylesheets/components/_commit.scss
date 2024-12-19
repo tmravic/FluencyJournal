@@ -1,7 +1,7 @@
 @use '../components';
 
 .commit {
-  margin-top: var(--space-xl);
+  margin-top: var(--space-xxs);
   margin-bottom: var(--space-xxs);
 
   &__header {
@@ -12,10 +12,10 @@
   }
 
   &__title {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-m);
 
     @include components.media(tabletAndUp) {
-      font-size: var(--font-size-xxl);
+      font-size: var(--font-size-m);
     }
   }
 
