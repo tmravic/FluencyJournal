@@ -1,6 +1,4 @@
-<%= turbo_frame_tag "open_journal_button" do %>
-  <%= link_to "Open journal",
-              open_journal_entry_path(@entry),
-              class: "btn btn--secondary",
-              data: { turbo_frame: "journal", turbo_stream: true } %>
-<% end %>
+<%= link_to "Open journal",
+            open_journal_entry_path(@entry),
+            class: "btn btn--secondary",
+            data: { turbo_frame: "journal", turbo_stream: true } %>

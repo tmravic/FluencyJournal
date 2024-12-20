@@ -4,6 +4,10 @@ class EntriesController < ApplicationController
   # GET /entries or /entries.json
   def index
     @entries = current_group.entries.ordered
+    respond_to do |format|
+      format.html
+      format.turbo_stream { flash.now[:notice] = "Entry was closed." }
+    end
   end
 
   # GET /entries/1 or /entries/1.json

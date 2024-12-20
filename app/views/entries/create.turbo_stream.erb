@@ -1,4 +1,5 @@
 <%= turbo_stream.prepend "entries", @entry %>
 <%= turbo_stream.update Entry.new, "" %>
 <%= turbo_stream.update "workspace", partial: "entries/entry_content", locals: { entry: @entry } %>
+<%= turbo_stream.update "close_entry_button", partial: "entries/close_entry_button" %>
 <%= render_turbo_stream_flash_messages %>

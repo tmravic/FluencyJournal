@@ -7,6 +7,9 @@
 
   <div class="header">
     <h1>Entries</h1>
+
+    <%= turbo_frame_tag "close_entry_button" %>
+
     <%= link_to "Start entry",
                 new_entry_path,
                 class: "btn btn--primary",
