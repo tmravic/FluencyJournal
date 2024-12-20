@@ -7,7 +7,7 @@
 
   <div class="form__input__button_block">
     <%= link_to "Cancel", entry_path(entry), class: "btn btn--light",
-                data: { turbo_method: :get, turbo_frame: "_top" } %>
+                data: { turbo_method: :get, turbo_frame: "new_commit" } %>
     <%= f.submit class: "btn btn--secondary", name: nil %>
   </div>
 <% end %>

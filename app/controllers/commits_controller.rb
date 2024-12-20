@@ -13,7 +13,8 @@ class CommitsController < ApplicationController
     @uuid = SecureRandom.uuid
     @commit = @entry.commits.build
     respond_to do |format|
-      format.turbo_stream { turbo_stream.update "journal", partial: "commits/journal" }
+      format.html
+      format.turbo_stream
     end
   end
 
@@ -78,18 +79,4 @@ class CommitsController < ApplicationController
     params.expect(commit: [ :content, :entry_id ])
   end
 
-  def get_ai_models
-    @ai_models = list_models(@api_key).map { |ai_model| ai_model['id'] }
-  end
-
-  def list_models(api_key)
-    connection = set_faraday_connection(api_key)
-    response = connection.get('/v1/models')
-
-    if response.success?
-      JSON.parse(response.body)["data"]
-    else
-      puts "Error: #{response.status} - #{response.body}"
-    end
-  end
 end

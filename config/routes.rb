@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   resources :entries do
+    member do
+      get :open_journal
+    end
     resources :commits
   end
   resource :session

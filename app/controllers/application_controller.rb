@@ -4,6 +4,21 @@ class ApplicationController < ActionController::Base
   # allow_browser versions: :modern
   before_action :set_api_key
 
+  def list_models(api_key)
+    connection = set_faraday_connection(api_key)
+    response = connection.get('/v1/models')
+
+    if response.success?
+      JSON.parse(response.body)["data"]
+    else
+      puts "Error: #{response.status} - #{response.body}"
+    end
+  end
+
+  def get_ai_models
+    @ai_models = list_models(@api_key).map { |ai_model| ai_model['id'] }
+  end
+
   private
 
   def current_group

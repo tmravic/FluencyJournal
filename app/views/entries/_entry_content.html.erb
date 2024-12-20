@@ -26,4 +26,7 @@
             new_entry_commit_path(@entry),
             class: "btn btn--primary",
             data: { turbo_frame: dom_id(Commit.new), turbo_stream: true } %>
+
+<%= turbo_frame_tag "close_journal_button" %>
+<%= turbo_frame_tag "open_journal_button" %>
 <br>

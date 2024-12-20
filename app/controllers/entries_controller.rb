@@ -1,5 +1,5 @@
 class EntriesController < ApplicationController
-  before_action :set_entry, only: %i[ show edit update destroy]
+  before_action :set_entry, only: %i[ show edit update destroy open_journal ]
 
   # GET /entries or /entries.json
   def index
@@ -11,12 +11,7 @@ class EntriesController < ApplicationController
     @commits = @entry.commits.ordered
     respond_to do |format|
       format.html # Renders the default HTML view for regular requests
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("new_commit", ""),
-          turbo_stream.replace("journal", "")
-        ]
-      end
+      format.turbo_stream
     end
   end
 
@@ -81,6 +76,15 @@ class EntriesController < ApplicationController
       format.turbo_stream
       # flash[:notice] = "..."
       format.html { redirect_to entries_path, notice: "AI request sent." }
+    end
+  end
+
+  def open_journal
+    @ai_models = get_ai_models
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
     end
   end
 
