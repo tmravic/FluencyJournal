@@ -1,0 +1,25 @@
+.sidebar {
+  display: none;
+
+  &__sidebar-note {
+    margin: var(--space-s) 0;
+    padding: var(--space-s) var(--space-s) ;
+    border-radius: var(--border-radius);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-small);
+    transition: background-color 0.2s, box-shadow 0.2s;
+
+    a {
+      text-decoration: none;
+      display: block;
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &:active {
+      background-color: #e9ecef;
+      box-shadow: var(--shadow-large);
+    }
+  }
+}

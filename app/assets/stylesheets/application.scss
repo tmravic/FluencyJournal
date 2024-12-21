@@ -31,12 +31,14 @@
 @use "components/flash";
 @use "components/empty_state";
 @use "components/commit";
+@use "components/notes_sidebar_item";
 
 @use "config/animations";
 
 // Layouts
 @use "layouts/container";
 @use "layouts/header";
+@use "layouts/sidebar";
 
 .card {
   background-color: var(--color-glint);
