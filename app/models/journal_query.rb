@@ -39,24 +39,33 @@ class JournalQuery < AiQuery
   end
 
   def corrected_text
+    # Sometimes a string is returned and sometimes it's a Hash
     content = parsed_response.fetch("corrected_text", error_message)
-    return content['text'] if content.class == Hash && content['text']
-    return content['内容'] if content.class == Hash && content['内容']
-    # Sometimes a string is returned and sometimes its Hash
-    #
-    # ["昨年のクリスマスにあなたに私の心をあげました。",
-    #  "昨年のクリスマスに私はあなたに心を捧げました",
-    #  {"text"=>"昨年のクリスマスに心をあげた"},
-    #  "昨年のクリスマス、私はあなたに心を捧げました。",
-    #  "昨年のクリスマスに私はあなたに心を捧げました",
-    #  {"text"=>"昨年のクリスマスに私はあなたに心を捧げました"}]
-    # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
 
+    #  {"text"=>"昨年のクリスマスに心をあげた"},
+    #  {"text"=>"昨年のクリスマスに私はあなたに心を捧げました"}]
+    return content['text'] if is_hash?(content) && content['text']
+
+    # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
+    return content['内容'] if is_hash?(content) && content['内容']
+
+    #  {"Today was such a hot day."=>""}
+    if is_hash?(content) && content.values.first.empty?
+      return content.keys.first
+    end
+
+    #  "昨年のクリスマスに私はあなたに心を捧げました"
     content
   end
 
   # ["Change 1", "Change 2", "Corrected Text"]
   def titles
     parsed_response.keys.map(&:titleize)
+  end
+
+  private
+
+  def is_hash?(content)
+    content.class == Hash
   end
 end

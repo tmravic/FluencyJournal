@@ -7,9 +7,13 @@ class AiQueryController < ApplicationController
   end
 
   def destroy
+    @ai_models = get_ai_models
     @ai_query.destroy!
 
-    # respond_to do |format|
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def set_ai_query
@@ -17,7 +21,7 @@ class AiQueryController < ApplicationController
   end
 
   def set_entry
-    @entry = current_group.entries.find(params[:entry_id])
+    @entry = current_group.entries.find(params.require(:entry_id))
   end
 
   def set_prompt

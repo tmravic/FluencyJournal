@@ -1,9 +1,9 @@
 <%= turbo_frame_tag "journal" do %>
   <div class="container">
     <%= button_to "Delete",
-                  entry_ai_query_path(@ai_query),
+                  entry_ai_query_path(@ai_query.entry, @ai_query),
                   method: :delete,
-                  data: { turbo: true },
+                  data: { turbo_stream: true },
                   class: "btn btn--light" %>
 
     <div style="display:flex;justify-content:space-evenly">
