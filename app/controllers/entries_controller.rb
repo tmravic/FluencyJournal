@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
     @entries = current_group.entries.ordered
     respond_to do |format|
       format.html
-      format.turbo_stream { flash.now[:notice] = "Entry was closed." }
+      format.turbo_stream
     end
   end
 

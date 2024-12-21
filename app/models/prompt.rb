@@ -3,6 +3,8 @@ class Prompt < ApplicationRecord
   # belongs_to :commit, optional: true
   belongs_to :followup, optional: true
 
+  delegate :user, to: :ai_query, allow_nil: true
+
   validates :raw_prompt, presence: true
   validates :ai_model, presence: true
   validates :uuid, presence: true

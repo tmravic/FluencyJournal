@@ -9,6 +9,9 @@ class AiRequestJob < ApplicationJob
 
     # { "prompt"=>"Original Language: This year to save me from tears I'll give it to someone special.\nLearning Language: ", ... }
 
+    entry = Entry.find(ai_request_params['entry_id'])
+    user = entry.user
+
     # make a new CommitPrompt using the ai_request_params as raw_content
     commit_prompt = CommitPrompt.create(
       raw_prompt: ai_request_params["prompt"],
@@ -29,7 +32,7 @@ class AiRequestJob < ApplicationJob
         messages: [
           {
             role: 'system',
-            content: CommitPrompt.system_prompt
+            content: commit_prompt.system_prompt(user)
           },
           {
             role: 'user',
@@ -37,7 +40,7 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: CommitPrompt.response_format
+            content: commit_prompt.response_format
           }
         ],
       }.to_json
@@ -99,7 +102,6 @@ class AiRequestJob < ApplicationJob
     )
 
     journal_query.prompt = commit_prompt
-    entry = Entry.find(ai_request_params['entry_id'])
     journal_query.entry = entry
     journal_query.save!
 

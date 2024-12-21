@@ -1,8 +1,20 @@
 <header class="navbar">
   <% if Current.user %>
-    <div class="navbar__brand">
-      <%= "Group: #{current_group.name}" %>
+<!--    <div class="navbar__brand">-->
+      <%#= "Group: #{current_group.name}" %>
         <!--Member count: -->
+<!--    </div>-->
+
+    <div class="navbar__name">
+      <%= "#{Current.user.original_language}" %>
+    </div>
+
+    <div class="navbar__name">
+      <%= " → " %>
+    </div>
+
+    <div class="navbar__name">
+      <%= "#{Current.user.learning_language}" %>
     </div>
 
     <div class="navbar__name">

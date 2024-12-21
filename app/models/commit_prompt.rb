@@ -5,19 +5,11 @@ class CommitPrompt < Prompt
   # as well as the note sent, original_language,
   # and learning_language
 
-  def self.original_language
-    "English"
+  def system_prompt(user)
+    "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct #{user.learning_language}. The journal entry may contain #{user.original_language} in 'Original Language' to clarify the student's intended meaning, but ignore this if no #{user.original_language} is in the prompt. If 'Learning Language contains no #{user.learning_language}, but 'Original Language' has an #{user.original_language} entry then simply translate without any changes."
   end
 
-  def self.learning_language
-    "Japanese"
-  end
-
-  def self.system_prompt
-    "You are a helpful #{learning_language} teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct #{learning_language}. The journal entry may contain #{original_language} in 'Original Language' to clarify the student's intended meaning, but ignore this if no #{original_language} is in the prompt. If 'Learning Language contains no #{learning_language}, but 'Original Language' has an #{original_language} entry then simply translate without any changes."
-  end
-
-  def self.response_format
+  def response_format
     'Include json marker and return json in this exact format (matching the number of changes) { { change_1: { content: "... → ...", explanation_en: "...", change_2: { content: "... → ...", explanation_en: "...", change_3: { content: "... → ...", explanation_en: "...", ..., corrected_text: { "..." }, } }'
   end
 

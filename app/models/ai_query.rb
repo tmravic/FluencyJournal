@@ -2,6 +2,7 @@ class AiQuery < ApplicationRecord
   belongs_to :entry, optional: true
   belongs_to :followup, optional: true
   has_one :prompt, dependent: :destroy
+  delegate :user, to: :entry, allow_nil: true
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
   validates :type, presence: true
