@@ -19,8 +19,8 @@
                     name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:11px;" %>
   </div>
 </div>
-<div style="display:flex;justify-content:space-evenly">
+<div style="display:flex;justify-content:center">
   <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
-  <%= f.submit "Send", class: "btn btn--primary", style: "padding:6px;" %>
+  <%= f.submit "Send", class: "btn btn--primary", style: "margin-left:6px;" %>
 </div>
 <% end %>

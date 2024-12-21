@@ -7,6 +7,8 @@ class AiRequestJob < ApplicationJob
     # ai_request_params["ai_model"]
     # ai_request_params["uuid"]
 
+    # { "prompt"=>"Original Language: This year to save me from tears I'll give it to someone special.\nLearning Language: ", ... }
+
     # make a new CommitPrompt using the ai_request_params as raw_content
     commit_prompt = CommitPrompt.create(
       raw_prompt: ai_request_params["prompt"],
@@ -97,7 +99,8 @@ class AiRequestJob < ApplicationJob
     )
 
     journal_query.prompt = commit_prompt
-    journal_query.entry = Entry.find(ai_request_params['entry_id'])
+    entry = Entry.find(ai_request_params['entry_id'])
+    journal_query.entry = entry
     journal_query.save!
 
     generated_idea = journal_query.corrected_text
@@ -109,6 +112,13 @@ class AiRequestJob < ApplicationJob
       target: 'ai_output',
       partial: 'ai/output',
       locals: { generated_idea:, change_list: }
+    )
+
+    Turbo::StreamsChannel.broadcast_update_to(
+      "channel_#{uuid}",
+      target: 'previous_queries',
+      partial: 'entries/previous_queries',
+      locals: { entry: }
     )
   end
 end

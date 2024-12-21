@@ -1,0 +1,6 @@
+<% entry.ai_queries.each do |query| %>
+  <%= link_to "#{query.id}",
+              entry_ai_query_path(entry, query),
+              class: "btn btn--secondary",
+              data: { turbo_frame: "journal" } %>
+<% end %>

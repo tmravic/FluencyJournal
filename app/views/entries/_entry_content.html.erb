@@ -2,11 +2,9 @@
   <h3><%= @entry.title %></h3>
 </div>
 
-<% @entry.ai_queries.each do |query| %>
-  <button><%= query.id %></button>
+<%= turbo_frame_tag "previous_queries" do %>
+  <%= render partial: "entries/previous_queries", locals: { entry: @entry } %>
 <% end %>
-<!--I want a method called show_previous_query-->
-<!--which opens the journal partial with that query's data-->
 
 <%= turbo_frame_tag Commit.new do %>
   <%= render 'commits/empty_state' unless @commits.present? %>

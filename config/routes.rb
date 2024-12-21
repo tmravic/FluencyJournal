@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       get :open_journal
     end
     resources :commits
+    resources :ai_query, only: [:show, :destroy] # look up how to shorten this route
   end
   resource :session
   resources :passwords, param: :token
