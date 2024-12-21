@@ -53,14 +53,13 @@ users.each do |user_attrs|
 end
 
 entries = [
-  { title: 'title1', content: 'content', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
-  { title: 'title2', content: 'content2', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
-  { title: 'title3', content: 'content3', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
-  { title: 'title4', content: 'content4', user_id: User.find_by(email_address: 'admin@admin.com').id, group: Group.find_by(name: "PwC") }
+  { title: 'title1', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
+  { title: 'title2', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
+  { title: 'title3', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
+  { title: 'title4', user_id: User.find_by(email_address: 'admin@admin.com').id, group: Group.find_by(name: "PwC") }
 ]
 entries.each do |entry_attrs|
   Entry.find_or_create_by(title: entry_attrs[:title], user_id: entry_attrs[:user_id]) do |entry|
-    entry.content = entry_attrs[:content]
     entry.group = entry_attrs[:group]
   end
 end
