@@ -2,10 +2,6 @@
   <h3><%= @entry.title %></h3>
 </div>
 
-<%= turbo_frame_tag "previous_queries" do %>
-  <%= render partial: "entries/previous_queries", locals: { entry: @entry } %>
-<% end %>
-
 <%= turbo_frame_tag Commit.new do %>
   <%= render 'commits/empty_state' unless @commits.present? %>
 <% end %>
@@ -16,7 +12,15 @@
     <%= render @commits, entry: @entry %>
   <% end %>
 <% end %>
+<br>
+<hr>
+<%= turbo_frame_tag "previous_queries" do %>
+  <% if @entry.ai_queries.any? %>
+    <%= render partial: "entries/previous_queries", locals: { entry: @entry } %>
+  <% end %>
+<% end %>
 
+<br>
 <%= turbo_frame_tag "journal" %>
 <br>
 
