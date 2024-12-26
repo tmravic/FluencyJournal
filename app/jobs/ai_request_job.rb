@@ -40,7 +40,7 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: commit_prompt.response_format
+            content: commit_prompt.response_format(user)
           }
         ],
       }.to_json
