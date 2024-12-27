@@ -3,7 +3,7 @@
     <%= link_to entry.title,
                 entry_path(entry),
                 data: { turbo_frame: "_top" } %>
-    <%= entry.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
+    <p class="entry__date"><%= entry.created_at.strftime("%Y/%m/%d %H:%M:%S") %></p>
     <div class="entry__actions">
       <%= link_to "Edit",
                   edit_entry_path(entry),

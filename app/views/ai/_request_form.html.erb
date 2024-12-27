@@ -1,4 +1,5 @@
-<%= form_for :ai_request, url: ai_request_path, method: :post, remote: true, id: "aiRequestForm", data: { controller: "ai-request", action: "submit->ai-request#combineFields" } do |f| %>
+<%= form_for :ai_request, url: ai_request_path, method: :post, remote: true, id: "aiRequestForm",
+             data: { controller: "ai-request", action: "submit->ai-request#combineFields" } do |f| %>
 <%= f.hidden_field :uuid, value: @uuid %>
 <%= f.hidden_field :entry_id, value: @entry.id %>
 <%= f.hidden_field :prompt, value: "", data: { ai_request_target: "prompt" } %>
@@ -11,16 +12,17 @@
     <%= f.text_area :original_language_prompt,
                     placeholder: " Type your journal entry in your native language to confirm its meaning.",
                     data: { ai_request_target: "originalLanguage" },
-                    name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:11px;" %>
+                    name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:12px;" %>
 
     <%= f.text_area :learning_language_prompt,
                     placeholder: " Type your journal entry in the language you're studying.",
                     data: { ai_request_target: "learningLanguage" },
-                    name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:11px;" %>
+                    name: nil, style: "height:100px;width:48%;padding:3px;margin:1px;font-size:12px;" %>
   </div>
 </div>
 <div style="display:flex;justify-content:center">
-  <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
+  <%#= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
+  <%= f.hidden_field :ai_model, value: "gpt-4o-mini" %>
   <%= f.submit "Send", class: "btn btn--primary", style: "margin-left:6px;" %>
 </div>
 <% end %>

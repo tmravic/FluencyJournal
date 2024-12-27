@@ -1,0 +1,21 @@
+.card {
+  background-color: var(--color-glint);
+  padding: var(--space-xxs) var(--space-xxs);
+  border-radius: var(--border-radius);
+
+  &__change {
+    padding: var(--space-xxxs) var(--space-xxxs);
+
+    &__title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__change_content {
+    div {
+      padding: var(--space-xxxs) 0;
+    }
+  }
+}

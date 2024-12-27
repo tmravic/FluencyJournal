@@ -1,7 +1,7 @@
 <br>
 <div class="card">
   <% if generated_idea %>
-    <p>Corrected text</p>
+    <h4>Corrected text</h4>
     <%= content_tag(:div, generated_idea) %>
   <% end %>
 
@@ -9,12 +9,21 @@
     <% jq = JournalQuery.find(change_list) %>
     <% jq.count_changes.times do |i| %>
       <hr> <!------------>
-      <p><%= "Change #{i + 1}" %></p>
-      <%= content_tag(:div, jq.change_content(i + 1)) %>
-      <%= content_tag(:div) do %>
-        <%= "(#{jq.change_explanation_en(i + 1)})" %>
-      <% end %>
+      <div class="card__change">
+        <div class="card__change__title">
+          <h4><%= "Change #{i + 1}" %></h4>
+          <% unless jq.made_note == true %>
+            <%= link_to "Make note", new_entry_path, class: "btn btn--primary" %>
+          <% end %>
+        </div>
+        <div class="card__change_content">
+          <%= content_tag(:div, jq.change_content(i + 1)) %>
+          <%= content_tag(:div) do %>
+            <%= "(#{jq.change_explanation(i + 1, jq.prompt.abbr(jq.user))})" %>
+          <% end %>
+        </div>
+      </div>
     <% end %>
-  <% end %>
-  <br>
-</div>
+    <br>
+  </div>
+<% end %>
