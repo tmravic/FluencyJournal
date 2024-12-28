@@ -1,5 +1,13 @@
 <div class="header">
   <h3><%= @entry.title %></h3>
+
+  <%= turbo_frame_tag "open_journal_button" %>
+  <%= turbo_frame_tag "close_journal_button" %>
+
+  <%= link_to "Start commit",
+              new_entry_commit_path(@entry),
+              class: "btn btn--primary",
+              data: { turbo_frame: dom_id(Commit.new), turbo_stream: true } %>
 </div>
 
 <%= turbo_frame_tag Commit.new do %>
@@ -22,13 +30,4 @@
 
 <br>
 <%= turbo_frame_tag "journal" %>
-<br>
-
-<%= link_to "Start commit",
-            new_entry_commit_path(@entry),
-            class: "btn btn--primary",
-            data: { turbo_frame: dom_id(Commit.new), turbo_stream: true } %>
-
-<%= turbo_frame_tag "close_journal_button" %>
-<%= turbo_frame_tag "open_journal_button" %>
 <br>

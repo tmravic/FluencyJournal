@@ -1,6 +1,6 @@
 .btn {
   display: inline-block;
-  padding: var(--space-xxxxs) var(--space-xxs);
+  padding: var(--space-xxxs) var(--space-xxs);
   border-radius: var(--border-radius);
   background-origin: border-box; // Invisible borders with linear gradients
   background-color: transparent;
@@ -10,7 +10,7 @@
   cursor: pointer;
   outline: none;
   transition: filter 400ms, color 200ms;
-  font-size: var(--font-size-s);
+  font-size: var(--font-size-xs);
 
   &:hover,
   &:focus,
@@ -32,7 +32,7 @@
       filter: saturate(1.4) brightness(115%);
     }
 
-    &--start-entry {
+    &--manage-entry {
       padding: var(--space-xxxs) var(--space-xxs);
       font-size: var(--font-size-m);
     }

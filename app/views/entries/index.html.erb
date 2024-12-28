@@ -3,6 +3,9 @@
 <%= turbo_stream_from current_group, "entries" %>
 
 <div class="container">
+
+  <%= turbo_frame_tag "all_notes" %>
+
   <%= turbo_frame_tag "workspace" %>
 
   <div class="header">
@@ -12,7 +15,7 @@
 
     <%= link_to "Start entry",
                 new_entry_path,
-                class: "btn btn--primary btn--primary--start-entry",
+                class: "btn btn--primary btn--primary--manage-entry",
                 data: { turbo_frame: dom_id(Entry.new) }%>
   </div>
 

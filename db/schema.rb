@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_21_014248) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_21_014248) do
     t.bigint "followup_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "made_note"
     t.index ["entry_id"], name: "index_ai_queries_on_entry_id"
     t.index ["followup_id"], name: "index_ai_queries_on_followup_id"
   end

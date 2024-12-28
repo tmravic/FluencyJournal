@@ -1,0 +1,15 @@
+<div class="empty-state empty-state--only-child">
+  <p class="empty-state__text">
+    You don't have any notes yet!
+  </p>
+
+  <%= link_to "Add note",
+              new_note_path,
+              class: "btn btn--primary",
+              data: { turbo_frame: dom_id(Note.new) } %>
+
+  <%= link_to "Close notes",
+              entries_path,
+              class: "btn btn--dark",
+              data: { turbo_frame: "all_notes" } %>
+</div>

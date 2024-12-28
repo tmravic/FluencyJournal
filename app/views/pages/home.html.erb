@@ -7,4 +7,5 @@
   <% else %>
     <%= link_to "Sign in", new_session_path, class: "btn btn--dark" %>
   <% end %>
+  <%= turbo_frame_tag "all_notes" %>
 </main>

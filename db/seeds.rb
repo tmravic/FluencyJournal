@@ -1,6 +1,6 @@
 groups = [
-  { name: "KPMG" },
-  { name: "PwC" }
+  { name: "JapaneseGroup" },
+  { name: "EnglishGroup" }
 ]
 groups.each do |group_attrs|
   Group.find_or_create_by(name: group_attrs[:name])
@@ -10,38 +10,17 @@ users = [
   {
     email_address: 'admin@admin.com',
     password: '123456',
-    group: Group.find_by(name: "PwC"),
+    group: Group.find_by(name: "EnglishGroup"),
     learning_language: 'English',
     original_language: 'Japanese'
   },
   {
-    email_address: 'eavesdropper@pwc.com',
+    email_address: 'taylor@kpmg.com',
     password: '123456',
-    group: Group.find_by(name: "PwC"),
-    learning_language: 'French',
-    original_language: 'English'
-  },
-  {
-    email_address: 'ilovegerman@pwc.com',
-    password: '123456',
-    group: Group.find_by(name: "PwC"),
-    learning_language: 'German',
-    original_language: 'English'
-  },
-  {
-    email_address: 'manager@kpmg.com',
-    password: '123456',
-    group: Group.find_by(name: "KPMG"),
+    group: Group.find_by(name: "JapaneseGroup"),
     learning_language: 'Japanese',
     original_language: 'English'
   },
-  {
-    email_address: 'accountant@kpmg.com',
-    password: '123456',
-    group: Group.find_by(name: "KPMG"),
-    learning_language: 'Japanese',
-    original_language: 'English'
-  }
 ]
 users.each do |user_attrs|
   User.find_or_create_by(email_address: user_attrs[:email_address]) do |user|
@@ -53,10 +32,10 @@ users.each do |user_attrs|
 end
 
 entries = [
-  { title: 'title1', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
-  { title: 'title2', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
-  { title: 'title3', user_id: User.find_by(email_address: 'manager@kpmg.com').id, group: Group.find_by(name: "KPMG") },
-  { title: 'title4', user_id: User.find_by(email_address: 'admin@admin.com').id, group: Group.find_by(name: "PwC") }
+  { title: 'title1', user_id: User.find_by(email_address: 'taylor@kpmg.com').id, group: Group.find_by(name: "JapaneseGroup") },
+  { title: 'title2', user_id: User.find_by(email_address: 'taylor@kpmg.com').id, group: Group.find_by(name: "JapaneseGroup") },
+  { title: 'title3', user_id: User.find_by(email_address: 'admin@admin.com').id, group: Group.find_by(name: "EnglishGroup") },
+  { title: 'title4', user_id: User.find_by(email_address: 'admin@admin.com').id, group: Group.find_by(name: "EnglishGroup") }
 ]
 entries.each do |entry_attrs|
   Entry.find_or_create_by(title: entry_attrs[:title], user_id: entry_attrs[:user_id]) do |entry|
