@@ -1,16 +1,11 @@
 class CommitPrompt < Prompt
-  LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
 
   def system_prompt(user)
-    "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct #{user.learning_language}. The journal entry may contain #{user.original_language} in 'Original Language' to clarify the student's intended meaning, but ignore this if no #{user.original_language} is in the prompt. If 'Learning Language contains no #{user.learning_language}, but 'Original Language' has an #{user.original_language} entry then simply translate without any changes."
+    "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes and reword journal entries into more natural and correct #{user.learning_language}. The journal entry may contain #{user.original_language} in 'Original Language' to clarify the student's intended meaning, but ignore this if no #{user.original_language} is in the prompt. If 'Learning Language contains no #{user.learning_language}, but 'Original Language' has an #{user.original_language} entry then simply translate without any changes. Avoid vague feedback such as 'Corrected the sentence structure for clarity and formality.'"
   end
 
   def response_format(user)
-    "Include json marker and return json in this exact format (matching the number of changes) { { change_1: { content: '... → ...', explanation_en: '...', change_2: { content: '... → ...', explanation_en: '...', change_3: { content: '... → ...', explanation_#{abbr(user)}: '...', ..., corrected_text: { '...' }, } }"
-  end
-
-  def abbr(user)
-    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, 'English')
+    "Include json marker and return json in this exact format (matching the number of changes) { { change_1: { content: '... → ...', explanation_#{abbr(user)}: '...', change_2: { content: '... → ...', explanation_#{abbr(user)}: '...', change_3: { content: '... → ...', explanation_#{abbr(user)}: '...', ..., corrected_text: { '...' }, } }"
   end
 
   def parsed_prompt

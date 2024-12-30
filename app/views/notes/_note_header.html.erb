@@ -1,0 +1,11 @@
+<div class="note__header">
+  <h3>Notes</h3>
+  <div class="header">
+    <%= link_to "Make note",
+                new_note_path,
+                class: "btn btn--primary",
+                data: { turbo_frame: dom_id(Note.new) }%>
+
+    <%= render "notes/close_notes_button" %>
+  </div>
+</div>

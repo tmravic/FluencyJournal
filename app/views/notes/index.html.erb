@@ -1,17 +1,22 @@
 <div class="container">
-  <div class="header">
-    <h4>Notes</h4>
+  <%= turbo_frame_tag "notes_box" do %>
+    <div class="notes_box_scroll">
 
-    <%= link_to "Make note",
-                new_note_path,
-                class: "btn btn--primary",
-                data: { turbo_frame: dom_id(Note.new) }%>
-  </div>
+      <%= turbo_frame_tag Note.new do %>
+        <%= render "notes/empty_state" unless @notes.present? %>
+      <% end %>
 
-  <%= turbo_frame_tag Note.new %>
+      <%= turbo_frame_tag "notes" do %>
 
-  <%= turbo_frame_tag "all_notes" do %>
-    <%= render "notes/empty_state" %>
-    <%= render @notes %>
+        <%= turbo_frame_tag "note_header" do %>
+          <%= render "notes/note_header" if @notes.present? %>
+        <% end %>
+
+        <% if @notes.present? %>
+
+          <%= render @notes %>
+        <% end %>
+      <% end %>
+    </div>
   <% end %>
 </div>

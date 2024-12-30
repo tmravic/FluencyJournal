@@ -1,0 +1,12 @@
+<%= simple_form_for note, html: { class: "note form" }, data: { turbo: true } do |f| %>
+  <%= form_error_notification(note) %>
+
+  <%= f.input :content, input_html: { autofocus: true } %>
+
+  <div class="form__input__button_block">
+    <%= f.select :category, reject_automatic_notes %>
+    <%= link_to "Cancel", notes_path, class: "btn btn--light" %>
+    <%#= if @entry %>
+    <%= f.submit class: "btn btn--secondary" %>
+  </div>
+<% end %>

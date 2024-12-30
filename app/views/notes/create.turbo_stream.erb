@@ -1,0 +1,4 @@
+<%= turbo_stream.update Note.new, "" %>
+<%= turbo_stream.update "note_header", partial: "notes/note_header" %>
+<%= turbo_stream.append "notes", @note %>
+<%= render_turbo_stream_flash_messages %>

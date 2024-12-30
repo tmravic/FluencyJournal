@@ -8,8 +8,5 @@
               class: "btn btn--primary",
               data: { turbo_frame: dom_id(Note.new) } %>
 
-  <%= link_to "Close notes",
-              entries_path,
-              class: "btn btn--dark",
-              data: { turbo_frame: "all_notes" } %>
+    <%= render "notes/close_notes_button" %>
 </div>

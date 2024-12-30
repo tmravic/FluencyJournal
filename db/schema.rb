@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,11 +20,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
     t.integer "total_tokens"
     t.string "type"
     t.text "raw_response"
+    t.boolean "made_note"
     t.bigint "entry_id"
     t.bigint "followup_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "made_note"
     t.index ["entry_id"], name: "index_ai_queries_on_entry_id"
     t.index ["followup_id"], name: "index_ai_queries_on_followup_id"
   end
@@ -40,9 +40,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
   create_table "entries", force: :cascade do |t|
     t.string "title"
     t.bigint "user_id", null: false
+    t.bigint "group_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "group_id", null: false
     t.index ["group_id"], name: "index_entries_on_group_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
@@ -62,12 +62,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
 
   create_table "notes", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "entry_id", null: false
     t.text "content"
     t.integer "category", default: 0, null: false
+    t.datetime "next_study_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["entry_id"], name: "index_notes_on_entry_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
@@ -98,11 +97,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
+    t.string "original_language", null: false
+    t.string "learning_language", null: false
+    t.bigint "group_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "group_id", null: false
-    t.string "original_language"
-    t.string "learning_language"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
   end
@@ -113,7 +112,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_115659) do
   add_foreign_key "entries", "groups"
   add_foreign_key "entries", "users"
   add_foreign_key "followups", "commits"
-  add_foreign_key "notes", "entries"
   add_foreign_key "notes", "users"
   add_foreign_key "prompts", "ai_queries"
   add_foreign_key "prompts", "commits"

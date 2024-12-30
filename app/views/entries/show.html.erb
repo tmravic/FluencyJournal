@@ -2,6 +2,6 @@
 
 <main class="container">
   <%= link_to sanitize("&larr; Back to entries"), entries_path %>
-  <%= turbo_frame_tag "all_notes" %>
+  <%= turbo_frame_tag "notes_box" %>
   <%= render "entries/entry_content", entry: @entry, commits: @commits %>
 </main>

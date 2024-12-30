@@ -17,7 +17,9 @@
           <% end %>
         </div>
         <div class="card__change_content">
-          <%= content_tag(:div, jq.change_content(i + 1)) %>
+          <%= content_tag(:div, jq.change_content(i + 1).first) %>
+          <p>↓</p>
+          <%= content_tag(:div, jq.change_content(i + 1).last) %>
           <%= content_tag(:div) do %>
             <%= "(#{jq.change_explanation(i + 1, jq.prompt.abbr(jq.user))})" %>
           <% end %>

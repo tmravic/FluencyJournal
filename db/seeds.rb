@@ -50,3 +50,7 @@ commits = [
 commits.each do |commit_attrs|
   Commit.find_or_create_by(entry_id: commit_attrs[:entry_id], content: commit_attrs[:content])
 end
+
+notes = [
+  {  }
+]

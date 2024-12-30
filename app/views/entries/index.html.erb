@@ -4,7 +4,7 @@
 
 <div class="container">
 
-  <%= turbo_frame_tag "all_notes" %>
+  <%= turbo_frame_tag "notes_box" %>
 
   <%= turbo_frame_tag "workspace" %>
 
@@ -19,10 +19,11 @@
                 data: { turbo_frame: dom_id(Entry.new) }%>
   </div>
 
-  <%= turbo_frame_tag Entry.new %>
+  <%= turbo_frame_tag Entry.new do %>
+    <%= render 'entries/empty_state' unless @entries.present? %>
+  <% end %>
 
   <%= turbo_frame_tag "entries" do %>
-    <%= render "entries/empty_state" %>
     <%= render @entries %>
   <% end %>
 </div>

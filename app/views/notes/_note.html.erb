@@ -1,0 +1,23 @@
+<%= turbo_frame_tag note do %>
+  <div class="note">
+    <div class="note__header">
+      <h5><%= note.category %> note</h5> <span><%= note.next_study_date.strftime("%Y/%m/%d") %></span>
+
+      <div class="note__actions">
+        <%= link_to "Followup",
+                    edit_note_path(note),
+                    class: "btn btn--light" %>
+
+        <%= link_to "Edit",
+                    edit_note_path(note),
+                    class: "btn btn--light" %>
+        <%= button_to "Delete",
+                      note_path(note),
+                      method: :delete,
+                      form: { data: { turbo_confirm: "Are you sure?" } },
+                      class: "btn btn--light" %>
+      </div>
+    </div>
+    <p><%= note.content %></p>
+  </div>
+<% end %>

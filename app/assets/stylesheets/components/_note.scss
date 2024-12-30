@@ -1,0 +1,41 @@
+@use '../components';
+
+.note {
+  margin-top: var(--space-xxs);
+  margin-bottom: var(--space-xxs);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+
+    h5 {
+      font-size: var(--font-size-s);
+    }
+
+    span {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  &__title {
+    font-size: var(--font-size-m);
+
+    @include components.media(tabletAndUp) {
+      font-size: var(--font-size-m);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-xs);
+  }
+}
+
+.notes_box_scroll {
+  max-height: 30vh; /* Ensure it doesn't exceed 30% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling for overflowing content */
+  border: 1px solid #ccc; /* Optional: Add a border for visibility */
+  padding: 0.2rem; /* Optional: Add padding for better readability */
+}

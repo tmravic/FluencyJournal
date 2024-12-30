@@ -39,7 +39,9 @@
             <%= link_to "Make note", new_entry_path, class: "btn btn--primary" %>
           </div>
           <div class="card__change_content">
-            <%= content_tag(:div, @ai_query.change_content(i + 1)) %>
+            <%= content_tag(:div, @ai_query.change_content(i + 1).first) %>
+            <p>↓</p>
+            <%= content_tag(:div, @ai_query.change_content(i + 1).last) %>
             <%= content_tag(:div) do %>
               <%= "(#{@ai_query.change_explanation(i + 1, @ai_query.prompt.abbr(@ai_query.user))})" %>
             <% end %>

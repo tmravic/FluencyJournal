@@ -1,0 +1,3 @@
+<%= turbo_stream.remove @note %>
+<%= turbo_stream.update "notes_box", "" if Current.user.notes.empty? %>
+<%= render_turbo_stream_flash_messages %>

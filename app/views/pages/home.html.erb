@@ -1,11 +1,13 @@
 <main class="container">
   <h1>Fluency Journal</h1>
   <p>Your AI-powered foreign-language daily diary</p>
-  <br>
-  <% if Current.user.present? %>
-    <%= link_to "View entries", entries_path, class: "btn btn--dark" %>
-  <% else %>
-    <%= link_to "Sign in", new_session_path, class: "btn btn--dark" %>
-  <% end %>
-  <%= turbo_frame_tag "all_notes" %>
+  <div style="margin: 10px 0;">
+    <% if Current.user.present? %>
+      <%= link_to "View entries", entries_path, class: "btn btn--dark" %>
+    <% else %>
+      <%= link_to "Sign in", new_session_path, class: "btn btn--dark" %>
+    <% end %>
+  </div>
+
+  <%= turbo_frame_tag "notes_box" %>
 </main>
