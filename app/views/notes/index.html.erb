@@ -2,20 +2,20 @@
   <%= turbo_frame_tag "notes_box" do %>
     <div class="notes_box_scroll">
 
-      <%= turbo_frame_tag Note.new do %>
-        <%= render "notes/empty_state" unless @notes.present? %>
+      <%= turbo_frame_tag Note.new, locals: { view_context: "todays_notes" } do %>
+        <%= render "notes/empty_state_today" unless @todays_notes.present? %>
+      <% end %>
+
+      <%= turbo_frame_tag "note_header" do %>
+        <%= render "notes/notes_header_todays" if @todays_notes.present? %>
       <% end %>
 
       <%= turbo_frame_tag "notes" do %>
 
-        <%= turbo_frame_tag "note_header" do %>
-          <%= render "notes/note_header" if @notes.present? %>
+        <% if @todays_notes.present? %>
+          <%= render @todays_notes %>
         <% end %>
 
-        <% if @notes.present? %>
-
-          <%= render @notes %>
-        <% end %>
       <% end %>
     </div>
   <% end %>

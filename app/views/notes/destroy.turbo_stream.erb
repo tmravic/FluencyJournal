@@ -1,3 +1,17 @@
 <%= turbo_stream.remove @note %>
-<%= turbo_stream.update "notes_box", "" if Current.user.notes.empty? %>
+
+<% all_notes_empty = Current.user&.notes.empty? %>
+<% todays_notes_empty = Current.user&.notes.next_to_study.empty? %>
+<% delete_from_todays_notes = ActiveModel::Type::Boolean.new.cast(delete_from_todays_notes) %>
+
+<% if all_notes_empty %>
+  <%= turbo_stream.update "new_note", partial: "notes/empty_state" %>
+  <%= turbo_stream.update "note_header", "" %>
+<% elsif todays_notes_empty %>
+  <% if delete_from_todays_notes %>
+    <%= turbo_stream.update "new_note", partial: "notes/empty_state_today" %>
+    <%= turbo_stream.update "note_header", "" %>
+  <% end %>
+<% end %>
+
 <%= render_turbo_stream_flash_messages %>

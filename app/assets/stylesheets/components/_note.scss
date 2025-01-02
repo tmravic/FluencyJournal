@@ -34,8 +34,11 @@
 }
 
 .notes_box_scroll {
-  max-height: 30vh; /* Ensure it doesn't exceed 30% of the viewport height */
-  overflow-y: auto; /* Enable vertical scrolling for overflowing content */
-  border: 1px solid #ccc; /* Optional: Add a border for visibility */
-  padding: 0.2rem; /* Optional: Add padding for better readability */
+  max-height: 80vh;
+  min-height: 10vh;
+  height: 30vh;
+  overflow-y: auto;
+  border: var(--border);
+  //padding: 0.3rem;
+  resize: vertical;
 }
