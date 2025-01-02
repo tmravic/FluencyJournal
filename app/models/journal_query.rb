@@ -31,11 +31,11 @@ class JournalQuery < AiQuery
   end
 
   def change_content(num)
-    parsed_response.fetch("change_#{num}", error_message).fetch("content")
+    parsed_response.fetch("change_#{num}", error_message).fetch("content").split('→')
   end
 
-  def change_explanation_en(num)
-    parsed_response.fetch("change_#{num}", error_message).fetch("explanation_en")
+  def change_explanation(num, abbr)
+    parsed_response.fetch("change_#{num}", error_message).fetch("explanation_#{abbr}")
   end
 
   def corrected_text
@@ -48,6 +48,9 @@ class JournalQuery < AiQuery
 
     # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
     return content['内容'] if is_hash?(content) && content['内容']
+
+    # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
+    return content['corrected_japanese'] if is_hash?(content) && content['corrected_japanese']
 
     #  {"Today was such a hot day."=>""}
     if is_hash?(content) && content.values.first.empty?

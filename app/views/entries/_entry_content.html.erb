@@ -1,10 +1,14 @@
 <div class="header">
   <h3><%= @entry.title %></h3>
-</div>
 
-<%= turbo_frame_tag "previous_queries" do %>
-  <%= render partial: "entries/previous_queries", locals: { entry: @entry } %>
-<% end %>
+  <%= turbo_frame_tag "open_journal_button" %>
+  <%= turbo_frame_tag "close_journal_button" %>
+
+  <%= link_to "Start commit",
+              new_entry_commit_path(@entry),
+              class: "btn btn--primary",
+              data: { turbo_frame: dom_id(Commit.new), turbo_stream: true } %>
+</div>
 
 <%= turbo_frame_tag Commit.new do %>
   <%= render 'commits/empty_state' unless @commits.present? %>
@@ -16,15 +20,14 @@
     <%= render @commits, entry: @entry %>
   <% end %>
 <% end %>
-
-<%= turbo_frame_tag "journal" %>
 <br>
+<hr>
+<%= turbo_frame_tag "previous_queries" do %>
+  <% if @entry.ai_queries.any? %>
+    <%= render partial: "entries/previous_queries", locals: { entry: @entry } %>
+  <% end %>
+<% end %>
 
-<%= link_to "Start commit",
-            new_entry_commit_path(@entry),
-            class: "btn btn--primary",
-            data: { turbo_frame: dom_id(Commit.new), turbo_stream: true } %>
-
-<%= turbo_frame_tag "close_journal_button" %>
-<%= turbo_frame_tag "open_journal_button" %>
+<br>
+<%= turbo_frame_tag "journal" %>
 <br>

@@ -3,7 +3,6 @@ class Entry < ApplicationRecord
   belongs_to :group
   has_many :commits, dependent: :destroy
   has_many :ai_queries, dependent: :destroy
-  has_many :notes, dependent: :destroy
 
   validates :title, presence: true
 

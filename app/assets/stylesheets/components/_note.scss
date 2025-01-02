@@ -1,0 +1,44 @@
+@use '../components';
+
+.note {
+  margin-top: var(--space-xxs);
+  margin-bottom: var(--space-xxs);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+
+    h5 {
+      font-size: var(--font-size-s);
+    }
+
+    span {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  &__title {
+    font-size: var(--font-size-m);
+
+    @include components.media(tabletAndUp) {
+      font-size: var(--font-size-m);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-xs);
+  }
+}
+
+.notes_box_scroll {
+  max-height: 80vh;
+  min-height: 10vh;
+  height: 30vh;
+  overflow-y: auto;
+  border: var(--border);
+  //padding: 0.3rem;
+  resize: vertical;
+}

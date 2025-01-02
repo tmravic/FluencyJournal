@@ -57,9 +57,9 @@ class CommitsController < ApplicationController
     @commit.destroy!
 
     respond_to do |format|
-      format.html { redirect_to entry_path(@entry), status: :see_other, notice: "Commit was successfully destroyed." }
+      format.html { redirect_to entry_path(@entry), status: :see_other, notice: "Commit was successfully deleted." }
       format.json { head :no_content }
-      format.turbo_stream { flash.now[:notice] = "Commit was successfully destroyed." }
+      format.turbo_stream { flash.now[:notice] = "Commit was successfully deleted." }
     end
   end
 

@@ -10,10 +10,7 @@ x-app: &default-app
       - "RAILS_ENV=${RAILS_ENV:-development}"
       - "NODE_ENV=${NODE_ENV:-development}"
   depends_on:
-    db:
-      condition: "service_healthy"
-      required: false
-    redis:
+    postgres:
       condition: "service_healthy"
       required: false
   env_file:
@@ -55,7 +52,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    profiles: [ "db" ]
+    profiles: [ "postgres" ]
 
   web:
     <<: *default-app
@@ -94,6 +91,5 @@ services:
 
 volumes:
   postgres: {}
-  redis: {}
   node_modules: {}
   bundle: {}

@@ -22,4 +22,8 @@
     align-self: flex-start;
     gap: var(--space-xs);
   }
+
+  &__date {
+    font-size: var(--font-size-xs);
+  }
 }

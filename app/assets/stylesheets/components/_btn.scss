@@ -10,6 +10,7 @@
   cursor: pointer;
   outline: none;
   transition: filter 400ms, color 200ms;
+  font-size: var(--font-size-xs);
 
   &:hover,
   &:focus,
@@ -29,6 +30,11 @@
     &:active {
       color: var(--color-white);
       filter: saturate(1.4) brightness(115%);
+    }
+
+    &--manage-entry {
+      padding: var(--space-xxxs) var(--space-xxs);
+      font-size: var(--font-size-m);
     }
   }
 

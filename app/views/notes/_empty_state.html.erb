@@ -1,0 +1,13 @@
+<div class="empty-state empty-state--only-child">
+  <p class="empty-state__text">
+    You don't have any notes yet!
+  </p>
+
+  <%= link_to "Add note",
+              new_note_path(view_context: "all_notes"),
+              class: "btn btn--primary",
+              data: { turbo_frame: dom_id(Note.new) } %>
+<!--Why doesn't this frame exist after I delete the last note?-->
+
+    <%= render "notes/close_notes_button" %>
+</div>

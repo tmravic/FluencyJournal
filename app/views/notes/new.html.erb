@@ -1,0 +1,12 @@
+<% content_for :title, "New note" %>
+<div class="container">
+  <%= link_to sanitize("&larr; Back to notes"), notes_path %>
+
+  <div class="header">
+    <h1>New note</h1>
+  </div>
+
+  <%= turbo_frame_tag @note do %>
+    <%= render "form", note: @note, view_context: @view_context %>
+  <% end %>
+</div>

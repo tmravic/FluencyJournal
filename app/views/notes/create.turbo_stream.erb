@@ -1,0 +1,14 @@
+<%= turbo_stream.update Note.new, "" %>
+<% if header_partial == "notes/notes_header_all" %>
+  <% if previous_note %>
+    <%= turbo_stream.after dom_id(previous_note) do %>
+      <%= render partial: "notes/note", locals: { note: @note } %>
+    <% end %>
+  <% else %>
+    <%= turbo_stream.prepend "notes", @note %>
+  <% end %>
+<% elsif header_partial == 'notes/notes_header_todays' %>
+  <%= turbo_stream.append "notes", @note %>
+<% end %>
+<%= turbo_stream.update "note_header", partial: header_partial %>
+<%= render_turbo_stream_flash_messages %>

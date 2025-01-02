@@ -3,6 +3,9 @@
 <%= turbo_stream_from current_group, "entries" %>
 
 <div class="container">
+
+  <%= turbo_frame_tag "notes_box" %>
+
   <%= turbo_frame_tag "workspace" %>
 
   <div class="header">
@@ -12,14 +15,15 @@
 
     <%= link_to "Start entry",
                 new_entry_path,
-                class: "btn btn--primary",
+                class: "btn btn--primary btn--primary--manage-entry",
                 data: { turbo_frame: dom_id(Entry.new) }%>
   </div>
 
-  <%= turbo_frame_tag Entry.new %>
+  <%= turbo_frame_tag Entry.new do %>
+    <%= render 'entries/empty_state' unless @entries.present? %>
+  <% end %>
 
   <%= turbo_frame_tag "entries" do %>
-    <%= render "entries/empty_state" %>
     <%= render @entries %>
   <% end %>
 </div>

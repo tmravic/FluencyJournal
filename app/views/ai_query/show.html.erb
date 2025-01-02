@@ -1,10 +1,6 @@
 <%= turbo_frame_tag "journal" do %>
   <div class="container">
-    <%= button_to "Delete",
-                  entry_ai_query_path(@ai_query.entry, @ai_query),
-                  method: :delete,
-                  data: { turbo_stream: true },
-                  class: "btn btn--light" %>
+    <br>
 
     <div style="display:flex;justify-content:space-evenly">
       <label for="original_language_prompt">Original Language:</label>
@@ -13,28 +9,44 @@
     <div style="margin-left:5px">
       <textarea id="original_language_prompt"
                 placeholder="Type your journal entry in your native language to confirm its meaning."
-                style="height:100px;width:48%;padding:3px;margin:1px;font-size:11px;"
+                style="height:100px;width:48%;padding:3px;margin:1px;font-size:12px;"
                 readonly><%= @prompt.original_language if @prompt %></textarea>
 
       <textarea id="learning_language_prompt"
                 placeholder="Type your journal entry in the language you're studying."
-                style="height:100px;width:48%;padding:3px;margin:1px;font-size:11px;"
+                style="height:100px;width:48%;padding:3px;margin:1px;font-size:12px;"
                 readonly><%= @prompt.learning_language if @prompt %></textarea>
     </div>
 
     <br>
 
     <div class="card">
-      <p>Corrected text</p>
+      <div class="card__change__title">
+        <h4>Corrected text</h4>
+        <%= button_to "Delete",
+                    entry_ai_query_path(@ai_query.entry, @ai_query),
+                    method: :delete,
+                    data: { turbo_stream: true },
+                    class: "btn btn--light" %>
+      </div>
       <%= content_tag(:div, @ai_query.corrected_text) %>
 
       <% @ai_query.count_changes.times do |i| %>
         <hr> <!------------>
-        <p><%= "Change #{i + 1}" %></p>
-        <%= content_tag(:div, @ai_query.change_content(i + 1)) %>
-        <%= content_tag(:div) do %>
-          <%= "(#{@ai_query.change_explanation_en(i + 1)})" %>
-        <% end %>
+        <div class="card__change">
+          <div class="card__change__title">
+            <h4><%= "Change #{i + 1}" %></h4>
+            <%= link_to "Make note", new_entry_path, class: "btn btn--primary" %>
+          </div>
+          <div class="card__change_content">
+            <%= content_tag(:div, @ai_query.change_content(i + 1).first) %>
+            <p>↓</p>
+            <%= content_tag(:div, @ai_query.change_content(i + 1).last) %>
+            <%= content_tag(:div) do %>
+              <%= "(#{@ai_query.change_explanation(i + 1, @ai_query.prompt.abbr(@ai_query.user))})" %>
+            <% end %>
+          </div>
+        </div>
       <% end %>
       <br>
     </div>
