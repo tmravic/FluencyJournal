@@ -23,7 +23,7 @@
     <div class="card">
       <div class="card__change__title">
         <h4>Corrected text</h4>
-        <%= button_to "Delete",
+        <%= button_to "Delete AI Question",
                     journal_ai_query_path(@ai_query.journal, @ai_query),
                     method: :delete,
                     data: { turbo_stream: true },
@@ -36,7 +36,10 @@
         <div class="card__change">
           <div class="card__change__title">
             <h4><%= "Change #{i + 1}" %></h4>
-            <%= link_to "Make note", new_journal_path, class: "btn btn--primary" %>
+            <div>
+              <%= link_to "Followup", new_journal_path, class: "btn btn--secondary" %>
+              <%= link_to "Make note", new_journal_path, class: "btn btn--primary" %>
+            </div>
           </div>
           <div class="card__change_content">
             <%= content_tag(:div, @ai_query.change_content(i + 1).first) %>
