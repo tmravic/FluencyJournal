@@ -1,0 +1,29 @@
+<% content_for :title, "Journals" %>
+
+<%= turbo_stream_from current_group, "journals" %>
+
+<div class="container">
+
+  <%= turbo_frame_tag "notes_box" %>
+
+  <%= turbo_frame_tag "workspace" %>
+
+  <div class="header">
+    <h1>Journals</h1>
+
+    <%= turbo_frame_tag "close_journal_button" %>
+
+    <%= link_to "Start journal",
+                new_journal_path,
+                class: "btn btn--primary btn--primary--manage-journal",
+                data: { turbo_frame: dom_id(Journal.new) }%>
+  </div>
+
+  <%= turbo_frame_tag Journal.new do %>
+    <%= render 'journals/empty_state' unless @journals.present? %>
+  <% end %>
+
+  <%= turbo_frame_tag "journals" do %>
+    <%= render @journals %>
+  <% end %>
+</div>

@@ -7,12 +7,12 @@
 
       <div class="commit__actions">
         <%= link_to "Edit",
-                    [:edit, entry, commit], # edit_entry_commit_path(entry, commit)
+                    [:edit, journal, commit], # edit_journal_commit_path(journal, commit)
                     class: "btn btn--light" %>
         <%= button_to "Delete",
-                      [entry, commit],
+                      [journal, commit],
                       method: :delete,
-                      form: { data: { turbo_confirm: "Are you sure?" } },
+                      form: { data: { turbo_confirm: "Really delete this commit?" } },
                       class: "btn btn--light" %>
       </div>
     </div>

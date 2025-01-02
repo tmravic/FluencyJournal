@@ -7,7 +7,7 @@ class CreateAiQueries < ActiveRecord::Migration[8.0]
       t.string :type
       t.text :raw_response
       t.boolean :made_note
-      t.references :entry, foreign_key: true
+      t.references :journal, foreign_key: true
       t.references :followup, foreign_key: true
 
       t.timestamps

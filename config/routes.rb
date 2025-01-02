@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :entries do
+  resources :journals do
     member do
-      get :open_journal
+      get :open_ai_assistant
     end
     resources :commits
     resources :ai_query, only: [:show, :destroy] # look up how to shorten this route
@@ -19,8 +19,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root "pages#home"
-  get "/journal", to: "pages#journal"
-  post "ai_request", to: "entries#ai_request"
+  post "ai_request", to: "journals#ai_request"
 
   get "/up/", to: "up#index", as: :up
   get "/up/databases", to: "up#databases", as: :up_databases

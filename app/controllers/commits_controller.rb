@@ -1,6 +1,6 @@
 class CommitsController < ApplicationController
   require 'securerandom'
-  before_action :set_entry, only: %i[ new create show edit update destroy ]
+  before_action :set_journal, only: %i[ new create show edit update destroy ]
   before_action :set_commit, only: %i[ show edit update destroy ]
   before_action :get_ai_models
 
@@ -11,7 +11,7 @@ class CommitsController < ApplicationController
   # GET /commits/new
   def new
     @uuid = SecureRandom.uuid
-    @commit = @entry.commits.build
+    @commit = @journal.commits.build
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -24,11 +24,11 @@ class CommitsController < ApplicationController
 
   # POST /commits or /commits.json
   def create
-    @commit = @entry.commits.build(commit_params)
+    @commit = @journal.commits.build(commit_params)
 
     respond_to do |format|
       if @commit.save
-        format.html { redirect_to entry_path(@entry), notice: "Commit was successfully created." }
+        format.html { redirect_to journal_path(@journal), notice: "Commit was successfully created." }
         format.json { render :show, status: :created, location: @commit }
         format.turbo_stream { flash.now[:notice] = "Commit was successfully created." }
       else
@@ -42,7 +42,7 @@ class CommitsController < ApplicationController
   def update
     respond_to do |format|
       if @commit.update(commit_params)
-        format.html { redirect_to entry_path(@entry), notice: "Commit was successfully updated." }
+        format.html { redirect_to journal_path(@journal), notice: "Commit was successfully updated." }
         format.json { render :show, status: :ok, location: @commit }
         format.turbo_stream { flash.now[:notice] = "Commit was successfully updated." }
       else
@@ -57,7 +57,7 @@ class CommitsController < ApplicationController
     @commit.destroy!
 
     respond_to do |format|
-      format.html { redirect_to entry_path(@entry), status: :see_other, notice: "Commit was successfully deleted." }
+      format.html { redirect_to journal_path(@journal), status: :see_other, notice: "Commit was successfully deleted." }
       format.json { head :no_content }
       format.turbo_stream { flash.now[:notice] = "Commit was successfully deleted." }
     end
@@ -70,13 +70,13 @@ class CommitsController < ApplicationController
     @commit = Commit.find(params.expect(:id))
   end
 
-  def set_entry
-    @entry = current_group.entries.find(params[:entry_id])
+  def set_journal
+    @journal = current_group.journals.find(params[:journal_id])
   end
 
   # Only allow a list of trusted parameters through.
   def commit_params
-    params.expect(commit: [ :content, :entry_id ])
+    params.expect(commit: [ :content, :journal_id ])
   end
 
 end

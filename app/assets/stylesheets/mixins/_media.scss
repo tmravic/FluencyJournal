@@ -3,5 +3,9 @@
     @media (min-width: 50rem) {
       @content;
     }
+  } @else if $query == smallPhones {
+    @media (max-width: 25rem) {
+      @content;
+    }
   }
 }

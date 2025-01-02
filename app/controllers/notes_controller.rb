@@ -59,7 +59,7 @@ class NotesController < ApplicationController
   def update
     respond_to do |format|
       if @note.update(note_params)
-        format.html { redirect_to entries_path, notice: "Note was successfully updated." }
+        format.html { redirect_to journals_path, notice: "Note was successfully updated." }
         format.turbo_stream { flash.now[:notice] = "Note was successfully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -118,6 +118,6 @@ class NotesController < ApplicationController
   end
 
   def note_params
-    params.expect(note: [ :content, :user_id, :entry_id, :category ])
+    params.expect(note: [ :content, :user_id, :journal_id, :category ])
   end
 end

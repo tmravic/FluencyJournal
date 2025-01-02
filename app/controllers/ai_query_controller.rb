@@ -1,5 +1,5 @@
 class AiQueryController < ApplicationController
-  before_action :set_entry
+  before_action :set_journal
   before_action :set_ai_query
   before_action :set_prompt
 
@@ -20,8 +20,8 @@ class AiQueryController < ApplicationController
     @ai_query = AiQuery.find(params.expect(:id))
   end
 
-  def set_entry
-    @entry = current_group.entries.find(params.require(:entry_id))
+  def set_journal
+    @journal = current_group.journals.find(params.require(:journal_id))
   end
 
   def set_prompt

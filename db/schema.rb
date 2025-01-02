@@ -21,30 +21,20 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.string "type"
     t.text "raw_response"
     t.boolean "made_note"
-    t.bigint "entry_id"
+    t.bigint "journal_id"
     t.bigint "followup_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["entry_id"], name: "index_ai_queries_on_entry_id"
     t.index ["followup_id"], name: "index_ai_queries_on_followup_id"
+    t.index ["journal_id"], name: "index_ai_queries_on_journal_id"
   end
 
   create_table "commits", force: :cascade do |t|
     t.text "content"
-    t.bigint "entry_id", null: false
+    t.bigint "journal_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["entry_id"], name: "index_commits_on_entry_id"
-  end
-
-  create_table "entries", force: :cascade do |t|
-    t.string "title"
-    t.bigint "user_id", null: false
-    t.bigint "group_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["group_id"], name: "index_entries_on_group_id"
-    t.index ["user_id"], name: "index_entries_on_user_id"
+    t.index ["journal_id"], name: "index_commits_on_journal_id"
   end
 
   create_table "followups", force: :cascade do |t|
@@ -58,6 +48,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "journals", force: :cascade do |t|
+    t.string "title"
+    t.bigint "user_id", null: false
+    t.bigint "group_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_journals_on_group_id"
+    t.index ["user_id"], name: "index_journals_on_user_id"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -107,12 +107,12 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.index ["group_id"], name: "index_users_on_group_id"
   end
 
-  add_foreign_key "ai_queries", "entries"
   add_foreign_key "ai_queries", "followups"
-  add_foreign_key "commits", "entries"
-  add_foreign_key "entries", "groups"
-  add_foreign_key "entries", "users"
+  add_foreign_key "ai_queries", "journals"
+  add_foreign_key "commits", "journals"
   add_foreign_key "followups", "commits"
+  add_foreign_key "journals", "groups"
+  add_foreign_key "journals", "users"
   add_foreign_key "notes", "users"
   add_foreign_key "prompts", "ai_queries"
   add_foreign_key "prompts", "commits"

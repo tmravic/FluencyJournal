@@ -1,0 +1,4 @@
+<%= turbo_stream.update("close_ai_assistant_button", "")%>
+<%= turbo_stream.update("open_ai_assistant_button", partial: "commits/open_ai_assistant_button")%>
+<%= turbo_stream.update("ai_assistant", "") %>
+<%= turbo_stream.update(dom_id(@commit), "") if @commit.present? %>

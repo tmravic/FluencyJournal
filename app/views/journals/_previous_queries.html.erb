@@ -1,0 +1,7 @@
+<h4>Previous Ai Questions</h4>
+<% journal.ai_queries.each do |query| %>
+  <%= link_to "#{query.id}",
+              journal_ai_query_path(journal, query),
+              class: "btn btn--secondary",
+              data: { turbo_frame: "ai_assistant" } %>
+<% end %>

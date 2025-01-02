@@ -1,7 +1,7 @@
 <%= form_for :ai_request, url: ai_request_path, method: :post, remote: true, id: "aiRequestForm",
              data: { controller: "ai-request", action: "submit->ai-request#combineFields" } do |f| %>
 <%= f.hidden_field :uuid, value: @uuid %>
-<%= f.hidden_field :entry_id, value: @entry.id %>
+<%= f.hidden_field :journal_id, value: @journal.id %>
 <%= f.hidden_field :prompt, value: "", data: { ai_request_target: "prompt" } %>
 <div>
   <div style="display:flex;justify-content:space-evenly">

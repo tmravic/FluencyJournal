@@ -1,0 +1,31 @@
+<div class="header">
+  <h3><%= @journal.title %></h3>
+
+  <%= turbo_frame_tag "open_ai_assistant_button" %>
+  <%= turbo_frame_tag "close_ai_assistant_button" %>
+
+  <%= turbo_frame_tag "start_commit_button" do %>
+    <%= render 'commits/start_commit_button' %>
+  <% end %>
+</div>
+
+<%= turbo_frame_tag "commits" do %>
+  <% if @commits.present? %>
+    <%= render 'commits/empty_state' %>
+    <%= render @commits, journal: @journal %>
+  <% end %>
+<% end %>
+
+<%= turbo_frame_tag Commit.new do %>
+  <%= render 'commits/empty_state' unless @commits.present? %>
+<% end %>
+<hr>
+<%= turbo_frame_tag "previous_queries" do %>
+  <% if @journal.ai_queries.any? %>
+    <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
+  <% end %>
+<% end %>
+
+<br>
+<%= turbo_frame_tag "ai_assistant" %>
+<br>

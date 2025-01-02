@@ -4,7 +4,7 @@ RSpec.describe "commits/show", type: :view do
   before(:each) do
     assign(:commit, Commit.create!(
       content: "MyText",
-      entry: nil
+      journal: nil
     ))
   end
 

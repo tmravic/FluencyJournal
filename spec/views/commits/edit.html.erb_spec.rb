@@ -4,7 +4,7 @@ RSpec.describe "commits/edit", type: :view do
   let(:commit) {
     Commit.create!(
       content: "MyText",
-      entry: nil
+      journal: nil
     )
   }
 
@@ -19,7 +19,7 @@ RSpec.describe "commits/edit", type: :view do
 
       assert_select "textarea[name=?]", "commit[content]"
 
-      assert_select "input[name=?]", "commit[entry_id]"
+      assert_select "input[name=?]", "commit[journal_id]"
     end
   end
 end

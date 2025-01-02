@@ -1,14 +1,14 @@
 jp:
   simple_form:
     placeholders:
-      entry:
+      journal:
         title: 記入の題名
     labels:
-      entry:
+      journal:
         title: 題名
 
   helpers:
     submit:
-      entry:
+      journal:
         create: 記入を始める
         update: 題名を変更

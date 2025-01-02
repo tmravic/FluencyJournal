@@ -1,2 +1,2 @@
-<%= turbo_stream.update "previous_queries", partial: "entries/previous_queries", locals: { entry: @entry } %>
-<%= turbo_stream.update "journal", partial:  "commits/journal" %>
+<%= turbo_stream.update "previous_queries", partial: "journals/previous_queries", locals: { journal: @journal } %>
+<%= turbo_stream.update "ai_assistant", partial:  "commits/ai_assistant" %>

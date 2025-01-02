@@ -1,13 +1,13 @@
 <% content_for :title, "Editing commit" %>
 
 <main class="container">
-  <%= link_to sanitize("&larr; Back to entry"), entry_path(@entry) %>
+  <%= link_to sanitize("&larr; Back to journal"), journal_path(@journal) %>
 
   <div class="header">
     <h1>Edit commit</h1>
   </div>
 
   <%= turbo_frame_tag @commit do %>
-    <%= render "form", entry: @entry, commit: @commit %>
+    <%= render "form", journal: @journal, commit: @commit %>
   <% end %>
 </main>

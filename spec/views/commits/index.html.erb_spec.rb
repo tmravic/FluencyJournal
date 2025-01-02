@@ -5,11 +5,11 @@ RSpec.describe "commits/index", type: :view do
     assign(:commits, [
       Commit.create!(
         content: "MyText",
-        entry: nil
+        journal: nil
       ),
       Commit.create!(
         content: "MyText",
-        entry: nil
+        journal: nil
       )
     ])
   end

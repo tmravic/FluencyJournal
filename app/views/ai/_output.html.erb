@@ -13,7 +13,7 @@
         <div class="card__change__title">
           <h4><%= "Change #{i + 1}" %></h4>
           <% unless jq.made_note == true %>
-            <%= link_to "Make note", new_entry_path, class: "btn btn--primary" %>
+            <%= link_to "Make note", new_journal_path, class: "btn btn--primary" %>
           <% end %>
         </div>
         <div class="card__change_content">

@@ -1,17 +1,17 @@
 en:
   simple_form:
     placeholders:
-      entry:
-        title: Title of your entry
+      journal:
+        title: Title of your journal
     labels:
-      entry:
+      journal:
         title: Title
       commit:
         content: Content
 
   helpers:
     submit:
-      entry:
+      journal:
         create: Start writing
         update: Change title
       commit:

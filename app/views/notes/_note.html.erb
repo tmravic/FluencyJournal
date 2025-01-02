@@ -27,7 +27,7 @@
         <%= button_to "Delete",
                       note_path(note, delete_from_todays_notes: @todays_notes.present?),
                       method: :delete,
-                      form: { data: { turbo_confirm: "Are you sure?" } },
+                      form: { data: { turbo_confirm: "Really delete this note?" } },
                       class: "btn btn--light" %>
       </div>
     </div>

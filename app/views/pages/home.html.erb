@@ -3,7 +3,7 @@
   <p>Your AI-powered foreign-language daily diary</p>
   <div style="margin: 10px 0;">
     <% if Current.user.present? %>
-      <%= link_to "View entries", entries_path, class: "btn btn--dark" %>
+      <%= link_to "View journals", journals_path, class: "btn btn--dark" %>
     <% else %>
       <%= link_to "Sign in", new_session_path, class: "btn btn--dark" %>
     <% end %>

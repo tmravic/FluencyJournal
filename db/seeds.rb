@@ -34,27 +34,27 @@ end
 user1 = User.find_by(email_address: 'taylor@kpmg.com')
 user2 = User.find_by(email_address: 'admin@admin.com')
 
-entries = [
+journals = [
   { title: 'ニキータさん', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
   { title: 'title2', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
   { title: 'title3', user_id: user2.id, group: Group.find_by(name: "EnglishGroup") },
   { title: 'title4', user_id: user2.id, group: Group.find_by(name: "EnglishGroup") }
 ]
-entries.each do |entry_attrs|
-  Entry.find_or_create_by(title: entry_attrs[:title], user_id: entry_attrs[:user_id]) do |entry|
-    entry.group = entry_attrs[:group]
+journals.each do |journal_attrs|
+  Journal.find_or_create_by(title: journal_attrs[:title], user_id: journal_attrs[:user_id]) do |journal|
+    journal.group = journal_attrs[:group]
   end
 end
 
 commits = [
-  { entry_id: Entry.find_by(title: 'ニキータさん').id, content: "先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。" },
-  { entry_id: Entry.find_by(title: 'ニキータさん').id, content: "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。" },
-  { entry_id: Entry.find_by(title: 'ニキータさん').id, content: "私は彼女の人生にいる他の男性と競争できない気がした。" },
-  { entry_id: Entry.find_by(title: 'ニキータさん').id, content: "話し終わった後は空虚な気持ちになった。" },
-  { entry_id: Entry.find_by(title: 'title2').id, content: "commit content 2" }
+  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。" },
+  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。" },
+  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "私は彼女の人生にいる他の男性と競争できない気がした。" },
+  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "話し終わった後は空虚な気持ちになった。" },
+  { journal_id: Journal.find_by(title: 'title2').id, content: "commit content 2" }
 ]
 commits.each do |commit_attrs|
-  Commit.find_or_create_by(entry_id: commit_attrs[:entry_id], content: commit_attrs[:content])
+  Commit.find_or_create_by(journal_id: commit_attrs[:journal_id], content: commit_attrs[:content])
 end
 
 # user1.notes.create(content: '312 hours ago', category: 3, next_study_date: DateTime.now - 312.hours)

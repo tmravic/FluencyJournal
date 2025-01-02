@@ -12,4 +12,11 @@
   @include components.media(tabletAndUp) {
     margin-bottom: var(--space-xl);
   }
+
+  @include components.media(smallPhones) {
+    flex-wrap: nowrap;
+    h1 {
+      font-size: var(--space-l);
+    }
+  }
 }

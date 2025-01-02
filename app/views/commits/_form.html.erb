@@ -1,12 +1,12 @@
 <!--Commit form-->
 
-<%= simple_form_for [entry, commit], html: { class: "form commit" } do |f| %>
+<%= simple_form_for [journal, commit], html: { class: "form commit" } do |f| %>
   <%= form_error_notification(commit) %>
 
   <%= f.input :content, html5: true, placeholder: "Write your journal here one small piece at a time.", style: "font-size:11px;" %>
 
   <div class="form__input__button_block">
-    <%= link_to "Cancel", entry_path(entry), class: "btn btn--light" %>
+    <%= link_to "Cancel", journal_path(journal), class: "btn btn--light" %>
     <%= f.submit class: "btn btn--secondary", name: nil %>
   </div>
 <% end %>

@@ -4,7 +4,7 @@ RSpec.describe "commits/new", type: :view do
   before(:each) do
     assign(:commit, Commit.new(
       content: "MyText",
-      entry: nil
+      journal: nil
     ))
   end
 
@@ -15,7 +15,7 @@ RSpec.describe "commits/new", type: :view do
 
       assert_select "textarea[name=?]", "commit[content]"
 
-      assert_select "input[name=?]", "commit[entry_id]"
+      assert_select "input[name=?]", "commit[journal_id]"
     end
   end
 end
