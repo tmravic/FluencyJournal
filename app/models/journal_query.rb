@@ -31,11 +31,14 @@ class JournalQuery < AiQuery
   end
 
   def change_content(num)
-    parsed_response.fetch("change_#{num}", error_message).fetch("content").split('→')
+    result = parsed_response.fetch("change_#{num}", error_message).fetch("content", error_message)
+    return result.split('→') unless result == error_message
+
+    error_message
   end
 
   def change_explanation(num, abbr)
-    parsed_response.fetch("change_#{num}", error_message).fetch("explanation_#{abbr}")
+    parsed_response.fetch("change_#{num}", error_message).fetch("explanation_#{abbr}", error_message)
   end
 
   def corrected_text

@@ -37,17 +37,28 @@
           <div class="card__change__title">
             <h4><%= "Change #{i + 1}" %></h4>
             <div>
-              <%= link_to "Followup", new_journal_path, class: "btn btn--secondary" %>
-              <%= link_to "Make note", new_journal_path, class: "btn btn--primary" %>
+              <%= link_to "Followup",
+                          new_journal_path,
+                          class: "btn btn--secondary" %>
+              <%= turbo_frame_tag "make_note_button" do %>
+                <% unless @ai_query.made_note %>
+                  <%= link_to "Make note",
+                              new_automatic_notes_path(
+                                ai_query_id: @ai_query.id,
+                                change_content_number: i
+                              ),
+                              class: "btn btn--primary",
+                              data: {
+                                turbo_stream: true,
+                                controller: "scroll",
+                                action: "click->scroll#scrollToTop"
+                              } %>
+                <% end %>
+              <% end %>
             </div>
           </div>
           <div class="card__change_content">
-            <%= content_tag(:div, @ai_query.change_content(i + 1).first) %>
-            <p>↓</p>
-            <%= content_tag(:div, @ai_query.change_content(i + 1).last) %>
-            <%= content_tag(:div) do %>
-              <%= "(#{@ai_query.change_explanation(i + 1, @ai_query.prompt.abbr(@ai_query.user))})" %>
-            <% end %>
+            <%= render_ai_query_change_content(@ai_query, i, html: true) %>
           </div>
         </div>
       <% end %>

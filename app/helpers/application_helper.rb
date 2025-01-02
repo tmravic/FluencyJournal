@@ -10,4 +10,21 @@ module ApplicationHelper
       end
     end
   end
+
+  def render_ai_query_change_content(ai_query, index, html: false)
+    content_first = ai_query.change_content(index + 1).first
+    content_last = ai_query.change_content(index + 1).last
+    explanation = ai_query.change_explanation(index + 1, ai_query.abbr(ai_query.user))
+
+    if html
+      content_tag(:div) do
+        concat content_tag(:div, content_first)
+        concat tag.p("↓")
+        concat content_tag(:div, content_last)
+        concat content_tag(:div, "(#{explanation})")
+      end
+    else
+      "#{content_first}\n→\n#{content_last}\n\n(#{explanation})"
+    end
+  end
 end

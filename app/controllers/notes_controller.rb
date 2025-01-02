@@ -22,15 +22,28 @@ class NotesController < ApplicationController
     @view_context = params[:view_context]
   end
 
+  def new_automatic
+    @change_content_number = (params[:change_content_number].to_i)
+    @note = Note.new
+    @view_context = params[:view_context]
+    @ai_query = AiQuery.find(params[:ai_query_id])
+    respond_to do |format|
+      format.html
+      format.turbo_stream { flash.now[:notice] = "You can customize this automatically created note before saving it." }
+    end
+  end
+
   def create
     @note = Current.user.notes.build(note_params)
     @note.next_study_date = DateTime.now
+    @ai_query = AiQuery.find(params[:ai_query_id]) if params[:ai_query_id]
     header_partial = get_header_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
     previous_note = @note.previous_note
 
     respond_to do |format|
       if @note.save
+        @ai_query.update(made_note: true) if @ai_query
         format.html { redirect_to note_path(@note), notice: "Note was successfully created." }
         format.turbo_stream do
           flash.now[:notice] = "Note was added to the end of today's study queue."
@@ -118,6 +131,6 @@ class NotesController < ApplicationController
   end
 
   def note_params
-    params.expect(note: [ :content, :user_id, :journal_id, :category ])
+    params.expect(note: [ :content, :user_id, :journal_id, :category, :ai_query_id ])
   end
 end

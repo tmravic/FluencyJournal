@@ -1,7 +1,9 @@
 <div class="header">
   <h3><%= @journal.title %></h3>
 
-  <%= turbo_frame_tag "open_ai_assistant_button" %>
+  <%= turbo_frame_tag "open_ai_assistant_button" do %>
+    <%= render "entries/open_ai_assistant_button" %>
+  <% end %>
   <%= turbo_frame_tag "close_ai_assistant_button" %>
 
   <%= turbo_frame_tag "start_entry_button" do %>

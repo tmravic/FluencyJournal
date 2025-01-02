@@ -1,0 +1,22 @@
+<% locals = { automatic: true,
+              note: @note,
+              ai_query_id: @ai_query_id,
+              change_content_number: @change_content_number,
+              view_context: "todays_notes" } %>
+
+<%= turbo_stream.update "notes_box" do %>
+  <div class="notes_box_scroll">
+    <%= turbo_frame_tag Note.new %>
+    <%= turbo_frame_tag "note_header" %>
+    <% @todays_notes = Current.user&.notes.next_to_study %>
+    <%= turbo_frame_tag "notes" do %>
+      <% if @todays_notes.present? %>
+        <%= render @todays_notes %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+<%= turbo_stream.update "new_note" do %>
+  <%= render partial: "notes/form", locals: locals %>
+<% end %>
+<%= render_turbo_stream_flash_messages %>

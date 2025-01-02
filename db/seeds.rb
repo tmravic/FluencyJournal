@@ -51,7 +51,7 @@ entries = [
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "私は彼女の人生にいる他の男性と競争できない気がした。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "話し終わった後は空虚な気持ちになった。" },
-  { journal_id: Journal.find_by(title: 'title2').id, content: "Entry content 2" }
+  { journal_id: Journal.find_by(title: 'お寺').id, content: "お寺に祈りに行って、「好きな女の子が私の彼女になりますように」とお願いしました。" }
 ]
 entries.each do |entry_attrs|
   Entry.find_or_create_by(journal_id: entry_attrs[:journal_id], content: entry_attrs[:content])

@@ -12,10 +12,13 @@ class JournalsController < ApplicationController
 
   # GET /journals/1 or /journals/1.json
   def show
+    cancel = params["cancel"]
     @entries = @journal.entries.ordered
     respond_to do |format|
-      format.html # Renders the default HTML view for regular requests
-      format.turbo_stream
+      format.html
+      format.turbo_stream do
+        render "journals/show", locals: { cancel: cancel }
+      end
     end
   end
 

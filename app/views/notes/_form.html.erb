@@ -1,12 +1,26 @@
 <%= simple_form_for note, html: { class: "note form" }, data: { turbo: true } do |f| %>
   <%= form_error_notification(note) %>
 
-  <%= f.input :content, input_html: { autofocus: true } %>
+  <% if automatic %>
+    <%= f.input :content, input_html: {
+      value: render_ai_query_change_content(@ai_query, @change_content_number),
+      style: "height: 20vh;"
+    } %>
+    <%= hidden_field_tag :made_note_from_ai_question, true %>
+    <%= hidden_field_tag :ai_query_id, @ai_query.id %>
+  <% else %>
+    <%= f.input :content %>
+  <% end %>
 
   <%= hidden_field_tag :view_context, view_context if local_assigns[:view_context] %>
 
   <div class="form__input__button_block">
-    <%= f.select :category, hide_automatic_notes_option %>
+    <% if automatic %>
+      <%= f.select :category, Note.categories.keys.map { |key| [ key.humanize, key ] },
+                   { selected: 'automatic' } %>
+    <% else %>
+      <%= f.select :category, hide_automatic_notes_option %>
+    <% end %>
     <%= link_to "Cancel", notes_path, class: "btn btn--light" %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>

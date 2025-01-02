@@ -7,6 +7,6 @@
   </div>
 
   <%= turbo_frame_tag @note do %>
-    <%= render "form", note: @note, view_context: @view_context %>
+    <%= render "form", note: @note, view_context: @view_context, automatic: false %>
   <% end %>
 </div>

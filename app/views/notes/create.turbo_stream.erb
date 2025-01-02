@@ -11,4 +11,5 @@
   <%= turbo_stream.append "notes", @note %>
 <% end %>
 <%= turbo_stream.update "note_header", partial: header_partial %>
+<%= turbo_stream.update "make_note_button", ""  if @ai_query&.made_note %>
 <%= render_turbo_stream_flash_messages %>

@@ -14,8 +14,20 @@
           <h4><%= "Change #{i + 1}" %></h4>
           <% unless jq.made_note == true %>
             <div>
-              <%= link_to "Followup", new_journal_path, class: "btn btn--secondary" %>
-              <%= link_to "Make note", new_journal_path, class: "btn btn--primary" %>
+              <%= link_to "Followup",
+                          new_journal_path,
+                          class: "btn btn--secondary" %>
+              <%= link_to "Make note",
+                          new_automatic_notes_path(
+                            ai_query_id: jq.id,
+                            change_content_number: i
+                          ),
+                          class: "btn btn--primary",
+                          data: {
+                            turbo_stream: true,
+                            controller: "scroll",
+                            action: "click->scroll#scrollToTop"
+                          } %>
             </div>
           <% end %>
         </div>
@@ -24,7 +36,7 @@
           <p>↓</p>
           <%= content_tag(:div, jq.change_content(i + 1).last) %>
           <%= content_tag(:div) do %>
-            <%= "(#{jq.change_explanation(i + 1, jq.prompt.abbr(jq.user))})" %>
+            <%= "(#{jq.change_explanation(i + 1, jq.abbr(jq.user))})" %>
           <% end %>
         </div>
       </div>

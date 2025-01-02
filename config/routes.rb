@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :notes do
     collection do
       get :all
+      get :new_automatic, as: :new_automatic
     end
     member do
       post :mark_note_as_studied
