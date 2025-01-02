@@ -3,10 +3,11 @@
 
   <%= f.input :content, input_html: { autofocus: true } %>
 
+  <%= hidden_field_tag :view_context, view_context if local_assigns[:view_context] %>
+
   <div class="form__input__button_block">
-    <%= f.select :category, reject_automatic_notes %>
+    <%= f.select :category, hide_automatic_notes_option %>
     <%= link_to "Cancel", notes_path, class: "btn btn--light" %>
-    <%#= if @entry %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>
 <% end %>

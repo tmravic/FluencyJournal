@@ -64,6 +64,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.bigint "user_id", null: false
     t.text "content"
     t.integer "category", default: 0, null: false
+    t.integer "last_interval", default: 1, null: false
     t.datetime "next_study_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

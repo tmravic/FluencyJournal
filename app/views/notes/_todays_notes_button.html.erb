@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "todays_notes_button" do %>
+  <%= link_to "Due today",
+              notes_path,
+              class: "btn btn--secondary",
+              data: { turbo_frame: "notes_box" } %>
+<% end %>

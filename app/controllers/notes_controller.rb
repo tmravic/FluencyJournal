@@ -1,9 +1,16 @@
 class NotesController < ApplicationController
-  before_action :set_note, only: %i[ show edit update destroy ]
+  before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied ]
 
   def index
-    @notes = Current.user&.notes.order(:next_study_date)
-    # next_study_date = note from journals 1, 3, 7, etc in sequence of 2.5 rounded up
+    @todays_notes = Current.user&.notes.next_to_study
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
+  def all
+    @all_notes = Current.user&.notes.order(:next_study_date)
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -12,16 +19,27 @@ class NotesController < ApplicationController
 
   def new
     @note = Note.new
+    @view_context = params[:view_context]
   end
 
   def create
     @note = Current.user.notes.build(note_params)
-    @note.next_study_date = DateTime.now + 1.days
+    @note.next_study_date = DateTime.now
+    header_partial = get_header_from_view_context(params[:view_context])
+    collection = get_collection_from_view_context(params[:view_context])
+    previous_note = @note.previous_note
 
     respond_to do |format|
       if @note.save
         format.html { redirect_to note_path(@note), notice: "Note was successfully created." }
-        format.turbo_stream { flash.now[:notice] = "Note was successfully created." }
+        format.turbo_stream do
+          flash.now[:notice] = "Note was added to the end of today's study queue."
+          render "notes/create", locals: {
+            header_partial: header_partial,
+            collection: collection,
+            previous_note: previous_note
+          }
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -51,14 +69,49 @@ class NotesController < ApplicationController
 
   def destroy
     @note.destroy!
+    delete_from_todays_notes = params[:delete_from_todays_notes]
 
     respond_to do |format|
-      format.html { redirect_to notes_path, status: :see_other, notice: "Note was successfully destroyed." }
-      format.turbo_stream { flash.now[:notice] = "Note was successfully destroyed." }
+      format.html { redirect_to notes_path, status: :see_other, notice: "Note was successfully deleted." }
+      format.turbo_stream do
+        flash.now[:notice] = "Note was successfully deleted."
+        render "notes/destroy", locals: { delete_from_todays_notes: delete_from_todays_notes }
+      end
+    end
+  end
+
+  def mark_note_as_studied
+    new_interval = @note.last_interval * 2.5
+    next_study_date = (new_interval).days.from_now
+    notice = "Note will return on #{next_study_date.strftime("%m/%d/%Y")}"
+
+    respond_to do |format|
+      if @note.update(next_study_date: next_study_date, last_interval: new_interval)
+        format.html { redirect_to note_path(@note), notice: notice }
+        format.turbo_stream do
+          flash.now[:notice] = notice
+        end
+      end
     end
   end
 
   private
+
+  def get_header_from_view_context(view_context)
+    if view_context == 'todays_notes'
+      'notes/notes_header_todays'
+    elsif view_context == 'all_notes'
+      'notes/notes_header_all'
+    end
+  end
+
+  def get_collection_from_view_context(view_context)
+    if view_context == 'todays_notes'
+      @todays_notes = Current.user&.notes.next_to_study
+    elsif view_context == 'all_notes'
+      @all_notes = Current.user&.notes.order(:next_study_date)
+    end
+  end
 
   def set_note
     @note = Current.user.notes.find(params.expect(:id))

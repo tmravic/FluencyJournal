@@ -67,9 +67,9 @@ class EntriesController < ApplicationController
 
     respond_to do |format|
       # flash[:notice] = "..."
-      format.html { redirect_to entries_path, status: :see_other, notice: "Entry was successfully destroyed." }
+      format.html { redirect_to entries_path, status: :see_other, notice: "Entry was successfully deleted." }
       format.json { head :no_content }
-      format.turbo_stream { flash.now[:notice] = "Entry was successfully destroyed." }
+      format.turbo_stream { flash.now[:notice] = "Entry was successfully deleted." }
     end
   end
 

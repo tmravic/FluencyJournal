@@ -1,9 +1,21 @@
 <%= turbo_frame_tag note do %>
   <div class="note">
     <div class="note__header">
-      <h5><%= note.category %> note</h5> <span><%= note.next_study_date.strftime("%Y/%m/%d") %></span>
+      <h5><%= note.category %></h5>
 
       <div class="note__actions">
+
+        <% if @todays_notes.present? %>
+          <%= button_to "Studied",
+                        mark_note_as_studied_note_path(note),
+                        form: { data: { turbo_confirm: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?" } },
+                        class: "btn btn--light" %>
+        <% else %>
+          <span style="display:flex;align-items:center">
+            Next review: <%= note.next_study_date.strftime("%m/%d/%Y") %>
+          </span>
+        <% end %>
+
         <%= link_to "Followup",
                     edit_note_path(note),
                     class: "btn btn--light" %>
@@ -11,8 +23,9 @@
         <%= link_to "Edit",
                     edit_note_path(note),
                     class: "btn btn--light" %>
+
         <%= button_to "Delete",
-                      note_path(note),
+                      note_path(note, delete_from_todays_notes: @todays_notes.present?),
                       method: :delete,
                       form: { data: { turbo_confirm: "Are you sure?" } },
                       class: "btn btn--light" %>

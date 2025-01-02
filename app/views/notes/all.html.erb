@@ -1,0 +1,22 @@
+<div class="container">
+  <%= turbo_frame_tag "notes_box" do %>
+    <div class="notes_box_scroll">
+
+      <%= turbo_frame_tag Note.new, locals: { view_context: "all_notes" } do %>
+        <%= render "notes/empty_state" unless @all_notes.present? %>
+      <% end %>
+
+      <%= turbo_frame_tag "note_header" do %>
+        <%= render "notes/notes_header_all" if @all_notes.present? %>
+      <% end %>
+
+      <%= turbo_frame_tag "notes" do %>
+
+        <% if @all_notes.present? %>
+          <%= render @all_notes %>
+        <% end %>
+
+      <% end %>
+    </div>
+  <% end %>
+</div>
