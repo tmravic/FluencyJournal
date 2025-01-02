@@ -4,20 +4,20 @@
   <%= turbo_frame_tag "open_ai_assistant_button" %>
   <%= turbo_frame_tag "close_ai_assistant_button" %>
 
-  <%= turbo_frame_tag "start_commit_button" do %>
-    <%= render 'commits/start_commit_button' %>
+  <%= turbo_frame_tag "start_entry_button" do %>
+    <%= render 'entries/start_entry_button' %>
   <% end %>
 </div>
 
-<%= turbo_frame_tag "commits" do %>
-  <% if @commits.present? %>
-    <%= render 'commits/empty_state' %>
-    <%= render @commits, journal: @journal %>
+<%= turbo_frame_tag "entries" do %>
+  <% if @entries.present? %>
+    <%= render 'entries/empty_state' %>
+    <%= render @entries, journal: @journal %>
   <% end %>
 <% end %>
 
-<%= turbo_frame_tag Commit.new do %>
-  <%= render 'commits/empty_state' unless @commits.present? %>
+<%= turbo_frame_tag Entry.new do %>
+  <%= render 'entries/empty_state' unless @entries.present? %>
 <% end %>
 <hr>
 <%= turbo_frame_tag "previous_queries" do %>

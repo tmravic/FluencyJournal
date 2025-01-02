@@ -12,10 +12,10 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/commits", type: :request do
+RSpec.describe "/entries", type: :request do
   
   # This should return the minimal set of attributes required to create a valid
-  # Commit. As you add validations to Commit, be sure to
+  # Entry. As you add validations to Entry, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -27,58 +27,58 @@ RSpec.describe "/commits", type: :request do
 
   describe "GET /index" do
     it "renders a successful response" do
-      Commit.create! valid_attributes
-      get commits_url
+      Entry.create! valid_attributes
+      get entrys_url
       expect(response).to be_successful
     end
   end
 
   describe "GET /show" do
     it "renders a successful response" do
-      commit = Commit.create! valid_attributes
-      get commit_url(commit)
+      entry = Entry.create! valid_attributes
+      get entry_url(entry)
       expect(response).to be_successful
     end
   end
 
   describe "GET /new" do
     it "renders a successful response" do
-      get new_commit_url
+      get new_entry_url
       expect(response).to be_successful
     end
   end
 
   describe "GET /edit" do
     it "renders a successful response" do
-      commit = Commit.create! valid_attributes
-      get edit_commit_url(commit)
+      entry = Entry.create! valid_attributes
+      get edit_entry_url(entry)
       expect(response).to be_successful
     end
   end
 
   describe "POST /create" do
     context "with valid parameters" do
-      it "creates a new Commit" do
+      it "creates a new Entry" do
         expect {
-          post commits_url, params: { commit: valid_attributes }
-        }.to change(Commit, :count).by(1)
+          post entrys_url, params: { entry: valid_attributes }
+        }.to change(Entry, :count).by(1)
       end
 
-      it "redirects to the created commit" do
-        post commits_url, params: { commit: valid_attributes }
-        expect(response).to redirect_to(commit_url(Commit.last))
+      it "redirects to the created entry" do
+        post entrys_url, params: { entry: valid_attributes }
+        expect(response).to redirect_to(entry_url(Entry.last))
       end
     end
 
     context "with invalid parameters" do
-      it "does not create a new Commit" do
+      it "does not create a new Entry" do
         expect {
-          post commits_url, params: { commit: invalid_attributes }
-        }.to change(Commit, :count).by(0)
+          post entrys_url, params: { entry: invalid_attributes }
+        }.to change(Entry, :count).by(0)
       end
 
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
-        post commits_url, params: { commit: invalid_attributes }
+        post entrys_url, params: { entry: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -90,42 +90,42 @@ RSpec.describe "/commits", type: :request do
         skip("Add a hash of attributes valid for your model")
       }
 
-      it "updates the requested commit" do
-        commit = Commit.create! valid_attributes
-        patch commit_url(commit), params: { commit: new_attributes }
-        commit.reload
+      it "updates the requested entry" do
+        entry = Entry.create! valid_attributes
+        patch entry_url(entry), params: { entry: new_attributes }
+        entry.reload
         skip("Add assertions for updated state")
       end
 
-      it "redirects to the commit" do
-        commit = Commit.create! valid_attributes
-        patch commit_url(commit), params: { commit: new_attributes }
-        commit.reload
-        expect(response).to redirect_to(commit_url(commit))
+      it "redirects to the entry" do
+        entry = Entry.create! valid_attributes
+        patch entry_url(entry), params: { entry: new_attributes }
+        entry.reload
+        expect(response).to redirect_to(entry_url(entry))
       end
     end
 
     context "with invalid parameters" do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
-        commit = Commit.create! valid_attributes
-        patch commit_url(commit), params: { commit: invalid_attributes }
+        entry = Entry.create! valid_attributes
+        patch entry_url(entry), params: { entry: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
 
   describe "DELETE /destroy" do
-    it "destroys the requested commit" do
-      commit = Commit.create! valid_attributes
+    it "destroys the requested entry" do
+      entry = Entry.create! valid_attributes
       expect {
-        delete commit_url(commit)
-      }.to change(Commit, :count).by(-1)
+        delete entry_url(entry)
+      }.to change(Entry, :count).by(-1)
     end
 
-    it "redirects to the commits list" do
-      commit = Commit.create! valid_attributes
-      delete commit_url(commit)
-      expect(response).to redirect_to(commits_url)
+    it "redirects to the entries list" do
+      entry = Entry.create! valid_attributes
+      delete entry_url(entry)
+      expect(response).to redirect_to(entrys_url)
     end
   end
 end

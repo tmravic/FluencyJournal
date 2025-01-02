@@ -29,19 +29,19 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.index ["journal_id"], name: "index_ai_queries_on_journal_id"
   end
 
-  create_table "commits", force: :cascade do |t|
+  create_table "entries", force: :cascade do |t|
     t.text "content"
     t.bigint "journal_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["journal_id"], name: "index_commits_on_journal_id"
+    t.index ["journal_id"], name: "index_entries_on_journal_id"
   end
 
   create_table "followups", force: :cascade do |t|
-    t.bigint "commit_id", null: false
+    t.bigint "entries_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["commit_id"], name: "index_followups_on_commit_id"
+    t.index ["entries_id"], name: "index_followups_on_entries_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -73,7 +73,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
 
   create_table "prompts", force: :cascade do |t|
     t.bigint "ai_query_id"
-    t.bigint "commit_id"
+    t.bigint "entries_id"
     t.bigint "followup_id"
     t.text "raw_prompt"
     t.string "type"
@@ -82,7 +82,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ai_query_id"], name: "index_prompts_on_ai_query_id"
-    t.index ["commit_id"], name: "index_prompts_on_commit_id"
+    t.index ["entries_id"], name: "index_prompts_on_entries_id"
     t.index ["followup_id"], name: "index_prompts_on_followup_id"
   end
 
@@ -109,13 +109,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
 
   add_foreign_key "ai_queries", "followups"
   add_foreign_key "ai_queries", "journals"
-  add_foreign_key "commits", "journals"
-  add_foreign_key "followups", "commits"
+  add_foreign_key "entries", "journals"
+  add_foreign_key "followups", "entries", column: "entries_id"
   add_foreign_key "journals", "groups"
   add_foreign_key "journals", "users"
   add_foreign_key "notes", "users"
   add_foreign_key "prompts", "ai_queries"
-  add_foreign_key "prompts", "commits"
+  add_foreign_key "prompts", "entries", column: "entries_id"
   add_foreign_key "prompts", "followups"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "groups"

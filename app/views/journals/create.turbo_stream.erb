@@ -2,5 +2,5 @@
 <%= turbo_stream.update Journal.new, "" %>
 <%= turbo_stream.update "workspace", partial: "journals/journal_content", locals: { journal: @journal } %>
 <%= turbo_stream.update "close_journal_button", partial: "journals/close_journal_button" %>
-<%= turbo_stream.update "open_ai_assistant_button", partial: "commits/open_ai_assistant_button" %>
+<%= turbo_stream.update "open_ai_assistant_button", partial: "entries/open_ai_assistant_button" %>
 <%= render_turbo_stream_flash_messages %>

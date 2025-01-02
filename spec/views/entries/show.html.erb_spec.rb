@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "commits/show", type: :view do
+RSpec.describe "entries/show", type: :view do
   before(:each) do
-    assign(:commit, Commit.create!(
+    assign(:entry, Entry.create!(
       content: "MyText",
       journal: nil
     ))

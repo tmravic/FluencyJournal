@@ -1,0 +1,5 @@
+<%= turbo_stream.update "ai_assistant", partial: "entries/ai_assistant" %>
+<%= turbo_stream.update "open_ai_assistant_button", "" %>
+<%= turbo_stream.update "close_ai_assistant_button", partial: "entries/close_ai_assistant_button" %>
+<%= turbo_stream.update "start_entry_button", "" %>
+<%= turbo_stream.update "new_entry", partial: "entries/form", locals: { entry: @entry, journal: @journal } %>

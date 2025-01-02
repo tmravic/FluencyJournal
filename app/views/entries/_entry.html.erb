@@ -1,0 +1,24 @@
+<%= turbo_frame_tag entry do %>
+  <div class="entry">
+    <div class="entry__header">
+      <h2 class="entry__title">
+        Entry <%= entry.entry_number %>
+      </h2>
+
+      <div class="entry__actions">
+        <%= link_to "Followup",
+                    [:edit, journal, entry],
+                    class: "btn btn--light" %>
+        <%= link_to "Edit",
+                    [:edit, journal, entry], # edit_journal_entry_path(journal, entry)
+                    class: "btn btn--light" %>
+        <%= button_to "Delete",
+                      [journal, entry],
+                      method: :delete,
+                      form: { data: { turbo_confirm: "Really delete this entry?" } },
+                      class: "btn btn--light" %>
+      </div>
+    </div>
+    <p><%= entry.content %></p>
+  </div>
+<% end %>

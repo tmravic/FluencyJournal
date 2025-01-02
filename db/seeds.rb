@@ -46,15 +46,15 @@ journals.each do |journal_attrs|
   end
 end
 
-commits = [
+entries = [
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "私は彼女の人生にいる他の男性と競争できない気がした。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "話し終わった後は空虚な気持ちになった。" },
-  { journal_id: Journal.find_by(title: 'title2').id, content: "commit content 2" }
+  { journal_id: Journal.find_by(title: 'title2').id, content: "Entry content 2" }
 ]
-commits.each do |commit_attrs|
-  Commit.find_or_create_by(journal_id: commit_attrs[:journal_id], content: commit_attrs[:content])
+entries.each do |entry_attrs|
+  Entry.find_or_create_by(journal_id: entry_attrs[:journal_id], content: entry_attrs[:content])
 end
 
 # user1.notes.create(content: '312 hours ago', category: 3, next_study_date: DateTime.now - 312.hours)

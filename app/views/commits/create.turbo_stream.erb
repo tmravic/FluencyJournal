@@ -1,4 +1,0 @@
-<%= turbo_stream.update Commit.new, "" %>
-<%= turbo_stream.update "start_commit_button", partial: 'commits/start_commit_button' %>
-<%= turbo_stream.append "commits", partial: "commits/commit", locals: { commit: @commit, journal: @journal } %>
-<%= render_turbo_stream_flash_messages %>

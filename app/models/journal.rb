@@ -1,7 +1,7 @@
 class Journal < ApplicationRecord
   belongs_to :user
   belongs_to :group
-  has_many :commits, dependent: :destroy
+  has_many :entries, dependent: :destroy
   has_many :ai_queries, dependent: :destroy
 
   validates :title, presence: true

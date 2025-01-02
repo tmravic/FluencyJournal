@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     member do
       get :open_ai_assistant
     end
-    resources :commits
+    resources :entries
     resources :ai_query, only: [:show, :destroy] # look up how to shorten this route
   end
   resources :notes do

@@ -12,8 +12,8 @@ class AiRequestJob < ApplicationJob
     journal = Journal.find(ai_request_params['journal_id'])
     user = journal.user
 
-    # make a new CommitPrompt using the ai_request_params as raw_content
-    commit_prompt = CommitPrompt.create(
+    # make a new EntryPrompt using the ai_request_params as raw_content
+    entry_prompt = EntryPrompt.create(
       raw_prompt: ai_request_params["prompt"],
       ai_model: ai_request_params["ai_model"],
       uuid: ai_request_params["uuid"]
@@ -27,12 +27,12 @@ class AiRequestJob < ApplicationJob
       req.headers['Content-Type'] = 'application/json'
       req.headers['Authorization'] = "Bearer #{api_key}"
       req.body = {
-        model: commit_prompt.ai_model,
+        model: entry_prompt.ai_model,
         response_format: { type: "json_object" },
         messages: [
           {
             role: 'system',
-            content: commit_prompt.system_prompt(user)
+            content: entry_prompt.system_prompt(user)
           },
           {
             role: 'user',
@@ -40,7 +40,7 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: commit_prompt.response_format(user)
+            content: entry_prompt.response_format(user)
           }
         ],
       }.to_json
@@ -101,7 +101,7 @@ class AiRequestJob < ApplicationJob
       raw_response: response_from_open_ai
     )
 
-    journal_query.prompt = commit_prompt
+    journal_query.prompt = entry_prompt
     journal_query.journal = journal
     journal_query.save!
 

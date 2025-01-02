@@ -1,6 +1,6 @@
-class CreateCommits < ActiveRecord::Migration[8.0]
+class CreateEntries < ActiveRecord::Migration[8.0]
   def change
-    create_table :commits do |t|
+    create_table :entries do |t|
       t.text :content
       t.references :journal, null: false, foreign_key: true
 

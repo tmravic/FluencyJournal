@@ -12,7 +12,7 @@ class JournalsController < ApplicationController
 
   # GET /journals/1 or /journals/1.json
   def show
-    @commits = @journal.commits.ordered
+    @entries = @journal.entries.ordered
     respond_to do |format|
       format.html # Renders the default HTML view for regular requests
       format.turbo_stream

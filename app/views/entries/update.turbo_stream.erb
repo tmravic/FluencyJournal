@@ -1,0 +1,2 @@
+<%= turbo_stream.replace dom_id(@entry), partial: "entries/entry", locals: { entry: @entry, journal: @journal } %>
+<%= render_turbo_stream_flash_messages %>

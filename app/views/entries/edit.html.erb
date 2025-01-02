@@ -1,0 +1,13 @@
+<% content_for :title, "Editing entry" %>
+
+<main class="container">
+  <%= link_to sanitize("&larr; Back to journal"), journal_path(@journal) %>
+
+  <div class="header">
+    <h1>Edit entry</h1>
+  </div>
+
+  <%= turbo_frame_tag @entry do %>
+    <%= render "form", journal: @journal, entry: @entry %>
+  <% end %>
+</main>

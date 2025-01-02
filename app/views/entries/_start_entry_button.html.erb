@@ -1,0 +1,4 @@
+<%= link_to "Start entry",
+            new_journal_entry_path(@journal),
+            class: "btn btn--primary",
+            data: { turbo_frame: dom_id(Entry.new), turbo_stream: true } %>

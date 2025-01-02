@@ -1,20 +1,20 @@
 require 'rails_helper'
 
-RSpec.describe "commits/index", type: :view do
+RSpec.describe "entries/index", type: :view do
   before(:each) do
-    assign(:commits, [
-      Commit.create!(
+    assign(:entries, [
+      Entry.create!(
         content: "MyText",
         journal: nil
       ),
-      Commit.create!(
+      Entry.create!(
         content: "MyText",
         journal: nil
       )
     ])
   end
 
-  it "renders a list of commits" do
+  it "renders a list of entries" do
     render
     cell_selector = 'div>p'
     assert_select cell_selector, text: Regexp.new("MyText".to_s), count: 2

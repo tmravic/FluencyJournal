@@ -6,7 +6,7 @@ en:
     labels:
       journal:
         title: Title
-      commit:
+      entry:
         content: Content
 
   helpers:
@@ -14,6 +14,6 @@ en:
       journal:
         create: Start writing
         update: Change title
-      commit:
-        create: Add commit
+      entry:
+        create: Add entry
         update: Edit content
