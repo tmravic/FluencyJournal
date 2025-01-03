@@ -67,13 +67,24 @@ class NotesController < ApplicationController
   end
 
   def edit
+    @update_from_todays_notes = params[:update_from_todays_notes]
   end
 
   def update
+    update_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:update_from_todays_notes])
     respond_to do |format|
       if @note.update(note_params)
         format.html { redirect_to journals_path, notice: "Note was successfully updated." }
-        format.turbo_stream { flash.now[:notice] = "Note was successfully updated." }
+        format.turbo_stream do
+          flash.now[:notice] = "Note was successfully updated."
+          if update_from_todays_notes
+            @todays_notes = Current.user&.notes.next_to_study
+            render "notes/update", locals: { collection: @todays_notes }
+          else
+            @all_notes = Current.user&.notes.order(:next_study_date)
+            render "notes/update", locals: { collection: @all_notes }
+          end
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
       end

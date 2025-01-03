@@ -1,7 +1,7 @@
 class AiRequestJob < ApplicationJob
   queue_as :default
 
-  def perform(ai_request_params, api_key)
+  def perform(ai_request_params, api_key, entry_prompt)
     # params
     # ai_request_params["prompt"]
     # ai_request_params["ai_model"]
@@ -11,13 +11,6 @@ class AiRequestJob < ApplicationJob
 
     journal = Journal.find(ai_request_params['journal_id'])
     user = journal.user
-
-    # make a new EntryPrompt using the ai_request_params as raw_content
-    entry_prompt = EntryPrompt.create(
-      raw_prompt: ai_request_params["prompt"],
-      ai_model: ai_request_params["ai_model"],
-      uuid: ai_request_params["uuid"]
-    )
 
     connection = Faraday.new(url: 'https://api.openai.com')
     response = connection.post do |req|

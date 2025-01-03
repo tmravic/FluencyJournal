@@ -13,6 +13,7 @@
   <% end %>
 
   <%= hidden_field_tag :view_context, view_context if local_assigns[:view_context] %>
+  <%= hidden_field_tag :update_from_todays_notes, @update_from_todays_notes if @update_from_todays_notes %>
 
   <div class="form__input__button_block">
     <% if automatic %>

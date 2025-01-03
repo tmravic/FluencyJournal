@@ -21,7 +21,7 @@
                     class: "btn btn--light" %>
 
         <%= link_to "Edit",
-                    edit_note_path(note),
+                    edit_note_path(note, update_from_todays_notes: @todays_notes.present?),
                     class: "btn btn--light" %>
 
         <%= button_to "Delete",
