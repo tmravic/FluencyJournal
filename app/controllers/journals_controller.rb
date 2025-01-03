@@ -77,7 +77,16 @@ class JournalsController < ApplicationController
   end
 
   def ai_request
-    AiRequestJob.perform_later(ai_request_params, @api_key)
+    entry_prompt = EntryPrompt.create(
+      raw_prompt: ai_request_params["prompt"],
+      ai_model: ai_request_params["ai_model"],
+      uuid: ai_request_params["uuid"],
+      original_language: entry_prompt.original_language,
+      learning_language: entry_prompt.learning_language
+    )
+    binding.break
+
+    AiRequestJob.perform_later(ai_request_params, @api_key, entry_prompt)
 
     respond_to do |format|
       format.turbo_stream
