@@ -28,4 +28,8 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  note:
+    actions:
+      studied: "Studied"
+      studied_warning: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?"
+

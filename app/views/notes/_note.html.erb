@@ -6,12 +6,12 @@
       <div class="note__actions">
 
         <% if @todays_notes.present? %>
-          <%= button_to "Studied",
+          <%= button_to t('note.actions.studied'),
                         mark_note_as_studied_note_path(note),
-                        form: { data: { turbo_confirm: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?" } },
+                        form: { data: { turbo_confirm: t('note.actions.studied_warning') } },
                         class: "btn btn--light" %>
         <% else %>
-          <span style="display:flex;align-items:center">
+          <span class="note__next_review">
             Next review: <%= note.next_study_date.strftime("%m/%d/%Y") %>
           </span>
         <% end %>
