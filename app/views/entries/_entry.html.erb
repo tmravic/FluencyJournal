@@ -5,6 +5,8 @@
         Entry <%= entry.entry_number %>
       </h2>
 
+      <span class="entry__date"><%= entry.created_at.strftime("%m/%d/%Y") %></span>
+
       <div class="entry__actions">
         <%= link_to "Followup",
                     [:edit, journal, entry],

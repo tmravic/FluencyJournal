@@ -19,6 +19,10 @@
     }
   }
 
+  &__date {
+    font-size: var(--font-size-xs);
+  }
+
   &__actions {
     display: flex;
     gap: var(--space-xs);
