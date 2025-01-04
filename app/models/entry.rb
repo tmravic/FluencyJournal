@@ -1,5 +1,7 @@
 class Entry < ApplicationRecord
   belongs_to :journal
+  has_many :entries_followups
+  has_many :followups, through: :entries_followups
 
   validates :content, presence: true
 
