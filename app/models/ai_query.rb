@@ -2,8 +2,9 @@ class AiQuery < ApplicationRecord
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
 
   belongs_to :journal, optional: true
-  has_one :prompt, dependent: :destroy
+  belongs_to :prompt
   delegate :user, to: :journal, allow_nil: true
+  has_many :followups
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
   validates :type, presence: true

@@ -1,7 +1,7 @@
 class Prompt < ApplicationRecord
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
 
-  belongs_to :ai_query, optional: true
+  has_one :ai_query, dependent: :destroy
 
   delegate :user, to: :ai_query, allow_nil: true
 

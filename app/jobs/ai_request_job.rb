@@ -87,7 +87,12 @@ class AiRequestJob < ApplicationJob
     response_from_open_ai = json_response['choices'][0]['message'].dig("content")
 
     # Use this to create a JournalQuery
-    journal_query = JournalQuery.build(prompt_tokens: token_data["prompt_tokens"], completion_tokens: token_data["completion_tokens"], total_tokens: token_data["total_tokens"], raw_response: response_from_open_ai)
+    journal_query = JournalQuery.build(
+      prompt_tokens: token_data["prompt_tokens"],
+      completion_tokens: token_data["completion_tokens"],
+      total_tokens: token_data["total_tokens"],
+      raw_response: response_from_open_ai
+    )
 
     journal_query.change_count = journal_query.count_changes
     journal_query.made_note = journal_query.track_made_notes
