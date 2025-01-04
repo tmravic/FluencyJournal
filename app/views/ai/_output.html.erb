@@ -15,13 +15,15 @@
         <div class="card__change__title">
           <h4><%= "Change #{i + 1}" %></h4>
           <div>
-            <%= link_to "Followup", new_journal_path, class: "btn btn--secondary" %>
-            <%= turbo_frame_tag "make_note_button" do %>
-              <% unless jq.made_note %>
+            <%= link_to "Followup",
+                        new_journal_path,
+                        class: "btn btn--secondary" %>
+            <%= turbo_frame_tag "make_note_button_#{i + 1}" do %>
+              <% unless jq.made_note[(i + 1).to_s] %>
                 <%= link_to "Make note",
                             new_automatic_notes_path(
                               ai_query_id: jq.id,
-                              change_content_number: i
+                              change_content_number: i + 1
                             ),
                             class: "btn btn--primary",
                             data: {
@@ -34,7 +36,7 @@
           </div>
         </div>
         <div class="card__change_content">
-          <%= render_ai_query_change_content(jq, i, html: false) %>
+          <%= render_ai_query_change_content(jq, i + 1, html: true) %>
         </div>
       </div>
     <% end %>

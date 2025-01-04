@@ -21,7 +21,7 @@
   </div>
 </div>
 <div style="display:flex;justify-content:center">
-  <%#= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
+  <%= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
   <%= f.hidden_field :ai_model, value: "gpt-4o-mini" %>
   <%= f.submit "Send", class: "btn btn--primary", style: "flex-grow:1;font-size: 16px", data: { turbo_stream: true } %>
 </div>

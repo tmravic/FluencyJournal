@@ -8,7 +8,7 @@ class JournalQuery < AiQuery
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
   def parsed_response
-    JSON.parse(self.raw_response)
+    JSON.parse(self.raw_response || '{}') rescue {}
   end
 
   def separate_messages
@@ -26,19 +26,23 @@ class JournalQuery < AiQuery
     end
   end
 
+  def track_made_notes
+    (1..self.change_count).map { |i| [i, false] }.to_h
+  end
+
   def error_message
     "something went wrong"
   end
 
   def change_content(num)
-    result = parsed_response.fetch("change_#{num}", error_message).fetch("content", error_message)
-    return result.split('→') unless result == error_message
+    result = parsed_response.dig("change_#{num}", "content")
+    return result.split('→') if result
 
     error_message
   end
 
   def change_explanation(num, abbr)
-    parsed_response.fetch("change_#{num}", error_message).fetch("explanation_#{abbr}", error_message)
+    parsed_response.dig("change_#{num}","explanation_#{abbr}") || error_message
   end
 
   def corrected_text

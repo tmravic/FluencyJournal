@@ -40,12 +40,12 @@
               <%= link_to "Followup",
                           new_journal_path,
                           class: "btn btn--secondary" %>
-              <%= turbo_frame_tag "make_note_button" do %>
-                <% unless @ai_query.made_note %>
+              <%= turbo_frame_tag "make_note_button_#{i+ 1}" do %>
+                <% unless @ai_query.made_note[(i + 1).to_s] %>
                   <%= link_to "Make note",
                               new_automatic_notes_path(
                                 ai_query_id: @ai_query.id,
-                                change_content_number: i
+                                change_content_number: i + 1
                               ),
                               class: "btn btn--primary",
                               data: {
@@ -58,11 +58,10 @@
             </div>
           </div>
           <div class="card__change_content">
-            <%= render_ai_query_change_content(@ai_query, i, html: true) %>
+            <%= render_ai_query_change_content(@ai_query, i + 1, html: true) %>
           </div>
         </div>
       <% end %>
-      <br>
     </div>
   </div>
 <% end %>

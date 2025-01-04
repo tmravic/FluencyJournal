@@ -8,7 +8,7 @@ class AiQuery < ApplicationRecord
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
   validates :type, presence: true
   validates :raw_response, presence: true
-  # validates :made_note　<-- boolean
+  # validates :made_note　<-- Hash  ex: { 1 => false, 2 => false, 3 => false }
 
   def abbr(user)
     # This same thing exists on Prompt

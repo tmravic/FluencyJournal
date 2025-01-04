@@ -20,7 +20,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.integer "total_tokens"
     t.string "type"
     t.text "raw_response"
-    t.boolean "made_note"
+    t.integer "change_count"
+    t.jsonb "made_note", default: {}, null: false
     t.bigint "journal_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

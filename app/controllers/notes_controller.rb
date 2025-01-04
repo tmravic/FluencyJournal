@@ -37,13 +37,17 @@ class NotesController < ApplicationController
     @note = Current.user.notes.build(note_params)
     @note.next_study_date = DateTime.now
     @ai_query = AiQuery.find(params[:ai_query_id]) if params[:ai_query_id]
+    @change_content_number = params[:change_content_number]
+    # Need to be able to create a note from All Notes or Today's notes
+    # and stay on the same page with the same view context and header
     header_partial = get_header_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
     previous_note = @note.previous_note
 
     respond_to do |format|
-      if @note.save
-        @ai_query.update(made_note: true) if @ai_query
+      if @note.save!
+        @ai_query.made_note[@change_content_number] = true if note_made_automatically?
+        @ai_query.save!
         format.html { redirect_to note_path(@note), notice: "Note was successfully created." }
         format.turbo_stream do
           flash.now[:notice] = "Note was added to the end of today's study queue."
@@ -120,6 +124,10 @@ class NotesController < ApplicationController
   end
 
   private
+
+  def note_made_automatically?
+    @ai_query && !@change_content_number.nil? && !@change_content_number.to_i.zero?
+  end
 
   def get_header_from_view_context(view_context)
     if view_context == 'todays_notes'

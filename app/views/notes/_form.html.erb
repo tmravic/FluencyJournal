@@ -3,11 +3,12 @@
 
   <% if automatic %>
     <%= f.input :content, input_html: {
-      value: render_ai_query_change_content(@ai_query, @change_content_number),
+      value: render_ai_query_change_content(@ai_query, @change_content_number, html: false),
       style: "height: 20vh;"
     } %>
     <%= hidden_field_tag :made_note_from_ai_question, true %>
     <%= hidden_field_tag :ai_query_id, @ai_query.id %>
+    <%= hidden_field_tag :change_content_number, @change_content_number %>
   <% else %>
     <%= f.input :content %>
   <% end %>
