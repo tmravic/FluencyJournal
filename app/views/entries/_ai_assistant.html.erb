@@ -6,7 +6,7 @@
   <%= turbo_stream_from "channel_#{@uuid}" %>
 
   <%= turbo_frame_tag "ai_output" do %>
-    <div id="ai_output">
+    <div>
       <%= render partial: "ai/output", locals: { generated_idea: "", change_list: "" } %>
     </div>
   <% end %>

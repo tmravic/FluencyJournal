@@ -36,7 +36,7 @@ user2 = User.find_by(email_address: 'admin@admin.com')
 
 journals = [
   { title: 'ニキータさん', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
-  { title: 'title2', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
+  { title: 'お寺', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
   { title: 'title3', user_id: user2.id, group: Group.find_by(name: "EnglishGroup") },
   { title: 'title4', user_id: user2.id, group: Group.find_by(name: "EnglishGroup") }
 ]

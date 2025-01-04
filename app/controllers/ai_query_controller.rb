@@ -9,6 +9,7 @@ class AiQueryController < ApplicationController
   def destroy
     @ai_models = get_ai_models
     @ai_query.destroy!
+    @uuid = SecureRandom.uuid
 
     respond_to do |format|
       format.html

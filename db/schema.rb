@@ -22,10 +22,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.text "raw_response"
     t.boolean "made_note"
     t.bigint "journal_id"
-    t.bigint "followup_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["followup_id"], name: "index_ai_queries_on_followup_id"
     t.index ["journal_id"], name: "index_ai_queries_on_journal_id"
   end
 
@@ -35,13 +33,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["journal_id"], name: "index_entries_on_journal_id"
-  end
-
-  create_table "followups", force: :cascade do |t|
-    t.bigint "entries_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["entries_id"], name: "index_followups_on_entries_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -54,6 +45,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.string "title"
     t.bigint "user_id", null: false
     t.bigint "group_id", null: false
+    t.decimal "last_interval", precision: 10, scale: 2, default: "1.0", null: false
+    t.datetime "next_study_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_journals_on_group_id"
@@ -73,17 +66,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
 
   create_table "prompts", force: :cascade do |t|
     t.bigint "ai_query_id"
-    t.bigint "entries_id"
-    t.bigint "followup_id"
     t.text "raw_prompt"
+    t.text "sent_role_prompt"
+    t.string "original_language_prompt"
+    t.string "learning_language_prompt"
     t.string "type"
     t.string "ai_model"
     t.string "uuid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ai_query_id"], name: "index_prompts_on_ai_query_id"
-    t.index ["entries_id"], name: "index_prompts_on_entries_id"
-    t.index ["followup_id"], name: "index_prompts_on_followup_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -107,16 +99,12 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_08_050035) do
     t.index ["group_id"], name: "index_users_on_group_id"
   end
 
-  add_foreign_key "ai_queries", "followups"
   add_foreign_key "ai_queries", "journals"
   add_foreign_key "entries", "journals"
-  add_foreign_key "followups", "entries", column: "entries_id"
   add_foreign_key "journals", "groups"
   add_foreign_key "journals", "users"
   add_foreign_key "notes", "users"
   add_foreign_key "prompts", "ai_queries"
-  add_foreign_key "prompts", "entries", column: "entries_id"
-  add_foreign_key "prompts", "followups"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "groups"
 end

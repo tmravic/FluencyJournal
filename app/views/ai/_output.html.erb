@@ -2,45 +2,41 @@
 <div class="card">
   <% if generated_idea %>
     <h4>Corrected text</h4>
-    <%= content_tag(:div, generated_idea) %>
+    <div><%= generated_idea %></div>
+  <% elsif change_list == "Processing..." %>
+    <h4><%= change_list %></h4>
   <% end %>
 
-  <% if change_list.present? && change_list != 'Processing...' %>
+  <% if change_list.present? && change_list != "Processing..." %>
     <% jq = JournalQuery.find(change_list) %>
     <% jq.count_changes.times do |i| %>
-      <hr> <!------------>
+      <hr>
       <div class="card__change">
         <div class="card__change__title">
           <h4><%= "Change #{i + 1}" %></h4>
-          <% unless jq.made_note == true %>
-            <div>
-              <%= link_to "Followup",
-                          new_journal_path,
-                          class: "btn btn--secondary" %>
-              <%= link_to "Make note",
-                          new_automatic_notes_path(
-                            ai_query_id: jq.id,
-                            change_content_number: i
-                          ),
-                          class: "btn btn--primary",
-                          data: {
-                            turbo_stream: true,
-                            controller: "scroll",
-                            action: "click->scroll#scrollToTop"
-                          } %>
-            </div>
-          <% end %>
+          <div>
+            <%= link_to "Followup", new_journal_path, class: "btn btn--secondary" %>
+            <%= turbo_frame_tag "make_note_button" do %>
+              <% unless jq.made_note %>
+                <%= link_to "Make note",
+                            new_automatic_notes_path(
+                              ai_query_id: jq.id,
+                              change_content_number: i
+                            ),
+                            class: "btn btn--primary",
+                            data: {
+                              turbo_stream: true,
+                              controller: "scroll",
+                              action: "click->scroll#scrollToTop"
+                            } %>
+              <% end %>
+            <% end %>
+          </div>
         </div>
         <div class="card__change_content">
-          <%= content_tag(:div, jq.change_content(i + 1).first) %>
-          <p>↓</p>
-          <%= content_tag(:div, jq.change_content(i + 1).last) %>
-          <%= content_tag(:div) do %>
-            <%= "(#{jq.change_explanation(i + 1, jq.abbr(jq.user))})" %>
-          <% end %>
+          <%= render_ai_query_change_content(jq, i, html: false) %>
         </div>
       </div>
     <% end %>
-    <br>
-  </div>
-<% end %>
+  <% end %>
+</div>

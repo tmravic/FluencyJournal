@@ -25,7 +25,7 @@ class AiRequestJob < ApplicationJob
         messages: [
           {
             role: 'system',
-            content: entry_prompt.system_prompt(user)
+            content: entry_prompt.role_prompt(user)
           },
           {
             role: 'user',

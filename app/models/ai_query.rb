@@ -11,6 +11,7 @@ class AiQuery < ApplicationRecord
   # validates :made_note　<-- boolean
 
   def abbr(user)
+    # This same thing exists on Prompt
     LANGUAGE_ABBREVIATIONS.fetch(user.original_language, 'English')
   end
 end
