@@ -17,35 +17,34 @@
                 style="height:100px;width:48%;padding:3px;margin:1px;font-size:12px;"
                 readonly><%= @prompt.learning_language if @prompt %></textarea>
     </div>
-
-    <br>
-
-    <div class="card">
-      <div class="card__change__title">
-        <h4>Corrected text</h4>
-        <%= button_to "Delete AI Question",
+    <div style="display:flex;justify-content:center; margin-bottom: 5px;">
+      <%= button_to "Delete AI Question",
                     journal_ai_query_path(@ai_query.journal, @ai_query),
                     method: :delete,
                     data: { turbo_stream: true },
                     class: "btn btn--light" %>
-      </div>
-      <%= content_tag(:div, @ai_query.corrected_text) %>
 
-      <% @ai_query.count_changes.times do |i| %>
-        <hr> <!------------>
-        <div class="card__change">
+    </div>
+    <div class="card">
+      <% if @corrected_text_output %>
+        <%= turbo_frame_tag "change_#{@corrected_text_output.identifier}" do %>
           <div class="card__change__title">
-            <h4><%= "Change #{i + 1}" %></h4>
+            <h4>Corrected text</h4>
             <div>
+              <%= button_to "Delete",
+                            ai_output_path(@corrected_text_output.id),
+                            method: :delete,
+                            data: { turbo_stream: true },
+                            class: "btn btn--light" %>
               <%= link_to "Followup",
                           new_journal_path,
                           class: "btn btn--secondary" %>
-              <%= turbo_frame_tag "make_note_button_#{i+ 1}" do %>
-                <% unless @ai_query.made_note[(i + 1).to_s] %>
-                  <%= link_to "Make note",
+              <% unless @corrected_text_output.made_note %>
+                <%= turbo_frame_tag "make_note_button_#{@corrected_text_output.identifier}" do %>
+                  <%= link_to "Note",
                               new_automatic_notes_path(
                                 ai_query_id: @ai_query.id,
-                                change_content_number: i + 1
+                                ai_output_id: @corrected_text_output.id
                               ),
                               class: "btn btn--primary",
                               data: {
@@ -57,10 +56,51 @@
               <% end %>
             </div>
           </div>
-          <div class="card__change_content">
-            <%= render_ai_query_change_content(@ai_query, i + 1, html: true) %>
+
+          <div class="card__change__corrected">
+            <%= @ai_query.corrected_text %>
           </div>
-        </div>
+        <% end %>
+      <% end %>
+
+      <% @ai_query.ai_outputs.each do |output| %>
+        <% next if output == @corrected_text_output %>
+        <hr> <!------------>
+        <%= turbo_frame_tag "change_#{output.identifier}" do %>
+          <div class="card__change">
+            <div class="card__change__title">
+              <h4><%= "Change #{output.identifier}" %></h4>
+              <div>
+                <%= button_to "Delete",
+                              ai_output_path(output.id),
+                              method: :delete,
+                              data: { turbo_stream: true },
+                              class: "btn btn--light" %>
+                <%= link_to "Followup",
+                            new_journal_path,
+                            class: "btn btn--secondary" %>
+                <% unless output.made_note %>
+                  <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
+                    <%= link_to "Note",
+                                new_automatic_notes_path(
+                                  ai_query_id: @ai_query.id,
+                                  ai_output_id: output.id
+                                ),
+                                class: "btn btn--primary",
+                                data: {
+                                  turbo_stream: true,
+                                  controller: "scroll",
+                                  action: "click->scroll#scrollToTop"
+                                } %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+            <div class="card__change_content">
+                <%= render_ai_query_change_content(@ai_query, output.identifier, html: true) %>
+            </div>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

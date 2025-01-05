@@ -4,12 +4,22 @@
   border-radius: var(--border-radius);
 
   &__change {
-    padding: var(--space-xxxs) var(--space-xxxs);
+    padding: var(--space-xxxs) 0;
 
     &__title {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      div {
+        form {
+          display: inline;
+        }
+      }
+    }
+
+    &__corrected {
+      margin-bottom: 5px;
     }
   }
 

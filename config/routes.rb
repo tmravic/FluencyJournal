@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       post :mark_note_as_studied
     end
   end
+  resources :followups
+  resources :ai_outputs, only: [:destroy]
+
   resource :session
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

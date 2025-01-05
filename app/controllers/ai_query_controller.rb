@@ -1,9 +1,11 @@
 class AiQueryController < ApplicationController
+  include AiOutputHelper
   before_action :set_journal
   before_action :set_ai_query
   before_action :set_prompt
 
   def show
+    @corrected_text_output = find_ai_output_by_identifier('corrected_text')
   end
 
   def destroy

@@ -11,10 +11,15 @@ module ApplicationHelper
     end
   end
 
-  def render_ai_query_change_content(ai_query, index, html: false)
-    content_first = ai_query.change_content(index).first
-    content_last = ai_query.change_content(index).last
-    explanation = ai_query.change_explanation(index, ai_query.abbr(ai_query.user))
+  def render_ai_query_change_content(ai_query, identifier, html: false)
+    if identifier == 'corrected_text'
+      learning_language = ai_query.prompt.parsed_prompt.last[18..]
+      corrected_sentence = ai_query.corrected_text
+    else
+      content_first = ai_query.change_content(identifier).first
+      content_last = ai_query.change_content(identifier).last
+      explanation = ai_query.change_explanation(identifier, ai_query.abbr(ai_query.user))
+    end
 
     if html
       content_tag(:div) do
@@ -23,6 +28,8 @@ module ApplicationHelper
         concat content_tag(:div, content_last)
         concat content_tag(:div, "(#{explanation})")
       end
+    elsif identifier == 'corrected_text'
+      "#{learning_language}\n↓\n#{corrected_sentence}"
     else
       "#{content_first} → #{content_last}\n\n(#{explanation})"
     end

@@ -21,7 +21,7 @@
 <%= turbo_frame_tag Entry.new do %>
   <%= render 'entries/empty_state' unless @entries.present? %>
 <% end %>
-<hr>
+<hr style="margin: 10px 0;">
 <%= turbo_frame_tag "previous_queries" do %>
   <% if @journal.ai_queries.any? %>
     <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>

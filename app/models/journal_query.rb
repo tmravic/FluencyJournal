@@ -26,10 +26,6 @@ class JournalQuery < AiQuery
     end
   end
 
-  def track_made_notes
-    (1..self.change_count).map { |i| [i, false] }.to_h
-  end
-
   def error_message
     "something went wrong"
   end
@@ -48,6 +44,10 @@ class JournalQuery < AiQuery
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
     content = parsed_response.fetch("corrected_text", error_message)
+
+    # When the user input nothing
+    # {"..."=>0}
+    return "No content" if is_hash?(content) && content['...']
 
     #  {"text"=>"昨年のクリスマスに心をあげた"},
     #  {"text"=>"昨年のクリスマスに私はあなたに心を捧げました"}]

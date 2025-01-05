@@ -93,12 +93,17 @@ class AiRequestJob < ApplicationJob
       total_tokens: token_data["total_tokens"],
       raw_response: response_from_open_ai
     )
-
     journal_query.change_count = journal_query.count_changes
-    journal_query.made_note = journal_query.track_made_notes
     journal_query.prompt = entry_prompt
     journal_query.journal = journal
     journal_query.save!
+
+    # Make an AiOutput for each change in the journal query
+    (1..journal_query.change_count).each do |count|
+      journal_query.ai_outputs.create(made_note: false, identifier: count.to_s)
+    end
+    # Make one more AiOutput for the Corrected Text
+    journal_query.ai_outputs.create(made_note: false, identifier: 'corrected_text')
 
     generated_idea = journal_query.corrected_text
     change_list = journal_query.id

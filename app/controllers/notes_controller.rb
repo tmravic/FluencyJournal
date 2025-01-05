@@ -1,4 +1,5 @@
 class NotesController < ApplicationController
+  include AiOutputHelper
   before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied ]
 
   def index
@@ -23,7 +24,7 @@ class NotesController < ApplicationController
   end
 
   def new_automatic
-    @change_content_number = (params[:change_content_number].to_i)
+    @ai_output = AiOutput.find(params[:ai_output_id].to_i)
     @note = Note.new
     @view_context = params[:view_context]
     @ai_query = AiQuery.find(params[:ai_query_id])
@@ -36,8 +37,12 @@ class NotesController < ApplicationController
   def create
     @note = Current.user.notes.build(note_params)
     @note.next_study_date = DateTime.now
-    @ai_query = AiQuery.find(params[:ai_query_id]) if params[:ai_query_id]
-    @change_content_number = params[:change_content_number]
+
+    if params[:ai_query_id].present?
+      @ai_query = AiQuery.find(params[:ai_query_id])
+      @ai_output = find_ai_output_by_identifier(params[:ai_output_identifier])
+    end
+
     # Need to be able to create a note from All Notes or Today's notes
     # and stay on the same page with the same view context and header
     header_partial = get_header_from_view_context(params[:view_context])
@@ -46,8 +51,7 @@ class NotesController < ApplicationController
 
     respond_to do |format|
       if @note.save!
-        @ai_query.made_note[@change_content_number] = true if note_made_automatically?
-        @ai_query.save!
+        @ai_output.update(made_note: true) if note_made_automatically?
         format.html { redirect_to note_path(@note), notice: "Note was successfully created." }
         format.turbo_stream do
           flash.now[:notice] = "Note was added to the end of today's study queue."
@@ -125,8 +129,10 @@ class NotesController < ApplicationController
 
   private
 
+
+
   def note_made_automatically?
-    @ai_query && !@change_content_number.nil? && !@change_content_number.to_i.zero?
+    @ai_query && @ai_output.present?
   end
 
   def get_header_from_view_context(view_context)

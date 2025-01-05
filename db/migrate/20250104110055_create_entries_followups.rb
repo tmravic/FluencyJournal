@@ -1,7 +1,7 @@
 class CreateEntriesFollowups < ActiveRecord::Migration[8.0]
   def change
     create_table :entries_followups, id: false do |t|
-      t.references :note, null: false, foreign_key: true, index: true
+      t.references :entry, null: false, foreign_key: true, index: true
       t.references :followup, null: false, foreign_key: true, index: true
 
       t.timestamps
