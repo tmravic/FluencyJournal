@@ -1,7 +1,17 @@
-<h4>Previous AI Questions</h4>
-<% journal.ai_queries.each_with_index do |query, index| %>
-  <%= link_to "#{index + 1}",
-              journal_ai_query_path(journal, query),
-              class: "btn btn--secondary",
-              data: { turbo_frame: "ai_assistant" } %>
+<h4>Previous AI Questions and Followups</h4>
+<% journal.ai_queries.each do |query| %>
+  <% if query.followups.any? %>
+    <%= link_to "F",
+                followup_path(
+                  query.followups.first,
+                  source_tag: "ai_assistant"
+                ),
+                class: "btn btn--primary",
+                data: { turbo_frame: "ai_assistant" } %>
+  <% else %>
+    <%= link_to "Q",
+                journal_ai_query_path(journal, query),
+                class: "btn btn--secondary",
+                data: { turbo_frame: "ai_assistant" } %>
+  <% end %>
 <% end %>

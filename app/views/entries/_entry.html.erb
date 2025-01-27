@@ -9,7 +9,11 @@
 
       <div class="entry__actions">
         <%= link_to "Followup",
-                    [:edit, journal, entry],
+                    new_followup_path(
+                      class_name: entry.class,
+                      id: entry.id
+                    ),
+                    data: { turbo_frame: "ai_assistant" },
                     class: "btn btn--light" %>
         <%= link_to "Edit",
                     [:edit, journal, entry], # edit_journal_entry_path(journal, entry)

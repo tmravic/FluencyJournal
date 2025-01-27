@@ -16,6 +16,7 @@
 
     span {
       font-size: var(--font-size-xs);
+      line-height: var(--font-size-xs);
     }
   }
 
@@ -34,16 +35,20 @@
 
   &__next_review {
     display:flex;
-    align-items:center
+    align-items:center;
   }
 }
 
 .notes_box_scroll {
   max-height: 80vh;
   min-height: 10vh;
-  height: 30vh;
+  height: 35vh;
   overflow-y: auto;
   border: var(--border);
   //padding: 0.3rem;
   resize: vertical;
+
+  @include components.media(smallPhones) {
+    height: 40vh;
+  }
 }

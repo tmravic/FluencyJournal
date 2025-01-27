@@ -1,5 +1,4 @@
 class NotesController < ApplicationController
-  include AiOutputHelper
   before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied ]
 
   def index
@@ -28,6 +27,7 @@ class NotesController < ApplicationController
     @note = Note.new
     @view_context = params[:view_context]
     @ai_query = AiQuery.find(params[:ai_query_id])
+
     respond_to do |format|
       format.html
       format.turbo_stream { flash.now[:notice] = "You can customize this automatically created note before saving it." }
@@ -40,7 +40,7 @@ class NotesController < ApplicationController
 
     if params[:ai_query_id].present?
       @ai_query = AiQuery.find(params[:ai_query_id])
-      @ai_output = find_ai_output_by_identifier(params[:ai_output_identifier])
+      @ai_output = @ai_query.find_ai_output_by_identifier(params[:ai_output_identifier])
     end
 
     # Need to be able to create a note from All Notes or Today's notes
@@ -128,8 +128,6 @@ class NotesController < ApplicationController
   end
 
   private
-
-
 
   def note_made_automatically?
     @ai_query && @ai_output.present?

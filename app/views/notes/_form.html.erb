@@ -3,7 +3,7 @@
 
   <% if automatic %>
     <%= f.input :content, input_html: {
-      value: render_ai_query_change_content(@ai_query, @ai_output.identifier, html: false),
+      value: render_ai_query_change_content(@ai_query, @ai_output.identifier, @ai_query.prompt.change_keyword, html: false),
       style: "height: 20vh;"
     } %>
     <%= hidden_field_tag :made_note_from_ai_question, true %>
@@ -12,8 +12,6 @@
   <% else %>
     <%= f.input :content %>
   <% end %>
-
-
 
   <%= hidden_field_tag :view_context, view_context if local_assigns[:view_context] %>
   <%= hidden_field_tag :update_from_todays_notes, @update_from_todays_notes if @update_from_todays_notes %>
@@ -25,7 +23,7 @@
     <% else %>
       <%= f.select :category, hide_automatic_notes_option %>
     <% end %>
-    <%= link_to "Cancel", notes_path, class: "btn btn--light" %>
+    <%= link_to "Cancel", notes_path, class: "btn btn--light", data: { turbo_frame: "notes_box" } %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>
 <% end %>

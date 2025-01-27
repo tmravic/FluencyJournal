@@ -1,0 +1,27 @@
+<%= turbo_stream_from "channel_#{@uuid}" %>
+
+<%= turbo_frame_tag "followup_output_#{@source_tag}" do %>
+  <%= simple_form_for [followup], html: { class: "form followup" } do |f| %>
+    <%= form_error_notification(followup) %>
+
+    <%= f.fields_for :followup_prompt do |followup_prompt| %>
+      <%= followup_prompt.label "followup_question" %>
+      <%= followup_prompt.text_area :base_content, html5: true, placeholder: "Write your followup question here", value: @base_content %>
+
+      <%= followup_prompt.label "reference_text" %>
+      <%= followup_prompt.text_area :user_generated_content, html5: true, value: @reference_text %>
+      <%= followup_prompt.hidden_field :uuid, value: @uuid %>
+      <%= followup_prompt.hidden_field :ai_model, value: "gpt-4o-mini" %>
+      <%#= followup_prompt.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
+    <% end %>
+
+    <%= f.hidden_field :followup_origin_class, value: @followup_origin.class %>
+    <%= f.hidden_field :followup_origin_id, value: @followup_origin.id %>
+    <%= f.hidden_field :source_tag, value: @source_tag %>
+
+    <div class="form__input__button_block">
+      <%= render_correct_cancel_button %>
+      <%= f.submit class: "btn btn--secondary", data: { turbo_stream: true } %>
+    </div>
+  <% end %>
+<% end %>

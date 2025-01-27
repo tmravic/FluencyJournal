@@ -1,0 +1,19 @@
+<% if @journal %>
+  <%= turbo_stream.update "previous_queries", partial: "journals/previous_queries", locals: { journal: @journal } %>
+  <%= turbo_stream.update @source_tag, "" %>
+<% else %>
+  <%= turbo_stream.update "notes_box" do %>
+    <div class="notes_box_scroll">
+      <%= turbo_frame_tag Note.new %>
+      <% @todays_notes = Current.user&.notes.next_to_study %>
+      <%= turbo_frame_tag "note_header" do %>
+        <%= render "notes/notes_header_todays" if @todays_notes.present? %>
+      <% end %>
+      <%= turbo_frame_tag "notes" do %>
+        <% if @todays_notes.present? %>
+          <%= render @todays_notes %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

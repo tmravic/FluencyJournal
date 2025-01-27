@@ -49,8 +49,7 @@ end
 entries = [
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。" },
-  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "私は彼女の人生にいる他の男性と競争できない気がした。" },
-  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "話し終わった後は空虚な気持ちになった。" },
+  { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "東京にいる面白い人との繋がりが多くてうらやましかった。" },
   { journal_id: Journal.find_by(title: 'お寺').id, content: "お寺に祈りに行って、「好きな女の子が私の彼女になりますように」とお願いしました。" }
 ]
 entries.each do |entry_attrs|
@@ -58,9 +57,9 @@ entries.each do |entry_attrs|
 end
 
 user1.notes.create(content: '24 hours ago', category: 2, next_study_date: DateTime.now - 24.hours)
-user1.notes.create(content: 'Right now', category: 3, next_study_date: DateTime.now)
+user1.notes.create(content: 'そんなもんか', category: 3, next_study_date: DateTime.now)
 user1.notes.create(content: '24 hours later', category: 0, next_study_date: DateTime.now + 24.hours)
 
 user2.notes.create(content: '24 hours ago', category: 2, next_study_date: DateTime.now - 24.hours)
-user2.notes.create(content: 'Right now', category: 3, next_study_date: DateTime.now)
+user2.notes.create(content: 'そんなもんか', category: 3, next_study_date: DateTime.now)
 user2.notes.create(content: '24 hours later', category: 0, next_study_date: DateTime.now + 24.hours)

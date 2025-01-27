@@ -36,6 +36,10 @@
       padding: var(--space-xxxs) var(--space-xxs);
       font-size: var(--font-size-m);
     }
+
+    &--short {
+      padding: 0 var(--space-xxxs);
+    }
   }
 
   &--secondary {

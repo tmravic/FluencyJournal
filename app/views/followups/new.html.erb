@@ -1,0 +1,17 @@
+<% content_for :title, "New followup" %>
+<main class="container">
+
+  <div class="header">
+    <h1>New followup</h1>
+  </div>
+
+  <%= turbo_frame_tag @source_tag do %>
+    <% if @source_tag == "notes_box" %>
+      <div class="notes_box_scroll">
+        <%= render "form", followup: @followup %>
+      </div>
+    <% else %>
+      <%= render "form", followup: @followup %>
+    <% end %>
+  <% end %>
+</main>

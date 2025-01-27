@@ -4,7 +4,6 @@ class CreateAiQueries < ActiveRecord::Migration[8.0]
       t.integer :prompt_tokens
       t.integer :completion_tokens
       t.integer :total_tokens
-      t.string :type
       t.text :raw_response
       t.integer :change_count
       t.references :journal, foreign_key: true

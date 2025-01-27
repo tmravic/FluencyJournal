@@ -1,9 +1,10 @@
 <br>
-<% jq = JournalQuery.find(change_list) if change_list.present? && change_list != "Processing..." %>
-<% corrected_text_output = jq.ai_outputs.last if jq %>
+<% ai_query = set_ai_query_when_job_finishes(ai_query_id) %>
+<% corrected_text_output = set_corrected_text_output(ai_query) %>
+<% change_keyword = ai_query.prompt.change_keyword if ai_query %>
 <div class="card">
-  <% if generated_idea.present? %>
-    <%= turbo_frame_tag "change_#{corrected_text_output.identifier}" do %>
+  <% if corrected_text.present? %>
+    <%= turbo_frame_tag "#{change_keyword}#{corrected_text_output.identifier}" do %>
       <div class="card__change__title">
         <h4>Corrected text</h4>
         <div>
@@ -13,13 +14,17 @@
                         data: { turbo_stream: true },
                         class: "btn btn--light" %>
           <%= link_to "Followup",
-                      new_journal_path,
+                      new_followup_path(
+                        class_name: corrected_text_output.class,
+                        id: corrected_text_output.id
+                      ),
+                      data: { turbo_frame: "ai_assistant" },
                       class: "btn btn--secondary" %>
-          <% unless jq && corrected_text_output.made_note %>
+          <% unless ai_query && corrected_text_output.made_note %>
             <%= turbo_frame_tag "make_note_button_#{corrected_text_output.identifier}" do %>
               <%= link_to "Note",
                           new_automatic_notes_path(
-                            ai_query_id: jq.id,
+                            ai_query_id: ai_query.id,
                             ai_output_id: corrected_text_output.id
                           ),
                           class: "btn btn--primary",
@@ -34,22 +39,28 @@
       </div>
 
       <div class="card__change__corrected">
-        <%= generated_idea %>
+        <%= corrected_text %>
       </div>
     <% end %>
-  <% elsif change_list == "Processing..." %>
-    <h4><%= change_list %></h4>
+  <% elsif ai_query_id == "Processing..." %>
+    <h4><%= ai_query_id %></h4>
   <% else %>
     <h4>AI Output</h4>
   <% end %>
-  <% if jq %>
-    <% jq.ai_outputs.each do |output| %>
+
+  <% if ai_query %>
+    <% ai_query.ai_outputs.each do |output| %>
       <% next if output == corrected_text_output %>
       <hr>
-      <%= turbo_frame_tag "change_#{output.identifier}" do %>
+      <%= turbo_frame_tag "#{change_keyword}#{output.identifier}" do %>
+      <!-- <turbo-frame id='change_1'> -->
+
         <div class="card__change">
           <div class="card__change__title">
-            <h4><%= "Change #{output.identifier}" %></h4>
+            <h4>
+              <%= "#{change_keyword.titleize}#{output.identifier}" %>
+              <!--Change 1-->
+            </h4>
             <div>
               <%= button_to "Delete",
                             ai_output_path(output.id),
@@ -57,13 +68,14 @@
                             data: { turbo_stream: true },
                             class: "btn btn--light" %>
               <%= link_to "Followup",
-                          new_followup_path,
+                          new_followup_path(class_name: output.class, id: output.id),
+                          data: { turbo_frame: "ai_assistant" },
                           class: "btn btn--secondary" %>
               <% unless output.made_note %>
                 <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
                   <%= link_to "Note",
                               new_automatic_notes_path(
-                                ai_query_id: jq.id,
+                                ai_query_id: ai_query.id,
                                 ai_output_id: output.id
                               ),
                               class: "btn btn--primary",
@@ -77,7 +89,7 @@
             </div>
           </div>
           <div class="card__change_content">
-            <%= render_ai_query_change_content(jq, output.identifier, html: true) %>
+            <%= render_ai_query_change_content(ai_query, output.identifier, change_keyword, html: true) %>
           </div>
         </div>
       <% end %>

@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe "ai_query/show.html.erb", type: :view do
+RSpec.describe "ai_queries/show.html.erb", type: :view do
   pending "add some examples to (or delete) #{__FILE__}"
 end

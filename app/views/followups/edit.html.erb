@@ -1,0 +1,13 @@
+<% content_for :title, "Editing followup" %>
+
+<main class="container">
+  <%= link_to sanitize("&larr; Back to followups"), followup_path(@followup) %>
+
+  <div class="header">
+    <h1>Editing followup</h1>
+  </div>
+
+  <%= turbo_frame_tag @followup do %>
+    <%= render "form", followup: @followup %>
+  <% end %>
+</main>

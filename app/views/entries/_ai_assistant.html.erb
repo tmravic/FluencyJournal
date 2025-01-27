@@ -1,13 +1,13 @@
 <div class="container">
   <%= turbo_frame_tag "ai_request_form" do %>
-    <%= render partial: "ai/request_form", locals: { uuid: @uuid } %>
+    <%= render partial: "ai_queries/request_form", locals: { uuid: @uuid } %>
   <% end %>
 
   <%= turbo_stream_from "channel_#{@uuid}" %>
 
   <%= turbo_frame_tag "ai_output" do %>
     <div>
-      <%= render partial: "ai/output", locals: { generated_idea: "", change_list: "" } %>
+      <%= render partial: "ai_queries/output", locals: { corrected_text: "", ai_query_id: "" } %>
     </div>
   <% end %>
 </div>

@@ -4,7 +4,11 @@ Rails.application.routes.draw do
       get :open_ai_assistant
     end
     resources :entries
-    resources :ai_query, only: [:show, :destroy] # look up how to shorten this route
+    resources :ai_queries, only: [:show, :destroy] do
+      collection do
+        post :ai_request
+      end
+    end
   end
   resources :notes do
     collection do
@@ -15,7 +19,7 @@ Rails.application.routes.draw do
       post :mark_note_as_studied
     end
   end
-  resources :followups
+  resources :followups, only: [:new, :create, :show, :destroy]
   resources :ai_outputs, only: [:destroy]
 
   resource :session
@@ -23,7 +27,6 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root "pages#home"
-  post "ai_request", to: "journals#ai_request"
 
   get "/up/", to: "up#index", as: :up
   get "/up/databases", to: "up#databases", as: :up_databases

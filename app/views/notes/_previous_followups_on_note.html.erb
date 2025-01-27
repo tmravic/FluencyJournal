@@ -1,0 +1,6 @@
+<% note.followups.each do |followup| %>
+  <%= link_to "F",
+              followup_path(followup, source_tag: "notes_box"),
+              class: "btn btn--primary btn--primary--short",
+              data: { turbo_frame: "notes_box" } %>
+<% end %>

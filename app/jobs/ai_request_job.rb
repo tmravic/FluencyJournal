@@ -1,15 +1,7 @@
 class AiRequestJob < ApplicationJob
   queue_as :default
 
-  def perform(ai_request_params, api_key, entry_prompt)
-    # params
-    # ai_request_params["prompt"]
-    # ai_request_params["ai_model"]
-    # ai_request_params["uuid"]
-
-    # { "prompt"=>"Original Language: This year to save me from tears I'll give it to someone special.\nLearning Language: ", ... }
-
-    journal = Journal.find(ai_request_params['journal_id'])
+  def perform(journal, api_key, entry_prompt)
     user = journal.user
 
     connection = Faraday.new(url: 'https://api.openai.com')
@@ -29,7 +21,7 @@ class AiRequestJob < ApplicationJob
           },
           {
             role: 'user',
-            content: ai_request_params[:prompt]
+            content: entry_prompt.raw_prompt
           },
           {
             role: 'user',
@@ -86,38 +78,49 @@ class AiRequestJob < ApplicationJob
 
     response_from_open_ai = json_response['choices'][0]['message'].dig("content")
 
-    # Use this to create a JournalQuery
-    journal_query = JournalQuery.build(
+    ai_query = AiQuery.build(
       prompt_tokens: token_data["prompt_tokens"],
       completion_tokens: token_data["completion_tokens"],
       total_tokens: token_data["total_tokens"],
       raw_response: response_from_open_ai
     )
-    journal_query.change_count = journal_query.count_changes
-    journal_query.prompt = entry_prompt
-    journal_query.journal = journal
-    journal_query.save!
+
+    ai_query.prompt = entry_prompt
+    ai_query.change_count = ai_query.count_changes(entry_prompt.change_keyword)
+    ai_query.journal = journal
+    ai_query.save!
 
     # Make an AiOutput for each change in the journal query
-    (1..journal_query.change_count).each do |count|
-      journal_query.ai_outputs.create(made_note: false, identifier: count.to_s)
+    (1..ai_query.change_count).each do |count|
+      ai_query.ai_outputs.create(
+        made_note: false,
+        identifier: count.to_s
+      ).tap do |ai_output|
+        ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
+        ai_output.save!
+      end
     end
     # Make one more AiOutput for the Corrected Text
-    journal_query.ai_outputs.create(made_note: false, identifier: 'corrected_text')
+    ai_query.ai_outputs.create(
+      made_note: false,
+      identifier: 'corrected_text'
+    ).tap do |ai_output|
+      ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
+      ai_output.save!
+    end
 
-    generated_idea = journal_query.corrected_text
-    change_list = journal_query.id
+    corrected_text = ai_query.corrected_text
+    ai_query_id = ai_query.id
 
-    uuid = ai_request_params[:uuid]
     Turbo::StreamsChannel.broadcast_update_to(
-      "channel_#{uuid}",
+      "channel_#{entry_prompt.uuid}",
       target: 'ai_output',
-      partial: 'ai/output',
-      locals: { generated_idea:, change_list: }
+      partial: 'ai_queries/output',
+      locals: { corrected_text:, ai_query_id: }
     )
 
     Turbo::StreamsChannel.broadcast_update_to(
-      "channel_#{uuid}",
+      "channel_#{entry_prompt.uuid}",
       target: 'previous_queries',
       partial: 'journals/previous_queries',
       locals: { journal: }

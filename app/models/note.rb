@@ -1,7 +1,6 @@
 class Note < ApplicationRecord
   belongs_to :user
-  has_many :notes_followups
-  has_many :followups, through: :notes_followups
+  has_and_belongs_to_many :followups
 
   validates :content, presence: true
   validates :next_study_date, presence: true

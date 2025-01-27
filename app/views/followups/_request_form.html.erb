@@ -1,0 +1,31 @@
+<div class="request_form">
+  <div>
+    <label for="base_content">Followup Question</label>
+    <textarea id="base_content" readonly><%= followup.prompt.base_content %></textarea>
+  </div>
+
+  <div>
+    <label for="user_generated_content">Reference Text</label>
+    <textarea id="user_generated_content" readonly><%= followup.prompt.user_generated_content %></textarea>
+  </div>
+  <div style="display:flex;justify-content:space-evenly; margin-bottom: 5px;">
+    <% if followup.origin.is_a?(Note) %>
+      <%= button_to "Delete Followup",
+                    followup_path(followup, source_tag: source_tag),
+                    method: :delete,
+                    data: { turbo_stream: true },
+                    class: "btn btn--light" %>
+      <% binding.break %>
+      <%= link_to "Back to notes",
+                    notes_path,
+                    data: { turbo: true },
+                    class: "btn btn--dark" %>
+    <% else %>
+      <%= button_to "Delete Followup",
+                    followup_path(followup, source_tag: source_tag, journal: @journal),
+                    method: :delete,
+                    data: { turbo_stream: true },
+                    class: "btn btn--light", id: "send_button" %>
+    <% end %>
+  </div>
+</div>

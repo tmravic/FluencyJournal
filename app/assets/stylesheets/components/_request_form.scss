@@ -1,0 +1,28 @@
+.request_form {
+  margin-top: var(--space-xxs);
+  margin-bottom: var(--space-xxs);
+  display: flex;
+  flex-direction: column;
+
+  label {
+    display:block;
+  }
+
+  textarea {
+    height: 10vh;
+    width: 100%;
+    padding: var(--space-xxxs);
+    margin: var(--space-xxxxs);
+    font-size: var(--font-size-s);
+  }
+}
+
+#send_button {
+  flex-grow:1;
+  font-size: var(--font-size-m);
+}
+
+.send_button_box {
+  display: flex;
+  justify-content: center;
+}

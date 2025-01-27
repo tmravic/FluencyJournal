@@ -1,0 +1,21 @@
+<%= simple_form_for EntryPrompt.new, url: ai_request_journal_ai_queries_path(@journal),
+             method: :post, remote: true, html: { class: "request_form" } do |f| %>
+  <%= f.hidden_field :uuid, value: @uuid %>
+  <%= f.hidden_field :journal_id, value: @journal.id %>
+  <%= f.hidden_field :ai_model, value: "gpt-4o-mini" %>
+
+  <div>
+    <%= f.text_area :base_content, label: "Original Language:",
+                    placeholder: " Type your journal entry in your native language to confirm its meaning." %>
+  </div>
+
+  <div>
+    <%= f.text_area :user_generated_content, label: "Learning Language:",
+                    placeholder: " Type your journal entry in the language you're studying." %>
+  </div>
+
+  <div class="send_button_box">
+    <%#= f.select :ai_model, options_for_select(@ai_models, "gpt-4o-mini"), {} %>
+    <%= f.submit "Send", class: "btn btn--primary", id: "send_button", data: { turbo_stream: true } %>
+  </div>
+<% end %>
