@@ -16,9 +16,10 @@
           <%= link_to "Followup",
                       new_followup_path(
                         class_name: corrected_text_output.class,
-                        id: corrected_text_output.id
+                        id: corrected_text_output.id,
+                        source_tag: source_tag,
                       ),
-                      data: { turbo_frame: "ai_assistant" },
+                      data: { turbo_frame: source_tag },
                       class: "btn btn--secondary" %>
           <% unless ai_query && corrected_text_output.made_note %>
             <%= turbo_frame_tag "make_note_button_#{corrected_text_output.identifier}" do %>
@@ -68,8 +69,8 @@
                             data: { turbo_stream: true },
                             class: "btn btn--light" %>
               <%= link_to "Followup",
-                          new_followup_path(class_name: output.class, id: output.id),
-                          data: { turbo_frame: "ai_assistant" },
+                          new_followup_path(class_name: output.class, id: output.id, source_tag: source_tag),
+                          data: { turbo_frame: source_tag },
                           class: "btn btn--secondary" %>
               <% unless output.made_note %>
                 <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
@@ -89,7 +90,7 @@
             </div>
           </div>
           <div class="card__change_content">
-            <%= render_ai_query_change_content(ai_query, output.identifier, change_keyword, html: true) %>
+            <%= render_ai_query_change_content(ai_query, output.identifier, change_keyword, user, html: true) %>
           </div>
         </div>
       <% end %>

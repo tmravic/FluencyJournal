@@ -14,7 +14,7 @@
 <%= turbo_frame_tag "entries" do %>
   <% if @entries.present? %>
     <%= render 'entries/empty_state' %>
-    <%= render @entries, journal: @journal %>
+    <%= render @entries, journal: @journal, source_tag: @source_tag %>
   <% end %>
 <% end %>
 

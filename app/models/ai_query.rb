@@ -68,7 +68,7 @@ class AiQuery < ApplicationRecord
 
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
-    content = parsed_response.fetch('corrected_text', error_message)
+    content = parsed_response.fetch('corrected_text', nil)
 
     # When the user input nothing
     # {"..."=>0}
@@ -83,6 +83,9 @@ class AiQuery < ApplicationRecord
 
     # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
     return content['内容'] if is_hash?(content) && content['内容']
+
+    # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
+    return content['content'] if is_hash?(content) && content['content']
 
     # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
     return content['corrected_japanese'] if is_hash?(content) && content['corrected_japanese']

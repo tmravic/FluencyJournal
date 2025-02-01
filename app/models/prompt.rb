@@ -12,7 +12,7 @@ class Prompt < ApplicationRecord
   validates :uuid, presence: true
   validates :sent_role_prompt, presence: true
   validates :base_content, presence: false
-  validates :user_generated_content, presence: true
+  validates :user_generated_content, presence: false
 
   # When you're using single-table inheritance with your models,
   # you can't rely on record identification on a subclass if

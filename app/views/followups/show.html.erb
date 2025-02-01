@@ -29,7 +29,7 @@
                                 data: { turbo_stream: true },
                                 class: "btn btn--light" %>
                   <%= link_to "Followup",
-                              new_followup_path(class_name: output.class, id: output.id),
+                              new_followup_path(class_name: output.class, id: output.id, source_tag: @source_tag),
                               data: { turbo_frame: @source_tag },
                               class: "btn btn--secondary" %>
                   <% unless output.made_note %>

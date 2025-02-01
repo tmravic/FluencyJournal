@@ -77,5 +77,4 @@ class EntriesController < ApplicationController
   def entry_params
     params.expect(entry: [ :content, :journal_id ])
   end
-
 end

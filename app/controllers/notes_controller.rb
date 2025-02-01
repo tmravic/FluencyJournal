@@ -2,6 +2,7 @@ class NotesController < ApplicationController
   before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied ]
 
   def index
+    @source_tag = 'notes_box'
     @todays_notes = Current.user&.notes.next_to_study
     respond_to do |format|
       format.html
@@ -10,6 +11,7 @@ class NotesController < ApplicationController
   end
 
   def all
+    @source_tag = 'notes_box'
     @all_notes = Current.user&.notes.order(:next_study_date)
     respond_to do |format|
       format.html

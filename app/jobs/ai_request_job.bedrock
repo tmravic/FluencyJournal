@@ -1,0 +1,204 @@
+require 'aws-sdk-bedrockruntime'
+require 'json'
+
+class AiRequestJob < ApplicationJob
+  queue_as :default
+
+  def perform(journal, api_key, entry_prompt)
+    access_key = Rails.application.credentials.dig(:aws, :access_key_id)
+    secret_access_key = Rails.application.credentials.dig(:aws, :secret_access_key)
+    user = journal.user
+
+    input_text = [
+      entry_prompt.role_prompt(user),
+      entry_prompt.raw_prompt,
+      entry_prompt.response_format(user)
+    ].join("\n\n")
+
+    credentials = Aws::Credentials.new(access_key, secret_access_key)
+    bedrock_client = Aws::BedrockRuntime::Client.new(
+      region: "ap-northeast-1",
+      credentials: credentials
+    )
+      request_data = {
+        "inputText" => input_text,
+        "textGenerationConfig" => {
+          "maxTokenCount" => 8192,
+          "stopSequences" => [],
+          "temperature"   => 0,
+          "topP"          => 1
+        }
+      }
+    body = request_data.to_json
+    response = bedrock_client.invoke_model(
+      {
+        accept:       "application/json",
+        content_type: "application/json",
+        body:         body,
+        model_id:     "amazon.titan-text-express-v1"
+      }
+    )
+
+    # connection = Faraday.new(url: 'https://api.openai.com')
+    # response = connection.post do |req|
+    #   req.url "/v1/chat/completions"
+    #   req.options.timeout = 120
+    #   req.options.open_timeout = 30
+    #   req.headers['Content-Type'] = 'application/json'
+    #   req.headers['Authorization'] = "Bearer #{api_key}"
+    #   req.body = {
+    #     model: entry_prompt.ai_model,
+    #     response_format: { type: "json_object" },
+    #     messages: [
+    #       {
+    #         role: 'system',
+    #         content: entry_prompt.role_prompt(user)
+    #       },
+    #       {
+    #         role: 'user',
+    #         content: entry_prompt.raw_prompt
+    #       },
+    #       {
+    #         role: 'user',
+    #         content: entry_prompt.response_format(user)
+    #       }
+    #     ],
+    #   }.to_json
+    # end
+    #
+
+    response.body.rewind
+    json_string = response.body.read
+    json_response = JSON.parse(json_string)
+    # json_response.keys
+    # ["inputTextTokenCount", "results"]
+    # json_response['results']
+    # json_response['inputTextTokenCount']
+
+
+    # {"inputTextTokenCount"=>314,
+    #   "results"=>
+    #     [{"tokenCount"=>158,
+    #       "outputText"=>
+    #         "\n{ \"change_1\": { \"content\": \"お寺でキラキラしてる10円玉を賽銭箱に投入しました\", \"explanation_en
+    # \": \"Changed \"お寺\" to \"お寺で\" to make the sentence more natural\" }, \"change_2\": { \"content\
+    # ": \"お寺でキラキラしてる10円玉を賽銭箱に投入しました\", \"explanation_en\": \"Changed \"お寺で\" to \"
+    # お寺\" to make the sentence more natural\" }, \"corrected_text\": \"お寺でキラキラしてる10円玉を賽銭箱 に投入しました\" }",
+    #          "completionReason"=>"FINISH"}]}
+    full_token_details = {
+      'prompt_tokens'    => json_response['inputTextTokenCount'],
+      'completion_tokens'=> json_response['results'].first["tokenCount"]
+    }
+    full_token_details.merge!(
+      'total_tokens' => full_token_details['prompt_tokens'] + full_token_details['completion_tokens']
+    )
+    # {"prompt_tokens"=>314, "completion_tokens"=>158, "total_tokens"=>472}
+
+    response_from_ai = json_response['results'].first['outputText']
+    # response_from_ai = json_response['choices'][0]['message'].dig("content")
+
+    ai_query = AiQuery.build(
+      prompt_tokens: full_token_details["prompt_tokens"],
+      completion_tokens: full_token_details["completion_tokens"],
+      total_tokens: full_token_details["total_tokens"],
+      raw_response: response_from_ai)
+
+    ai_query.prompt = entry_prompt
+    ai_query.change_count = ai_query.count_changes(entry_prompt.change_keyword)
+    ai_query.journal = journal
+    ai_query.save!
+
+    # Make an AiOutput for each change in the journal query
+    (1..ai_query.change_count).each do |count|
+      ai_query.ai_outputs.create(
+        made_note: false,
+        identifier: count.to_s
+      ).tap do |ai_output|
+        ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
+        ai_output.save!
+      end
+    end
+    # Make one more AiOutput for the Corrected Text
+    ai_query.ai_outputs.create(
+      made_note: false,
+      identifier: 'corrected_text'
+    ).tap do |ai_output|
+      ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
+      ai_output.save!
+    end
+
+
+    binding.break
+    source_tag = 'ai_assistant'
+    corrected_text = ai_query.corrected_text
+    ai_query_id = ai_query.id
+
+    Turbo::StreamsChannel.broadcast_update_to(
+      "channel_#{entry_prompt.uuid}",
+      target: 'ai_output',
+      partial: 'ai_queries/output',
+      locals: { corrected_text:, ai_query_id:, source_tag:, user: }
+    )
+
+    Turbo::StreamsChannel.broadcast_update_to(
+      "channel_#{entry_prompt.uuid}",
+      target: 'previous_queries',
+      partial: 'journals/previous_queries',
+      locals: { journal: }
+    )
+  end
+end
+
+
+#
+# input_text = [
+#   entry_prompt.role_prompt(user),
+#   entry_prompt.raw_prompt,
+#   entry_prompt.response_format(user)
+# ].join("\n\n")
+#
+# # Replace with your actual AWS credentials
+# access_key = Rails.application.credentials.dig(:aws, :access_key_id)
+# secret_access_key = Rails.application.credentials.dig(:aws, :secret_access_key)
+#
+# begin
+#   # Set up AWS credentials and create the Bedrock client
+#   credentials = Aws::Credentials.new(access_key, secret_access_key)
+#   bedrock_client = Aws::BedrockRuntime::Client.new(
+#     region: "ap-northeast-1",
+#     credentials: credentials
+#   )
+#
+#   # Build the payload according to the official schema:
+#   request_data = {
+#     "inputText" => input_text,
+#     "textGenerationConfig" => {
+#       "maxTokenCount" => 8192,
+#       "stopSequences" => [],
+#       "temperature"   => 0,
+#       "topP"          => 1
+#     }
+#   }
+#
+#   # Convert the payload to a JSON string
+#   body = request_data.to_json
+#
+#   # Invoke the model with the proper parameters
+#   response = bedrock_client.invoke_model({
+#                                            accept:       "application/json",
+#                                            content_type: "application/json",
+#                                            body:         body,
+#                                            model_id:     "amazon.titan-text-express-v1"
+#                                          })
+#
+#   # The response.body is an IO-like object; output its contents:
+#   string_io_object = response.body
+#   string_io_object.rewind
+#   string_io_object.each_line do |line|
+#     puts line
+#   end
+#
+# rescue => e
+#   puts "An error occurred: #{e.class} - #{e.message}"
+#   puts e.backtrace
+# end

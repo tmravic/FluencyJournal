@@ -109,6 +109,7 @@ class AiRequestJob < ApplicationJob
       ai_output.save!
     end
 
+    source_tag = 'ai_assistant'
     corrected_text = ai_query.corrected_text
     ai_query_id = ai_query.id
 
@@ -116,7 +117,7 @@ class AiRequestJob < ApplicationJob
       "channel_#{entry_prompt.uuid}",
       target: 'ai_output',
       partial: 'ai_queries/output',
-      locals: { corrected_text:, ai_query_id: }
+      locals: { corrected_text:, ai_query_id:, source_tag:, user: }
     )
 
     Turbo::StreamsChannel.broadcast_update_to(

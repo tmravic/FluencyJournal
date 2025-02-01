@@ -6,7 +6,7 @@ class FollowupRequestJob < ApplicationJob
     connection = Faraday.new(url: 'https://api.openai.com')
     response = connection.post do |req|
       req.url "/v1/chat/completions"
-      req.options.timeout = 120
+      req.options.timeout = 30
       req.options.open_timeout = 30
       req.headers['Content-Type'] = 'application/json'
       req.headers['Authorization'] = "Bearer #{api_key}"

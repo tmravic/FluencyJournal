@@ -13,7 +13,7 @@
       <%= turbo_frame_tag "notes" do %>
 
         <% if @all_notes.present? %>
-          <%= render @all_notes %>
+          <%= render @all_notes, source_tag: @source_tag %>
         <% end %>
 
       <% end %>

@@ -10,7 +10,7 @@ class FollowupsController < ApplicationController
     @followup_prompt = set_correct_prompt_type(class_name)
     @followup = @followup_prompt.build_followup
 
-    @source_tag = 'ai_assistant'
+    @source_tag = params[:source_tag]
     @uuid = SecureRandom.uuid
     # @ai_models = get_ai_models
 
@@ -19,7 +19,6 @@ class FollowupsController < ApplicationController
     elsif class_name == Entry
       @journal = @followup_origin.journal
     else
-      @source_tag = 'notes_box'
       @followup_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
       # this is just so the Cancel button knows which screen to return to
     end
@@ -94,14 +93,11 @@ class FollowupsController < ApplicationController
   private
 
   def set_user_and_journal_based_on_origin_class(followup_origin_class)
+    @user = Current.user
     if followup_origin_class == AiOutput
       @journal = @followup_origin.ai_query.journal
-      @user = @journal.user
     elsif followup_origin_class == Entry
       @journal = @followup_origin.journal
-      @user = @journal.user
-    elsif followup_origin_class == Note
-      @user = Current.user
     end
   end
 

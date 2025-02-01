@@ -15,10 +15,9 @@
                     method: :delete,
                     data: { turbo_stream: true },
                     class: "btn btn--light" %>
-      <% binding.break %>
       <%= link_to "Back to notes",
                     notes_path,
-                    data: { turbo: true },
+                    data: { turbo_frame: 'notes_box' },
                     class: "btn btn--dark" %>
     <% else %>
       <%= button_to "Delete Followup",
