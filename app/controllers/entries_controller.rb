@@ -25,6 +25,7 @@ class EntriesController < ApplicationController
   # POST /entries or /entries.json
   def create
     @entry = @journal.entries.build(entry_params)
+    @source_tag = 'ai_assistant'
 
     respond_to do |format|
       if @entry.save

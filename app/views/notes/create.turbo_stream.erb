@@ -2,13 +2,17 @@
 <% if header_partial == "notes/notes_header_all" %>
   <% if previous_note %>
     <%= turbo_stream.after dom_id(previous_note) do %>
-      <%= render partial: "notes/note", locals: { note: @note } %>
+      <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
     <% end %>
   <% else %>
-    <%= turbo_stream.prepend "notes", @note %>
+    <%= turbo_stream.prepend "notes" do %>
+      <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
+    <% end %>
   <% end %>
 <% elsif header_partial == 'notes/notes_header_todays' %>
-  <%= turbo_stream.append "notes", @note %>
+  <%= turbo_stream.append "notes" do %>
+    <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
+  <% end %>
 <% end %>
 <%= turbo_stream.update "note_header", partial: header_partial %>
 <%= turbo_stream.update "make_note_button_#{@ai_output.identifier}", ""  if @ai_output && @ai_output.made_note %>

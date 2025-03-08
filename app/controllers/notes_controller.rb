@@ -115,6 +115,7 @@ class NotesController < ApplicationController
   end
 
   def mark_note_as_studied
+    @source_tag = 'notes_box'
     new_interval = @note.last_interval * 2.5
     next_study_date = (new_interval).days.from_now
     notice = "Note will return on #{next_study_date.strftime("%m/%d/%Y")}"
