@@ -1,0 +1,36 @@
+# User journeys
+As a user, I can...
+## Login
+- [ ] Create a new account
+- [ ] Watch a how-to video on the login and post-login page
+- [x] Login to my account
+- [x] View/operate notes on the post-login page
+## Journals
+- [x] View my journals on the journals index page
+- [x] View the show page of any journal
+- [x] Start a new journal on the index page like a Single Page App by giving it a title
+- [x] Close the started journal and continue it on its show page /journals/:id
+- [x] Delete the journal
+- [x] Edit the title of the journal
+### AI Assistant
+- [x] Only open the AI Assistant without making an entry
+- [x] Close the AI Assistant after having opened it
+- [x] Open it and the Entry form at once by pressing the "Start entry" button
+- [x] Close the AI Assistant after having started an entry
+- [x] Make a query to the AI using both Japanese and English and get back Corrected text and Changes 1, 2, etc...
+### AiQuery
+- [ ] Delete Corrected text only
+- [ ] Delete a Change only
+- [x] Ask a followup question about Corrected text
+- [x] Ask a followup question on a change
+
+## Entries
+- [x]
+- [x]
+## Notes
+## Followups
+### Bugs
+- [ ] Switch from OpenAI to Grok for AiRequestJob and FollowupRequestJob
+- Can't delete journals - NotNullViolation on ai_outputs
+- New Note: (newline) can't handle \n newline in input
+- Entry also doesn't handle intended \n newlines
