@@ -3,7 +3,7 @@ class FollowupRequestJob < ApplicationJob
 
   def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
 
-    connection = Faraday.new(url: 'https://api.openai.com')
+    connection = Faraday.new(url: 'https://api.x.ai')
     response = connection.post do |req|
       req.url "/v1/chat/completions"
       req.options.timeout = 30
@@ -94,7 +94,7 @@ class FollowupRequestJob < ApplicationJob
       # need origin: or reference: instead
     )
   rescue Faraday::ConnectionFailed => e
-    handle_error(e, "Connection failed to OpenAI API")
+    handle_error(e, "Connection failed to Xai API")
   rescue JSON::ParserError => e
     handle_error(e, "Failed to parse JSON response")
   rescue ActiveRecord::RecordInvalid => e

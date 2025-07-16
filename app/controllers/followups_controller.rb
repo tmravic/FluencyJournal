@@ -130,7 +130,7 @@ class FollowupsController < ApplicationController
     #     "base_content"=>"What are the readings for all the kanji in this sentence?",
     #     "user_generated_content"=>"お寺に祈りに行って、「好きな女の子が私の彼女になりますように」とお願いしました。",
     #     "uuid"=>"c9b63573-f7de-45c5-98ed-47c49109becb",
-    #     "ai_model"=>"gpt-4o-mini"
+    #     "ai_model"=>"grok-3"
     #   }
     # }
     params.expect(

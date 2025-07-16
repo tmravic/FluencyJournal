@@ -4,7 +4,7 @@ class AiRequestJob < ApplicationJob
   def perform(journal, api_key, entry_prompt)
     user = journal.user
 
-    connection = Faraday.new(url: 'https://api.openai.com')
+    connection = Faraday.new(url: 'https://api.x.ai')
     response = connection.post do |req|
       req.url "/v1/chat/completions"
       req.options.timeout = 120

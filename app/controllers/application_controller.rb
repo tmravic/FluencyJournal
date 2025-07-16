@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_group
 
   def set_faraday_connection(api_key)
-    Faraday.new(url: 'https://api.openai.com') do |faraday|
+    Faraday.new(url: 'https://api.x.ai') do |faraday|
       faraday.headers['Authorization'] = "Bearer #{api_key}"
       faraday.headers['Content-Type'] = 'application/json'
       faraday.adapter Faraday.default_adapter
@@ -36,6 +36,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_api_key
-    @api_key = Rails.application.credentials.openai[:api_key]
+    @api_key = Rails.application.credentials.xai[:api_key]
   end
 end
