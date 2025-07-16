@@ -12,6 +12,7 @@ As a user, I can...
 - [x] Close the started journal and continue it on its show page /journals/:id
 - [x] Delete the journal
 - [x] Edit the title of the journal
+- [ ] Start Journal button appears even after a journal is already started
 ### AI Assistant
 - [x] Only open the AI Assistant without making an entry
 - [x] Close the AI Assistant after having opened it
@@ -30,7 +31,7 @@ As a user, I can...
 ## Notes
 ## Followups
 ### Bugs
-- [ ] Switch from OpenAI to Grok for AiRequestJob and FollowupRequestJob
-- Can't delete journals - NotNullViolation on ai_outputs
+- [x] Switch from OpenAI to Grok for AiRequestJob
+- [x] Switch from OpenAI to Grok for FollowupRequestJob
 - New Note: (newline) can't handle \n newline in input
 - Entry also doesn't handle intended \n newlines
