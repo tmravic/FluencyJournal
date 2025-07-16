@@ -31,7 +31,3 @@ As a user, I can...
 ## Notes
 ## Followups
 ### Bugs
-- [x] Switch from OpenAI to Grok for AiRequestJob
-- [x] Switch from OpenAI to Grok for FollowupRequestJob
-- New Note: (newline) can't handle \n newline in input
-- Entry also doesn't handle intended \n newlines
