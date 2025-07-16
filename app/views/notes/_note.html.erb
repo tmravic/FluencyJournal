@@ -37,7 +37,7 @@
                       class: "btn btn--light" %>
       </div>
     </div>
-    <p><%= note.content %></p>
+    <p><%= simple_format(note.content) %></p>
     <% if note.followups.any? %>
 
       <%= render partial: "notes/previous_followups_on_note", locals: { note: note } %>
