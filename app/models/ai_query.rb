@@ -4,7 +4,7 @@ class AiQuery < ApplicationRecord
   belongs_to :journal, optional: true
   belongs_to :prompt
   delegate :user, to: :journal, allow_nil: true
-  has_many :ai_outputs, dependent: :nullify
+  has_many :ai_outputs, dependent: :destroy
 
   has_and_belongs_to_many :followups
   # has_one :ai_queries_followup, dependent: :nullify
