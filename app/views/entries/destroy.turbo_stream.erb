@@ -1,2 +1,7 @@
 <%= turbo_stream.remove @entry %>
+<% if @entries.empty? %>
+  <%= turbo_stream.update dom_id(Entry.new) do %>
+    <%= render 'entries/empty_state' %>
+  <% end %>
+<% end %>
 <%= render_turbo_stream_flash_messages %>

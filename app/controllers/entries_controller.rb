@@ -56,6 +56,7 @@ class EntriesController < ApplicationController
   # DELETE /entries/1 or /entries/1.json
   def destroy
     @entry.destroy!
+    @entries = @journal.entries.ordered
 
     respond_to do |format|
       format.html { redirect_to journal_path(@journal), status: :see_other, notice: "Entry was successfully deleted." }

@@ -68,6 +68,7 @@ class JournalsController < ApplicationController
   # DELETE /journals/1 or /journals/1.json
   def destroy
     @journal.destroy!
+    @journals = current_group.journals.ordered
 
     respond_to do |format|
       # flash[:notice] = "..."

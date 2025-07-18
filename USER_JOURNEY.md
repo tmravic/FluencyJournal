@@ -12,7 +12,6 @@ As a user, I can...
 - [x] Close the started journal and continue it on its show page /journals/:id
 - [x] Delete the journal
 - [x] Edit the title of the journal
-- [ ] Start Journal button appears even after a journal is already started
 ### AI Assistant
 - [x] Only open the AI Assistant without making an entry
 - [x] Close the AI Assistant after having opened it
