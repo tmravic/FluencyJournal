@@ -128,7 +128,6 @@ class AiRequestJob < ApplicationJob
     end
 
 
-    binding.break
     source_tag = 'ai_assistant'
     corrected_text = ai_query.corrected_text
     ai_query_id = ai_query.id

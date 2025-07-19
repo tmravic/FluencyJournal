@@ -20,7 +20,7 @@
     </div>
     <div class="card">
       <% if @corrected_text_output %>
-        <%= turbo_frame_tag "change_#{@corrected_text_output.identifier}" do %>
+        <%= turbo_frame_tag "#{@prompt.change_keyword}#{@corrected_text_output.identifier}" do %>
           <div class="card__change__title">
             <h4>Corrected text</h4>
             <div>
@@ -64,7 +64,7 @@
       <% @ai_query.ai_outputs.each do |output| %>
         <% next if output == @corrected_text_output %>
         <hr> <!------------>
-        <%= turbo_frame_tag "change_#{output.identifier}" do %>
+        <%= turbo_frame_tag "#{@prompt.change_keyword}#{output.identifier}" do %>
           <div class="card__change">
             <div class="card__change__title">
               <h4><%= "Change #{output.identifier}" %></h4>

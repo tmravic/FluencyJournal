@@ -20,7 +20,7 @@
                     new_followup_path(
                       class_name: note.class,
                       id: note.id,
-                      source_tag: source_tag,
+                      source_tag: @source_tag,
                       followup_from_todays_notes: @todays_notes.present?
                     ),
                     data: { turbo_frame: "notes_box" },

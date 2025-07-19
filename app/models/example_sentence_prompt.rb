@@ -7,7 +7,7 @@ class ExampleSentencePrompt < Prompt
       "to you parts of their journal, notes, or corrections which may contain both #{user.learning_language} " +
       "and #{user.original_language}. Look at both their 'Reference text' and 'Followup Question' to give " +
       "them an example sentence in #{user.learning_language} with a translation in #{user.original_language}. " +
-      "Include a reading for languages that contain kanji or something similar like this: (かく.ご) 覚悟."
+      "Include a reading for languages that contain kanji or something similar like this: (かく.ご) 覚悟 or (い)れました 入れました."
   end
 
   def change_keyword

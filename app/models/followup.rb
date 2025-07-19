@@ -26,4 +26,12 @@ class Followup < ApplicationRecord
     # ex: :entries_followup
     self.send(join_table_name)
   end
+
+  def user
+    if origin.is_a?(Note)
+      origin.user
+    else
+      origin.ai_query.journal.user
+    end
+  end
 end

@@ -27,7 +27,7 @@
               </h4>
               <div>
                 <%= button_to "Delete",
-                              ai_output_path(output.id, source_tag: source_tag),
+                              ai_output_path(output.id, source_tag: source_tag), # source_tag will be either notes_box or ai_assistant
                               method: :delete,
                               data: { turbo_stream: true },
                               class: "btn btn--light" %>

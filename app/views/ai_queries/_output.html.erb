@@ -9,7 +9,7 @@
         <h4>Corrected text</h4>
         <div>
           <%= button_to "Delete",
-                        ai_output_path(corrected_text_output.id),
+                        ai_output_path(corrected_text_output.id, source_tag: source_tag),
                         method: :delete,
                         data: { turbo_stream: true },
                         class: "btn btn--light" %>
@@ -64,7 +64,7 @@
             </h4>
             <div>
               <%= button_to "Delete",
-                            ai_output_path(output.id),
+                            ai_output_path(output.id, source_tag: source_tag),
                             method: :delete,
                             data: { turbo_stream: true },
                             class: "btn btn--light" %>
