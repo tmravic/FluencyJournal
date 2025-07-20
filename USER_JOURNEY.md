@@ -19,8 +19,8 @@ As a user, I can...
 - [x] Close the AI Assistant after having started an entry
 - [x] Make a query to the AI using both Japanese and English and get back Corrected text and Changes 1, 2, etc...
 ### AiQuery
-- [ ] Delete Corrected text only (from a newly created AiQuery)
-- [ ] Delete a Change only (from a newly created AiQuery)
+- [x] Delete Corrected text only (from a newly created AiQuery)
+- [x] Delete a Change only (from a newly created AiQuery)
 - [x] Ask a followup question about Corrected text
 - [x] Ask a followup question on a change
 
@@ -28,7 +28,8 @@ As a user, I can...
 - [x]
 - [x]
 ## Notes
+- [ ] Just made a note, can't make a followup "Content missing"
 ## Followups
 - [ ] Create a note based on a Followup change
-- [ ] Followups need to be associated with a user even ones via notes
+- [ ] Can _output views make a note?
 ### Bugs
