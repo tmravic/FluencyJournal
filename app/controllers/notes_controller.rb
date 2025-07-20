@@ -29,7 +29,7 @@ class NotesController < ApplicationController
     @note = Note.new
     @view_context = params[:view_context]
     @ai_query = AiQuery.find(params[:ai_query_id])
-    @user = User.find(params[:user_id])
+    @user = Current.user
 
     respond_to do |format|
       format.html
