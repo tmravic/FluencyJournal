@@ -19,7 +19,7 @@ class FollowupsController < ApplicationController
     elsif class_name == Entry
       @journal = @followup_origin.journal
     else
-      @followup_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
+      session[:followup_from_todays_notes] = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
       # this is just so the Cancel button knows which screen to return to
     end
   end

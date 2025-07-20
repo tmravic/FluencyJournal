@@ -50,6 +50,7 @@ class NotesController < ApplicationController
     # and stay on the same page with the same view context and header
     header_partial = get_header_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
+    @source_tag = 'notes_box'
     previous_note = @note.previous_note
 
     respond_to do |format|
