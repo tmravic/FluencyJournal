@@ -1,103 +1,72 @@
+# syntax=docker/dockerfile:1
+# check=error=true
+
+# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
+# docker build -t fluency_journal .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name fluency_journal fluency_journal
+
+# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
+
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.6
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS assets
-LABEL authors="Taylor Mravic <taylor.mravic@gmail.com>"
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-WORKDIR /app
+# Rails app lives here
+WORKDIR /rails
 
+# Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
-    curl git libjemalloc2 libvips postgresql-client build-essential libpq-dev && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-ARG USER
-ARG UID
-ARG GID
-ENV USER="${USER}" \
-    UID="${UID}" \
-    GID="${GID}"
+# Set production environment
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development"
 
-RUN groupadd -g $GID $USER && \
-    useradd -u $UID -g $USER -m $USER
+# Throw-away build stage to reduce size of final image
+FROM base AS build
 
-RUN chown -R $USER:$USER /usr/local
-RUN chown -R $USER:$USER /app
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install Node.js v22.11.0 and Yarn using NodeSource
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g yarn && \
-    ln -sf $(which node) /usr/local/bin/node && \
-    ln -sf $(which npm) /usr/local/bin/npm && \
-    ln -sf $(which yarn) /usr/local/bin/yarn
+# Install application gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
 
-USER $USER
-
-COPY --chown=$USER:$USER Gemfile* ./
-RUN gem install rails
-RUN bundle install
-
-# Change working directory for npm and yarn
-ENV NODE_PATH="/usr/local/node_modules"
-ENV PATH="$NODE_PATH/.bin:$PATH"
-
-COPY --chown=$USER:$USER package.json yarn.lock ./
-RUN yarn install --modules-folder $NODE_PATH
-
-ARG RAILS_ENV="development"
-ARG NODE_ENV="development"
-ENV RAILS_ENV="${RAILS_ENV}" \
-    NODE_ENV="${NODE_ENV}"
-
-# Move the entire build context into the image
+# Copy application code
 COPY . .
 
-RUN if [ "${RAILS_ENV}" != "development" ]; then \
-    yarn build && SECRET_KEY_BASE_DUMMY=1 rails assets:precompile; fi
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
 
-EXPOSE 3000
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-CMD ["bash"]
 
-# Stage 2: App (runtime environment)
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS app
-LABEL authors="Taylor Mravic <taylor.mravic@gmail.com>"
 
-WORKDIR /app
 
-RUN apt-get update -qq && apt-get install --no-install-recommends -y build-essential vim libpq5 && \
-    rm -rf /var/lib/apt/lists/*
+# Final stage for app image
+FROM base
 
-ARG USER
-ARG UID
-ARG GID
-ENV USER="${USER}" \
-    UID="${UID}" \
-    GID="${GID}"
+# Copy built artifacts: gems, application
+COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --from=build /rails /rails
 
-RUN groupadd -g $GID $USER && \
-    useradd -u $UID -g $USER -m $USER
+# Run and own only the runtime files as a non-root user for security
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    chown -R rails:rails db log storage tmp
+USER 1000:1000
 
-RUN chown -R $USER:$USER /usr/local
-RUN chown -R $USER:$USER /app
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-USER $USER
-
-COPY --from=assets --chown=$USER:$USER /usr/local/bundle /usr/local/bundle
-COPY --from=assets --chown=$USER:$USER /usr/local/node_modules /usr/local/node_modules
-COPY --from=assets --chown=$USER:$USER /usr/bin /usr/bin
-COPY --from=assets --chown=$USER:$USER /usr/lib/node_modules /usr/lib/node_modules
-COPY --from=assets --chown=$USER:$USER /app /app
-
-# Set environment variables for the runtime
-ENV RAILS_ENV="development" \
-    NODE_ENV="development"
-
-# Expose the Rails server port
-EXPOSE 3000
-
-# Start the Rails server
-CMD ["rails", "s", "-b", "0.0.0.0"]
-FROM ubuntu:latest
-LABEL authors="Taylor"
-
-ENTRYPOINT ["top", "-b"]
+# Start server via Thruster by default, this can be overwritten at runtime
+EXPOSE 80
+CMD ["./bin/thrust", "./bin/rails", "server"]
