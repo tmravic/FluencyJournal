@@ -7,10 +7,10 @@ image: tmravic/fluency_journal
 # Deploy to these servers.
 servers:
   web:
-    - 18.181.188.142
+    - 35.78.195.68
   # job:
   #   hosts:
-  #     - 18.181.188.142
+  #     - 35.78.195.68
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -101,8 +101,8 @@ ssh:
 accessories:
   db:
     image: postgres:16
-    host: 18.181.188.142
-    port: "127.0.0.1:5432:5432"
+    host: 35.78.195.68
+#    port: "127.0.0.1:5432:5432"
     env:
       clear:
         POSTGRES_DB: fluency_journal_production

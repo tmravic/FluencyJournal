@@ -25,11 +25,11 @@ As a user, I can...
 - [x] Ask a followup question on a change
 
 ## Entries
-- [x]
-- [x]
+- [ ] origin.ai_query.journal.user creates error when I clicked a Followup
+- [ ] Double empty state after deleting Entry
 ## Notes
-- [ ] Just made a note, can't make a followup "Content missing"
+- [ ] 
 ## Followups
-- [ ] Create a note based on a Followup change
-- [ ] Can _output views make a note?
+- [ ] error when I made a followup on an Entry then deleted the Entry, Followup now becomes inaccessible  
+- [ ] Does this happen with Notes or AiQueries?
 ### Bugs
