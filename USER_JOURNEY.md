@@ -23,13 +23,17 @@ As a user, I can...
 - [x] Delete a Change only (from a newly created AiQuery)
 - [x] Ask a followup question about Corrected text
 - [x] Ask a followup question on a change
+- [ ] 
+- [ ] 
+- [ ]   
 
 ## Entries
-- [ ] origin.ai_query.journal.user creates error when I clicked a Followup
-- [ ] Double empty state after deleting Entry
+- [ ] 
+- [ ] 
+- [ ] 
 ## Notes
 - [ ] 
+- [ ] 
 ## Followups
-- [ ] error when I made a followup on an Entry then deleted the Entry, Followup now becomes inaccessible  
-- [ ] Does this happen with Notes or AiQueries?
+- [ ] 
 ### Bugs
