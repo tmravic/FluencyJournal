@@ -19,6 +19,8 @@ class Followup < ApplicationRecord
 
   def origin
     followup_origin_class.constantize.find(followup_origin_id)
+  rescue ActiveRecord::RecordNotFound
+    nil # when entry got deleted
   end
 
   def connector
@@ -34,6 +36,8 @@ class Followup < ApplicationRecord
       origin.ai_query.user
     elsif origin.is_a?(Entry)
       origin.journal.user
+    elsif origin.nil?
+      Current.user
     else
       origin.ai_query.journal.user
     end
