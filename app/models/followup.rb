@@ -30,6 +30,10 @@ class Followup < ApplicationRecord
   def user
     if origin.is_a?(Note)
       origin.user
+    elsif origin.is_a?(AiOutput)
+      origin.ai_query.user
+    elsif origin.is_a?(Entry)
+      origin.journal.user
     else
       origin.ai_query.journal.user
     end
