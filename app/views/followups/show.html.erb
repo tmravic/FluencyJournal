@@ -5,9 +5,6 @@
   <% end %>
 
     <div class="container">
-      <%= render partial: 'followups/request_form',
-                 locals: { followup: @followup, source_tag: @source_tag } %>
-
       <div class="card">
         <% ai_query = @followup.ai_queries.first %>
         <% change_keyword = ai_query.prompt.change_keyword %>
@@ -56,6 +53,9 @@
           <% end %>
         <% end %>
       </div>
+
+      <%= render partial: 'followups/request_form',
+                 locals: { followup: @followup, source_tag: @source_tag } %>
     </div>
 
   <% if @source_tag == "notes_box" %>

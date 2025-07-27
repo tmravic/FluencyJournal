@@ -1,63 +1,64 @@
-<% if ai_query_id == "Processing..." %>
-  <div class="card">
-    <h4><%= ai_query_id %></h4>
-  </div>
-<% elsif followup_text.present? %>
-  <% if followup.origin.is_a?(Note) %>
-    <%= render partial: 'followups/request_form', locals: { followup: followup, source_tag: @source_tag } %>
-  <% end %>
+<div class="container">
+  <% if ai_query_id == "Processing..." %>
+    <div class="card">
+      <h4><%= ai_query_id %></h4>
+    </div>
+  <% elsif followup_text.present? %>
+    <div class="card">
+      <h4><%= followup_text %></h4>
 
-  <div class="card">
-    <h4><%= followup_text %></h4>
+      <% ai_query = set_ai_query_when_job_finishes(ai_query_id) %>
 
-    <% ai_query = set_ai_query_when_job_finishes(ai_query_id) %>
+      <% if ai_query %>
+        <% change_keyword = ai_query.prompt.change_keyword %>
+        <% ai_query.ai_outputs.each do |output| %>
+          <hr>
+          <%= turbo_frame_tag "#{source_tag}_#{change_keyword}#{output.identifier}" do %>
+            <!-- <turbo-frame id='answer_1 or example_1'> -->
 
-    <% if ai_query %>
-      <% change_keyword = ai_query.prompt.change_keyword %>
-      <% ai_query.ai_outputs.each do |output| %>
-        <hr>
-        <%= turbo_frame_tag "#{source_tag}_#{change_keyword}#{output.identifier}" do %>
-          <!-- <turbo-frame id='answer_1 or example_1'> -->
-
-          <div class="card__change">
-            <div class="card__change__title">
-              <h4>
-                <%= "#{change_keyword.titleize}#{output.identifier}" %>
-                <!--Answer 1 or Example 1-->
-              </h4>
-              <div>
-                <%= button_to "Delete",
-                              ai_output_path(output.id, source_tag: source_tag), # source_tag will be either notes_box or ai_assistant
-                              method: :delete,
-                              data: { turbo_stream: true },
-                              class: "btn btn--light" %>
-                <%= link_to "Followup",
-                            new_followup_path(class_name: output.class, id: output.id, source_tag: source_tag),
-                            data: { turbo_frame: source_tag },
-                            class: "btn btn--secondary" %>
-                <% unless output.made_note %>
-                  <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
-                    <%= link_to "Note",
-                                new_automatic_notes_path(
-                                  ai_query_id: ai_query.id,
-                                  ai_output_id: output.id
-                                ),
-                                class: "btn btn--primary",
-                                data: {
-                                  turbo_stream: true,
-                                  controller: "scroll",
-                                  action: "click->scroll#scrollToTop"
-                                } %>
+            <div class="card__change">
+              <div class="card__change__title">
+                <h4>
+                  <%= "#{change_keyword.titleize}#{output.identifier}" %>
+                  <!--Answer 1 or Example 1-->
+                </h4>
+                <div>
+                  <%= button_to "Delete",
+                                ai_output_path(output.id, source_tag: source_tag), # source_tag will be either notes_box or ai_assistant
+                                method: :delete,
+                                data: { turbo_stream: true },
+                                class: "btn btn--light" %>
+                  <%= link_to "Followup",
+                              new_followup_path(class_name: output.class, id: output.id, source_tag: source_tag),
+                              data: { turbo_frame: source_tag },
+                              class: "btn btn--secondary" %>
+                  <% unless output.made_note %>
+                    <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
+                      <%= link_to "Note",
+                                  new_automatic_notes_path(
+                                    ai_query_id: ai_query.id,
+                                    ai_output_id: output.id
+                                  ),
+                                  class: "btn btn--primary",
+                                  data: {
+                                    turbo_stream: true,
+                                    controller: "scroll",
+                                    action: "click->scroll#scrollToTop"
+                                  } %>
+                    <% end %>
                   <% end %>
-                <% end %>
+                </div>
+              </div>
+              <div class="card__change_content">
+                <%= render_ai_query_change_content(ai_query, output.identifier, change_keyword, user, html: true, ) %>
               </div>
             </div>
-            <div class="card__change_content">
-              <%= render_ai_query_change_content(ai_query, output.identifier, change_keyword, user, html: true, ) %>
-            </div>
-          </div>
+          <% end %>
         <% end %>
       <% end %>
-    <% end %>
-  </div>
-<% end %>
+    </div>
+
+    <%= render partial: 'followups/request_form',
+               locals: { followup: followup, source_tag: @source_tag } %>
+  <% end %>
+</div>
