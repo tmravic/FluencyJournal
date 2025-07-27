@@ -35,5 +35,8 @@ As a user, I can...
 - [ ] 
 - [ ] 
 ## Followups
-- [ ] 
+- [ ]
 ### Bugs
+- [ ] 
+### General
+- [ ]
