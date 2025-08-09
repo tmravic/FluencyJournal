@@ -1,5 +1,13 @@
 @mixin media($query) {
-  @if $query == tabletAndUp {
+  @if $query == largeMonitorAndUp {
+    @media (min-width: 90rem) {
+      @content;
+    }
+  } @else if $query == laptopAndUp {
+    @media (min-width: 64rem) {
+      @content;
+    }
+  } @else if $query == tabletAndUp {
     @media (min-width: 50rem) {
       @content;
     }
