@@ -12,9 +12,9 @@
                     new_followup_path(
                       class_name: entry.class,
                       id: entry.id,
-                      source_tag: source_tag
+                      source_tag: @source_tag
                     ),
-                    data: { turbo_frame: source_tag },
+                    data: { turbo_frame: @source_tag },
                     class: "btn btn--light" %>
         <%= link_to "Edit",
                     [:edit, journal, entry], # edit_journal_entry_path(journal, entry)

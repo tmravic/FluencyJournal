@@ -6,7 +6,10 @@
   <%= f.input :content, html5: true, placeholder: "Write your journal here one small piece at a time." %>
 
   <div class="form__input__button_block">
-    <%= link_to "Cancel", journal_path(journal, cancel: true), class: "btn btn--light", data: { turbo_stream: true } %>
+    <%= link_to "Cancel",
+                journal_path(journal, cancel: true),
+                class: "btn btn--light",
+                data: { turbo_frame: dom_id(@entry) } %>
     <%= f.submit class: "btn btn--secondary", name: nil %>
   </div>
 <% end %>

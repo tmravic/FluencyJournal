@@ -1,3 +1,6 @@
+<!-- rendered by app/views/journals/show.html.erb in this line: -->
+<!-- render "journals/journal_content", journal: @journal, entries: @entries -->
+
 <div class="header">
   <h3><%= @journal.title %></h3>
 
@@ -27,6 +30,6 @@
     <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
   <% end %>
 <% end %>
-
+<hr style="margin: 10px 0;">
 <%= turbo_frame_tag "ai_assistant" %>
 <br>

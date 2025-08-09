@@ -20,6 +20,7 @@ class EntriesController < ApplicationController
 
   # GET /entries/1/edit
   def edit
+    @source_tag = 'ai_assistant'
   end
 
   # POST /entries or /entries.json
