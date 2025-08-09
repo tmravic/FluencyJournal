@@ -6,7 +6,7 @@ class AiOutput < ApplicationRecord
   validates :content, presence: true # text
   validates :made_note, inclusion: { in: [true, false] }
 
-  def assemble_content(change_keyword, user)
+  def assemble_content(change_keyword, user) # Shouldn't this be in a Helper?
     corrected_sentence = ai_query.corrected_text if ai_query.parsed_response.keys.include?('corrected_text')
 
     if self.identifier == 'corrected_text'

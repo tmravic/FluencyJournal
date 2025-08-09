@@ -3,10 +3,6 @@
     <h4><%= ai_query_id %></h4>
   </div>
 <% elsif followup_text.present? %>
-  <% if followup.origin.is_a?(Note) %>
-    <%= render partial: 'followups/request_form', locals: { followup: followup, source_tag: @source_tag } %>
-  <% end %>
-
   <div class="card">
     <h4><%= followup_text %></h4>
 
@@ -14,8 +10,10 @@
 
     <% if ai_query %>
       <% change_keyword = ai_query.prompt.change_keyword %>
-      <% ai_query.ai_outputs.each do |output| %>
-        <hr>
+      <% ai_query.ai_outputs.each_with_index do |output, index| %>
+        <% unless index.zero? %>
+          <hr>
+        <% end %>
         <%= turbo_frame_tag "#{source_tag}_#{change_keyword}#{output.identifier}" do %>
           <!-- <turbo-frame id='answer_1 or example_1'> -->
 
@@ -60,4 +58,7 @@
       <% end %>
     <% end %>
   </div>
+
+  <%= render partial: 'followups/request_form',
+             locals: { followup: followup, source_tag: @source_tag } %>
 <% end %>

@@ -1,48 +1,70 @@
 <%= turbo_frame_tag "ai_assistant" do %>
-  <div class="container">
-    <div class="request_form">
-      <div>
-        <label for="base_content">Original Language:</label>
-        <textarea id="base_content" readonly><%= @prompt.original_language if @prompt %></textarea>
+  <div class="card">
+    <% if @corrected_text_output %>
+      <%= turbo_frame_tag "#{@prompt.change_keyword}#{@corrected_text_output.identifier}" do %>
+        <div class="card__change__title">
+          <h4>Corrected text</h4>
+          <div>
+            <%= button_to "Delete",
+                          ai_output_path(@corrected_text_output.id),
+                          method: :delete,
+                          data: { turbo_stream: true },
+                          class: "btn btn--light" %>
+            <%= link_to "Followup",
+                        new_followup_path(
+                          class_name: @corrected_text_output.class,
+                          id: @corrected_text_output.id,
+                          source_tag: @source_tag
+                        ),
+                        data: { turbo_frame: @source_tag },
+                        class: "btn btn--secondary" %>
+            <% unless @corrected_text_output.made_note %>
+              <%= turbo_frame_tag "make_note_button_#{@corrected_text_output.identifier}" do %>
+                <%= link_to "Note",
+                            new_automatic_notes_path(
+                              ai_query_id: @ai_query.id,
+                              ai_output_id: @corrected_text_output.id
+                            ),
+                            class: "btn btn--primary",
+                            data: {
+                              turbo_stream: true,
+                              controller: "scroll",
+                              action: "click->scroll#scrollToTop"
+                            } %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
 
-      </div>
-      <div>
-        <label for="user_generated_content">Learning Language:</label>
-        <textarea id="user_generated_content" readonly><%= @prompt.learning_language if @prompt %></textarea>
-      </div>
-      <div style="display:flex;justify-content:center; margin-bottom: 5px;">
-        <%= button_to "Delete AI Question",
-                      journal_ai_query_path(@ai_query.journal, @ai_query),
-                      method: :delete,
-                      data: { turbo_stream: true },
-                      class: "btn btn--light", id: "send_button" %>
-      </div>
-    </div>
-    <div class="card">
-      <% if @corrected_text_output %>
-        <%= turbo_frame_tag "#{@prompt.change_keyword}#{@corrected_text_output.identifier}" do %>
+        <div class="card__change__corrected">
+          <%= @ai_query.corrected_text %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% @ai_query.ai_outputs.each do |output| %>
+      <% next if output == @corrected_text_output %>
+      <hr> <!------------>
+      <%= turbo_frame_tag "#{@prompt.change_keyword}#{output.identifier}" do %>
+        <div class="card__change">
           <div class="card__change__title">
-            <h4>Corrected text</h4>
+            <h4><%= "Change #{output.identifier}" %></h4>
             <div>
               <%= button_to "Delete",
-                            ai_output_path(@corrected_text_output.id),
+                            ai_output_path(output.id),
                             method: :delete,
                             data: { turbo_stream: true },
                             class: "btn btn--light" %>
               <%= link_to "Followup",
-                          new_followup_path(
-                            class_name: @corrected_text_output.class,
-                            id: @corrected_text_output.id,
-                            source_tag: @source_tag
-                          ),
+                          new_followup_path(class_name: output.class, id: output.id, source_tag: @source_tag),
                           data: { turbo_frame: @source_tag },
                           class: "btn btn--secondary" %>
-              <% unless @corrected_text_output.made_note %>
-                <%= turbo_frame_tag "make_note_button_#{@corrected_text_output.identifier}" do %>
+              <% unless output.made_note %>
+                <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
                   <%= link_to "Note",
                               new_automatic_notes_path(
                                 ai_query_id: @ai_query.id,
-                                ai_output_id: @corrected_text_output.id
+                                ai_output_id: output.id,
                               ),
                               class: "btn btn--primary",
                               data: {
@@ -54,53 +76,29 @@
               <% end %>
             </div>
           </div>
-
-          <div class="card__change__corrected">
-            <%= @ai_query.corrected_text %>
+          <div class="card__change_content">
+              <%= render_ai_query_change_content(@ai_query, output.identifier, 'change_', @ai_query.user, html: true) %>
           </div>
-        <% end %>
+        </div>
       <% end %>
+    <% end %>
+  </div>
+  <div class="request_form">
+    <div>
+      <label for="base_content">Original Language:</label>
+      <textarea id="base_content" readonly><%= @prompt.original_language if @prompt %></textarea>
 
-      <% @ai_query.ai_outputs.each do |output| %>
-        <% next if output == @corrected_text_output %>
-        <hr> <!------------>
-        <%= turbo_frame_tag "#{@prompt.change_keyword}#{output.identifier}" do %>
-          <div class="card__change">
-            <div class="card__change__title">
-              <h4><%= "Change #{output.identifier}" %></h4>
-              <div>
-                <%= button_to "Delete",
-                              ai_output_path(output.id),
-                              method: :delete,
-                              data: { turbo_stream: true },
-                              class: "btn btn--light" %>
-                <%= link_to "Followup",
-                            new_followup_path(class_name: output.class, id: output.id, source_tag: @source_tag),
-                            data: { turbo_frame: @source_tag },
-                            class: "btn btn--secondary" %>
-                <% unless output.made_note %>
-                  <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
-                    <%= link_to "Note",
-                                new_automatic_notes_path(
-                                  ai_query_id: @ai_query.id,
-                                  ai_output_id: output.id,
-                                ),
-                                class: "btn btn--primary",
-                                data: {
-                                  turbo_stream: true,
-                                  controller: "scroll",
-                                  action: "click->scroll#scrollToTop"
-                                } %>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-            <div class="card__change_content">
-                <%= render_ai_query_change_content(@ai_query, output.identifier, 'change_', @ai_query.user, html: true) %>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
+    </div>
+    <div>
+      <label for="user_generated_content">Learning Language:</label>
+      <textarea id="user_generated_content" readonly><%= @prompt.learning_language if @prompt %></textarea>
+    </div>
+    <div style="display:flex;justify-content:center; margin-bottom: 5px;">
+      <%= button_to "Delete AI Question",
+                    journal_ai_query_path(@ai_query.journal, @ai_query),
+                    method: :delete,
+                    data: { turbo_stream: true },
+                    class: "btn btn--light", id: "send_button" %>
     </div>
   </div>
 <% end %>
