@@ -3,11 +3,11 @@
 // In Dart Sass @use only includes into the file directly
 // it does not make it globally available to all files
 
-// You can create a namespace like this:
+//// You can create a namespace like this:
 // @use '../colors' as c;
-// Or skip using a namespace with * like this:
+//// Or skip using a namespace with * like this:
 // @use '../fonts' as *;
-
+//
 //.card {
 //  color: c.$blue;
 //  font-size: $font-size;
