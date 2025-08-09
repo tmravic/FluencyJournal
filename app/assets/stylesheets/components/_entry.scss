@@ -16,11 +16,15 @@
   }
 
   &__title {
-    font-size: var(--font-size-m);
+    font-size: var(--font-size-l);
 
     @include components.media(tabletAndUp) {
       font-size: var(--font-size-m);
     }
+  }
+
+  p {
+    font-size: var(--font-size-l);
   }
 
   &__date {
