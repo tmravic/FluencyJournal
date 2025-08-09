@@ -77,10 +77,10 @@ Rails.application.configure do
   ]
 
   # Enable detailed logging for SolidCable
-  ActiveSupport::Notifications.subscribe("solid_cable.message.created") do |*args|
-    event = ActiveSupport::Notifications::Event.new(*args)
-    Rails.logger.info("[SolidCable] Message created - Channel: #{event.payload[:channel]}, Payload: #{event.payload[:payload]}")
-  end
+  # ActiveSupport::Notifications.subscribe("solid_cable.message.created") do |*args|
+  #   event = ActiveSupport::Notifications::Event.new(*args)
+  #   Rails.logger.info("[SolidCable] Message created - Channel: #{event.payload[:channel]}, Payload: #{event.payload[:payload]}")
+  # end
 
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
@@ -93,6 +93,7 @@ Rails.application.configure do
 
   # Assign the custom logger to SolidQueue
   # config.solid_queue.logger = solid_queue_logger
+  config.solid_queue.silence_polling = true
 
   config.hosts << /.*\.ngrok-free\.app/
 end
