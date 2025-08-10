@@ -1,4 +1,4 @@
-<% content_for :title, "Journals" %>
+<% content_for :title, "Fluency Journal - Journals" %>
 
 <%= turbo_stream_from current_group, "journals" %>
 
@@ -9,7 +9,7 @@
   <%= turbo_frame_tag "workspace" %>
 
   <div class="header">
-    <h1>Journals</h1>
+    <h1><%= t("journal.journals") %></h1>
 
     <%= turbo_frame_tag "close_journal_button" %>
 

@@ -1,4 +1,4 @@
 <%= turbo_stream.update(
       "ai_output", partial: "ai_queries/output",
-      locals: { ai_query_id: "Processing...", corrected_text: nil }
+      locals: { ai_query_id: t('ai_query.processing'), corrected_text: nil }
     ) %>

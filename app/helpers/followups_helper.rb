@@ -8,6 +8,6 @@ module FollowupsHelper
       frame = "ai_assistant"
     end
 
-    link_to "Cancel", path, class: "btn btn--light", data: { turbo_frame: frame }
+    link_to t("cancel"), path, class: "btn btn--light", data: { turbo_frame: frame }
   end
 end

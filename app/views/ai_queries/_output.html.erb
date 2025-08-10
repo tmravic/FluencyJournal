@@ -6,14 +6,14 @@
   <% if corrected_text.present? %>
     <%= turbo_frame_tag "#{change_keyword}#{corrected_text_output.identifier}" do %>
       <div class="card__change__title">
-        <h4>Corrected text</h4>
+        <h4><%= t("ai_query.corrected_text") %></h4>
         <div>
-          <%= button_to "Delete",
+          <%= button_to t("delete"),
                         ai_output_path(corrected_text_output.id, source_tag: source_tag),
                         method: :delete,
                         data: { turbo_stream: true },
                         class: "btn btn--light" %>
-          <%= link_to "Followup",
+          <%= link_to t('followup.followup'),
                       new_followup_path(
                         class_name: corrected_text_output.class,
                         id: corrected_text_output.id,
@@ -23,7 +23,7 @@
                       class: "btn btn--secondary" %>
           <% unless ai_query && corrected_text_output.made_note %>
             <%= turbo_frame_tag "make_note_button_#{corrected_text_output.identifier}" do %>
-              <%= link_to "Note",
+              <%= link_to t("note_button"),
                           new_automatic_notes_path(
                             ai_query_id: ai_query.id,
                             ai_output_id: corrected_text_output.id
@@ -43,10 +43,10 @@
         <%= corrected_text %>
       </div>
     <% end %>
-  <% elsif ai_query_id == "Processing..." %>
+  <% elsif ai_query_id == t('ai_query.processing') %>
     <h4><%= ai_query_id %></h4>
   <% else %>
-    <h4>AI Output</h4>
+    <h4><%= t('ai_query.ai_output') %></h4>
   <% end %>
 
   <% if ai_query %>
@@ -59,22 +59,22 @@
         <div class="card__change">
           <div class="card__change__title">
             <h4>
-              <%= "#{change_keyword.titleize}#{output.identifier}" %>
+              <%= "#{t('ai_query.change')} #{output.identifier}" %>
               <!--Change 1-->
             </h4>
             <div>
-              <%= button_to "Delete",
+              <%= button_to t("delete"),
                             ai_output_path(output.id, source_tag: source_tag),
                             method: :delete,
                             data: { turbo_stream: true },
                             class: "btn btn--light" %>
-              <%= link_to "Followup",
+              <%= link_to t('followup.followup'),
                           new_followup_path(class_name: output.class, id: output.id, source_tag: source_tag),
                           data: { turbo_frame: source_tag },
                           class: "btn btn--secondary" %>
               <% unless output.made_note %>
                 <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
-                  <%= link_to "Note",
+                  <%= link_to t("note_button"),
                               new_automatic_notes_path(
                                 ai_query_id: ai_query.id,
                                 ai_output_id: output.id

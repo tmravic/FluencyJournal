@@ -19,3 +19,7 @@ jp:
       entry:
         create: "条を作成"
         update: "条を編集"
+      followup:
+        create: "追及を作成"
+      note:
+        create: "ノートを作成"

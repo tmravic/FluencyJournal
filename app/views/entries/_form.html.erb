@@ -3,10 +3,12 @@
 <%= simple_form_for [journal, entry], html: { class: "form entry" } do |f| %>
   <%= form_error_notification(entry) %>
 
-  <%= f.input :content, html5: true, placeholder: "Write your journal here one small piece at a time." %>
+  <%= f.input :content,
+              html5: true,
+              placeholder: t('simple_form.placeholders.entry.content') %>
 
   <div class="form__input__button_block">
-    <%= link_to "Cancel",
+    <%= link_to t("cancel"),
                 journal_path(journal, cancel: true),
                 class: "btn btn--light",
                 data: { turbo_frame: dom_id(@entry) } %>

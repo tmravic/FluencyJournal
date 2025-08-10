@@ -9,7 +9,7 @@ class Note < ApplicationRecord
     message: "%{value} is not a valid category"
   }
 
-  enum :category, { vocab: 0, grammar: 1, free: 2, automatic: 3 }
+  enum :category, { vocab: 0, grammar: 1, draft_journal: 2, automatic: 3 }
 
   scope :next_to_study, -> {
     where(arel_table[:next_study_date].lteq(DateTime.now))

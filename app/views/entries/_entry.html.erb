@@ -2,13 +2,13 @@
   <div class="entry">
     <div class="entry__header">
       <h2 class="entry__title">
-        Entry <%= entry.entry_number %>
+        <%= t('entry.entry', number: entry.entry_number) %>
       </h2>
 
       <span class="entry__date"><%= entry.created_at.strftime("%m/%d/%Y") %></span>
 
       <div class="entry__actions">
-        <%= link_to "Followup",
+        <%= link_to t('followup.followup'),
                     new_followup_path(
                       class_name: entry.class,
                       id: entry.id,
@@ -16,10 +16,10 @@
                     ),
                     data: { turbo_frame: @source_tag },
                     class: "btn btn--light" %>
-        <%= link_to "Edit",
+        <%= link_to t("edit"),
                     [:edit, journal, entry], # edit_journal_entry_path(journal, entry)
                     class: "btn btn--light" %>
-        <%= button_to "Delete",
+        <%= button_to t("delete"),
                       [journal, entry],
                       method: :delete,
                       form: { data: { turbo_confirm: "Really delete this entry?" } },

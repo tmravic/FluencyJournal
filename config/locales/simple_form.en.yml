@@ -19,3 +19,7 @@ en:
       entry:
         create: Add entry
         update: Edit content
+      followup:
+        create: Create Followup
+      note:
+        create: Create Note

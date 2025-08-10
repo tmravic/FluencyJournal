@@ -4,7 +4,7 @@
   <%= f.input :title, input_html: { autofocus: true } %>
 
   <div class="form__input__button_block">
-    <%= link_to "Cancel", journals_path, class: "btn btn--light" %>
+    <%= link_to t("cancel"), journals_path, class: "btn btn--light" %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>
 <% end %>

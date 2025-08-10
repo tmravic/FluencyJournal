@@ -1,7 +1,7 @@
 <% content_for :title, "Editing journal" %>
 
 <main class="container">
-  <%= link_to sanitize("&larr; Back to journals"), journal_path(@journal) %>
+  <%= link_to sanitize("&larr; #{t('journal.back_to_journals')}"), journal_path(@journal) %>
 
   <div class="header">
     <h1>Editing journal</h1>

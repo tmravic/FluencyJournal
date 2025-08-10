@@ -18,12 +18,12 @@
 
   <div class="form__input__button_block">
     <% if automatic %>
-      <%= f.select :category, Note.categories.keys.map { |key| [ key.humanize, key ] },
+      <%= f.select :category, Note.categories.keys.map { |key| [ Note.human_attribute_name("categories.#{key}"), key ] },
                    { selected: 'automatic' } %>
     <% else %>
       <%= f.select :category, hide_automatic_notes_option %>
     <% end %>
-    <%= link_to "Cancel", notes_path, class: "btn btn--light", data: { turbo_frame: "notes_box" } %>
+    <%= link_to t("cancel"), notes_path, class: "btn btn--light", data: { turbo_frame: "notes_box" } %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>
 <% end %>
