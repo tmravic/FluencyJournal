@@ -1,4 +1,7 @@
+require 'action_view/helpers/translation_helper'
+
 class FollowupRequestJob < ApplicationJob
+  include ActionView::Helpers::TranslationHelper
   queue_as :default
 
   def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
@@ -76,7 +79,7 @@ class FollowupRequestJob < ApplicationJob
 
     ai_query_id = ai_query.id
     uuid = followup_prompt.uuid
-    followup_text = "Followup #{followup_prompt.change_keyword.titleize.strip}"
+    followup_text = t('followup.followup_answer')
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{uuid}",
