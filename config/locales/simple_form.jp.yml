@@ -2,13 +2,20 @@ jp:
   simple_form:
     placeholders:
       journal:
-        title: 記入の題名
+        title: "日記の題名"
+      entry:
+        content: "ここに日記の条を一つずつ書きましょう。\nAI機能を使って間違いを確認できます。"
     labels:
       journal:
-        title: 題名
+        title: "題名"
+      entry:
+        content: "条"
 
   helpers:
     submit:
       journal:
-        create: 記入を始める
-        update: 題名を変更
+        create: "日記を始める"
+        update: "題名を変更"
+      entry:
+        create: "条を作成"
+        update: "条を編集"

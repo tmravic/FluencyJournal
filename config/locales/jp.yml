@@ -28,4 +28,41 @@
 #       enabled: "ON"
 
 jp:
-  hello: "こんにちは"
+  english: "英語"
+  japanese: "日本語"
+  cancel: "取り消し"
+  delete: "削除"
+  edit: "編集"
+  logout: "ログアウト"
+  sign_in: "サインイン"
+  note_button: "ノート"
+  note:
+    actions:
+      studied: "学習"
+      studied_warning: "今日の日記の条で内容を使用した場合、ノートを学習としてマークします。学習済みにマークし、将来の日に設定しますか？"
+  journal:
+    journals: "日記一覧"
+    start: "日記開始"
+    back_to_journals: "日記一覧に戻る"
+    open_ai_assistant: "AI質問欄を開く"
+    close_ai_assistant: "AI質問欄を閉じる"
+  entry:
+    start_entry: "条を作成"
+  followup:
+    followup: "追及"
+    previous: "過去のAI質問と追及"
+    short: "追"
+    answer: "回答"
+    followup_answer: "追及回答"
+    delete_followup:
+  ai_query:
+    short: "問"
+    corrected_text: "修正文"
+    change: "修正"
+    ai_output: "AI生成はここになります。"
+    processing: "処理中..."
+
+  activerecord:
+    errors:
+      messages:
+        blank: "を入力してください"

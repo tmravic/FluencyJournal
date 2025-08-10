@@ -3,6 +3,8 @@ en:
     placeholders:
       journal:
         title: Title of your journal
+      entry:
+        content: "Write your journal here one part at a time.\nUse the AI Assistant to check for mistakes."
     labels:
       journal:
         title: Title
