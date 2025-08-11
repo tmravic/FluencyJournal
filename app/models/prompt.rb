@@ -1,5 +1,4 @@
 class Prompt < ApplicationRecord
-
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
 
   has_one :ai_query, dependent: :destroy
@@ -20,7 +19,7 @@ class Prompt < ApplicationRecord
   # You will have to specify :url, and :scope (the model name) explicitly.
 
   def abbr(user)
-    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, 'English')
+    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, "English")
   end
 
   def original_language

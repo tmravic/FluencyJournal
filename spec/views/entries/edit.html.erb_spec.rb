@@ -16,9 +16,7 @@ RSpec.describe "entries/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", entry_path(entry), "post" do
-
       assert_select "textarea[name=?]", "entry[content]"
-
       assert_select "input[name=?]", "entry[journal_id]"
     end
   end

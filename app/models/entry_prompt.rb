@@ -15,7 +15,7 @@ class EntryPrompt < Prompt
   end
 
   def change_keyword
-    'change_'
+    "change_"
   end
 
   def response_format(user)

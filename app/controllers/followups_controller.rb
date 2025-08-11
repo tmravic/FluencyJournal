@@ -101,7 +101,7 @@ class FollowupsController < ApplicationController
     end
   end
 
-  def set_correct_prompt_type(class_name, params={})
+  def set_correct_prompt_type(class_name, params = {})
     if is_vocab_or_grammar_note?(class_name)
       set_prompt_type_based_on_params(params, ExampleSentencePrompt)
     else
@@ -136,7 +136,7 @@ class FollowupsController < ApplicationController
     params.expect(
       followup:
         [ :source_tag, :followup_origin_class, :followup_origin_id,
-          followup_prompt: [:base_content, :user_generated_content, :raw_prompt, :ai_model, :uuid]
+          followup_prompt: [ :base_content, :user_generated_content, :raw_prompt, :ai_model, :uuid ]
         ]
     )
   end

@@ -19,7 +19,7 @@ class AiQuery < ApplicationRecord
 
   def abbr(user)
     # This same thing exists on Prompt
-    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, 'English')
+    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, "English")
   end
 
   def find_ai_output_by_identifier(identifier)
@@ -35,7 +35,7 @@ class AiQuery < ApplicationRecord
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
   def parsed_response
-    JSON.parse(self.raw_response || '{}') rescue {}
+    JSON.parse(self.raw_response || "{}") rescue {}
   end
 
   def count_changes(string)
@@ -52,8 +52,8 @@ class AiQuery < ApplicationRecord
   def change_content(num, change_keyword)
     result = parsed_response.dig("#{change_keyword}#{num}", "content")
     if result
-      if result.include?('→')
-        return result.split('→')
+      if result.include?("→")
+        return result.split("→")
       else
         return result
       end
@@ -63,32 +63,32 @@ class AiQuery < ApplicationRecord
   end
 
   def change_explanation(change_keyword, num, abbr)
-    parsed_response.dig("#{change_keyword}#{num}","explanation_#{abbr}") || error_message
+    parsed_response.dig("#{change_keyword}#{num}", "explanation_#{abbr}") || error_message
   end
 
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
-    content = parsed_response.fetch('corrected_text', nil)
+    content = parsed_response.fetch("corrected_text", nil)
 
     # When the user input nothing
     # {"..."=>0}
-    return "No content" if is_hash?(content) && content['...']
+    return "No content" if is_hash?(content) && content["..."]
 
     # {"お時間がかかってしまい申し訳ございません。"=>"お時間がかかってしまい申し訳ございません。"}
     return content.keys.first if is_hash?(content) && content.keys.first == content.values.first
 
     #  {"text"=>"昨年のクリスマスに心をあげた"},
     #  {"text"=>"昨年のクリスマスに私はあなたに心を捧げました"}]
-    return content['text'] if is_hash?(content) && content['text']
+    return content["text"] if is_hash?(content) && content["text"]
 
     # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content['内容'] if is_hash?(content) && content['内容']
+    return content["内容"] if is_hash?(content) && content["内容"]
 
     # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content['content'] if is_hash?(content) && content['content']
+    return content["content"] if is_hash?(content) && content["content"]
 
     # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content['corrected_japanese'] if is_hash?(content) && content['corrected_japanese']
+    return content["corrected_japanese"] if is_hash?(content) && content["corrected_japanese"]
 
     #  {"Today was such a hot day."=>""}
     if is_hash?(content) && content.values.first.empty?

@@ -3,7 +3,7 @@ class CreateEntriesFollowupsJoinTable < ActiveRecord::Migration[8.0]
     create_join_table :entries, :followups do |t|
       t.index :entry_id
       t.index :followup_id
-      t.index [:entry_id, :followup_id], unique: true
+      t.index [ :entry_id, :followup_id ], unique: true
     end
   end
 end

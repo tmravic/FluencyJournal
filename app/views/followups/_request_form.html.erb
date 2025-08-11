@@ -21,7 +21,7 @@
                     class: "btn btn--light" %>
       <%= link_to "Back to notes",
                     notes_path,
-                    data: { turbo_frame: 'notes_box' },
+                    data: { turbo_frame: "notes_box" },
                     class: "btn btn--dark" %>
     <% else %>
       <%= button_to t("followup.delete_followup"),

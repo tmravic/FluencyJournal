@@ -1,5 +1,5 @@
 class EntriesController < ApplicationController
-  require 'securerandom'
+  require "securerandom"
   before_action :set_journal, only: %i[ new create show edit update destroy ]
   before_action :set_entry, only: %i[ show edit update destroy ]
   before_action :get_ai_models
@@ -20,13 +20,13 @@ class EntriesController < ApplicationController
 
   # GET /entries/1/edit
   def edit
-    @source_tag = 'ai_assistant'
+    @source_tag = "ai_assistant"
   end
 
   # POST /entries or /entries.json
   def create
     @entry = @journal.entries.build(entry_params)
-    @source_tag = 'ai_assistant'
+    @source_tag = "ai_assistant"
 
     respond_to do |format|
       if @entry.save

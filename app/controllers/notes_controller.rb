@@ -2,7 +2,7 @@ class NotesController < ApplicationController
   before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied ]
 
   def index
-    @source_tag = 'notes_box'
+    @source_tag = "notes_box"
     @todays_notes = Current.user&.notes.next_to_study
     respond_to do |format|
       format.html
@@ -11,7 +11,7 @@ class NotesController < ApplicationController
   end
 
   def all
-    @source_tag = 'notes_box'
+    @source_tag = "notes_box"
     @all_notes = Current.user&.notes.order(:next_study_date)
     respond_to do |format|
       format.html
@@ -50,7 +50,7 @@ class NotesController < ApplicationController
     # and stay on the same page with the same view context and header
     header_partial = get_header_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
-    @source_tag = 'notes_box'
+    @source_tag = "notes_box"
     previous_note = @note.previous_note
 
     respond_to do |format|
@@ -117,7 +117,7 @@ class NotesController < ApplicationController
   end
 
   def mark_note_as_studied
-    @source_tag = 'notes_box'
+    @source_tag = "notes_box"
     new_interval = @note.last_interval * 2.5
     next_study_date = (new_interval).days.from_now
     notice = "Note will return on #{next_study_date.strftime("%m/%d/%Y")}"
@@ -139,17 +139,17 @@ class NotesController < ApplicationController
   end
 
   def get_header_from_view_context(view_context)
-    if view_context == 'todays_notes'
-      'notes/notes_header_todays'
-    elsif view_context == 'all_notes'
-      'notes/notes_header_all'
+    if view_context == "todays_notes"
+      "notes/notes_header_todays"
+    elsif view_context == "all_notes"
+      "notes/notes_header_all"
     end
   end
 
   def get_collection_from_view_context(view_context)
-    if view_context == 'todays_notes'
+    if view_context == "todays_notes"
       @todays_notes = Current.user&.notes.next_to_study
-    elsif view_context == 'all_notes'
+    elsif view_context == "all_notes"
       @all_notes = Current.user&.notes.order(:next_study_date)
     end
   end

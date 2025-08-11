@@ -1,6 +1,6 @@
 module FollowupsHelper
   def render_correct_cancel_button
-    if @source_tag == 'notes_box'
+    if @source_tag == "notes_box"
       frame = "notes_box"
       path = session[:followup_from_todays_notes] ? notes_path : all_notes_path
     elsif @journal

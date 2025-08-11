@@ -14,7 +14,7 @@ class JournalsController < ApplicationController
   def show
     cancel = params["cancel"]
     @entries = @journal.entries.ordered
-    @source_tag = 'ai_assistant'
+    @source_tag = "ai_assistant"
     respond_to do |format|
       format.html
       format.turbo_stream do

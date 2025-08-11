@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   def list_models(api_key)
     connection = set_faraday_connection(api_key)
-    response = connection.get('/v1/models')
+    response = connection.get("/v1/models")
 
     if response.success?
       JSON.parse(response.body)["data"]
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_ai_models
-    @ai_models = list_models(@api_key).map { |ai_model| ai_model['id'] }
+    @ai_models = list_models(@api_key).map { |ai_model| ai_model["id"] }
   end
 
   private
@@ -28,9 +28,9 @@ class ApplicationController < ActionController::Base
   helper_method :current_group
 
   def set_faraday_connection(api_key)
-    Faraday.new(url: 'https://api.x.ai') do |faraday|
-      faraday.headers['Authorization'] = "Bearer #{api_key}"
-      faraday.headers['Content-Type'] = 'application/json'
+    Faraday.new(url: "https://api.x.ai") do |faraday|
+      faraday.headers["Authorization"] = "Bearer #{api_key}"
+      faraday.headers["Content-Type"] = "application/json"
       faraday.adapter Faraday.default_adapter
     end
   end

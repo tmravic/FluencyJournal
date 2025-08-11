@@ -4,30 +4,30 @@ class AiRequestJob < ApplicationJob
   def perform(journal, api_key, entry_prompt)
     user = journal.user
 
-    connection = Faraday.new(url: 'https://api.x.ai')
+    connection = Faraday.new(url: "https://api.x.ai")
     response = connection.post do |req|
       req.url "/v1/chat/completions"
       req.options.timeout = 120
       req.options.open_timeout = 30
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['Authorization'] = "Bearer #{api_key}"
+      req.headers["Content-Type"] = "application/json"
+      req.headers["Authorization"] = "Bearer #{api_key}"
       req.body = {
         model: entry_prompt.ai_model,
         response_format: { type: "json_object" },
         messages: [
           {
-            role: 'system',
+            role: "system",
             content: entry_prompt.role_prompt(user)
           },
           {
-            role: 'user',
+            role: "user",
             content: entry_prompt.raw_prompt
           },
           {
-            role: 'user',
+            role: "user",
             content: entry_prompt.response_format(user)
           }
-        ],
+        ]
       }.to_json
     end
 
@@ -57,7 +57,7 @@ class AiRequestJob < ApplicationJob
     #        "rejected_prediction_tokens"=>0}},
     #  "system_fingerprint"=>"fp_c7ca0ebaca"}
 
-    full_token_details = json_response['usage']
+    full_token_details = json_response["usage"]
     # {
     #   "prompt_tokens"=>206,
     #   "completion_tokens"=>174,
@@ -76,7 +76,7 @@ class AiRequestJob < ApplicationJob
     token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
     # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
 
-    response_from_open_ai = json_response['choices'][0]['message'].dig("content")
+    response_from_open_ai = json_response["choices"][0]["message"].dig("content")
 
     ai_query = AiQuery.build(
       prompt_tokens: token_data["prompt_tokens"],
@@ -103,27 +103,27 @@ class AiRequestJob < ApplicationJob
     # Make one more AiOutput for the Corrected Text
     ai_query.ai_outputs.create(
       made_note: false,
-      identifier: 'corrected_text'
+      identifier: "corrected_text"
     ).tap do |ai_output|
       ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
       ai_output.save!
     end
 
-    source_tag = 'ai_assistant'
+    source_tag = "ai_assistant"
     corrected_text = ai_query.corrected_text
     ai_query_id = ai_query.id
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{entry_prompt.uuid}",
-      target: 'ai_output',
-      partial: 'ai_queries/output',
+      target: "ai_output",
+      partial: "ai_queries/output",
       locals: { corrected_text:, ai_query_id:, source_tag:, user: }
     )
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{entry_prompt.uuid}",
-      target: 'previous_queries',
-      partial: 'journals/previous_queries',
+      target: "previous_queries",
+      partial: "journals/previous_queries",
       locals: { journal: }
     )
   end
