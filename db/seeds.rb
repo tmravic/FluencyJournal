@@ -20,7 +20,7 @@ users = [
     group: Group.find_by(name: "JapaneseGroup"),
     learning_language: 'Japanese',
     original_language: 'English'
-  },
+  }
 ]
 users.each do |user_attrs|
   User.find_or_create_by(email_address: user_attrs[:email_address]) do |user|

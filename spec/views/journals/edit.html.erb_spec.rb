@@ -17,11 +17,8 @@ RSpec.describe "journals/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", journal_path(journal), "post" do
-
       assert_select "input[name=?]", "journal[title]"
-
       assert_select "textarea[name=?]", "journal[content]"
-
       assert_select "input[name=?]", "journal[user_id]"
     end
   end

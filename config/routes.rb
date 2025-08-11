@@ -4,7 +4,7 @@ Rails.application.routes.draw do
       get :open_ai_assistant
     end
     resources :entries
-    resources :ai_queries, only: [:show, :destroy] do
+    resources :ai_queries, only: [ :show, :destroy ] do
       collection do
         post :ai_request
       end
@@ -19,8 +19,8 @@ Rails.application.routes.draw do
       post :mark_note_as_studied
     end
   end
-  resources :followups, only: [:new, :create, :show, :destroy]
-  resources :ai_outputs, only: [:destroy]
+  resources :followups, only: [ :new, :create, :show, :destroy ]
+  resources :ai_outputs, only: [ :destroy ]
 
   resource :session
   resources :passwords, param: :token
@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
   get "/up/", to: "up#index", as: :up
   get "/up/databases", to: "up#databases", as: :up_databases
-  mount ActionCable.server, at: '/cable'
+  mount ActionCable.server, at: "/cable"
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

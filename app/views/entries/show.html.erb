@@ -1,6 +1,6 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @entry %>
+<%= render 'entries/entry', entry: @entry %>
 
 <div>
   <%= link_to "Edit this entry", edit_entry_path(@entry) %> |

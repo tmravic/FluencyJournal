@@ -11,7 +11,7 @@ module ApplicationHelper
     end
   end
 
-  def render_ai_query_change_content(ai_query, identifier, change_keyword, user=nil, html: false)
+  def render_ai_query_change_content(ai_query, identifier, change_keyword, user = nil, html: false)
     contents_hash = create_contents_hash(ai_query, identifier, change_keyword, user)
     # { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
 
@@ -31,7 +31,7 @@ module ApplicationHelper
       end
 
     # for auto-filling notes, html == false
-    elsif identifier == 'corrected_text'
+    elsif identifier == "corrected_text"
       "#{contents_hash[:learning_language]}\n↓\n#{contents_hash[:corrected_sentence]}"
     elsif has_content_for_followup?(contents_hash)
       "#{contents_hash[:content]}\n#{contents_hash[:explanation]}"
@@ -60,7 +60,7 @@ module ApplicationHelper
     learning_language = ai_query.prompt.learning_language
     corrected_sentence = ai_query.corrected_text
 
-    [learning_language, corrected_sentence]
+    [ learning_language, corrected_sentence ]
   end
 
   def get_ai_output_change_variables(ai_query, identifier, change_keyword)
@@ -68,18 +68,18 @@ module ApplicationHelper
     content_last = ai_query.change_content(identifier, change_keyword).last
     explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(ai_query.user))
 
-    [content_first, content_last, explanation]
+    [ content_first, content_last, explanation ]
   end
 
-  def get_followup_variables(ai_query, identifier, change_keyword, user=nil)
+  def get_followup_variables(ai_query, identifier, change_keyword, user = nil)
     content = ai_query.change_content(identifier, change_keyword)
     explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(user))
 
-    [content, explanation]
+    [ content, explanation ]
   end
 
-  def create_contents_hash(ai_query, identifier, change_keyword, user=nil)
-    if identifier == 'corrected_text'
+  def create_contents_hash(ai_query, identifier, change_keyword, user = nil)
+    if identifier == "corrected_text"
       learning_language, corrected_sentence = get_ai_output_correction_variables(ai_query)
     elsif rendering_followup?(ai_query, identifier, change_keyword)
       content, explanation = get_followup_variables(ai_query, identifier, change_keyword, user)

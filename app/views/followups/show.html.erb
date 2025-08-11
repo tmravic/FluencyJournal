@@ -17,22 +17,22 @@
           <div class="card__change">
             <div class="card__change__title">
               <h4>
-                <%= "#{change_keyword.titleize}#{output.identifier}" %>
+                <%= "#{t('followup.answer')} #{output.identifier}" %>
                 <!--Answer 1 or Example 1-->
               </h4>
               <div>
-                <%= button_to "Delete",
+                <%= button_to t("delete"),
                               ai_output_path(output.id, source_tag: @source_tag), # source_tag will be either notes_box or ai_assistant
                               method: :delete,
                               data: { turbo_stream: true },
                               class: "btn btn--light" %>
-                <%= link_to "Followup",
+                <%= link_to t('followup.followup'),
                             new_followup_path(class_name: output.class, id: output.id, source_tag: @source_tag),
                             data: { turbo_frame: @source_tag },
                             class: "btn btn--secondary" %>
                 <% unless output.made_note %>
                   <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
-                    <%= link_to "Note",
+                    <%= link_to t("note_button"),
                                 new_automatic_notes_path(
                                   ai_query_id: ai_query.id,
                                   ai_output_id: output.id,

@@ -30,8 +30,8 @@ gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
 
-gem 'aws-sigv4'
-gem 'aws-sdk-bedrockruntime'
+gem "aws-sigv4"
+gem "aws-sdk-bedrockruntime"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -50,7 +50,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
+  gem "brakeman", "~> 7.1.0", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false

@@ -24,7 +24,7 @@ class Followup < ApplicationRecord
   end
 
   def connector
-    join_table_name = (followup_origin_class.pluralize + 'Followups').underscore.to_sym
+    join_table_name = (followup_origin_class.pluralize + "Followups").underscore.to_sym
     # ex: :entries_followup
     self.send(join_table_name)
   end

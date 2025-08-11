@@ -1,7 +1,7 @@
 <div class="container">
   <p style="color: green"><%= notice %></p>
 
-  <%= render @note %>
+  <%= render 'notes/note', note: @note %>
 
   <div>
     <%= link_to "Edit this note", edit_note_path(@note) %>

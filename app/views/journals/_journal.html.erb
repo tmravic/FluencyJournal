@@ -5,11 +5,11 @@
                 data: { turbo_frame: "_top" } %>
     <span class="journal__date"><%= journal.created_at.strftime("%m/%d/%Y") %></span>
     <div class="journal__actions">
-      <%= link_to "Edit",
+      <%= link_to t("edit"),
                   edit_journal_path(journal),
                   data: { turbo: true },
                   class: "btn btn--light" %>
-      <%= button_to "Delete",
+      <%= button_to t("delete"),
                     journal_path(journal),
                     method: :delete,
                     form: { data: { turbo_confirm: "Really delete this journal?" } },

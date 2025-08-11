@@ -28,4 +28,72 @@
 #       enabled: "ON"
 
 jp:
-  hello: "こんにちは"
+  english: "英語"
+  japanese: "日本語"
+  cancel: "取り消し"
+  delete: "削除"
+  edit: "編集"
+  close:
+
+  logout: "ログアウト"
+  sign_in: "サインイン"
+  note_button: "ノート"
+  note:
+    todays_notes: "今日のノート"
+    all_notes: "全ノート"
+    close: "閉じる"
+    new: "新規"
+    next_review: "次回復習"
+    note_added: "ノートを今日の復習キュー末に追加。"
+    actions:
+      studied: "学習"
+      studied_warning: "今日の日記の文章で内容を使用した場合、ノートを学習としてマークします。学習済みにマークし、将来の日に設定しますか？"
+  journal:
+    journals: "日記一覧"
+    start: "日記開始"
+    back_to_journals: "日記一覧に戻る"
+    open_ai_assistant: "AI質問欄を開く"
+    close_ai_assistant: "AI質問欄を閉じる"
+  entry:
+    entry: "%{number}文章"
+    start_entry: "文章を作成"
+  followup:
+    followup: "追及"
+    previous: "過去のAI質問と追及"
+    short: "追"
+    answer: "回答"
+    followup_answer: "追及回答"
+    delete_followup: "追及削除"
+    followup_question: "追及質問"
+    reference_text: "参照文"
+    placeholder: "追及質問を書いてください。"
+  ai_query:
+    short: "問"
+    corrected_text: "修正文"
+    change: "修正"
+    ai_output: "AI生成はここになります。"
+    processing: "処理中..."
+    original_language: "母語:"
+    learning_language: "学習言語:"
+    placeholder:
+      original_language: "意味を確認するため、母語で日記の文章を入力してください。"
+      learning_language: "学習中の言語で日記の文章を入力してください。"
+    delete: "質問削除"
+    send: "送信"
+
+  activerecord:
+    errors:
+      models:
+        note:
+          attributes:
+            category:
+              inclusion: "%{value} は有効なカテゴリではありません"
+      messages:
+        blank: "を入力してください"
+    attributes:
+      note:
+        categories:
+          vocab: "単語"
+          grammar: "文法"
+          draft_journal: "下書き日記"
+          automatic: "自動ノート"

@@ -1,5 +1,8 @@
+<!-- rendered by app/views/journals/show.html.erb in this line: -->
+<!-- render "journals/journal_content", journal: @journal, entries: @entries -->
+
 <div class="header">
-  <h3><%= @journal.title %></h3>
+  <h2><%= @journal.title %></h2>
 
   <%= turbo_frame_tag "open_ai_assistant_button" do %>
     <%= render "entries/open_ai_assistant_button" %>
@@ -14,7 +17,12 @@
 <%= turbo_frame_tag "entries" do %>
   <% if @entries.present? %>
     <%= render 'entries/empty_state' %>
-    <%= render @entries, journal: @journal, source_tag: @source_tag %>
+    <%= render partial: 'entries/entry',
+               collection: @entries,
+               locals: {
+                 journal: @journal,
+                 source_tag: @source_tag
+               } %>
   <% end %>
 <% end %>
 
@@ -27,6 +35,6 @@
     <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
   <% end %>
 <% end %>
-
+<hr style="margin: 10px 0;">
 <%= turbo_frame_tag "ai_assistant" %>
 <br>

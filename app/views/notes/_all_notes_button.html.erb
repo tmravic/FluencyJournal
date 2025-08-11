@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "all_notes_button" do %>
-  <%= link_to "All notes",
+  <%= link_to t('note.all_notes'),
             all_notes_path,
             class: "btn btn--secondary",
             data: { turbo_frame: "notes_box" } %>

@@ -38,7 +38,7 @@ module FluencyJournal
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    config.time_zone = 'Asia/Tokyo'
+    config.time_zone = "Asia/Tokyo"
 
     # Ensure Active Record uses the local timezone for timestamps
     config.active_record.default_timezone = :local

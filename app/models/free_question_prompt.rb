@@ -13,7 +13,7 @@ class FreeQuestionPrompt < Prompt
 
 
   def change_keyword
-    'answer_'
+    "answer_"
   end
 
   def response_format(user)

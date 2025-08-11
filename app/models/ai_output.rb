@@ -4,12 +4,12 @@ class AiOutput < ApplicationRecord
 
   validates :identifier, presence: true # string
   validates :content, presence: true # text
-  validates :made_note, inclusion: { in: [true, false] }
+  validates :made_note, inclusion: { in: [ true, false ] }
 
   def assemble_content(change_keyword, user) # Shouldn't this be in a Helper?
-    corrected_sentence = ai_query.corrected_text if ai_query.parsed_response.keys.include?('corrected_text')
+    corrected_sentence = ai_query.corrected_text if ai_query.parsed_response.keys.include?("corrected_text")
 
-    if self.identifier == 'corrected_text'
+    if self.identifier == "corrected_text"
       learning_language = ai_query.prompt.learning_language
 
       # Ex:
@@ -32,12 +32,12 @@ class AiOutput < ApplicationRecord
       content_last = ai_query.change_content(self.identifier, change_keyword).last
       explanation = ai_query.change_explanation(change_keyword, self.identifier, ai_query.abbr(user))
 
-      # Ex:
-      # お寺でキラキラした10円玉を賽銭箱に投入しました。
-      # (Changed the form of the adjective to past tense to match the completed action.)
-      # キラキラしてる
-      # ↓
-      # キラキラした
+     # Ex:
+     # お寺でキラキラした10円玉を賽銭箱に投入しました。
+     # (Changed the form of the adjective to past tense to match the completed action.)
+     # キラキラしてる
+     # ↓
+     # キラキラした
      "#{corrected_sentence}\n(#{explanation})\n#{content_first}\n↓\n#{content_last}"
     end
   end

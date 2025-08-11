@@ -1,10 +1,10 @@
 <div class="note__header">
-  <h2>Today's Notes</h2>
+  <h2><%= t("note.todays_notes") %></h2>
   <div class="header">
 
     <%= render "notes/all_notes_button" %>
 
-    <%= link_to "New",
+    <%= link_to t('note.new'),
                 new_note_path(view_context: "todays_notes"),
                 class: "btn btn--primary",
                 data: { turbo_frame: dom_id(Note.new) } %>

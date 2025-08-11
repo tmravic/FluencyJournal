@@ -1,7 +1,7 @@
-<!--Journal show-->
+<% content_for :title, "Fluency Journal - #{@journal.title}" %>
 
 <main class="container">
-  <%= link_to sanitize("&larr; Back to journals"), journals_path %>
+  <%= link_to sanitize("&larr; #{t('journal.back_to_journals')}"), journals_path %>
   <%= turbo_frame_tag "notes_box" %>
   <%= render "journals/journal_content", journal: @journal, entries: @entries %>
 </main>

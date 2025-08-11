@@ -28,8 +28,71 @@
 #       enabled: "ON"
 
 en:
+  english: "English"
+  japanese: "Japanese"
+  cancel: "Cancel"
+  delete: "Delete"
+  edit: "Edit"
+  logout: "Logout"
+  sign_in: "Sign in"
+  note_button: "Note"
   note:
+    todays_notes: "Today's Notes"
+    all_notes: "All Notes"
+    close: "Close"
+    new: "New"
+    next_review: "Next review"
+    note_added: "Note was added to the end of today's study queue."
     actions:
       studied: "Studied"
       studied_warning: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?"
+  journal:
+    journals: "Journals"
+    start: "Start Journal"
+    back_to_journals: "Back to journals"
+    open_ai_assistant: "Open AI Assistant"
+    close_ai_assistant: "Close AI Assistant"
+  entry:
+    entry: "Entry %{number}"
+    start_entry: "Start entry"
+  followup:
+    followup: "Followup"
+    previous: "Previous AI Questions and Followups"
+    short: "F"
+    answer: "Answer"
+    followup_answer: "Followup Answer"
+    delete_followup: "Delete Followup"
+    followup_question: "Followup Question"
+    reference_text: "Reference Text"
+    placeholder: "Write your followup question here"
+  ai_query:
+    short: "Q"
+    corrected_text: "Corrected text"
+    change: "Change"
+    ai_output: "AI Output"
+    processing: "Processing..."
+    original_language: "Original Language:"
+    learning_language: "Learning Language:"
+    placeholder:
+      original_language: " Type your journal entry in your native language to confirm its meaning."
+      learning_language: " Type your journal entry in the language you're studying."
+    delete: "Delete AI Question"
+    send: "Send"
 
+    en:
+      activerecord:
+        errors:
+          models:
+            note:
+              attributes:
+                category:
+                  inclusion: "%{value} is not a valid category"
+          messages:
+            blank: " is blank."
+        attributes:
+          note:
+            categories:
+              vocab: "Vocab"
+              grammar: "Grammar"
+              draft_journal: "Draft Journal"
+              automatic: "Automatic"

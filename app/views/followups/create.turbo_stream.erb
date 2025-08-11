@@ -1,4 +1,4 @@
 <%= turbo_stream.update(
     "followup_output_#{@source_tag}", partial: "followups/output",
-    locals: { ai_query_id: "Processing...", followup_text: nil, uuid: @uuid }
+    locals: { ai_query_id: t('ai_query.processing'), followup_text: nil, uuid: @uuid }
   ) %>

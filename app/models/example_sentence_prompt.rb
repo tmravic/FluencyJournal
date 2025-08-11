@@ -11,7 +11,7 @@ class ExampleSentencePrompt < Prompt
   end
 
   def change_keyword
-    'example_'
+    "example_"
   end
 
   def response_format(user)

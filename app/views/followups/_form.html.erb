@@ -5,10 +5,10 @@
     <%= form_error_notification(followup) %>
 
     <%= f.fields_for :followup_prompt do |followup_prompt| %>
-      <%= followup_prompt.label "followup_question" %>
-      <%= followup_prompt.text_area :base_content, html5: true, placeholder: "Write your followup question here", value: @base_content %>
+      <%= followup_prompt.label t('followup.followup_question') %>
+      <%= followup_prompt.text_area :base_content, html5: true, placeholder: t('followup.placeholder'), value: @base_content %>
 
-      <%= followup_prompt.label "reference_text" %>
+      <%= followup_prompt.label t('followup.reference_text') %>
       <%= followup_prompt.text_area :user_generated_content, html5: true, value: @reference_text %>
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
       <%= followup_prompt.hidden_field :ai_model, value: "grok-3" %>

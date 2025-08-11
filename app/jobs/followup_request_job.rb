@@ -1,42 +1,44 @@
+require "action_view/helpers/translation_helper"
+
 class FollowupRequestJob < ApplicationJob
+  include ActionView::Helpers::TranslationHelper
   queue_as :default
 
   def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
-
-    connection = Faraday.new(url: 'https://api.x.ai')
+    connection = Faraday.new(url: "https://api.x.ai")
     response = connection.post do |req|
       req.url "/v1/chat/completions"
       req.options.timeout = 30
       req.options.open_timeout = 30
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['Authorization'] = "Bearer #{api_key}"
+      req.headers["Content-Type"] = "application/json"
+      req.headers["Authorization"] = "Bearer #{api_key}"
       req.body = {
         model: followup_prompt.ai_model,
         response_format: { type: "json_object" },
         messages: [
           {
-            role: 'system',
+            role: "system",
             content: followup_prompt.role_prompt(user)
           },
           {
-            role: 'user',
+            role: "user",
             content: followup_prompt.raw_prompt
           },
           {
-            role: 'user',
+            role: "user",
             content: followup_prompt.response_format(user)
           }
-        ],
+        ]
       }.to_json
     end
 
     json_response = JSON.parse(response.body)
 
-    full_token_details = json_response['usage']
+    full_token_details = json_response["usage"]
 
     token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
 
-    response_from_open_ai = json_response['choices'][0]['message'].dig("content")
+    response_from_open_ai = json_response["choices"][0]["message"].dig("content")
 
     ai_query = AiQuery.build(
       prompt_tokens: token_data["prompt_tokens"],
@@ -76,19 +78,19 @@ class FollowupRequestJob < ApplicationJob
 
     ai_query_id = ai_query.id
     uuid = followup_prompt.uuid
-    followup_text = "Followup #{followup_prompt.change_keyword.titleize.strip}"
+    followup_text = t("followup.followup_answer")
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{uuid}",
       target: "followup_output_#{source_tag}",
-      partial: 'followups/output',
+      partial: "followups/output",
       locals: { followup_text:, ai_query_id:, uuid:, user:, followup:, source_tag: }
     )
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{uuid}",
-      target: 'previous_queries',
-      partial: 'journals/previous_queries',
+      target: "previous_queries",
+      partial: "journals/previous_queries",
       locals: { journal: }
       # in the case of a note journal isn't used
       # need origin: or reference: instead
@@ -110,4 +112,3 @@ def handle_error(exception, context)
   Rails.logger.error("FollowupRequestJob error: #{context}: #{exception.message}")
   Rails.logger.error(exception.backtrace.join("\n"))
 end
-

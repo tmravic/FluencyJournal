@@ -1,11 +1,11 @@
 class AiQueriesController < ApplicationController
   before_action :set_journal
-  before_action :set_ai_query, except: [:ai_request]
-  before_action :set_prompt, except: [:ai_request]
+  before_action :set_ai_query, except: [ :ai_request ]
+  before_action :set_prompt, except: [ :ai_request ]
 
   def show
-    @source_tag = 'ai_assistant'
-    @corrected_text_output = @ai_query.find_ai_output_by_identifier('corrected_text')
+    @source_tag = "ai_assistant"
+    @corrected_text_output = @ai_query.find_ai_output_by_identifier("corrected_text")
   end
 
   def destroy
