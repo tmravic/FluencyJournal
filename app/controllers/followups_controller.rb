@@ -1,10 +1,14 @@
 class FollowupsController < ApplicationController
   before_action :set_followup, only: %i[show destroy]
+  ALLOWED_CLASSES = %w[Entry AiOutput Note Followup].freeze
+
+
 
   def new
-    class_name = params[:class_name].constantize
+    class_name = params[:class_name]
+    klass = check_allowed_classes_for_followup
     followup_origin_id = params[:id].to_i
-    @followup_origin = class_name.find(followup_origin_id)
+    @followup_origin = klass.find(followup_origin_id)
     @reference_text = @followup_origin.content
 
     @followup_prompt = set_correct_prompt_type(class_name)
@@ -115,6 +119,14 @@ class FollowupsController < ApplicationController
 
   def set_prompt_type_based_on_params(params, prompt_subclass_name)
     params.present? ? prompt_subclass_name.new(params[:params]) : prompt_subclass_name.new
+  end
+
+  def check_allowed_classes_for_followup
+    if ALLOWED_CLASSES.include?(class_name)
+      class_name.constantize
+    else
+      raise(ArgumentError, "Invalid class: #{class_name}")
+    end
   end
 
   def set_followup
