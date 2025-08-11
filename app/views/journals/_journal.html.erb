@@ -12,7 +12,7 @@
       <%= button_to t("delete"),
                     journal_path(journal),
                     method: :delete,
-                    form: { data: { turbo_confirm: "Really delete this journal?" } },
+                    form: { data: { turbo_confirm: t("journal.really_delete") } },
                     class: "btn btn--light" %>
     </div>
   </div>

@@ -5,7 +5,7 @@
 
   <div>
     <%= link_to "Edit this note", edit_note_path(@note) %>
-    <%= link_to "Back to notes", notes_path %>
+    <%= link_to t("note.back_to_notes"), notes_path %>
 
     <%= button_to "Destroy this note", @note, method: :delete, data: { turbo_frame: "notes_box", turbo_stream: true } %>
   </div>

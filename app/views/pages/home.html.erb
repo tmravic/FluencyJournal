@@ -1,11 +1,11 @@
 <main class="container">
-  <h1>Fluency Journal</h1>
-  <p>Your AI-powered foreign-language daily diary</p>
+  <h1><%= t("app_name") %></h1>
+  <p><%= t("tagline") %></p>
   <div style="margin: 10px 0;">
     <% if Current.user.present? %>
-      <%= link_to "View journals", journals_path, class: "btn btn--dark" %>
+      <%= link_to t("journal.view_journals"), journals_path, class: "btn btn--dark" %>
     <% else %>
-      <%= link_to "Sign in", new_session_path, class: "btn btn--dark" %>
+      <%= link_to t("sign_in"), new_session_path, class: "btn btn--dark" %>
     <% end %>
   </div>
 

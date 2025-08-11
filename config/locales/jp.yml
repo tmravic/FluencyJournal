@@ -33,8 +33,11 @@ jp:
   cancel: "取り消し"
   delete: "削除"
   edit: "編集"
-  close:
-
+  app_name: "流暢日記"
+  tagline: "AI搭載の外国語日記"
+  forgot_password: "パスワードを忘れましたか？"
+  enter_password: "パスワードを入力してください。"
+  enter_email: "メールアドレスを入力してください。"
   logout: "ログアウト"
   sign_in: "サインイン"
   note_button: "ノート"
@@ -45,18 +48,38 @@ jp:
     new: "新規"
     next_review: "次回復習"
     note_added: "ノートを今日の復習キュー末に追加。"
+    really_delete: "このノートを本当に削除しますか？"
+    add_note: "ノートを追加"
+    due_today: "本日復習期限"
+    back_to_notes: "ノートに戻る"
+    customize_auto_note: "You can customize this automatically created note before saving it."
+    updated: "Note was successfully updated."
+    deleted: "Note was successfully deleted."
     actions:
       studied: "学習"
       studied_warning: "今日の日記の文章で内容を使用した場合、ノートを学習としてマークします。学習済みにマークし、将来の日に設定しますか？"
   journal:
+    close_journal: "日記を閉じる"
+    empty_state: "まだ日記がありません。"
+    add_journal: "日記追加"
+    view_journals: "日記閲覧"
     journals: "日記一覧"
     start: "日記開始"
     back_to_journals: "日記一覧に戻る"
     open_ai_assistant: "AI質問欄を開く"
     close_ai_assistant: "AI質問欄を閉じる"
+    really_delete: "この日記を本当に削除しますか？"
+    created: "日記を作成しました。"
+    updated: "日記を更新しました。"
+    deleted: "日記を削除しました。"
   entry:
     entry: "%{number}文章"
     start_entry: "文章を作成"
+    really_delete: "この文章を本当に削除しますか？"
+    empty_state: "この日記にはまだ文章がありません。"
+    created: "文章を作成しました。"
+    updated: "文章を更新しました。"
+    deleted: "文章を削除しました。"
   followup:
     followup: "追及"
     previous: "過去のAI質問と追及"
@@ -67,6 +90,7 @@ jp:
     followup_question: "追及質問"
     reference_text: "参照文"
     placeholder: "追及質問を書いてください。"
+    request_sent: "追及リクエスト送信済み。"
   ai_query:
     short: "問"
     corrected_text: "修正文"
@@ -80,6 +104,9 @@ jp:
       learning_language: "学習中の言語で日記の文章を入力してください。"
     delete: "質問削除"
     send: "送信"
+    request_sent: "AIリクエスト送信済み。"
+  ai_output:
+    change_deleted: "修正が削除されました。"
 
   activerecord:
     errors:

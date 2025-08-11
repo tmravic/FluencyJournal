@@ -71,7 +71,7 @@ class FollowupsController < ApplicationController
         @user, @journal, @api_key, @followup_prompt, @followup_origin, @source_tag
       )
 
-      notice = "Followup request sent."
+      notice = t("followup.request_sent")
       respond_to do |format|
         format.html { redirect_to followup_path(@followup), notice: notice }
         format.turbo_stream { flash.now[:notice] = notice }

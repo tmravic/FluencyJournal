@@ -89,4 +89,12 @@ module ApplicationHelper
 
     { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
   end
+
+  def generate_original_and_learning_language
+    # 英語 → 日本語
+    # or
+    # English → Japanese
+    language_setting = "#{t("#{Current.user.original_language.downcase}")}"
+    language_setting += " → #{t("#{Current.user.learning_language.downcase}")}"
+  end
 end

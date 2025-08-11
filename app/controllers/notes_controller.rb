@@ -33,7 +33,7 @@ class NotesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.turbo_stream { flash.now[:notice] = "You can customize this automatically created note before saving it." }
+      format.turbo_stream { flash.now[:notice] = t("note.customize_auto_note") }
     end
   end
 
@@ -56,9 +56,9 @@ class NotesController < ApplicationController
     respond_to do |format|
       if @note.save!
         @ai_output.update(made_note: true) if note_made_automatically?
-        format.html { redirect_to note_path(@note), notice: "Note was successfully created." }
+        format.html { redirect_to note_path(@note), notice: t("note.note_added") }
         format.turbo_stream do
-          flash.now[:notice] = "Note was added to the end of today's study queue."
+          flash.now[:notice] = t("note.note_added")
           render "notes/create", locals: {
             header_partial: header_partial,
             collection: collection,
@@ -86,9 +86,9 @@ class NotesController < ApplicationController
     update_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:update_from_todays_notes])
     respond_to do |format|
       if @note.update(note_params)
-        format.html { redirect_to journals_path, notice: "Note was successfully updated." }
+        format.html { redirect_to journals_path, notice: t("note.updated") }
         format.turbo_stream do
-          flash.now[:notice] = "Note was successfully updated."
+          flash.now[:notice] = t("note.updated")
           if update_from_todays_notes
             @todays_notes = Current.user&.notes.next_to_study
             render "notes/update", locals: { collection: @todays_notes }
@@ -108,9 +108,9 @@ class NotesController < ApplicationController
     delete_from_todays_notes = params[:delete_from_todays_notes]
 
     respond_to do |format|
-      format.html { redirect_to notes_path, status: :see_other, notice: "Note was successfully deleted." }
+      format.html { redirect_to notes_path, status: :see_other, notice: t("note.deleted") }
       format.turbo_stream do
-        flash.now[:notice] = "Note was successfully deleted."
+        flash.now[:notice] = t("note.deleted")
         render "notes/destroy", locals: { delete_from_todays_notes: delete_from_todays_notes }
       end
     end

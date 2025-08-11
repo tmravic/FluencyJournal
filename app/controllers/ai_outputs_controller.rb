@@ -8,7 +8,7 @@ class AiOutputsController < ApplicationController
     @source_tag = params.dig(:source_tag)
 
     respond_to do |format|
-      format.html { redirect_to journals_path, status: :see_other, notice: "Change was successfully deleted." }
+      format.html { redirect_to journals_path, status: :see_other, notice: t("ai_output.change_deleted") }
       format.turbo_stream
     end
   end

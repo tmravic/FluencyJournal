@@ -30,9 +30,9 @@ class EntriesController < ApplicationController
 
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to journal_path(@journal), notice: "Entry was successfully created." }
+        format.html { redirect_to journal_path(@journal), notice: t("entry.created") }
         format.json { render :show, status: :created, location: @entry }
-        format.turbo_stream { flash.now[:notice] = "Entry was successfully created." }
+        format.turbo_stream { flash.now[:notice] = t("entry.created") }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @entry.errors, status: :unprocessable_entity }
@@ -44,9 +44,9 @@ class EntriesController < ApplicationController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
-        format.html { redirect_to journal_path(@journal), notice: "Entry was successfully updated." }
+        format.html { redirect_to journal_path(@journal), notice: t("entry.updated") }
         format.json { render :show, status: :ok, location: @entry }
-        format.turbo_stream { flash.now[:notice] = "Entry was successfully updated." }
+        format.turbo_stream { flash.now[:notice] = t("entry.updated") }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @entry.errors, status: :unprocessable_entity }
@@ -60,9 +60,9 @@ class EntriesController < ApplicationController
     @entries = @journal.entries.ordered
 
     respond_to do |format|
-      format.html { redirect_to journal_path(@journal), status: :see_other, notice: "Entry was successfully deleted." }
+      format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.deleted") }
       format.json { head :no_content }
-      format.turbo_stream { flash.now[:notice] = "Entry was successfully deleted." }
+      format.turbo_stream { flash.now[:notice] = t("entry.deleted") }
     end
   end
 

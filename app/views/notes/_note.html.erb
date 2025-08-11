@@ -1,7 +1,7 @@
 <%= turbo_frame_tag note do %>
   <div class="note">
     <div class="note__header">
-      <h5><%= note.category %></h5>
+      <h5><%= t("activerecord.attributes.note.categories.#{note.category}") %></h5>
 
       <div class="note__actions">
 
@@ -33,7 +33,7 @@
         <%= button_to t("delete"),
                       note_path(note, delete_from_todays_notes: @todays_notes.present?),
                       method: :delete,
-                      form: { data: { turbo_confirm: "Really delete this note?" } },
+                      form: { data: { turbo_confirm: t("note.really_delete") } },
                       class: "btn btn--light" %>
       </div>
     </div>

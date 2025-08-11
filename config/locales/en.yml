@@ -33,6 +33,11 @@ en:
   cancel: "Cancel"
   delete: "Delete"
   edit: "Edit"
+  app_name: "Fluency Journal"
+  tagline: "Your AI-powered foreign-language daily diary"
+  forgot_password: "Forgot password?"
+  enter_password: "Enter your password"
+  enter_email: "Enter your email address"
   logout: "Logout"
   sign_in: "Sign in"
   note_button: "Note"
@@ -43,18 +48,38 @@ en:
     new: "New"
     next_review: "Next review"
     note_added: "Note was added to the end of today's study queue."
+    really_delete: "Really delete this note?"
+    add_note: "Add note"
+    due_today: "Due today"
+    back_to_notes: "Back to notes"
+    customize_auto_note: "自動作成ノートを保存前にカスタマイズできます。"
+    updated: "ノートを更新しました。"
+    deleted: "ノートを削除しました。"
     actions:
       studied: "Studied"
       studied_warning: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?"
   journal:
+    close_journal: "Close journal"
+    empty_state: "You don't have any journals yet!"
+    add_journal: "Add journal"
+    view_journals: "View journals"
     journals: "Journals"
     start: "Start Journal"
     back_to_journals: "Back to journals"
     open_ai_assistant: "Open AI Assistant"
     close_ai_assistant: "Close AI Assistant"
+    really_delete: "Really delete this journal?"
+    created: "Journal was successfully created."
+    updated: "Journal was successfully updated."
+    deleted: "Journal was successfully deleted."
   entry:
     entry: "Entry %{number}"
     start_entry: "Start entry"
+    really_delete: "Really delete this entry?"
+    empty_state: "No entries yet for this journal."
+    created: "Entry was successfully created."
+    updated: "Entry was successfully updated."
+    deleted: "Entry was successfully deleted."
   followup:
     followup: "Followup"
     previous: "Previous AI Questions and Followups"
@@ -65,6 +90,7 @@ en:
     followup_question: "Followup Question"
     reference_text: "Reference Text"
     placeholder: "Write your followup question here"
+    request_sent: "Followup request sent."
   ai_query:
     short: "Q"
     corrected_text: "Corrected text"
@@ -78,6 +104,9 @@ en:
       learning_language: " Type your journal entry in the language you're studying."
     delete: "Delete AI Question"
     send: "Send"
+    request_sent: "AI request sent."
+  ai_output:
+    change_deleted: "Change was successfully deleted."
 
     en:
       activerecord:

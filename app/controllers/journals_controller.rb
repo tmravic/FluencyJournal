@@ -40,9 +40,9 @@ class JournalsController < ApplicationController
     respond_to do |format|
       if @journal.save
         # flash[:notice] = "..."
-        format.html { redirect_to journal_path(@journal), notice: "Journal was successfully created." }
+        format.html { redirect_to journal_path(@journal), notice: t("journal.created") }
         format.json { render :index, status: :created, location: @journal }
-        format.turbo_stream { flash.now[:notice] = "Journal was successfully created." }
+        format.turbo_stream { flash.now[:notice] = t("journal.created") }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @journal.errors, status: :unprocessable_entity }
@@ -55,9 +55,9 @@ class JournalsController < ApplicationController
     respond_to do |format|
       if @journal.update(journal_params)
         # flash[:notice] = "..."
-        format.html { redirect_to journals_path, notice: "Journal was successfully updated." }
+        format.html { redirect_to journals_path, notice: t("journal.updated") }
         format.json { render :show, status: :ok, location: @journal }
-        format.turbo_stream { flash.now[:notice] = "Journal was successfully updated." }
+        format.turbo_stream { flash.now[:notice] = t("journal.updated") }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @journal.errors, status: :unprocessable_entity }
@@ -72,9 +72,9 @@ class JournalsController < ApplicationController
 
     respond_to do |format|
       # flash[:notice] = "..."
-      format.html { redirect_to journals_path, status: :see_other, notice: "Journal was successfully deleted." }
+      format.html { redirect_to journals_path, status: :see_other, notice: t("journal.deleted") }
       format.json { head :no_content }
-      format.turbo_stream { flash.now[:notice] = "Journal was successfully deleted." }
+      format.turbo_stream { flash.now[:notice] = t("journal.deleted") }
     end
   end
 
