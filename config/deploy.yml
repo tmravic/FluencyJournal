@@ -106,7 +106,7 @@ accessories:
     env:
       clear:
         POSTGRES_DB: fluency_journal_production
-        POSTGRES_USER: taylor
+        POSTGRES_USER: fluency_journal
       secret:
         - POSTGRES_PASSWORD
     directories:

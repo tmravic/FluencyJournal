@@ -6,7 +6,7 @@ class FollowupsController < ApplicationController
 
   def new
     class_name = params[:class_name]
-    klass = check_allowed_classes_for_followup
+    klass = check_allowed_classes_for_followup(class_name)
     followup_origin_id = params[:id].to_i
     @followup_origin = klass.find(followup_origin_id)
     @reference_text = @followup_origin.content
@@ -121,7 +121,7 @@ class FollowupsController < ApplicationController
     params.present? ? prompt_subclass_name.new(params[:params]) : prompt_subclass_name.new
   end
 
-  def check_allowed_classes_for_followup
+  def check_allowed_classes_for_followup(class_name)
     if ALLOWED_CLASSES.include?(class_name)
       class_name.constantize
     else

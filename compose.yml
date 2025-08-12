@@ -5,8 +5,6 @@ x-app: &default-app
     target: "app"
     args:
       - "RUBY_VERSION=${RUBY_VERSION:-3.3.6}"
-      - "UID=${UID:-1000}"
-      - "GID=${GID:-1000}"
       - "RAILS_ENV=${RAILS_ENV:-development}"
       - "NODE_ENV=${NODE_ENV:-development}"
   depends_on:
@@ -16,7 +14,7 @@ x-app: &default-app
   env_file:
     - ".env"
   volumes:
-    - "${DOCKER_WEB_VOLUME:-.:/app}"
+    - "${DOCKER_WEB_VOLUME:-.:/rails}"
     - node_modules:/usr/local/node_modules
     - bundle:/usr/local/bundle
   stdin_open: true
@@ -27,8 +25,6 @@ x-assets: &default-assets
     context: "."
     target: "assets"
     args:
-      - "UID=${UID:-1000}"
-      - "GID=${GID:-1000}"
       - "RAILS_ENV=${RAILS_ENV:-development}"
       - "NODE_ENV=${NODE_ENV:-development}"
   env_file:
@@ -37,7 +33,7 @@ x-assets: &default-assets
   restart: no
   stop_grace_period: "3s"
   volumes:
-    - ".:/app"
+    - ".:/rails"
 
 services:
   postgres:
@@ -69,7 +65,7 @@ services:
 
   solid_cable:
     <<: *default-app
-    command: ["puma", "-p", "28080", "cable/config.ru"] # Is this working?
+    command: ["bundle", "exec", "puma", "-p", "28080", "cable/config.ru"]
     entrypoint: []
     ports:
       - "${DOCKER_CABLE_PORT_FORWARD:-127.0.0.1:28080}:${CABLE_PORT:-28080}"
@@ -77,7 +73,7 @@ services:
 
   solid_queue:
     <<: *default-app
-    command: ["bundle", "exec", "rake", "solid_queue:start"]
+    command: ["bundle", "exec", "rails", "solid_queue:start"]
     entrypoint: []
     profiles: ["solid_queue"]
 

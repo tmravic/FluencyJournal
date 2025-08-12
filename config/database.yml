@@ -26,7 +26,7 @@ production:
   primary: &primary_production
     <<: *default
     database: fluency_journal_production
-    username: taylor
+    username: fluency_journal
 #    password: <%#= ENV["FLUENCY_JOURNAL_DATABASE_PASSWORD"] %>
     password: <%= ENV["POSTGRES_PASSWORD"] %>
     host: <%= ENV["DB_HOST"] %>
@@ -41,4 +41,24 @@ production:
   cable:
     <<: *primary_production
     database: fluency_journal_production_cable
+    migrations_paths: db/cable_migrate
+
+staging:
+  primary: &primary_staging
+    <<: *default
+    database: fluency_journal_staging
+    username: fluency_journal
+    password: <%= ENV["POSTGRES_PASSWORD"] %>
+    host: <%= ENV["DB_HOST"] %>
+  cache:
+    <<: *primary_staging
+    database: fluency_journal_staging_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_staging
+    database: fluency_journal_staging_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_staging
+    database: fluency_journal_staging_cable
     migrations_paths: db/cable_migrate
