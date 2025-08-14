@@ -1,0 +1,2 @@
+FROM 182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/fluency_journal-apache:latest
+COPY httpd.conf /usr/local/apache2/conf/httpd.conf

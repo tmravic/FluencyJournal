@@ -90,4 +90,5 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   config.web_console.development_only = false
+  config.action_cable.allowed_request_origins = %w(http://localhost http://127.0.0.1)
 end

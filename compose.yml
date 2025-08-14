@@ -63,6 +63,24 @@ services:
       - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:3000}:${PORT:-3000}"
     profiles: ["web"]
 
+  apache:
+    image: httpd:2.4
+    ports:
+      - "80:80"
+    command: httpd-foreground
+    healthcheck:
+#      test: ["CMD-SHELL", "curl -f http://localhost/session/new || exit 1"]
+      test: ${DOCKER_APACHE_HEALTHCHECK_TEST:-curl -f http://localhost/session/new}
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - web
+      - solid_cable
+
   solid_cable:
     <<: *default-app
     command: ["bundle", "exec", "puma", "-p", "28080", "cable/config.ru"]
