@@ -1,0 +1,18 @@
+# This file defines the deployment specification for CodeDeploy on ECS.
+# Version 0.0 is required for ECS blue/green deployments.
+version: 0.0
+
+# Resources section specifies the target ECS service.
+Resources:
+  - TargetService:
+      # Type must be AWS::ECS::Service for ECS deployments.
+      Type: AWS::ECS::Service
+      Properties:
+        # <TASK_DEFINITION> is a placeholder; CodeDeploy replaces it with the new task definition ARN from taskdef.json during deployment.
+        TaskDefinition: "<TASK_DEFINITION>"
+        # LoadBalancerInfo configures the container and port for traffic routing.
+        LoadBalancerInfo:
+          # ContainerName must match the load-balanced container in taskdef.json (apache in this case).
+          ContainerName: "apache"
+          # ContainerPort must match the port exposed by that container.
+          ContainerPort: 80
