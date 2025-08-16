@@ -5,11 +5,10 @@
   "containerDefinitions": [
     {
       "name": "web",
-      "image": "182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/fluency_journal-web:latest",
+      "image": "<WEB_IMAGE>",
       "essential": true,
       "portMappings": [
         {
-          "hostPort": 0,
           "containerPort": 3000,
           "protocol": "tcp"
         }
@@ -72,11 +71,10 @@
     },
     {
       "name": "solid_cable",
-      "image": "182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/fluency_journal-solid_cable:latest",
+      "image": "<SOLID_CABLE_IMAGE>",
       "essential": true,
       "portMappings": [
         {
-          "hostPort": 0,
           "containerPort": 28080,
           "protocol": "tcp"
         }
@@ -124,7 +122,7 @@
     },
     {
       "name": "solid_queue",
-      "image": "182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/fluency_journal-solid_queue:latest",
+      "image": "<SOLID_QUEUE_IMAGE>",
       "essential": true,
       "environment": [
         {
@@ -165,11 +163,10 @@
     },
     {
       "name": "apache",
-      "image": "182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/fluency_journal-apache:latest",
+      "image": "<APACHE_IMAGE>",
       "essential": true,
       "portMappings": [
         {
-          "hostPort": 0,
           "containerPort": 80,
           "protocol": "tcp"
         }
