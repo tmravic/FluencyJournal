@@ -39,7 +39,8 @@ ENV NODE_PATH="/usr/local/node_modules"
 ENV PATH="$NODE_PATH/.bin:$PATH"
 
 COPY --chown=$USER:$USER package.json yarn.lock ./
-RUN yarn install --modules-folder $NODE_PATH
+# retry loop for yarn install
+RUN for i in $(seq 1 3); do yarn install --modules-folder $NODE_PATH && break || sleep 5; echo "Yarn install failed, retrying ($i/3)"; done
 
 ARG RAILS_ENV="development"
 ARG NODE_ENV="development"
