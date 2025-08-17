@@ -67,7 +67,8 @@
           "awslogs-region": "ap-northeast-1",
           "awslogs-stream-prefix": "web"
         }
-      }
+      },
+      "memoryReservation": 128
     },
     {
       "name": "solid_cable",
@@ -118,7 +119,8 @@
           "awslogs-region": "ap-northeast-1",
           "awslogs-stream-prefix": "solid_cable"
         }
-      }
+      },
+      "memoryReservation": 128
     },
     {
       "name": "solid_queue",
@@ -159,7 +161,8 @@
           "awslogs-region": "ap-northeast-1",
           "awslogs-stream-prefix": "solid_queue"
         }
-      }
+      },
+      "memoryReservation": 128
     },
     {
       "name": "apache",
@@ -195,7 +198,8 @@
           "awslogs-region": "ap-northeast-1",
           "awslogs-stream-prefix": "apache"
         }
-      }
+      },
+      "memoryReservation": 128
     }
   ],
   "executionRoleArn": "arn:aws:iam::182181248970:role/ecsTaskExecutionRole",
