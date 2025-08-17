@@ -1,5 +1,6 @@
-ARG RUBY_VERSION=3.3.6
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS assets
+#ARG RUBY_VERSION=3.3.6
+#FROM docker.io/library/ruby:$RUBY_VERSION-slim AS assets
+FROM 182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/ruby-base-image AS assets
 LABEL authors="Taylor Mravic <taylor.mravic@gmail.com>"
 
 WORKDIR /rails
@@ -64,7 +65,8 @@ EXPOSE 3000
 CMD ["bash"]
 
 # Stage 2: App (runtime environment)
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS app
+#FROM docker.io/library/ruby:$RUBY_VERSION-slim AS app
+FROM 182181248970.dkr.ecr.ap-northeast-1.amazonaws.com/ruby-base-image AS app
 LABEL authors="Taylor Mravic <taylor.mravic@gmail.com>"
 
 WORKDIR /rails
