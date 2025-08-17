@@ -16,3 +16,5 @@ Resources:
           ContainerName: "apache"
           # ContainerPort must match the port exposed by that container.
           ContainerPort: 80
+
+# I could add a hook here to force manual approval before switching from blue to green environment
