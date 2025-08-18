@@ -71,7 +71,7 @@ LABEL authors="Taylor Mravic <taylor.mravic@gmail.com>"
 
 WORKDIR /rails
 
-RUN apt-get update -qq && apt-get install --no-install-recommends -y build-essential vim libpq5 && \
+RUN apt-get update -qq && apt-get install --no-install-recommends -y build-essential vim libpq5 curl && \
     rm -rf /var/lib/apt/lists/*
 
 ENV USER="ruby" \
