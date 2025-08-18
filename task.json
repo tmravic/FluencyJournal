@@ -13,7 +13,8 @@
           "protocol": "tcp"
         }
       ],
-      "environment": [
+      "environment": [],
+      "secrets": [
         {
           "name": "RAILS_ENV",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/rails_env"
@@ -41,9 +42,7 @@
         {
           "name": "RUBY_VERSION",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/ruby_version"
-        }
-      ],
-      "secrets": [
+        },
         {
           "name": "POSTGRES_PASSWORD",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/postgres_password"
@@ -80,7 +79,8 @@
           "protocol": "tcp"
         }
       ],
-      "environment": [
+      "environment": [],
+      "secrets": [
         {
           "name": "RAILS_ENV",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/rails_env"
@@ -100,9 +100,7 @@
         {
           "name": "DB_HOST",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/db_host"
-        }
-      ],
-      "secrets": [
+        },
         {
           "name": "POSTGRES_PASSWORD",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/postgres_password"
@@ -133,7 +131,8 @@
       "name": "solid_queue",
       "image": "<QUEUE_IMAGE>",
       "essential": true,
-      "environment": [
+      "environment": [],
+      "secrets": [
         {
           "name": "RAILS_ENV",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/rails_env"
@@ -149,9 +148,7 @@
         {
           "name": "DB_HOST",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/db_host"
-        }
-      ],
-      "secrets": [
+        },
         {
           "name": "POSTGRES_PASSWORD",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/postgres_password"
