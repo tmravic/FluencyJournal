@@ -7,10 +7,10 @@ image: tmravic/fluency_journal
 # Deploy to these servers.
 servers:
   web:
-    - 35.78.195.68
+    - 18.183.95.132
   # job:
   #   hosts:
-  #     - 35.78.195.68
+  #     - 18.183.95.132
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -95,13 +95,14 @@ builder:
 ssh:
   user: ubuntu
   keys:
-    - ~/.ssh/fluency_journal_demo.pem
+    - ~/.ssh/kamal.pem
+#    - ~/.ssh/fluency_journal_demo.pem
 
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
   db:
     image: postgres:16
-    host: 35.78.195.68
+    host: 18.183.95.132
 #    port: "127.0.0.1:5432:5432"
     env:
       clear:
