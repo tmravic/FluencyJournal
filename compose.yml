@@ -6,8 +6,8 @@ x-app: &default-app
     target: "app"
     args:
       - "RUBY_VERSION=${RUBY_VERSION:-3.3.6}"
-      - "RAILS_ENV=${RAILS_ENV:-staging}"
-      - "NODE_ENV=${NODE_ENV:-staging}"
+      - "RAILS_ENV=${RAILS_ENV:-production}"
+      - "NODE_ENV=${NODE_ENV:-production}"
   depends_on:
     postgres:
       condition: "service_healthy"
@@ -26,8 +26,8 @@ x-assets: &default-assets
     context: "."
     target: "assets"
     args:
-      - "RAILS_ENV=${RAILS_ENV:-staging}"
-      - "NODE_ENV=${NODE_ENV:-staging}"
+      - "RAILS_ENV=${RAILS_ENV:-production}"
+      - "NODE_ENV=${NODE_ENV:-production}"
   env_file:
     - ".env"
   profiles: [ "assets" ]
