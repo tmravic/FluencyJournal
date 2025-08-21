@@ -26,7 +26,7 @@ production:
   primary: &primary_production
     <<: *default
     database: fluency_journal_production
-    username: fluency_journal
+    username: <%= ENV["POSTGRES_USER"] %>
 #    password: <%#= ENV["FLUENCY_JOURNAL_DATABASE_PASSWORD"] %>
     password: <%= ENV["POSTGRES_PASSWORD"] %>
     host: <%= ENV["DB_HOST"] %>
@@ -47,7 +47,7 @@ staging:
   primary: &primary_staging
     <<: *default
     database: fluency_journal_staging
-    username: fluency_journal
+    username: <%= ENV["POSTGRES_USER"] %>
     password: <%= ENV["POSTGRES_PASSWORD"] %>
     host: <%= ENV["DB_HOST"] %>
   cache:

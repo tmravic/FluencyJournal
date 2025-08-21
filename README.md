@@ -41,12 +41,40 @@ docker volume rm -f fluency_journal_bundle fluency_journal_postgres fluency_jour
 - [x] Can run yarn --version and npm --version
 - [x] Can install a node_module like: `npm install lodash --save`
 
-## Redis
-WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory<br>
-condition. Being disabled, it can also cause failures without low memory condition, see<br>
-https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf<br>
-and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+## Kamal deployment to single EC2
+`aws ec2 describe-vpcs`
 
-`echo "vm.overcommit_memory=1" | sudo tee -a /etc/sysctl.conf`
+`aws ec2 create-security-group --group-name "kamal-sg" --description "For Kamal deploy" --vpc-id vpc-3dcc365b`
 
+```bash
+aws ec2 authorize-security-group-ingress --group-name kamal-sg --protocol tcp --port 22 --cidr 0.0.0.0/0 && \
+aws ec2 authorize-security-group-ingress --group-name kamal-sg --protocol tcp --port 80 --cidr 0.0.0.0/0 && \
+aws ec2 authorize-security-group-ingress --group-name kamal-sg --protocol tcp --port 443 --cidr 0.0.0.0/0
+```
+` aws ec2 describe-images --owners 099720109477 --filters "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" "Name=architecture,Values=x86_64" --query "Images | sort_by(@, &CreationDate) | [-1].[ImageId]" --output text`
 
+Replace <sg-kamal-sg> and ami
+
+`aws ec2 run-instances --image-id ami-02dc59944bc69e802 --count 1 --instance-type t3.micro --key-name kamal --security-group-ids <sg-kamal-sg> --associate-public-ip-address`
+
+`aws ec2 run-instances --image-id ami-02dc59944bc69e802 --count 1 --instance-type t3.small --key-name fluency_journal_demo --security-group-ids sg-01f56775d44169bf2 --associate-public-ip-address`
+
+Get instance-id
+`aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].InstanceId"`
+
+Get IP address
+`aws ec2 describe-instances --instance-ids i-0316cfead9ad8c666 --query "Reservations[].Instances[].PublicIpAddress" --output text`
+
+SSH into host
+`ssh -i ~/.ssh/fluency_journal_demo.pem ubuntu@13.230.239.138`
+
+```bash
+sudo apt update && \
+sudo apt install -y docker.io && \
+sudo usermod -aG docker ubuntu && \
+sudo systemctl enable docker && \
+sudo systemctl status docker
+
+exit
+```
+`bundle exec kamal setup`

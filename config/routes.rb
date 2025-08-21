@@ -28,7 +28,7 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
-  get "/up/", to: "up#index", as: :up
+  get "/up", to: "up#index", as: :up
   get "/up/databases", to: "up#databases", as: :up_databases
   mount ActionCable.server, at: "/cable"
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
