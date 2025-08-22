@@ -20,6 +20,7 @@ servers:
 proxy:
   ssl: false
   host: ""
+  app_port: 3000
 #  host: fluencyjournal.com
 #  set this up later
 

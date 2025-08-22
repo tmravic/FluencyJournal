@@ -77,6 +77,10 @@ exit
 ```
 `bundle exec kamal setup`
 
+`kamal app exec -i 'bin/rails db:prepare'`
+
+`kamal deploy`
+
 Check containers
 
 `kamal app containers`
