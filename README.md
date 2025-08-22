@@ -51,11 +51,9 @@ aws ec2 authorize-security-group-ingress --group-name kamal-sg --protocol tcp --
 aws ec2 authorize-security-group-ingress --group-name kamal-sg --protocol tcp --port 80 --cidr 0.0.0.0/0 && \
 aws ec2 authorize-security-group-ingress --group-name kamal-sg --protocol tcp --port 443 --cidr 0.0.0.0/0
 ```
-` aws ec2 describe-images --owners 099720109477 --filters "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" "Name=architecture,Values=x86_64" --query "Images | sort_by(@, &CreationDate) | [-1].[ImageId]" --output text`
+`aws ec2 describe-images --owners 099720109477 --filters "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" "Name=architecture,Values=x86_64" --query "Images | sort_by(@, &CreationDate) | [-1].[ImageId]" --output text`
 
 Replace <sg-kamal-sg> and ami
-
-`aws ec2 run-instances --image-id ami-02dc59944bc69e802 --count 1 --instance-type t3.micro --key-name kamal --security-group-ids <sg-kamal-sg> --associate-public-ip-address`
 
 `aws ec2 run-instances --image-id ami-02dc59944bc69e802 --count 1 --instance-type t3.small --key-name fluency_journal_demo --security-group-ids sg-01f56775d44169bf2 --associate-public-ip-address`
 
@@ -78,3 +76,10 @@ sudo systemctl status docker
 exit
 ```
 `bundle exec kamal setup`
+
+Check containers
+
+`kamal app containers`
+
+`kamal details`
+

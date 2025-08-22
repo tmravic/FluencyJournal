@@ -7,10 +7,10 @@ image: tmravic/fluency_journal
 # Deploy to these servers.
 servers:
   web:
-    - 13.230.239.138
+    - 18.176.55.73
   # job:
   #   hosts:
-  #     - 13.230.239.138
+  #     - 18.176.55.73
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -41,7 +41,6 @@ env:
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
-    SOLID_QUEUE_IN_PUMA: true
     DB_HOST: fluency_journal-db
     RAILS_ENV: production
     NODE_ENV: production
@@ -110,7 +109,7 @@ ssh:
 accessories:
   db:
     image: postgres:16
-    host: 13.230.239.138
+    host: 18.176.55.73
 #    port: "127.0.0.1:5432:5432"
     env:
       clear:
@@ -123,7 +122,7 @@ accessories:
 
   solid_cable:
     image: tmravic/fluency_journal
-    host: 13.230.239.138
+    host: 18.176.55.73
     cmd: "bundle exec puma -p 28080 cable/config.ru"
     port: "28080:28080"
     env:
@@ -138,7 +137,7 @@ accessories:
 
   solid_queue:
     image: tmravic/fluency_journal
-    host: 13.230.239.138
+    host: 18.176.55.73
     cmd: "bundle exec rails solid_queue:start"
     env:
       clear:
