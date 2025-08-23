@@ -1,11 +1,11 @@
 <div class="empty-state empty-state--only-child">
   <p class="empty-state__text">
-    You don't have any notes due today!
+    <%= t("note.empty_state") %>
   </p>
 
   <%= render "notes/all_notes_button" %>
 
-  <%= link_to "Add note",
+  <%= link_to t("note.add_note"),
               new_note_path(view_context: "todays_notes"),
               class: "btn btn--primary",
               data: { turbo_frame: dom_id(Note.new) } %>
