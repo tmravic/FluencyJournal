@@ -39,6 +39,7 @@ module FluencyJournal
     config.generators.system_tests = nil
 
     config.time_zone = "Asia/Tokyo"
+    config.i18n.available_locales = %i[en ja]
 
     # Ensure Active Record uses the local timezone for timestamps
     config.active_record.default_timezone = :local
