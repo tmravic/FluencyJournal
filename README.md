@@ -75,15 +75,15 @@ sudo systemctl status docker
 
 exit
 ```
-`bundle exec kamal setup`
-
-`kamal app exec -i 'bin/rails db:prepare'`
-
+`bundle exec kamal setup`<br>
+`kamal app exec -i 'bin/rails db:prepare'`<br>
 `kamal deploy`
+`kamal app exec -i 'bin/rails console'`
 
-Check containers
-
-`kamal app containers`
-
+Check containers<br>
+`kamal app containers`<br>
 `kamal details`
+
+If you see "unable to remove repository reference" run:<br>
+`kamal accessory reboot solid_cable / solid_queue`
 
