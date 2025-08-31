@@ -129,7 +129,6 @@ accessories:
     env:
       clear:
         RAILS_ENV: production
-        RAILS_LOG_LEVEL: debug
         DB_HOST: fluency_journal-db
         POSTGRES_DB: fluency_journal_production
         POSTGRES_USER: fluency_journal
