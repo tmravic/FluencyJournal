@@ -50,6 +50,7 @@ jp:
     note_added: "ノートを今日の復習キュー末に追加。"
     really_delete: "このノートを本当に削除しますか？"
     empty_state: "まだノートがありません！"
+    empty_state_due: "今日の学習するノートはありません！"
     add_note: "ノートを追加"
     due_today: "本日復習期限"
     back_to_notes: "ノートに戻る"
