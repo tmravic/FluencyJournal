@@ -2,8 +2,6 @@ class FollowupsController < ApplicationController
   before_action :set_followup, only: %i[show destroy]
   ALLOWED_CLASSES = %w[Entry AiOutput Note Followup].freeze
 
-
-
   def new
     class_name = params[:class_name]
     klass = check_allowed_classes_for_followup(class_name)
@@ -50,16 +48,15 @@ class FollowupsController < ApplicationController
       followup_origin_class,
       params: followup_prompt_params
     )
-    base_content ="Followup Question: #{followup_prompt_params.dig(:base_content)}"
-    user_generated_content ="Reference text: #{followup_prompt_params.dig(:user_generated_content)}"
+    base_content = "Followup Question: #{followup_prompt_params.dig(:base_content)}"
+    user_generated_content = "Reference text: #{followup_prompt_params.dig(:user_generated_content)}"
     raw_prompt = base_content + "\n" + user_generated_content
     @followup_prompt.raw_prompt = raw_prompt
 
 
     # create followup
     @followup_prompt.followup = Followup.new(
-      followup_origin_class: followup_params[:followup_origin_class],
-      followup_origin_id: followup_params[:followup_origin_id],
+      origin: @followup_origin,
       source_tag: followup_params[:source_tag]
     )
     @followup_prompt.sent_role_prompt = @followup_prompt.role_prompt(@user)

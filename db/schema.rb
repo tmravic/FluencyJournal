@@ -71,12 +71,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_08_134634) do
   end
 
   create_table "followups", force: :cascade do |t|
-    t.string "followup_origin_class"
-    t.integer "followup_origin_id"
+    t.string "origin_type"
+    t.bigint "origin_id"
     t.string "source_tag"
     t.bigint "prompt_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["origin_type", "origin_id"], name: "index_followups_on_origin"
     t.index ["prompt_id"], name: "index_followups_on_prompt_id"
   end
 

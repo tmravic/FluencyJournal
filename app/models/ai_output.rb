@@ -1,6 +1,7 @@
 class AiOutput < ApplicationRecord
   belongs_to :ai_query
   has_and_belongs_to_many :followups
+  has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :destroy
 
   validates :identifier, presence: true # string
   validates :content, presence: true # text

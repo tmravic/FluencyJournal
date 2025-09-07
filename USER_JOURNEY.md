@@ -35,7 +35,12 @@ As a user, I can...
 - [ ] 
 - [ ] 
 ## Followups
-- [ ]
+- [x] Make a followup on an AiQuery
+- [ ] Make a followup on an Entry
+- [x] Make a followup on a Note
+- [x] Make a followup on another Followup
+- [x] View a single Followup
+- [ ] Delete a Followup # Seems to be a Turbo Streams problem deleting the _output partial (not the show page of the Followup)
 ### Bugs
 - [ ] 
 ### General
