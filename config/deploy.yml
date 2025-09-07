@@ -109,7 +109,7 @@ ssh:
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
   db:
-    image: postgres:16
+    image: postgres:latest
     host: 18.176.55.73
 #    port: "127.0.0.1:5432:5432"
     env:
