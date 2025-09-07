@@ -25,7 +25,11 @@
                     class: "btn btn--dark" %>
     <% else %>
       <%= button_to t("followup.delete_followup"),
-                    followup_path(followup, source_tag: source_tag, journal: @journal),
+                    followup_path(
+                      followup,
+                      source_tag: source_tag,
+                      journal: followup.origin.journal
+                    ),
                     method: :delete,
                     data: { turbo_stream: true },
                     class: "btn btn--light", id: "send_button" %>

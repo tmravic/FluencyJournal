@@ -61,7 +61,6 @@ class FollowupsController < ApplicationController
     )
     @followup_prompt.sent_role_prompt = @followup_prompt.role_prompt(@user)
 
-
     if @followup_prompt.save! && @followup_prompt.followup.save!
 
       FollowupRequestJob.perform_later(
@@ -88,6 +87,10 @@ class FollowupsController < ApplicationController
   def destroy
     @journal = Journal.find(params.dig(:journal)) if params.dig(:journal)
     @source_tag = params.dig(:source_tag)
+    # ex: "ai_assistant" or "notes_box"
+    # Used to find the HTML items for turbo streams to delete, ex:
+    # "ai_assistant_answer_1"
+    # "notes_box_answer_2"
     @followup.destroy
   end
 
@@ -111,7 +114,7 @@ class FollowupsController < ApplicationController
   end
 
   def is_vocab_or_grammar_note?(class_name)
-    class_name == Note && %w[vocab, grammar].include?(@followup_origin.category)
+    class_name == Note && %w[vocab grammar].include?(@followup_origin.category)
   end
 
   def set_prompt_type_based_on_params(params, prompt_subclass_name)
