@@ -28,7 +28,7 @@
                     followup_path(
                       followup,
                       source_tag: source_tag,
-                      journal: followup.origin.journal
+                      journal: followup.origin&.journal
                     ),
                     method: :delete,
                     data: { turbo_stream: true },
