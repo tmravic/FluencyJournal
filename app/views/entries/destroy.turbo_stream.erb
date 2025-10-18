@@ -1,6 +1,6 @@
 <%= turbo_stream.remove @entry %>
 <% if @entries.empty? %>
-  <%= turbo_stream.update dom_id(Entry.new) do %>
+  <%= turbo_stream.update "entries" do %>
     <%= render 'entries/empty_state' %>
   <% end %>
 <% end %>
