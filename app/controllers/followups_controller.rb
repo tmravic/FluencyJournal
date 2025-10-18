@@ -14,7 +14,7 @@ class FollowupsController < ApplicationController
 
     @source_tag = params[:source_tag]
     @uuid = SecureRandom.uuid
-    # @ai_models = get_ai_models
+    @ai_models = get_ai_models
 
     if class_name == AiOutput
       @journal = @followup_origin.ai_query.journal
