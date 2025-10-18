@@ -32,7 +32,7 @@ class AiQueriesController < ApplicationController
       user_generated_content: entry_prompt_params[:user_generated_content]
     )
 
-    entry_prompt.sent_role_prompt = entry_prompt.role_prompt(@journal.user)
+    entry_prompt.sent_role_prompt = entry_prompt.role_prompt(@journal.user, @journal)
 
     if entry_prompt.save!
       AiRequestJob.perform_later(@journal, @api_key, entry_prompt)

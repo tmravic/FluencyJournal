@@ -1,17 +1,17 @@
 class EntryPrompt < Prompt
-  def role_prompt(user)
+  def role_prompt(user, journal)
     "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes " +
       "and reword journal entries into more natural and correct #{user.learning_language}. " +
       "The journal entry may contain #{user.original_language} in 'Original Language' to clarify the " +
       "student's intended meaning, but ignore this if no #{user.original_language} is in the prompt. " +
       "If 'Learning Language' contains no #{user.learning_language}, but 'Original Language' has an " +
       "#{user.original_language} entry, then simply translate without any changes. " +
+      "Each item in this array is part of a previous entry in this journal, which you " +
+      "should not correct or comment on but refer to as context to understand the current entry: #{journal.full_journal}. " +
       "Avoid vague feedback, instead pointing out each change clearly. When the content of " +
       "'Original Language' is grammatically correct, don't make needless corrections that change the tone, " +
       "nuance, or politeness unless the student asks for it specifically. " +
-      "Do not suggest adding a period at the end of sentences. " +
-      "Don't make any change which isn't correcting an actual mistake. " +
-      "Make sure all your changes agree with each other in tone and formality."
+      "Do not suggest adding a period at the end of sentences. "
   end
 
   def change_keyword
