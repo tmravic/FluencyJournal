@@ -1,0 +1,11 @@
+<%= turbo_stream.replace(
+      @quiz_answer.ai_output,
+      partial: "quiz_answers/compared_quiz_answer",
+      locals: { quiz_answer: @quiz_answer, ai_output: @ai_output }
+      ) %>
+<% if @show_grade_quiz_button %>
+  <%= turbo_stream.update("grade_quiz_button",
+      partial: "quizzes/grade_quiz_button",
+      locals: { journal: @journal, quiz: @quiz }
+      ) %>
+<% end %>

@@ -4,6 +4,18 @@ Rails.application.routes.draw do
       get :open_ai_assistant
     end
     resources :entries
+    resources :quizzes, only: [:show] do
+      member do
+        get :prepare_quiz
+        get :reset_quiz
+        get :grade_quiz
+      end
+      resources :quiz_answers, only: [:new, :create, :destroy, :show] do
+        member do
+          post :retry
+        end
+      end
+    end
     resources :ai_queries, only: [ :show, :destroy ] do
       collection do
         post :ai_request

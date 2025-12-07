@@ -6,10 +6,8 @@ class AiQuery < ApplicationRecord
   delegate :user, to: :journal, allow_nil: true
   has_many :ai_outputs, dependent: :destroy
   has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
-
   has_and_belongs_to_many :followups
-  # has_one :ai_queries_followup, dependent: :nullify
-  # has_one :followup, through: :ai_queries_followup, dependent: :nullify
+  has_many :quizzes, dependent: :destroy
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
   validates :raw_response, presence: true
@@ -46,6 +44,22 @@ class AiQuery < ApplicationRecord
     end
   end
 
+  def create_quiz_questions(translated_response)
+    line_count = translated_response.keys.count
+    (1..line_count).each do |count|
+      ai_outputs.create(
+        made_note: false,
+        identifier: count.to_s
+      ).tap do |ai_output|
+        # Did I add translation but this is specific to PrepareQuizJob?
+        ai_output.content = translated_response.dig("line_#{count}", "translation").split('→ ').last
+        # ["明日、彼女のお母さんに初めて会う予定です。 ",
+        #  "Tomorrow, I have plans to meet her mother for the first time."]
+        ai_output.save!
+      end
+    end
+  end
+
   def error_message
     "something went wrong"
   end
@@ -65,6 +79,18 @@ class AiQuery < ApplicationRecord
 
   def change_explanation(change_keyword, num, abbr)
     parsed_response.dig("#{change_keyword}#{num}", "explanation_#{abbr}") || error_message
+  end
+
+  def assessment
+    content = self.parsed_response.fetch("assessment", nil)
+
+    # {"overall"=> "Overall, the quiz answers are..."}
+    return content["overall"] if is_hash?(content) && content["overall"]
+
+    # {"overall_accuracy"=> "The translations are mostly accurate..."}
+    return content["overall_accuracy"] if is_hash?(content) && content["overall_accuracy"]
+
+    content
   end
 
   def corrected_text

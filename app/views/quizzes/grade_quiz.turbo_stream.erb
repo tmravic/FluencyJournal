@@ -1,0 +1,5 @@
+<%= turbo_stream.update(
+      "quiz_results",
+      partial: "quizzes/graded_output",
+      locals: { ai_query_id: "Quiz grading in progress...", assessment: nil }
+    ) %>

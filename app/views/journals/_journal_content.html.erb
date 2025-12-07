@@ -12,19 +12,16 @@
   <%= turbo_frame_tag "start_entry_button" do %>
     <%= render 'entries/start_entry_button' %>
   <% end %>
+
+  <% if @entries.present? %>
+    <%= turbo_frame_tag "quiz_buttons" do %>
+      <%= render 'quizzes/quiz_buttons' %>
+    <% end %>
+  <% end %>
+
 </div>
 
-<%= turbo_frame_tag "entries" do %>
-  <% if @entries.present? %>
-    <%= render 'entries/empty_state' %>
-    <%= render partial: 'entries/entry',
-               collection: @entries,
-               locals: {
-                 journal: @journal,
-                 source_tag: @source_tag
-               } %>
-  <% end %>
-<% end %>
+<%= render 'entries/entries_frame' %>
 
 <%= turbo_frame_tag Entry.new do %>
   <%= render 'entries/empty_state' unless @entries.present? %>

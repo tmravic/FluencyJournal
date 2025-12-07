@@ -1,0 +1,8 @@
+<%= turbo_stream.update("quiz_buttons", partial: 'quizzes/reset_quiz_button') %>
+<%= turbo_stream.replace "entries" do %>
+  <%= turbo_frame_tag "quizzes" do %>
+    <%= turbo_stream_from "channel_#{@uuid}" %>
+    <%= render partial: "quizzes/output", locals: { ai_query_id: @ai_query_id } %>
+  <% end %>
+<% end %>
+<%= turbo_stream.update "ai_assistant", partial: "quizzes/ai_assistant" %>

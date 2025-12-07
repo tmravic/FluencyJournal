@@ -1,0 +1,17 @@
+<!--QuizAnswer form-->
+<%= simple_form_for [journal, quiz, quiz_answer],
+                    html: {
+                      data: { turbo_frame: quiz_answer.ai_output },
+                      class: "form entry"
+                    } do |f| %>
+  <%= form_error_notification(quiz_answer) %>
+
+  <%= f.input :user_response,
+              html5: true,
+              placeholder: "try to translate this entry back to #{journal.user.learning_language}" %>
+  <%= f.hidden_field :ai_output_id %>
+  <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
+  <div class="form__input__button_block">
+    <%= f.submit "Check answer", class: "btn btn--secondary", name: nil %>
+  </div>
+<% end %>

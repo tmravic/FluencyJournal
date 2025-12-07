@@ -3,6 +3,7 @@ class Journal < ApplicationRecord
   belongs_to :group
   has_many :entries, dependent: :destroy
   has_many :ai_queries, dependent: :destroy
+  has_many :quizzes, dependent: :destroy
 
   validates :title, presence: true
 

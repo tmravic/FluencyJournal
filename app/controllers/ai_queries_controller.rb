@@ -20,9 +20,7 @@ class AiQueriesController < ApplicationController
   end
 
   def ai_request
-    original_language ="Original Language: #{entry_prompt_params[:base_content]}"
-    learning_language ="Learning Language: #{entry_prompt_params[:user_generated_content]}"
-    raw_prompt = original_language + "\n" + learning_language
+    raw_prompt = create_raw_prompt
 
     entry_prompt = EntryPrompt.build(
       raw_prompt: raw_prompt,
@@ -60,5 +58,13 @@ class AiQueriesController < ApplicationController
     params.expect(
       entry_prompt: [ :base_content, :user_generated_content, :ai_model, :uuid, :journal_id ]
     )
+  end
+
+  private
+
+  def create_raw_prompt
+    original_language ="Original Language: #{entry_prompt_params[:base_content]}"
+    learning_language ="Learning Language: #{entry_prompt_params[:user_generated_content]}"
+    original_language + "\n" + learning_language
   end
 end

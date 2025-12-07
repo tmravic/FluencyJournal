@@ -1,0 +1,14 @@
+<%= turbo_frame_tag quiz_entry do %>
+  <div class="entry">
+    <div class="entry__header">
+      <h2 class="entry__title">
+        <%= t('entry.entry', number: quiz_entry.identifier) %>
+      </h2>
+      <!-- Each quiz_entry is an AiOutput class object-->
+    </div>
+    <p><%= simple_format(quiz_entry.content) %></p>
+    <!-- Add form for user to input Japanese translation -->
+    <% quiz_answer = build_quiz_answer(quiz, quiz_entry) %>
+    <%= render partial: "quiz_answers/form", locals: { journal:, quiz:, quiz_answer:, quiz_entry: } %>
+  </div>
+<% end %>

@@ -38,13 +38,13 @@ class FollowupRequestJob < ApplicationJob
 
     token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
 
-    response_from_open_ai = json_response["choices"][0]["message"].dig("content")
+    response_from_x_ai = json_response["choices"][0]["message"].dig("content")
 
     ai_query = AiQuery.build(
       prompt_tokens: token_data["prompt_tokens"],
       completion_tokens: token_data["completion_tokens"],
       total_tokens: token_data["total_tokens"],
-      raw_response: response_from_open_ai
+      raw_response: response_from_x_ai
     )
 
     ai_query.change_count = ai_query.count_changes(followup_prompt.change_keyword)

@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "ai_output" do %>
-<div>
-  <%= render partial: "ai_queries/output", locals: { corrected_text: "", ai_query_id: "" } %>
-</div>
+  <div>
+    <%= render partial: "ai_queries/output", locals: { corrected_text: "", ai_query_id: "" } %>
+  </div>
 <% end %>
 
 <%= turbo_stream_from "channel_#{@uuid}" %>
