@@ -1,0 +1,106 @@
+<br>
+<%= turbo_stream_from "channel_#{@uuid}" %>
+<% ai_query = set_ai_query_when_job_finishes(ai_query_id, "Quiz grading in progress...") %>
+<% assessment_output = set_assessment_output(ai_query) %>
+<% entry_keyword = ai_query.prompt.change_keyword if ai_query %>
+<div class="card">
+  <% if assessment.present? %>
+    <%= turbo_frame_tag "#{entry_keyword}#{assessment_output.identifier}" do %>
+      <div class="card__change__title">
+        <h4><%= "Assessment" %></h4>
+        <div>
+          <%= button_to t("delete"),
+                        ai_output_path(assessment_output.id, source_tag: source_tag),
+                        method: :delete,
+                        data: { turbo_stream: true },
+                        class: "btn btn--light" %>
+          <%= link_to t('followup.followup'),
+                      new_followup_path(
+                        class_name: assessment_output.class,
+                        id: assessment_output.id,
+                        source_tag: source_tag,
+                      ),
+                      data: { turbo_frame: source_tag },
+                      class: "btn btn--secondary" %>
+          <% unless ai_query && assessment_output.made_note %>
+            <%= turbo_frame_tag "make_note_button_#{assessment_output.identifier}" do %>
+              <%= link_to t("note_button"),
+                          new_automatic_notes_path(
+                            ai_query_id: ai_query.id,
+                            ai_output_id: assessment_output.id
+                          ),
+                          class: "btn btn--primary",
+                          data: {
+                            turbo_stream: true,
+                            controller: "scroll",
+                            action: "click->scroll#scrollToTop"
+                          } %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card__change__corrected">
+        <%= assessment %>
+      </div>
+    <% end %>
+  <% elsif ai_query_id == "Quiz grading in progress..." %>
+    <h4><%= ai_query_id %></h4>
+  <% else %>
+    <h4><%= "Quiz results will appear below after grading" %></h4>
+  <% end %>
+
+  <% if ai_query %>
+    <% ai_query.ai_outputs.each do |output| %>
+      <% next if output == assessment_output %>
+      <hr>
+      <%= turbo_frame_tag "#{entry_keyword}#{output.identifier}" do %>
+        <div class="card__change">
+          <div class="card__change__title">
+            <h4>
+              <%= "Entry #{output.identifier}" %>
+            </h4>
+            <div>
+              <%= button_to t("delete"),
+                            ai_output_path(output.id, source_tag: source_tag),
+                            method: :delete,
+                            data: { turbo_stream: true },
+                            class: "btn btn--light" %>
+              <%= link_to t('followup.followup'),
+                          new_followup_path(class_name: output.class, id: output.id, source_tag: source_tag),
+                          data: { turbo_frame: source_tag },
+                          class: "btn btn--secondary" %>
+              <% unless output.made_note %>
+                <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
+                  <%= link_to t("note_button"),
+                              new_automatic_notes_path(
+                                ai_query_id: ai_query.id,
+                                ai_output_id: output.id
+                              ),
+                              class: "btn btn--primary",
+                              data: {
+                                turbo_stream: true,
+                                controller: "scroll",
+                                action: "click->scroll#scrollToTop"
+                              } %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <div class="card__change_content">
+            <%= render_ai_query_entry_content(ai_query, output.identifier, entry_keyword, user, quiz, html: true) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if assessment.present? %>
+    <script>
+        const quizResultsFrame = document.getElementById("quiz_results");
+        if (quizResultsFrame) {
+            quizResultsFrame.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    </script>
+  <% end %>
+</div>

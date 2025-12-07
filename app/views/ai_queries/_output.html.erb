@@ -1,5 +1,5 @@
 <br>
-<% ai_query = set_ai_query_when_job_finishes(ai_query_id) %>
+<% ai_query = set_ai_query_when_job_finishes(ai_query_id, t("ai_query.processing")) %>
 <% corrected_text_output = set_corrected_text_output(ai_query) %>
 <% change_keyword = ai_query.prompt.change_keyword if ai_query %>
 <div class="card">

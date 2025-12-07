@@ -3,6 +3,11 @@ class FollowupsController < ApplicationController
   ALLOWED_CLASSES = %w[Entry AiOutput Note Followup].freeze
 
   def new
+    if params[:class_name].blank? || params[:id].blank?
+      Rails.logger.warn "Invalid followup request: #{params.inspect} from referrer #{request.referer}"
+      redirect_to(@journal ? journal_path(@journal) : root_path) && return
+    end
+    render layout: false if @source_tag == "ai_assistant"
     class_name = params[:class_name]
     klass = check_allowed_classes_for_followup(class_name)
     followup_origin_id = params[:id].to_i
@@ -16,9 +21,9 @@ class FollowupsController < ApplicationController
     @uuid = SecureRandom.uuid
     @ai_models = get_ai_models
 
-    if class_name == AiOutput
+    if klass == AiOutput
       @journal = @followup_origin.ai_query.journal
-    elsif class_name == Entry
+    elsif klass == Entry
       @journal = @followup_origin.journal
     else
       session[:followup_from_todays_notes] = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])

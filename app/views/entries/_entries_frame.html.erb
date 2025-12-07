@@ -1,0 +1,11 @@
+<%= turbo_frame_tag "entries" do %>
+  <% if @entries.present? %>
+    <%= render 'entries/empty_state' %>
+    <%= render partial: 'entries/entry',
+               collection: @entries,
+               locals: {
+                 journal: @journal,
+                 source_tag: @source_tag
+               } %>
+  <% end %>
+<% end %>

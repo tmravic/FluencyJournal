@@ -1,0 +1,15 @@
+<% content_for :title, "New quiz_answer" %>
+
+<main class="container">
+  <%= link_to sanitize("&larr; Back to journal"), journal_path(@journal) %>
+
+  <div class="header">
+    <h1>New Quiz Answer</h1>
+  </div>
+
+  <%= turbo_frame_tag "ai_output_#{@ai_output.id}_quiz_answer_#{dom_id(@quiz_answer)}" do %>
+    <%= render "form",
+               journal: @journal,
+               quiz_answer: @quiz_answer %>
+  <% end %>
+</main>

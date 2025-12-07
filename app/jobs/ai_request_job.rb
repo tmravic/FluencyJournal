@@ -76,13 +76,13 @@ class AiRequestJob < ApplicationJob
     token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
     # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
 
-    response_from_open_ai = json_response["choices"][0]["message"].dig("content")
+    response_from_x_ai = json_response["choices"][0]["message"].dig("content")
 
     ai_query = AiQuery.build(
       prompt_tokens: token_data["prompt_tokens"],
       completion_tokens: token_data["completion_tokens"],
       total_tokens: token_data["total_tokens"],
-      raw_response: response_from_open_ai
+      raw_response: response_from_x_ai
     )
 
     ai_query.prompt = entry_prompt

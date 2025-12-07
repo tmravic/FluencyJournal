@@ -1,0 +1,5 @@
+<%= turbo_frame_tag "quiz_results" do %>
+  <div>
+    <%= render partial: "quizzes/graded_output", locals: { assessment: "", ai_query_id: "" } %>
+  </div>
+<% end %>

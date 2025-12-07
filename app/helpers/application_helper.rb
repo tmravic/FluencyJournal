@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def set_ai_query_when_job_finishes(ai_query_id, message)
+    AiQuery.find(ai_query_id) if ai_query_id.present? && ai_query_id != message
+  end
+
   def render_turbo_stream_flash_messages
     turbo_stream.prepend "flash", partial: "layouts/flash"
   end

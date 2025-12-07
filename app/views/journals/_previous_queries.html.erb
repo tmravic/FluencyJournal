@@ -1,17 +1,24 @@
+<!---------------------------------------->
+<!--Previous AI Questions and Followups-->
+<!--Q Q F Q F F T T T-->
+<!---------------------------------------->
+
 <h4><%= t("followup.previous") %></h4>
 <% journal.ai_queries.each do |query| %>
   <% if query.followups.any? %>
     <%= link_to t("followup.short"),
-                followup_path(
-                  query.followups.first,
-                  source_tag: "ai_assistant"
-                ),
+                followup_path(query.followups.first, source_tag: "ai_assistant"),
                 class: "btn btn--primary",
                 data: { turbo_frame: "ai_assistant" } %>
-  <% else %>
+  <% elsif query_unrelated_to_quizzes?(query) %>
     <%= link_to t("ai_query.short"),
                 journal_ai_query_path(journal, query),
                 class: "btn btn--secondary",
+                data: { turbo_frame: "ai_assistant" } %>
+  <% elsif query.prompt.is_a?(QuizResultPrompt) %>
+    <%= link_to "T",
+                journal_quiz_path(journal, query.quizzes.last),
+                class: "btn btn--dark",
                 data: { turbo_frame: "ai_assistant" } %>
   <% end %>
 <% end %>
