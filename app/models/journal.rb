@@ -6,12 +6,19 @@ class Journal < ApplicationRecord
   has_many :quizzes, dependent: :destroy
 
   validates :title, presence: true
+  validates :next_study_date, presence: true
+  validates :last_interval, numericality: true
 
   scope :ordered, -> { order(created_at: :desc) }
   # scope :personal, -> {  }
   # scope :private, -> {  }
   # scope :public, -> {  }
   # scope :shared (either private or publish, not personal), -> {  }
+
+  scope :next_to_study, -> {
+    where(arel_table[:next_study_date].lteq(DateTime.now))
+      .order(:next_study_date)
+  }
 
   # after_create_commit -> { broadcast_prepend_later_to "journals" }
   # after_update_commit -> { broadcast_replace_later_to "journals" }

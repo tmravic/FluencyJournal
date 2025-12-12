@@ -53,7 +53,6 @@ class QuizzesController < ApplicationController
     if quiz_result_prompt.save
       @uuid = quiz_result_prompt.uuid
       GradeQuizJob.perform_later(@journal, @api_key, quiz_result_prompt, @quiz)
-      # TODO: remember to use the JavaScript stimulus scroll_controller
       respond_to do |format|
         format.turbo_stream
       end

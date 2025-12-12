@@ -1,3 +1,19 @@
+<%= turbo_stream.update "journals_title" do %>
+  <h1><%= t("journal.todays_journals") %></h1>
+<% end %>
+
+<%= turbo_stream.update "switch_button" do %>
+  <%= render 'journals/all_journals_button' %>
+<% end %>
+
+<%= turbo_stream.update "journals" do %>
+  <%= render @todays_journals %>
+<% end %>
+
+<%= turbo_stream.update dom_id(Journal.new) do %>
+  <%= render 'journals/empty_state' unless @todays_journals.present? %>
+<% end %>
+
 <%= turbo_stream.update "workspace", "" %>
 <%= turbo_stream.update "close_journal_button", "" %>
 <%= turbo_stream.update "start_journal_button", partial: "journals/start_journal_button" %>

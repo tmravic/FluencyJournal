@@ -121,9 +121,10 @@ class NotesController < ApplicationController
     new_interval = @note.last_interval * 2.5
     next_study_date = (new_interval).days.from_now
     notice = "Note will return on #{next_study_date.strftime("%m/%d/%Y")}"
+    # TODO: Translate
 
-    respond_to do |format|
-      if @note.update(next_study_date: next_study_date, last_interval: new_interval)
+    if @note.update(next_study_date: next_study_date, last_interval: new_interval)
+      respond_to do |format|
         format.html { redirect_to note_path(@note), notice: notice }
         format.turbo_stream do
           flash.now[:notice] = notice

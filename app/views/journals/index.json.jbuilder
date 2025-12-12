@@ -1,1 +1,1 @@
-json.array! @journals, partial: "journals/journal", as: :journal
+json.array! @todays_journals, partial: "journals/journal", as: :journal

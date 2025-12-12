@@ -1,5 +1,4 @@
 <% content_for :title, "#{t("app_name")} - #{t("journal.journals")}" %>
-
 <%= turbo_stream_from current_group, "journals" %>
 
 <div class="container">
@@ -9,7 +8,13 @@
   <%= turbo_frame_tag "workspace" %>
 
   <div class="header">
-    <h1><%= t("journal.journals") %></h1>
+    <%= turbo_frame_tag "journals_title" do %>
+      <h1><%= t("journal.todays_journals") %></h1>
+    <% end %>
+
+      <%= turbo_frame_tag "switch_button" do %>
+        <%= render 'journals/all_journals_button' %>
+      <% end %>
 
     <%= turbo_frame_tag "close_journal_button" %>
 
@@ -19,10 +24,10 @@
   </div>
 
   <%= turbo_frame_tag Journal.new do %>
-    <%= render 'journals/empty_state' unless @journals.present? %>
+    <%= render 'journals/empty_state' unless @todays_journals.present? %>
   <% end %>
 
   <%= turbo_frame_tag "journals" do %>
-    <%= render @journals %>
+    <%= render @todays_journals %>
   <% end %>
 </div>

@@ -43,6 +43,8 @@ journals = [
 journals.each do |journal_attrs|
   Journal.find_or_create_by(title: journal_attrs[:title], user_id: journal_attrs[:user_id]) do |journal|
     journal.group = journal_attrs[:group]
+    journal.next_study_date = DateTime.now
+    journal.last_interval = 1.0
   end
 end
 

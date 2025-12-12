@@ -66,6 +66,8 @@ en:
     add_journal: "Add journal"
     view_journals: "View journals"
     journals: "Journals"
+    all_journals: "All Journals"
+    todays_journals: "Today's Journals"
     start: "Start Journal"
     back_to_journals: "Back to journals"
     open_ai_assistant: "Open AI Assistant"

@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   resources :journals do
+    collection do
+      get :all
+    end
     member do
       get :open_ai_assistant
+      post :mark_journal_as_studied
     end
     resources :entries
     resources :quizzes, only: [:show] do

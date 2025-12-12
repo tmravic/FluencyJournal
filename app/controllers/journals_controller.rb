@@ -1,9 +1,18 @@
 class JournalsController < ApplicationController
-  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant ]
+  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied]
 
   # GET /journals or /journals.json
   def index
-    @journals = current_group.journals.ordered
+    # This seems to complicate the destroy action/turbo views...
+    @todays_journals = current_group.journals.next_to_study
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
+  def all
+    @all_journals = current_group.journals.ordered
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -36,6 +45,7 @@ class JournalsController < ApplicationController
   def create
     @journal = current_group.journals.build(journal_params)
     @journal.user = Current.user
+    @journal.next_study_date = DateTime.now
 
     respond_to do |format|
       if @journal.save
@@ -88,20 +98,33 @@ class JournalsController < ApplicationController
     end
   end
 
+  def mark_journal_as_studied
+    new_interval = @journal.last_interval * 2.5
+    next_study_date = (new_interval).days.from_now
+    notice = "Journal will return on #{next_study_date.strftime("%m/%d/%Y")}"
+    # TODO: Translate
+
+    if @journal.update(next_study_date: next_study_date, last_interval: new_interval)
+      respond_to do |format|
+        format.html { redirect_to journal_path(@journal), notice: notice }
+        format.turbo_stream do
+          flash.now[:notice] = notice
+        end
+      end
+    end
+  end
+
+  def get_collection_from_view_context(view_context)
+
+  end
+
   private
 
-
-  # Use callbacks to share common setup or constraints between actions.
   def set_journal
     @journal = current_group.journals.find(params.expect(:id))
   end
 
-  # Only allow a list of trusted parameters through.
   def journal_params
-    # OLD
-    # user_params = params.require(:user).permit(:name, :favorite_pie)
-
-    # NEW in Rails 8 using .expect(model: [:attribute1, :attribute2])
     params.expect(journal: [ :title, :content, :user_id ])
   end
 end

@@ -1,0 +1,33 @@
+<% content_for :title, "#{t("app_name")} - #{t("journal.journals")}" %>
+<%= turbo_stream_from current_group, "journals" %>
+
+<div class="container">
+
+  <%= turbo_frame_tag "notes_box" %>
+
+  <%= turbo_frame_tag "workspace" %>
+
+  <div class="header">
+    <%= turbo_frame_tag "journals_title" do %>
+      <h1><%= t("journal.all_journals") %></h1>
+    <% end %>
+
+      <%= turbo_frame_tag "switch_button" do %>
+        <%= render 'journals/todays_journals_button' %>
+      <% end %>
+
+    <%= turbo_frame_tag "close_journal_button" %>
+
+    <%= turbo_frame_tag "start_journal_button" do %>
+      <%= render 'journals/start_journal_button' %>
+    <% end %>
+  </div>
+
+  <%= turbo_frame_tag Journal.new do %>
+    <%= render 'journals/empty_state' unless @all_journals.present? %>
+  <% end %>
+
+  <%= turbo_frame_tag "journals" do %>
+    <%= render @all_journals %>
+  <% end %>
+</div>
