@@ -1,6 +1,7 @@
 <!-- rendered by app/views/journals/show.html.erb in this line: -->
 <!-- render "journals/journal_content", journal: @journal, entries: @entries -->
 
+
 <div class="header">
   <h2><%= @journal.title %></h2>
 
@@ -13,14 +14,24 @@
     <%= render 'entries/start_entry_button' %>
   <% end %>
 
-  <% if @entries.present? %>
-    <%= turbo_frame_tag "quiz_buttons" do %>
-      <%= render 'quizzes/quiz_buttons' %>
+  <%= turbo_frame_tag "mark_studied_button" do %>
+    <% if @entries.present? %>
+      <%= render partial: 'journals/mark_studied_button', locals: { journal: @journal } %>
     <% end %>
   <% end %>
 
-</div>
+  <%= turbo_frame_tag "quiz_buttons" do %>
+    <%= render 'quizzes/quiz_buttons' if @entries.present? %>
+  <% end %>
 
+</div>
+<br>
+<div style="display:flex;justify-content:space-between;">
+  <span class="journal__date">First written: <%= @journal.created_at.strftime("%m/%d/%Y") %></span>
+  <%= turbo_frame_tag "next_review_timestamp" do %>
+    <%= render partial: 'journals/next_review_timestamp', locals: { journal: @journal } %>
+  <% end %>
+</div>
 <%= render 'entries/entries_frame' %>
 
 <%= turbo_frame_tag Entry.new do %>

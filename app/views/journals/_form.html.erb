@@ -2,6 +2,7 @@
   <%= form_error_notification(journal) %>
 
   <%= f.input :title, input_html: { autofocus: true } %>
+  <%= f.hidden_field :from_all_or_todays, value: from_all_or_todays %>
 
   <div class="form__input__button_block">
     <%= link_to t("cancel"), journals_path, class: "btn btn--light" %>

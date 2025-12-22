@@ -3,6 +3,8 @@
     <%= t("note.empty_state") %>
   </p>
 
+  <%= render "notes/todays_notes_button" %>
+
   <%= link_to t("note.add_note"),
               new_note_path(view_context: "all_notes"),
               class: "btn btn--primary",

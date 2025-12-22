@@ -7,6 +7,6 @@
   </div>
 
   <%= turbo_frame_tag @journal do %>
-    <%= render "form", journal: @journal %>
+    <%= render "form", journal: @journal, from_all_or_todays: @from_all_or_todays %>
   <% end %>
 </main>

@@ -11,6 +11,7 @@ class EntriesController < ApplicationController
   # GET /entries/new
   def new
     @uuid = SecureRandom.uuid
+    @no_entries = @journal.entries.empty?
     @entry = @journal.entries.build
     respond_to do |format|
       format.html

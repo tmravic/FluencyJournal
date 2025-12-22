@@ -9,9 +9,13 @@ Rails.application.routes.draw do
     end
     resources :entries
     resources :quizzes, only: [:show] do
-      member do
+      collection do
         get :prepare_quiz
         get :reset_quiz
+      end
+      member do
+        # get :prepare_quiz
+        # get :reset_quiz
         get :grade_quiz
       end
       resources :quiz_answers, only: [:new, :create, :destroy, :show] do

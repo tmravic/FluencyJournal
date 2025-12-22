@@ -3,14 +3,20 @@
     <%= link_to journal.title,
                 journal_path(journal),
                 data: { turbo_frame: "_top" } %>
-    <span class="journal__date"><%= journal.created_at.strftime("%m/%d/%Y") %></span>
+    <span class="journal__date"><%= t('note.next_review') %>: <br><%= display_next_review_time(journal) %></span>
     <div class="journal__actions">
+      <% if @todays_journals.present? %>
+        <%= button_to 'Studied',
+                      mark_journal_as_studied_journal_path(journal),
+                      form: { data: { turbo_confirm: t('note.actions.studied_warning') } },
+                      class: "btn btn--light" %>
+      <% end %>
       <%= link_to t("edit"),
-                  edit_journal_path(journal),
+                  edit_journal_path(journal, from_all_or_todays: all_or_todays),
                   data: { turbo: true },
                   class: "btn btn--light" %>
       <%= button_to t("delete"),
-                    journal_path(journal),
+                    journal_path(journal, from_all_or_todays: all_or_todays),
                     method: :delete,
                     form: { data: { turbo_confirm: t("journal.really_delete") } },
                     class: "btn btn--light" %>

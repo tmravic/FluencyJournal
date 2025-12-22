@@ -11,8 +11,8 @@
       <%= followup_prompt.label t('followup.reference_text') %>
       <%= followup_prompt.text_area :user_generated_content, html5: true, value: @reference_text %>
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
-      <%= followup_prompt.hidden_field :ai_model, value: "grok-3" %>
-      <%= followup_prompt.select :ai_model, options_for_select(@ai_models, "grok-3"), {} %>
+      <%= followup_prompt.hidden_field :ai_model, value: "grok-4-fast-non-reasoning" %>
+      <%#= followup_prompt.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning"), {} %>
     <% end %>
 
     <%= f.hidden_field :followup_origin_class, value: @followup_origin.class %>

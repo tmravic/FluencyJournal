@@ -101,4 +101,10 @@ module ApplicationHelper
     language_setting = "#{t("#{Current.user.original_language.downcase}")}"
     language_setting += " → #{t("#{Current.user.learning_language.downcase}")}"
   end
+
+  def display_next_review_time(object)
+    next_review_time = object.next_study_date.strftime("%m/%d/%Y")
+    today = Date.today.strftime("%m/%d/%Y")
+    next_review_time == today ? "Today" : next_review_time
+  end
 end

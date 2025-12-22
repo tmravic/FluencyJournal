@@ -1,10 +1,11 @@
 class JournalsController < ApplicationController
   before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied]
+  before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
   # GET /journals or /journals.json
   def index
-    # This seems to complicate the destroy action/turbo views...
     @todays_journals = current_group.journals.next_to_study
+    @from_all_or_todays = "todays"
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -13,6 +14,7 @@ class JournalsController < ApplicationController
 
   def all
     @all_journals = current_group.journals.ordered
+    @from_all_or_todays = "all"
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -78,7 +80,12 @@ class JournalsController < ApplicationController
   # DELETE /journals/1 or /journals/1.json
   def destroy
     @journal.destroy!
-    @journals = current_group.journals.ordered
+    @from_all_or_todays = params.dig("from_all_or_todays")
+    if @from_all_or_todays == "all"
+      @all_journals = current_group.journals.ordered
+    elsif @from_all_or_todays == "todays"
+      @todays_journals = current_group.journals.next_to_study
+    end
 
     respond_to do |format|
       # flash[:notice] = "..."
@@ -114,14 +121,14 @@ class JournalsController < ApplicationController
     end
   end
 
-  def get_collection_from_view_context(view_context)
-
-  end
-
   private
 
   def set_journal
     @journal = current_group.journals.find(params.expect(:id))
+  end
+
+  def set_from_all_or_todays
+    @from_all_or_todays = params.dig("journal", "from_all_or_todays")
   end
 
   def journal_params

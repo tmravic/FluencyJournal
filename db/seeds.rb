@@ -35,6 +35,7 @@ user1 = User.find_by(email_address: 'taylor@kpmg.com')
 user2 = User.find_by(email_address: 'admin@admin.com')
 
 journals = [
+  { title: '彼女のお母さん', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
   { title: 'ニキータさん', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
   { title: 'お寺', user_id: user1.id, group: Group.find_by(name: "JapaneseGroup") },
   { title: 'title3', user_id: user2.id, group: Group.find_by(name: "EnglishGroup") },
@@ -49,6 +50,9 @@ journals.each do |journal_attrs|
 end
 
 entries = [
+  { journal_id: Journal.find_by(title: '彼女のお母さん').id, content: "彼女のお母さんに会いました。" },
+  { journal_id: Journal.find_by(title: '彼女のお母さん').id, content: "３人で中目黒にピザを食べました。" },
+  { journal_id: Journal.find_by(title: '彼女のお母さん').id, content: "彼女のお母さんの顔を見ると、将来の彼女を見ているようだった。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。" },
   { journal_id: Journal.find_by(title: 'ニキータさん').id, content: "東京にいる面白い人との繋がりが多くてうらやましかった。" },

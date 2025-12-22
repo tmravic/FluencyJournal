@@ -3,5 +3,6 @@
   <%= turbo_stream.update "entries" do %>
     <%= render 'entries/empty_state' %>
   <% end %>
+  <%= turbo_stream.update "quiz_buttons", '' %>
 <% end %>
 <%= render_turbo_stream_flash_messages %>

@@ -3,7 +3,7 @@ class AiOutput < ApplicationRecord
   has_and_belongs_to_many :followups
   has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
   delegate :journal, to: :ai_query, allow_nil: true
-  has_many :quiz_answers #, through: :ai_query
+  has_many :quiz_answers, dependent: :destroy
 
   validates :identifier, presence: true # string
   validates :content, presence: true # text

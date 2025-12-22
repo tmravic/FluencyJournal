@@ -11,10 +11,10 @@
 <% end %>
 
 <%= turbo_stream.update dom_id(Journal.new) do %>
-  <%= render 'journals/empty_state' unless @all_journals.present? %>
+  <%= render partial: 'journals/empty_state', locals: { from_all_or_todays: @from_all_or_todays } unless @all_journals.present? %>
 <% end %>
 
 <%= turbo_stream.update "workspace", "" %>
 <%= turbo_stream.update "close_journal_button", "" %>
-<%= turbo_stream.update "start_journal_button", partial: "journals/start_journal_button" %>
+<%= turbo_stream.update "start_journal_button", partial: "journals/start_journal_button", locals: { from_all_or_todays: @from_all_or_todays } %>
 <%= render_turbo_stream_flash_messages %>

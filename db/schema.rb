@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_07_075113) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_111620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -145,10 +145,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_075113) do
     t.text "feedback"
     t.bigint "journal_id", null: false
     t.bigint "ai_query_id", null: false
+    t.bigint "grading_ai_query_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "grading_ai_query_id"
     t.index ["ai_query_id"], name: "index_quizzes_on_ai_query_id"
+    t.index ["grading_ai_query_id"], name: "index_quizzes_on_grading_ai_query_id"
     t.index ["journal_id"], name: "index_quizzes_on_journal_id"
   end
 

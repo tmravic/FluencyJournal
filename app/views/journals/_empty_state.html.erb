@@ -4,7 +4,7 @@
   </p>
 
   <%= link_to t("journal.add_journal"),
-              new_journal_path,
+              new_journal_path(from_all_or_todays: from_all_or_todays),
               class: "btn btn--primary",
               data: { turbo_frame: dom_id(Journal.new) } %>
 </div>

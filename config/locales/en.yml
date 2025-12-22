@@ -63,6 +63,7 @@ en:
   journal:
     close_journal: "Close journal"
     empty_state: "You don't have any journals yet!"
+    empty_state_due: "You don't have any journals due today!"
     add_journal: "Add journal"
     view_journals: "View journals"
     journals: "Journals"

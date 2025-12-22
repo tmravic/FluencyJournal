@@ -1,4 +1,4 @@
 <%= link_to t("journal.start"),
-            new_journal_path,
+            new_journal_path(from_all_or_todays: from_all_or_todays),
             class: "btn btn--primary btn--primary--manage-journal",
             data: { turbo_frame: dom_id(Journal.new) } %>

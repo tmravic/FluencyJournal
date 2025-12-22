@@ -1,9 +1,14 @@
 <%= turbo_stream.remove @journal %>
 <%= turbo_stream.update "workspace", "" %>
 <%= turbo_stream.update "close_ai_assistant_button", "" %>
-<% if @journals.empty? %>
+<%= turbo_stream.update "close_journal_button", "" %>
+<% if all_journals_empty? %>
   <%= turbo_stream.update dom_id(Journal.new) do %>
-    <%= render 'journals/empty_state' %>
+    <%= render partial: 'journals/empty_state', locals: { from_all_or_todays: @from_all_or_todays } %>
+  <% end %>
+<% elsif todays_journals_empty? %>
+  <%= turbo_stream.update dom_id(Journal.new) do %>
+    <%= render partial: 'journals/empty_state_today', locals: { from_all_or_todays: @from_all_or_todays } %>
   <% end %>
 <% end %>
 <%= render_turbo_stream_flash_messages %>

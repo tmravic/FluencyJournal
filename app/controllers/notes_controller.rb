@@ -105,13 +105,14 @@ class NotesController < ApplicationController
 
   def destroy
     @note.destroy!
-    delete_from_todays_notes = params[:delete_from_todays_notes]
+    @delete_from_todays_notes = delete_came_from_todays_notes?
+    @all_notes_empty = Current.user&.notes.empty?
+    @todays_notes_empty = Current.user&.notes.next_to_study.empty?
 
     respond_to do |format|
       format.html { redirect_to notes_path, status: :see_other, notice: t("note.deleted") }
       format.turbo_stream do
         flash.now[:notice] = t("note.deleted")
-        render "notes/destroy", locals: { delete_from_todays_notes: delete_from_todays_notes }
       end
     end
   end
@@ -134,6 +135,10 @@ class NotesController < ApplicationController
   end
 
   private
+
+  def delete_came_from_todays_notes?
+    ActiveModel::Type::Boolean.new.cast(params[:delete_from_todays_notes])
+  end
 
   def note_made_automatically?
     @ai_query && @ai_output.present?

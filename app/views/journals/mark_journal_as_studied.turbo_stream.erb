@@ -1,0 +1,18 @@
+<%= turbo_stream.remove @journal %>
+<% all_todays_journals_empty = Current.user&.journals.next_to_study.empty? %>
+<% if all_todays_journals_empty %>
+  <%= turbo_stream.update "journals",
+                          partial: "journals/empty_state_today",
+                          locals: { from_all_or_todays: @from_all_or_todays } %>
+<% else %>
+  <% if previous_journal = @journal.previous_journal %>
+    <%= turbo_stream.after dom_id(previous_journal) do %>
+      <%= render partial: "journals/journal", locals: { journal: @journal } %>
+    <% end %>
+  <% end %>
+<% end %>
+<%= turbo_stream.update "next_review_timestamp",
+                        partial: "journals/next_review_timestamp",
+                        locals: { journal: @journal } %>
+<%= turbo_stream.update "mark_studied_button", "" %>
+<%= render_turbo_stream_flash_messages %>

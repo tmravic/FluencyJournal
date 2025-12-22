@@ -7,10 +7,10 @@ image: tmravic/fluency_journal
 # Deploy to these servers.
 servers:
   web:
-    - 54.95.159.178
+    - 3.112.246.169
   # job:
   #   hosts:
-  #     - 54.95.159.178
+  #     - 3.112.246.169
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -110,7 +110,7 @@ ssh:
 accessories:
   db:
     image: postgres:latest
-    host: 54.95.159.178
+    host: 3.112.246.169
 #    port: "127.0.0.1:5432:5432"
     env:
       clear:
@@ -119,11 +119,11 @@ accessories:
       secret:
         - POSTGRES_PASSWORD
     directories:
-      - data:/var/lib/postgresql/data
+      - data:/var/lib/postgresql
 
   solid_cable:
     image: tmravic/fluency_journal
-    host: 54.95.159.178
+    host: 3.112.246.169
     cmd: "bundle exec puma -p 28080 cable/config.ru"
     port: "28080:28080"
     env:
@@ -138,7 +138,7 @@ accessories:
 
   solid_queue:
     image: tmravic/fluency_journal
-    host: 54.95.159.178
+    host: 3.112.246.169
     cmd: "bundle exec rails solid_queue:start"
     env:
       clear:
