@@ -87,3 +87,17 @@ Check containers<br>
 If you see "unable to remove repository reference" run:<br>
 `kamal accessory reboot solid_cable / solid_queue`
 
+## How to take down the Kamal instance and salvage the DB records
+Get the IP address from [config/deploy.yml](config/deploy.yml)<br>
+SSH into the instance<br>
+`ssh -i ~/.ssh/fluency_journal_demo.pem ubuntu@3.112.246.169`<br>
+`docker ps -a`<br>
+`docker exec -it a7cf031c4994 bash` # the postgres one <br>
+`pg_dump -U fluency_journal -d fluency_journal_production > primary_dump.sql`<br>
+You can copy the text with `cat primary_dump.sql` into a similarly-named file locally.
+
+```bash
+aws ec2 describe-instances
+aws ec2 terminate-instances --instance-ids i-047bf70413bc40e54
+aws ec2 delete-security-group --group-id sg-0ba4d56db09d1997e
+```
