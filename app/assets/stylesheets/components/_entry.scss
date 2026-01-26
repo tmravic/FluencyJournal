@@ -1,7 +1,11 @@
 @use '../components';
 
 .form.entry textarea.form__input {
-  font-size: var(--font-size-m) !important;
+  font-size: var(--font-size-l);
+
+  @include components.media(tabletAndUp) {
+    font-size: var(--font-size-xl);
+  }
 }
 
 .entry {
@@ -16,15 +20,18 @@
   }
 
   &__title {
-    font-size: var(--font-size-l);
+    font-size: var(--font-size-xl);
 
     @include components.media(tabletAndUp) {
-      font-size: var(--font-size-m);
+      font-size: var(--font-size-xxl);
     }
   }
 
   p {
     font-size: var(--font-size-l);
+    @include components.media(tabletAndUp) {
+      font-size: var(--font-size-xl);
+    }
   }
 
   &__date {

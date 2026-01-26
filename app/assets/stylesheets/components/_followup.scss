@@ -8,7 +8,12 @@
 
   textarea {
     min-height: 10vh;
-    font-size: var(--font-size-m);
+    font-size: var(--font-size-l);
+
+    @include components.media(tabletAndUp) {
+      padding: var(--space-xs) var(--space-m);
+      font-size: var(--font-size-xl);
+    }
     padding: var(--space-xxxs);
   }
 
