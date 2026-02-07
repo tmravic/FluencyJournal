@@ -80,4 +80,9 @@
       color: var(--color-white);
     }
   }
+
+  &--homepage {
+    padding: var(--space-xs) var(--space-s);
+    font-size: var(--font-size-l);
+  }
 }
