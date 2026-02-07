@@ -4,32 +4,8 @@ class AiRequestJob < ApplicationJob
   def perform(journal, api_key, entry_prompt)
     user = journal.user
 
-    connection = Faraday.new(url: "https://api.x.ai")
-    response = connection.post do |req|
-      req.url "/v1/chat/completions"
-      req.options.timeout = 120
-      req.options.open_timeout = 30
-      req.headers["Content-Type"] = "application/json"
-      req.headers["Authorization"] = "Bearer #{api_key}"
-      req.body = {
-        model: entry_prompt.ai_model,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content: entry_prompt.role_prompt(user, journal)
-          },
-          {
-            role: "user",
-            content: entry_prompt.raw_prompt
-          },
-          {
-            role: "user",
-            content: entry_prompt.response_format(user)
-          }
-        ]
-      }.to_json
-    end
+    x_ai_service = XAiService.new(api_key, entry_prompt, user, journal)
+    response = x_ai_service.call
 
     json_response = JSON.parse(response.body)
     # {"id"=>"chatcmpl-Ac46SBbYGN9RVs1rflKYPNv6l1scE",
