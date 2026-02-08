@@ -10,7 +10,7 @@ class AiOutput < ApplicationRecord
   validates :made_note, inclusion: { in: [ true, false ] }
 
   def assemble_content(change_keyword, user)
-    parsed = ai_query.parsed_response
+    parsed = ai_query.parsed_response(change_keyword)
     corrected_sentence = ai_query.corrected_text if parsed.keys.include?("corrected_text")
     assessment = ai_query.assessment if parsed.keys.include?("assessment")
     abbr = ai_query.abbr(user)

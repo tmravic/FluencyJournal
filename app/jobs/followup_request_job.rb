@@ -5,10 +5,26 @@ class FollowupRequestJob < ApplicationJob
   queue_as :default
 
   def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
-    x_ai_service = XAiService.new(
-      api_key: api_key, prompt: followup_prompt,
-      user: user, journal: journal, followup_origin: followup_origin)
-    ai_query = x_ai_service.call
+    if user.learning_language == "Japanese"
+      followup_prompt.update(ai_model: "elyza_llm")
+      bedrock_service = BedrockService.new(
+        prompt: followup_prompt,
+        user: user,
+        journal: journal,
+        followup_origin: followup_origin
+      )
+      ai_query = bedrock_service.call
+    else
+      x_ai_service = XAiService.new(
+        api_key: api_key,
+        prompt: followup_prompt,
+        user: user,
+        journal: journal,
+        followup_origin: followup_origin
+      )
+      ai_query = x_ai_service.call
+    end
+
 
     followup = followup_prompt.followup
     ai_query_id = ai_query.id

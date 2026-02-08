@@ -33,62 +33,87 @@ class AiQuery < ApplicationRecord
   #     "explanation_en"=>"Changed '太陽からの被害' to '日焼けによるダメージ' to sound more natural in Japanese."},
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
-  def parsed_response
-    parsed_response = sanitized_response
+  def parsed_response(string)
+    parsed_response = sanitized_response(string)
+    if parsed_response["answers"]
+      parsed_response = transform_keys(parsed_response, "answer_")
+    end
     parsed_response
   end
 
   def count_changes(string)
     # ["change_1", "change_2", "corrected_text"]
-    parsed_response.keys.count { |key| key.include?(string) }
+
+    parsed_response(string).keys.count { |key| key.include?(string) }
     # => 2
   end
 
-  def sanitized_response
-    raw = self.raw_response.gsub(/\n/, ' ').gsub(/\s+/, ' ')
-    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
-    raw += ' }' unless raw.end_with?('}')
-    JSON.parse(raw) rescue sanitized_response2
+  def sanitized_response(string)
+    raw = prepare_raw
+    raw = normalize_whitespace(raw)
+    raw = substitute_alphanumeric(raw)
+    raw = add_closing_brace(raw)
+    JSON.parse(raw) rescue sanitized_response2(string)
   end
 
-  def sanitized_response2
-    raw = (self.raw_response || "{}").strip.force_encoding('UTF-8')
-    raw = raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
-    raw = raw.gsub(/([^{:\s])\s+([a-z0-9_]+:)/i, '\1,\2')
-    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
-    raw = raw.gsub(/:\s*([^"{\[0-9tfn].*?)\s*(?=[,}\]])/m, ': "\1"')
-    raw += ' }' unless raw.end_with?('}')
-    JSON.parse(raw) rescue sanitized_response3
+  def sanitized_response2(string)
+    raw = prepare_raw(options: {encode: true})
+    raw = normalize_whitespace(raw)
+    raw = add_commas_variant1(raw)
+    raw = substitute_alphanumeric(raw)
+    raw = quote_values_variant1(raw)
+    raw = add_closing_brace(raw)
+    JSON.parse(raw) rescue sanitized_response3(string)
   end
 
-  def sanitized_response3
-    raw = (self.raw_response || "{}").strip.force_encoding('UTF-8')
-    raw = raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
-    raw = raw.gsub(/([}\"])\s+([a-z0-9_]+)\s*:/i, '\1, "\2":')
-    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
-    raw = raw.gsub(/:\s*([^",{\[\]]+?)\s*(?=[,}\]]|$)/, ': "\1"')
-    raw += ' }' unless raw.end_with?('}')
-    JSON.parse(raw) rescue sanitized_response4
+  def sanitized_response3(string)
+    raw = prepare_raw(options: {encode: true})
+    raw = normalize_whitespace(raw)
+    raw = add_commas_variant2(raw)
+    raw = substitute_alphanumeric(raw)
+    raw = quote_values_variant2(raw)
+    raw = add_closing_brace(raw)
+    JSON.parse(raw) rescue sanitized_response4(string)
   end
 
-  def sanitized_response4
-    raw = (self.raw_response || "{}").strip.force_encoding('UTF-8').scrub
-    raw = raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
-    raw = raw.gsub(/([}\"])\s+([a-z0-9_]+)\s*:/i, '\1, "\2":')
-    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
-    raw = raw.gsub(/:\s*([^",{\[\]]+?)\s*(?=[,}\]]|$)/, ': "\1"')
-    raw = raw.gsub(/,\s*([}\]])/, '\1')
-    raw += ' }' unless raw.end_with?('}')
-    JSON.parse(raw) rescue sanitized_response5
+  def sanitized_response4(string)
+    raw = prepare_raw(options: {encode: true, scrub: true})
+    raw = normalize_whitespace(raw)
+    raw = add_commas_variant2(raw)
+    raw = substitute_alphanumeric(raw)
+    raw = quote_values_variant2(raw)
+    raw = remove_trailing_commas(raw)
+    raw = add_closing_brace(raw)
+    JSON.parse(raw) rescue sanitized_response5(string)
   end
 
-  def sanitized_response5
+  def sanitized_response5(string)
     hash = {}
-    self.raw_response.scan(/change_(\d+):.*?content:\s*([^,]+).*?explanation_en:\s*([^}]+)/m) do |num, cont, exp|
-      hash["change_#{num}"] = { "content" => cont.strip.gsub(/\"/, ''), "explanation_en" => exp.strip.gsub(/\"/, '') }
+
+    regex1 = /corrected_text:\s*([^"]+)/
+    regex2 = /corrected_text:\s*(.+)$/m
+    match_corrected_text = self.raw_response.match(regex1) || self.raw_response.match(regex2)
+    hash["corrected_text"] = extract_corrected_text(match_corrected_text) if match_corrected_text
+
+    regex_pattern = sanitizing_regex(string)
+    hash = scan_raw_response_for_pattern(hash, regex_pattern, string)
+    if hash.empty?
+      return sanitized_response6(string)
     end
-    hash["corrected_text"] = self.raw_response.match(/corrected_text:\s*([^"]+)/)[1].strip.gsub(/\"/, '')
     hash
+  end
+
+  def sanitized_response6(string)
+    raw = normalize_whitespace(self.raw_response)
+    raw = substitute_alphanumeric(raw)
+    raw = quote_values_variant2(raw)
+    raw = add_closing_brace(raw)
+    parsed = JSON.parse(raw) rescue {}
+    if parsed && parsed["answers"]
+      parsed["answers"].each do |num, data|
+        hash["#{string}#{num}"] = data
+      end
+    end
   end
 
   def model_used
@@ -116,7 +141,7 @@ class AiQuery < ApplicationRecord
   end
 
   def change_content(num, change_keyword)
-    result = parsed_response.dig("#{change_keyword}#{num}", "content")
+    result = parsed_response(change_keyword).dig("#{change_keyword}#{num}", "content")
     if result
       if result.include?("→")
         return result.split("→")
@@ -129,11 +154,11 @@ class AiQuery < ApplicationRecord
   end
 
   def change_explanation(change_keyword, num, abbr)
-    parsed_response.dig("#{change_keyword}#{num}", "explanation_#{abbr}") || error_message
+    parsed_response(change_keyword).dig("#{change_keyword}#{num}", "explanation_#{abbr}") || error_message
   end
 
   def assessment
-    content = self.parsed_response.fetch("assessment", nil)
+    content = self.parsed_response("assessment")
 
     # {"overall"=> "Overall, the quiz answers are..."}
     return content["overall"] if is_hash?(content) && content["overall"]
@@ -146,7 +171,7 @@ class AiQuery < ApplicationRecord
 
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
-    content = parsed_response.fetch("corrected_text", nil)
+    content = parsed_response("corrected_text")
 
     # When the user input nothing
     # {"..."=>0}
@@ -179,5 +204,78 @@ class AiQuery < ApplicationRecord
 
   def is_hash?(content)
     content.class == Hash
+  end
+
+  def transform_keys(hash, prefix = "answer_")
+    return hash unless hash.is_a?(Hash) && hash["answers"]
+    new_answers = {}
+    hash["answers"].each do |old_key, value|
+      new_key = "#{prefix}#{old_key}"
+      new_answers[new_key] = value
+    end
+    # hash["answers"] = new_answers
+    # hash
+    new_answers
+  end
+
+  private
+
+  def scan_raw_response_for_pattern(hash, regex_pattern, string)
+    self.raw_response.scan(regex_pattern) do |num, cont, exp|
+      hash["#{string}#{num}"] = {
+        "content" => cont.strip.gsub(/\"/, ''),
+        "explanation_en" => exp.strip.gsub(/\"/, '')
+      }
+    end
+    hash
+  end
+
+  def normalize_whitespace(raw)
+    raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
+  end
+
+  def substitute_alphanumeric(raw)
+    raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
+  end
+
+  def prepare_raw(base_raw = self.raw_response || "{}", options = {})
+    base_raw = base_raw.to_s if base_raw.is_a?(Hash)
+    raw = base_raw.strip
+    raw = raw.force_encoding('UTF-8') if options[:encode]
+    raw = raw.scrub if options[:scrub]
+    raw
+  end
+
+  def add_closing_brace(raw)
+    raw += ' }' unless raw.end_with?('}')
+    raw
+  end
+
+  def add_commas_variant1(raw)
+    raw.gsub(/([^{:\s])\s+([a-z0-9_]+:)/i, '\1,\2')
+  end
+
+  def add_commas_variant2(raw)
+    raw.gsub(/([}\"])\s+([a-z0-9_]+)\s*:/i, '\1, "\2":')
+  end
+
+  def quote_values_variant1(raw)
+    raw.gsub(/:\s*([^"{\[0-9tfn].*?)\s*(?=[,}\]])/m, ': "\1"')
+  end
+
+  def quote_values_variant2(raw)
+    raw.gsub(/:\s*([^",{\[\]]+?)\s*(?=[,}\]]|$)/, ': "\1"')
+  end
+
+  def remove_trailing_commas(raw)
+    raw.gsub(/,\s*([}\]])/, '\1')
+  end
+
+  def extract_corrected_text(match)
+    match ? match[1].strip.gsub(/\"/, '') : ''
+  end
+
+  def sanitizing_regex(string)
+    /#{Regexp.escape(string)}(\d+):.*?content:\s*([^,]+).*?explanation_en:\s*([^}]+)/m
   end
 end

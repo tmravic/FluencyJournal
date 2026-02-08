@@ -2,9 +2,10 @@ class BedrockService
   include SharedServiceMethods
 
   def initialize(attributes = {})
-    @entry_prompt = attributes[:entry_prompt]
+    @prompt = attributes[:prompt]
     @user = attributes[:user]
     @journal = attributes[:journal]
+    @followup_origin = attributes[:followup_origin]
   end
 
   def call
@@ -12,13 +13,16 @@ class BedrockService
     json_response = parse_response_from_elyza_llm(response)
     token_data = organize_token_data(json_response)
     response_from_elyza_llm = json_response["generation"]
-    @entry_prompt.update(ai_model: "elyza_llm")
+    ai_query = build_ai_query(response_from_elyza_llm, token_data, @prompt, @journal)
 
-    # SharedServiceMethods
-    ai_query = build_ai_query(response_from_elyza_llm, token_data, @entry_prompt, @journal)
-    create_ai_outputs_for_each_change(ai_query, @entry_prompt, @user)
-    create_ai_output_for_corrected_text(ai_query, @entry_prompt, @user)
+    if @followup_origin
+      followup = @prompt.followup
+      # If this is a followup on a Note it won't be connected to any journal.
+      save_followup_based_on_origin(ai_query, followup, @followup_origin)
+    end
 
+    create_ai_outputs_for_each_change(ai_query, @prompt, @user)
+    create_ai_output_for_corrected_text(ai_query, @prompt, @user) unless @followup_origin
     ai_query
   end
 
@@ -36,11 +40,11 @@ class BedrockService
 
     # "あなたは誠実で優秀な日本人のアシスタントです。特に指示が無い場合は 、常に日本語で回答してください。\n"
     input_text = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n" +
-                 @entry_prompt.role_prompt(@user, @journal) + "\n" +
+                 @prompt.role_prompt(@user, @journal) + "\n" +
                  "<|eot_id|><|start_header_id|>user<|end_header_id|>\n" +
-                 @entry_prompt.raw_prompt + "\n" +
+                 @prompt.raw_prompt + "\n" +
                  "<|eot_id|><|start_header_id|>user<|end_header_id|>\n" +
-                 @entry_prompt.response_format(@user) + "\n" +
+                 @prompt.response_format(@user) + "\n" +
                  "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n"
 
     request_data = {
