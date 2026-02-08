@@ -4,9 +4,10 @@ class AiRequestJob < ApplicationJob
   def perform(journal, api_key, entry_prompt)
     user = journal.user
     if user.learning_language == "Japanese"
+    # if false
       entry_prompt.update(ai_model: "elyza_llm")
       bedrock_service = BedrockService.new(
-        entry_prompt: entry_prompt,
+        prompt: entry_prompt,
         user: user,
         journal: journal
       )
