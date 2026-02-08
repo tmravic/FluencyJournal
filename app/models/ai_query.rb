@@ -9,7 +9,7 @@ class AiQuery < ApplicationRecord
   has_and_belongs_to_many :followups
   has_many :quizzes, dependent: :destroy
 
-  validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
+  validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true
   validates :raw_response, presence: true
 
   after_destroy -> {
@@ -34,14 +34,65 @@ class AiQuery < ApplicationRecord
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
   def parsed_response
-    JSON.parse(self.raw_response || "{}") rescue {}
+    parsed_response = sanitized_response
+    parsed_response
   end
 
   def count_changes(string)
     # ["change_1", "change_2", "corrected_text"]
-    parsed_response.keys.count do |key|
-      key.include?(string)
+    parsed_response.keys.count { |key| key.include?(string) }
+    # => 2
+  end
+
+  def sanitized_response
+    raw = self.raw_response.gsub(/\n/, ' ').gsub(/\s+/, ' ')
+    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
+    raw += ' }' unless raw.end_with?('}')
+    JSON.parse(raw) rescue sanitized_response2
+  end
+
+  def sanitized_response2
+    raw = (self.raw_response || "{}").strip.force_encoding('UTF-8')
+    raw = raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
+    raw = raw.gsub(/([^{:\s])\s+([a-z0-9_]+:)/i, '\1,\2')
+    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
+    raw = raw.gsub(/:\s*([^"{\[0-9tfn].*?)\s*(?=[,}\]])/m, ': "\1"')
+    raw += ' }' unless raw.end_with?('}')
+    JSON.parse(raw) rescue sanitized_response3
+  end
+
+  def sanitized_response3
+    raw = (self.raw_response || "{}").strip.force_encoding('UTF-8')
+    raw = raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
+    raw = raw.gsub(/([}\"])\s+([a-z0-9_]+)\s*:/i, '\1, "\2":')
+    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
+    raw = raw.gsub(/:\s*([^",{\[\]]+?)\s*(?=[,}\]]|$)/, ': "\1"')
+    raw += ' }' unless raw.end_with?('}')
+    JSON.parse(raw) rescue sanitized_response4
+  end
+
+  def sanitized_response4
+    raw = (self.raw_response || "{}").strip.force_encoding('UTF-8').scrub
+    raw = raw.gsub(/\n/, ' ').gsub(/\s+/, ' ')
+    raw = raw.gsub(/([}\"])\s+([a-z0-9_]+)\s*:/i, '\1, "\2":')
+    raw = raw.gsub(/([a-z0-9_]+)\s*:/i, '"\1":')
+    raw = raw.gsub(/:\s*([^",{\[\]]+?)\s*(?=[,}\]]|$)/, ': "\1"')
+    raw = raw.gsub(/,\s*([}\]])/, '\1')
+    raw += ' }' unless raw.end_with?('}')
+    JSON.parse(raw) rescue sanitized_response5
+  end
+
+  def sanitized_response5
+    hash = {}
+    self.raw_response.scan(/change_(\d+):.*?content:\s*([^,]+).*?explanation_en:\s*([^}]+)/m) do |num, cont, exp|
+      hash["change_#{num}"] = { "content" => cont.strip.gsub(/\"/, ''), "explanation_en" => exp.strip.gsub(/\"/, '') }
     end
+    hash["corrected_text"] = self.raw_response.match(/corrected_text:\s*([^"]+)/)[1].strip.gsub(/\"/, '')
+    hash
+  end
+
+  def model_used
+    prompt.ai_model
   end
 
   def create_quiz_questions(translated_response)

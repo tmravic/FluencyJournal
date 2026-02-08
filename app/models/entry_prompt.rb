@@ -2,6 +2,8 @@ class EntryPrompt < Prompt
   def role_prompt(user, journal)
     "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes " +
       "and reword journal entries into more natural and correct #{user.learning_language}. " +
+      "'Learning Language' is the student's error-prone #{user.learning_language} attempt. " +
+      "Correct it to match the 'Original Language' #{user.original_language} intent. " +
       "The journal entry may contain #{user.original_language} in 'Original Language' to clarify the " +
       "student's intended meaning, but ignore this if no #{user.original_language} is in the prompt. " +
       "If 'Learning Language' contains no #{user.learning_language}, but 'Original Language' has an " +

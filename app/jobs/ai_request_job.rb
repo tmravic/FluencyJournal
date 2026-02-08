@@ -3,86 +3,13 @@ class AiRequestJob < ApplicationJob
 
   def perform(journal, api_key, entry_prompt)
     user = journal.user
-
-    x_ai_service = XAiService.new(api_key, entry_prompt, user, journal)
-    response = x_ai_service.call
-
-    json_response = JSON.parse(response.body)
-    # {"id"=>"chatcmpl-Ac46SBbYGN9RVs1rflKYPNv6l1scE",
-    #  "object"=>"chat.completion",
-    #  "created"=>1733635600,
-    #  "model"=>"gpt-4o-2024-08-06",
-    #  "choices"=>
-    #    [{"index"=>0,
-    #      "message"=>
-    #        {"role"=>"assistant",
-    #         "content"=>
-    #           "{\n  \"change_1\": {\n    \"content\": \"何年間のニキビ跡と太陽からの被害を治療したいです。→ 長年のニキビ跡や日焼けによる肌のダメージを改善したいです。\",\n    \"explanation_en\": \"The phrase '長年のニキビ跡や日焼けによる肌のダメージ' is more natural and concise to express 'years of acne scars and sun damage'. '改善したいです' is a more appropriate term to convey the intention to improve skin condition.\"\n  },\n  \"corrected_text\": \"今日はシルファームという肌の施術を受けます。小さい針とケミカルピーリングで長年のニキビ跡や日焼けによる肌のダメージを改善したいです。\"\n}",
-    #         "refusal"=>nil},
-    #      "logprobs"=>nil,
-    #      "finish_reason"=>"stop"}],
-    #  "usage"=>
-    #    {"prompt_tokens"=>260,
-    #     "completion_tokens"=>189,
-    #     "total_tokens"=>449,
-    #     "prompt_tokens_details"=>{"cached_tokens"=>0, "audio_tokens"=>0},
-    #     "completion_tokens_details"=>
-    #       {"reasoning_tokens"=>0,
-    #        "audio_tokens"=>0,
-    #        "accepted_prediction_tokens"=>0,
-    #        "rejected_prediction_tokens"=>0}},
-    #  "system_fingerprint"=>"fp_c7ca0ebaca"}
-
-    full_token_details = json_response["usage"]
-    # {
-    #   "prompt_tokens"=>206,
-    #   "completion_tokens"=>174,
-    #   "total_tokens"=>380,
-    #   "prompt_tokens_details"=> {
-    #       "cached_tokens"=>0,
-    #       "audio_tokens"=>0
-    #     },
-    #   "completion_tokens_details"=> {
-    #     "reasoning_tokens"=>0,
-    #     "audio_tokens"=>0,
-    #     "accepted_prediction_tokens"=>0,
-    #     "rejected_prediction_tokens"=>0
-    #   }
-    # }
-    token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
-    # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
-
-    response_from_x_ai = json_response["choices"][0]["message"].dig("content")
-
-    ai_query = AiQuery.build(
-      prompt_tokens: token_data["prompt_tokens"],
-      completion_tokens: token_data["completion_tokens"],
-      total_tokens: token_data["total_tokens"],
-      raw_response: response_from_x_ai
-    )
-
-    ai_query.prompt = entry_prompt
-    ai_query.change_count = ai_query.count_changes(entry_prompt.change_keyword)
-    ai_query.journal = journal
-    ai_query.save!
-
-    # Make an AiOutput for each change in the journal query
-    (1..ai_query.change_count).each do |count|
-      ai_query.ai_outputs.create(
-        made_note: false,
-        identifier: count.to_s
-      ).tap do |ai_output|
-        ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
-        ai_output.save!
-      end
-    end
-    # Make one more AiOutput for the Corrected Text
-    ai_query.ai_outputs.create(
-      made_note: false,
-      identifier: "corrected_text"
-    ).tap do |ai_output|
-      ai_output.content = ai_output.assemble_content(entry_prompt.change_keyword, journal.user)
-      ai_output.save!
+    if true
+    # if user.learning_language == "Japanese"
+      bedrock_service = BedrockService.new(entry_prompt: entry_prompt, user: user, journal: journal)
+      ai_query = bedrock_service.call
+    else
+      x_ai_service = XAiService.new(api_key, entry_prompt, user, journal)
+      ai_query = x_ai_service.call
     end
 
     source_tag = "ai_assistant"
