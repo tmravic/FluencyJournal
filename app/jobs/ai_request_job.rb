@@ -8,7 +8,7 @@ class AiRequestJob < ApplicationJob
       bedrock_service = BedrockService.new(entry_prompt: entry_prompt, user: user, journal: journal)
       ai_query = bedrock_service.call
     else
-      x_ai_service = XAiService.new(api_key, entry_prompt, user, journal)
+      x_ai_service = XAiService.new(api_key: api_key, prompt: entry_prompt, user: user, journal: journal)
       ai_query = x_ai_service.call
     end
 

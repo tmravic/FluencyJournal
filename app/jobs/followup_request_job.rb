@@ -5,77 +5,12 @@ class FollowupRequestJob < ApplicationJob
   queue_as :default
 
   def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
-    connection = Faraday.new(url: "https://api.x.ai")
-    response = connection.post do |req|
-      req.url "/v1/chat/completions"
-      req.options.timeout = 30
-      req.options.open_timeout = 30
-      req.headers["Content-Type"] = "application/json"
-      req.headers["Authorization"] = "Bearer #{api_key}"
-      req.body = {
-        model: followup_prompt.ai_model,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content: followup_prompt.role_prompt(user)
-          },
-          {
-            role: "user",
-            content: followup_prompt.raw_prompt
-          },
-          {
-            role: "user",
-            content: followup_prompt.response_format(user)
-          }
-        ]
-      }.to_json
-    end
+    x_ai_service = XAiService.new(
+      api_key: api_key, prompt: followup_prompt,
+      user: user, journal: journal, followup_origin: followup_origin)
+    ai_query = x_ai_service.call
 
-    json_response = JSON.parse(response.body)
-
-    full_token_details = json_response["usage"]
-
-    token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
-
-    response_from_x_ai = json_response["choices"][0]["message"].dig("content")
-
-    ai_query = AiQuery.build(
-      prompt_tokens: token_data["prompt_tokens"],
-      completion_tokens: token_data["completion_tokens"],
-      total_tokens: token_data["total_tokens"],
-      raw_response: response_from_x_ai
-    )
-
-    ai_query.change_count = ai_query.count_changes(followup_prompt.change_keyword)
-    ai_query.prompt = followup_prompt
-    ai_query.journal = journal if journal
-    # If this is a followup on a Note it won't be connected to any journal.
     followup = followup_prompt.followup
-
-    ai_query.followups.push(followup)
-    if ai_query.save!
-      if followup_origin.is_a?(Entry)
-        followup_origin.followups.push(followup)
-      elsif followup_origin.is_a?(AiOutput)
-        followup_origin.followups.push(followup)
-      elsif followup_origin.is_a?(Note)
-        followup_origin.followups.push(followup)
-      end
-    end
-
-    # Make an AiOutput for each feedback or example in the followup query
-    (1..ai_query.change_count).each do |count|
-      ai_query.ai_outputs.create(
-        made_note: false,
-        identifier: count.to_s
-      ).tap do |ai_output|
-        ai_output.content = ai_output.assemble_content(followup_prompt.change_keyword, user)
-        # "お寺に参拝して、「好きな女の子が私の彼女になりますように」と祈りました。\n('参拝する' is another way to say 'to visit a temple' that carries the meaning of worshipping or paying respect.)"
-        ai_output.save!
-      end
-    end
-
     ai_query_id = ai_query.id
     uuid = followup_prompt.uuid
     followup_text = t("followup.followup_answer")
@@ -103,6 +38,34 @@ class FollowupRequestJob < ApplicationJob
     handle_error(e, "ActiveRecord validation failed")
   rescue StandardError => e
     handle_error(e, "An unexpected error occurred")
+  end
+
+  private
+
+  def parse_response_from_x_api(response)
+    JSON.parse(response.body)
+    # {"id"=>"12f4fceb-5b18-610d-6d08-50b474977829",
+    #  "object"=>"chat.completion",
+    #  "created"=>1770524310,
+    #  "model"=>"grok-4-fast-non-reasoning",
+    #  "choices"=>
+    #    [{"index"=>0,
+    #      "message"=>
+    #        {"role"=>"assistant",
+    #         "content"=>
+    #           "{\"answer_1\":{\"content\":\"壁の塗装が剥げ落ちるほど古い日本酒の醸造所を訪れました。\",\"explanation_en\":\"This rephrasing uses '塗装' (tosō) for 'paint' to vary the vocabulary, '剥げ落ちる' (hageochiru) for a more descriptive peeling action, and '醸造所' (jōzōsho) to specify 'sake brewery' more clearly. '訪れました' (tazunemashita) is a synonym for '行きました' to change the verb while keeping the meaning intact.\"},\"answer_2\":{\"content\":\"古くて壁のペンキがめくれていた日本酒の醸造所に行きました。\",\"explanation_en\":\"Here, the sentence structure is adjusted by placing '古くて' (furukute) at the beginning to emphasize age, and 'めくれていた' (mekureteita) as a synonym for 'peeling' to make it sound more natural. '醸造所' adds specificity to the location.\"},\"answer_3\":{\"content\":\"日本酒の醸造所で、壁のペンキが剥げた古い建物を見学しました。\",\"explanation_en\":\"This version breaks the sentence into parts for better flow, using '見学しました' (kenkyō shimashita) instead of '行きました' to imply 'visited for viewing,' and '建物' (tatemono) to describe the building, providing a slightly more detailed and varied expression.\"}}",
+    #         "refusal"=>nil},
+    #      "finish_reason"=>"stop"}],
+    #  "usage"=>
+    #    {
+    #      "prompt_tokens"=>507, "completion_tokens"=>326, "total_tokens"=>833,
+    #      "prompt_tokens_details"=>{"text_tokens"=>507, "audio_tokens"=>0, "image_tokens"=>0, "cached_tokens"=>161},
+    #      "completion_tokens_details"=>
+    #        {
+    #          "reasoning_tokens"=>0, "audio_tokens"=>0, "accepted_prediction_tokens"=>0, "rejected_prediction_tokens"=>0
+    #        },
+    #      "num_sources_used"=>0, "cost_in_usd_ticks"=>2402500}, "system_fingerprint"=>"fp_f7a6b84626"
+    # }
   end
 end
 

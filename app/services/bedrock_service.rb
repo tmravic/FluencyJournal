@@ -16,8 +16,8 @@ class BedrockService
 
     # SharedServiceMethods
     ai_query = build_ai_query(response_from_elyza_llm, token_data, @entry_prompt, @journal)
-    create_ai_outputs_for_each_change(ai_query, @entry_prompt, @journal)
-    create_ai_output_for_corrected_text(ai_query, @entry_prompt, @journal)
+    create_ai_outputs_for_each_change(ai_query, @entry_prompt, @user)
+    create_ai_output_for_corrected_text(ai_query, @entry_prompt, @user)
 
     ai_query
   end

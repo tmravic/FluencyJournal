@@ -64,7 +64,7 @@ class FollowupsController < ApplicationController
       origin: @followup_origin,
       source_tag: followup_params[:source_tag]
     )
-    @followup_prompt.sent_role_prompt = @followup_prompt.role_prompt(@user)
+    @followup_prompt.sent_role_prompt = @followup_prompt.role_prompt(@user, @journal)
 
     if @followup_prompt.save! && @followup_prompt.followup.save!
 
