@@ -34,9 +34,12 @@ class AiQuery < ApplicationRecord
   #     "explanation_en"=>"Changed '太陽からの被害' to '日焼けによるダメージ' to sound more natural in Japanese."},
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
-  def parsed_response(string)
-    parsed_response = JSON.parse(self.raw_response) rescue sanitized_response(string)
-    parsed_response ||= {}
+  def parsed_response
+    parsed_response = JSON.parse(self.raw_response) rescue sanitized_response
+
+    if parsed_response.kind_of?(String)
+      parsed_response = JSON.parse(parsed_response)
+    end
     if parsed_response["answers"]
       parsed_response = transform_keys(parsed_response, "answer_")
     end
@@ -45,8 +48,7 @@ class AiQuery < ApplicationRecord
 
   def count_changes(string)
     # ["change_1", "change_2", "corrected_text"]
-
-    parsed_response(string).keys.count { |key| key.include?(string) }
+    parsed_response.keys.count { |key| key.include?(string) }
     # => 2
   end
 
@@ -75,7 +77,7 @@ class AiQuery < ApplicationRecord
   end
 
   def change_content(num, change_keyword)
-    result = parsed_response(change_keyword).dig("#{change_keyword}#{num}", "content")
+    result = parsed_response.dig("#{change_keyword}#{num}", "content")
     if result
       if result.include?("→")
         return result.split("→")
@@ -88,11 +90,16 @@ class AiQuery < ApplicationRecord
   end
 
   def change_explanation(change_keyword, num, abbr)
-    parsed_response(change_keyword).dig("#{change_keyword}#{num}", "explanation_#{abbr}") || error_message
+    explanation = parsed_response.dig("#{change_keyword}#{num}", "explanation_#{abbr}")
+    if explanation.nil?
+      explanation = parsed_response.dig("#{change_keyword}#{num}")
+    end
+
+    explanation
   end
 
   def assessment
-    content = self.parsed_response("assessment")
+    content = self.parsed_response
 
     # {"overall"=> "Overall, the quiz answers are..."}
     return content["overall"] if is_hash?(content) && content["overall"]
@@ -100,12 +107,35 @@ class AiQuery < ApplicationRecord
     # {"overall_accuracy"=> "The translations are mostly accurate..."}
     return content["overall_accuracy"] if is_hash?(content) && content["overall_accuracy"]
 
+    # content.keys
+    # ["entry_1", "entry_2", "entry_3", "entry_4", "assessment"]
+    # content.dig("assessment")
+    # {"overall_accuracy"=> "..."
+    if is_hash?(content) && is_hash?(content.dig("assessment")) && content.dig("assessment", "overall_accuracy")
+      return content.dig("assessment", "overall_accuracy")
+    end
+
+    if is_hash?(content) && is_hash?(content.dig("assessment")) && content.dig("assessment", "overall")
+      return content.dig("assessment", "overall")
+    end
+
+    return content["assessment"] if is_hash?(content) && content["assessment"]
+
     content
   end
 
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
-    content = parsed_response("corrected_text")
+    content = parsed_response
+    # {
+    #   "change_1"=>
+    #    { "content" => "ryokan → 旅館", "explanation_en"=>"「ryokan」は日 本語で「旅館」を意味するため、正しい表現に修正しました。" },
+    #   "change_2"=>
+    #     { "content" => "私立の外の露天風呂", "explanation_en"=>"「私立」は「個人的な」や「私有の」を意味するため、正しい表現に修正しました。" },
+    #   "change_3"=>
+    #     { "content" => "良寛のようやく", "explanation_en"=>"「 ようやく」は「ようやく」で正しい表現です。" },
+    #   "corrected_text" => "外の露天風呂がある旅館を作る"
+    # }
 
     # When the user input nothing
     # {"..."=>0}

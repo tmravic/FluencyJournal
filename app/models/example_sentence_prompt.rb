@@ -1,7 +1,7 @@
 class ExampleSentencePrompt < Prompt
   # Save whatever context the user asked for in their example sentence
   # Use this to quickly make followups
-  def role_prompt(user)
+  def role_prompt(user, journal)
     "You are a helpful #{user.learning_language} teacher whose job it is to help students who are writing " +
       "journal entries in #{user.learning_language} as language learning practice. The student will submit " +
       "to you parts of their journal, notes, or corrections which may contain both #{user.learning_language} " +

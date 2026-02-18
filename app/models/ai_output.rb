@@ -1,4 +1,5 @@
 class AiOutput < ApplicationRecord
+  include SharedMethods
   belongs_to :ai_query
   has_and_belongs_to_many :followups
   has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
@@ -10,7 +11,7 @@ class AiOutput < ApplicationRecord
   validates :made_note, inclusion: { in: [ true, false ] }
 
   def assemble_content(change_keyword, user)
-    parsed = ai_query.parsed_response(change_keyword)
+    parsed = ai_query.parsed_response
     corrected_sentence = ai_query.corrected_text if parsed.keys.include?("corrected_text")
     assessment = ai_query.assessment if parsed.keys.include?("assessment")
     abbr = ai_query.abbr(user)
@@ -41,8 +42,9 @@ class AiOutput < ApplicationRecord
   end
 
   def assemble_ai_output_content(abbr, change_keyword, corrected_sentence)
-    content_first = ai_query.change_content(self.identifier, change_keyword).first
-    content_last = ai_query.change_content(self.identifier, change_keyword).last
+    content = ai_query.change_content(self.identifier, change_keyword)
+    content_first = content.first
+    content_last = content.last
     explanation = ai_query.change_explanation(change_keyword, self.identifier, abbr)
 
     # Ex:

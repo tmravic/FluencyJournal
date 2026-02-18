@@ -6,19 +6,10 @@ class AiRequestJob < ApplicationJob
     if user.learning_language == "Japanese"
     # if false
       entry_prompt.update(ai_model: "elyza_llm")
-      bedrock_service = BedrockService.new(
-        prompt: entry_prompt,
-        user: user,
-        journal: journal
-      )
+      bedrock_service = BedrockService.new(prompt: entry_prompt, user: user, journal: journal)
       ai_query = bedrock_service.call
     else
-      x_ai_service = XAiService.new(
-        api_key: api_key,
-        prompt: entry_prompt,
-        user: user,
-        journal: journal
-      )
+      x_ai_service = XAiService.new(api_key: api_key, prompt: entry_prompt, user: user, journal: journal)
       ai_query = x_ai_service.call
     end
 

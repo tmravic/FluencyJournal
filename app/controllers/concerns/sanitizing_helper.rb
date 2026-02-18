@@ -1,33 +1,37 @@
+#TODO: This is too much, I need to look at all the responses elyza has given me so far
+# and catch all the different versions of the response data that could come out
+# and account for the different variations.
+# Prompt.where(ai_model: "elyza_llm").count
 module SanitizingHelper
-  def sanitized_response(string)
+  def sanitized_response
     raw = prepare_raw
     raw = normalize_whitespace(raw)
     raw = substitute_alphanumeric(raw)
     raw = add_closing_brace(raw)
-    JSON.parse(raw) rescue sanitized_response2(string)
+    JSON.parse(raw) rescue sanitized_response2
   end
 
-  def sanitized_response2(string)
+  def sanitized_response2
     raw = prepare_raw(options: {encode: true})
     raw = normalize_whitespace(raw)
     raw = add_commas_variant1(raw)
     raw = substitute_alphanumeric(raw)
     raw = quote_values_variant1(raw)
     raw = add_closing_brace(raw)
-    JSON.parse(raw) rescue sanitized_response3(string)
+    JSON.parse(raw) rescue sanitized_response3
   end
 
-  def sanitized_response3(string)
+  def sanitized_response3
     raw = prepare_raw(options: {encode: true})
     raw = normalize_whitespace(raw)
     raw = add_commas_variant2(raw)
     raw = substitute_alphanumeric(raw)
     raw = quote_values_variant2(raw)
     raw = add_closing_brace(raw)
-    JSON.parse(raw) rescue sanitized_response4(string)
+    JSON.parse(raw) rescue sanitized_response4
   end
 
-  def sanitized_response4(string)
+  def sanitized_response4
     raw = prepare_raw(options: {encode: true, scrub: true})
     raw = normalize_whitespace(raw)
     raw = add_commas_variant2(raw)
@@ -35,62 +39,14 @@ module SanitizingHelper
     raw = quote_values_variant2(raw)
     raw = remove_trailing_commas(raw)
     raw = add_closing_brace(raw)
-    JSON.parse(raw) rescue sanitized_response5(string)
+    JSON.parse(raw) rescue sanitized_response5
   end
 
-  def sanitized_response5(string)
-    hash = {}
-
-    regex_ct = /"corrected_text":\s*(?:\{\s*)?"([^"]*)"(?:\s*\})?/
-    match_corrected_text = self.raw_response.match(regex_ct)
-    hash["corrected_text"] = match_corrected_text[1].strip if match_corrected_text
-
-    regex_pattern = sanitizing_regex(string)
-    hash = scan_raw_response_for_pattern(hash, regex_pattern, string)
-    if hash.empty?
-      return sanitized_response6(string)
-    end
-    hash
-  end
-
-  def sanitized_response6(string)
-    raw = normalize_whitespace(self.raw_response)
-    raw = substitute_alphanumeric(raw)
-    raw = quote_values_variant2(raw)
-    raw = add_closing_brace(raw)
-    begin
-      parsed = JSON.parse(raw)
-    rescue
-      return sanitized_response7(string)
-    end
-    hash = {}
-    if parsed["answers"]
-      parsed["answers"].each do |num, data|
-        hash["#{string}#{num}"] = data
-      end
-      hash.merge!(parsed.except("answers"))
-    else
-      hash = parsed
-    end
-    hash
-  end
-
-  def sanitized_response7(string)
-    hash = {}
-    raw = normalize_whitespace(self.raw_response)
-    # Extract answers block
-    answers_match = raw.match(/"answers":\s*\{(.*?)\}/m)
-    return hash unless answers_match
-    answers_raw = answers_match[1]
-    # Regex for "N": { "content": value (possibly unquoted until next key), "explanation_en": "value" }
-    regex = /"(\d+)":\s*\{\s*"content":\s*([^"]*?)\s*,\s*"explanation_en":\s*"([^"]*?)"\s*\}/m
-    answers_raw.scan(regex) do |num, cont, exp|
-      hash["#{string}#{num}"] = {
-        "content" => cont.strip.gsub(/\\"/, '"').gsub(/「/, '').gsub(/」/, ''), # Clean Japanese brackets if needed
-        "explanation_en" => exp.strip.gsub(/\\"/, '"')
-      }
-    end
-    hash
+  def sanitized_response5
+    @api_key = Rails.application.credentials.xai[:api_key]
+    response = RescueBadFormatJob.perform_now(@api_key, self)
+    return response
+    #TODO: Should probably overwrite save the raw_response with what this returns
   end
 
   def scan_raw_response_for_pattern(hash, regex_pattern, string)
