@@ -3,4 +3,8 @@
       partial: "quizzes/graded_output",
       locals: { ai_query_id: "Quiz grading in progress...", assessment: nil }
     ) %>
-<%= turbo_stream.update("grade_quiz_button", '') %>
+<%= turbo_stream.replace "grade_quiz_button" do %>
+  <%= turbo_frame_tag "previous_queries" do %>
+    <%= turbo_stream_from "channel_#{@uuid}" %>
+  <% end %>
+<% end %>
