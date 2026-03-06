@@ -39,14 +39,16 @@ class FollowupRequestJob < ApplicationJob
       locals: { followup_text:, ai_query_id:, uuid:, user:, followup:, source_tag: }
     )
 
-    Turbo::StreamsChannel.broadcast_update_to(
-      "channel_#{uuid}",
-      target: "previous_queries",
-      partial: "journals/previous_queries",
-      locals: { journal: }
+    if journal
+      Turbo::StreamsChannel.broadcast_update_to(
+        "channel_#{uuid}",
+        target: "previous_queries",
+        partial: "journals/previous_queries",
+        locals: { journal: }
       # in the case of a note journal isn't used
       # need origin: or reference: instead
-    )
+      )
+    end
   rescue Faraday::ConnectionFailed => e
     handle_error(e, "Connection failed to Xai API")
   rescue JSON::ParserError => e

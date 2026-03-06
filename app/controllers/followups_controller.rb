@@ -15,6 +15,8 @@ class FollowupsController < ApplicationController
     @reference_text = @followup_origin.content
 
     @followup_prompt = set_correct_prompt_type(class_name)
+    # Disabled this until I can make a clear distinction between FreeQuestionPrompt and ExampleSentencePrompt
+    # Now just uses FreeQuestionPrompt by default
     @followup = @followup_prompt.build_followup
 
     @source_tag = params[:source_tag]
@@ -49,6 +51,7 @@ class FollowupsController < ApplicationController
     # create followup prompt
     followup_prompt_params = followup_params.dig(:followup_prompt)
 
+    # FreeQuestionPrompt or
     @followup_prompt = set_correct_prompt_type(
       followup_origin_class,
       params: followup_prompt_params
@@ -111,11 +114,12 @@ class FollowupsController < ApplicationController
   end
 
   def set_correct_prompt_type(class_name, params = {})
-    if is_vocab_or_grammar_note?(class_name)
-      set_prompt_type_based_on_params(params, ExampleSentencePrompt)
-    else
-      set_prompt_type_based_on_params(params, FreeQuestionPrompt)
-    end
+    set_prompt_type_based_on_params(params, FreeQuestionPrompt)
+    # if is_vocab_or_grammar_note?(class_name)
+    #   set_prompt_type_based_on_params(params, ExampleSentencePrompt)
+    # else
+    #   set_prompt_type_based_on_params(params, FreeQuestionPrompt)
+    # end
   end
 
   def is_vocab_or_grammar_note?(class_name)

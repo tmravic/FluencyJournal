@@ -69,7 +69,7 @@ class PrepareQuizJob < ApplicationJob
 
     source_tag = "ai_assistant"
     ai_query_id = quiz.ai_query.id
-    ai_outputs = ai_query.ai_outputs
+    ai_outputs = ai_query.ai_outputs.sort_by { |output| output.identifier.to_i }
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{prepare_quiz_prompt.uuid}",

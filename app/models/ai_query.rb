@@ -77,7 +77,8 @@ class AiQuery < ApplicationRecord
   end
 
   def change_content(num, change_keyword)
-    result = parsed_response.dig("#{change_keyword}#{num}", "content")
+    parsed = parsed_response
+    result = parsed.dig("#{change_keyword}#{num}", "content")
     if result
       if result.include?("→")
         return result.split("→")
@@ -86,13 +87,44 @@ class AiQuery < ApplicationRecord
       end
     end
 
-    error_message
+    if result.nil?
+      backup_key = parsed.keys[num.to_i - 1]
+      result = parsed.dig(backup_key, "content")
+      return result
+    end
+
+    if result.nil?
+      result = error_message
+    end
+
+    result
   end
 
   def change_explanation(change_keyword, num, abbr)
-    explanation = parsed_response.dig("#{change_keyword}#{num}", "explanation_#{abbr}")
+    parsed = parsed_response
+    explanation = parsed.dig("#{change_keyword}#{num}", "explanation_#{abbr}")
+
     if explanation.nil?
-      explanation = parsed_response.dig("#{change_keyword}#{num}")
+      explanation = parsed.dig("#{change_keyword}#{num}")
+    end
+
+    if explanation.nil?
+      backup_key = parsed.keys[num.to_i - 1]
+      explanation = parsed.dig(backup_key, "explanation_#{abbr}")
+      # {
+      #   "answer_例文" => {
+      #     "content" => "ほとんど一夜にして、東京は雪景色になった。",
+      #     "explanation_en" => "This sentence uses the phrase 'ほとんど一夜にして' to indicate that the change happened almost overnight. The sentence translates to 'Almost overnight, Tokyo became a winter wonderland.'"
+      #   },
+      #   "answer_例文2" => {
+      #     "content" => "彼は一瞬のうちに決断を下した。",
+      #     "explanation_en" => "This sentence uses the phrase '一瞬のうちに' to indicate that the decision was made in an instant. The sentence translates to 'He made the decision in an instant.'"
+      #   }
+      # }
+    end
+
+    if explanation.nil?
+      explanation = error_message
     end
 
     explanation
