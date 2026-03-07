@@ -7,10 +7,10 @@ image: tmravic/fluency_journal
 # Deploy to these servers.
 servers:
   web:
-    - 3.112.246.169
+    - 3.113.33.230
   # job:
   #   hosts:
-  #     - 3.112.246.169
+  #     - 3.113.33.230
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -18,11 +18,9 @@ servers:
 #
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
-  ssl: false
-  host: ""
+  ssl: true
+  host: fluencyjournal.com
   app_port: 3000
-#  host: fluencyjournal.com
-#  set this up later
 
 # Credentials for your image host.
 registry:
@@ -110,7 +108,7 @@ ssh:
 accessories:
   db:
     image: postgres:latest
-    host: 3.112.246.169
+    host: 3.113.33.230
 #    port: "127.0.0.1:5432:5432"
     env:
       clear:
@@ -123,7 +121,7 @@ accessories:
 
   solid_cable:
     image: tmravic/fluency_journal
-    host: 3.112.246.169
+    host: 3.113.33.230
     cmd: "bundle exec puma -p 28080 cable/config.ru"
     port: "28080:28080"
     env:
@@ -138,7 +136,7 @@ accessories:
 
   solid_queue:
     image: tmravic/fluency_journal
-    host: 3.112.246.169
+    host: 3.113.33.230
     cmd: "bundle exec rails solid_queue:start"
     env:
       clear:
