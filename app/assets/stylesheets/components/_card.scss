@@ -1,7 +1,15 @@
+@use '../components';
+
 .card {
   background-color: var(--color-glint);
   padding: var(--space-xxs) var(--space-xxs);
   border-radius: var(--border-radius);
+
+  font-size: var(--font-size-l);
+
+  @include components.media(tabletAndUp) {
+    font-size: var(--font-size-xl);
+  }
 
   &__change {
     padding: var(--space-xxxs) 0;

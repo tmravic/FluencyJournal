@@ -68,9 +68,10 @@ module ApplicationHelper
   end
 
   def get_ai_output_change_variables(ai_query, identifier, change_keyword)
+    user = ai_query.user || Current.user || @user
     content_first = ai_query.change_content(identifier, change_keyword).first
     content_last = ai_query.change_content(identifier, change_keyword).last
-    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(ai_query.user))
+    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(user))
 
     [ content_first, content_last, explanation ]
   end

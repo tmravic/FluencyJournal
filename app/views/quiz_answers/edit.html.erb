@@ -1,0 +1,14 @@
+<% content_for :title, "Editing quiz_answer" %>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Editing quiz_answer</h1>
+  </div>
+
+  <%= turbo_frame_tag "quiz_answer_#{@quiz_entry.identifier}" do %>
+    <%= render partial: "quizzes/quiz_entry", locals: {
+      journal: @journal, quiz_answer: @quiz_answer, quiz: @quiz, quiz_entry: @quiz_entry
+    } %>
+  <% end %>
+</div>

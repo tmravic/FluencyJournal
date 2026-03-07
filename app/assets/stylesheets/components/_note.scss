@@ -4,6 +4,13 @@
   margin-top: var(--space-xxs);
   margin-bottom: var(--space-xxs);
 
+  font-size: var(--font-size-l);
+
+  @include components.media(tabletAndUp) {
+    padding: var(--space-xs) var(--space-m);
+    font-size: var(--font-size-xl);
+  }
+
   &__header {
     display: flex;
     align-items: center;
@@ -42,7 +49,7 @@
 .notes_box_scroll {
   max-height: 80vh;
   min-height: 10vh;
-  height: 35vh;
+  height: 45vh;
   overflow-y: auto;
   border: var(--border);
   //padding: 0.3rem;

@@ -1,5 +1,6 @@
 class AiQuery < ApplicationRecord
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
+  include SanitizingHelper
 
   belongs_to :journal, optional: true
   belongs_to :prompt
@@ -9,7 +10,7 @@ class AiQuery < ApplicationRecord
   has_and_belongs_to_many :followups
   has_many :quizzes, dependent: :destroy
 
-  validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }
+  validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true
   validates :raw_response, presence: true
 
   after_destroy -> {
@@ -34,14 +35,25 @@ class AiQuery < ApplicationRecord
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
   def parsed_response
-    JSON.parse(self.raw_response || "{}") rescue {}
+    parsed_response = JSON.parse(self.raw_response) rescue sanitized_response
+
+    if parsed_response.kind_of?(String)
+      parsed_response = JSON.parse(parsed_response)
+    end
+    if parsed_response["answers"]
+      parsed_response = transform_keys(parsed_response, "answer_")
+    end
+    parsed_response
   end
 
   def count_changes(string)
     # ["change_1", "change_2", "corrected_text"]
-    parsed_response.keys.count do |key|
-      key.include?(string)
-    end
+    parsed_response.keys.count { |key| key.include?(string) }
+    # => 2
+  end
+
+  def model_used
+    prompt.ai_model
   end
 
   def create_quiz_questions(translated_response)
@@ -65,7 +77,8 @@ class AiQuery < ApplicationRecord
   end
 
   def change_content(num, change_keyword)
-    result = parsed_response.dig("#{change_keyword}#{num}", "content")
+    parsed = parsed_response
+    result = parsed.dig("#{change_keyword}#{num}", "content")
     if result
       if result.include?("→")
         return result.split("→")
@@ -74,15 +87,51 @@ class AiQuery < ApplicationRecord
       end
     end
 
-    error_message
+    if result.nil?
+      backup_key = parsed.keys[num.to_i - 1]
+      result = parsed.dig(backup_key, "content")
+      return result
+    end
+
+    if result.nil?
+      result = error_message
+    end
+
+    result
   end
 
   def change_explanation(change_keyword, num, abbr)
-    parsed_response.dig("#{change_keyword}#{num}", "explanation_#{abbr}") || error_message
+    parsed = parsed_response
+    explanation = parsed.dig("#{change_keyword}#{num}", "explanation_#{abbr}")
+
+    if explanation.nil?
+      explanation = parsed.dig("#{change_keyword}#{num}")
+    end
+
+    if explanation.nil?
+      backup_key = parsed.keys[num.to_i - 1]
+      explanation = parsed.dig(backup_key, "explanation_#{abbr}")
+      # {
+      #   "answer_例文" => {
+      #     "content" => "ほとんど一夜にして、東京は雪景色になった。",
+      #     "explanation_en" => "This sentence uses the phrase 'ほとんど一夜にして' to indicate that the change happened almost overnight. The sentence translates to 'Almost overnight, Tokyo became a winter wonderland.'"
+      #   },
+      #   "answer_例文2" => {
+      #     "content" => "彼は一瞬のうちに決断を下した。",
+      #     "explanation_en" => "This sentence uses the phrase '一瞬のうちに' to indicate that the decision was made in an instant. The sentence translates to 'He made the decision in an instant.'"
+      #   }
+      # }
+    end
+
+    if explanation.nil?
+      explanation = error_message
+    end
+
+    explanation
   end
 
   def assessment
-    content = self.parsed_response.fetch("assessment", nil)
+    content = self.parsed_response
 
     # {"overall"=> "Overall, the quiz answers are..."}
     return content["overall"] if is_hash?(content) && content["overall"]
@@ -90,12 +139,35 @@ class AiQuery < ApplicationRecord
     # {"overall_accuracy"=> "The translations are mostly accurate..."}
     return content["overall_accuracy"] if is_hash?(content) && content["overall_accuracy"]
 
+    # content.keys
+    # ["entry_1", "entry_2", "entry_3", "entry_4", "assessment"]
+    # content.dig("assessment")
+    # {"overall_accuracy"=> "..."
+    if is_hash?(content) && is_hash?(content.dig("assessment")) && content.dig("assessment", "overall_accuracy")
+      return content.dig("assessment", "overall_accuracy")
+    end
+
+    if is_hash?(content) && is_hash?(content.dig("assessment")) && content.dig("assessment", "overall")
+      return content.dig("assessment", "overall")
+    end
+
+    return content["assessment"] if is_hash?(content) && content["assessment"]
+
     content
   end
 
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
-    content = parsed_response.fetch("corrected_text", nil)
+    content = parsed_response
+    # {
+    #   "change_1"=>
+    #    { "content" => "ryokan → 旅館", "explanation_en"=>"「ryokan」は日 本語で「旅館」を意味するため、正しい表現に修正しました。" },
+    #   "change_2"=>
+    #     { "content" => "私立の外の露天風呂", "explanation_en"=>"「私立」は「個人的な」や「私有の」を意味するため、正しい表現に修正しました。" },
+    #   "change_3"=>
+    #     { "content" => "良寛のようやく", "explanation_en"=>"「 ようやく」は「ようやく」で正しい表現です。" },
+    #   "corrected_text" => "外の露天風呂がある旅館を作る"
+    # }
 
     # When the user input nothing
     # {"..."=>0}
@@ -117,6 +189,9 @@ class AiQuery < ApplicationRecord
     # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
     return content["corrected_japanese"] if is_hash?(content) && content["corrected_japanese"]
 
+    # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
+    return content["corrected_text"] if is_hash?(content) && content["corrected_text"]
+
     #  {"Today was such a hot day."=>""}
     if is_hash?(content) && content.values.first.empty?
       return content.keys.first
@@ -128,5 +203,17 @@ class AiQuery < ApplicationRecord
 
   def is_hash?(content)
     content.class == Hash
+  end
+
+  def transform_keys(hash, prefix = "answer_")
+    return hash unless hash.is_a?(Hash) && hash["answers"]
+    new_answers = {}
+    hash["answers"].each do |old_key, value|
+      new_key = "#{prefix}#{old_key}"
+      new_answers[new_key] = value
+    end
+    # hash["answers"] = new_answers
+    # hash
+    new_answers
   end
 end

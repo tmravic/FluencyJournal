@@ -1,9 +1,20 @@
 class QuizAnswersController < ApplicationController
   before_action :set_journal
+  before_action :set_quiz_answer, only: [:show, :edit, :retry]
   before_action :set_quiz
 
+  def show
+    #<ActionController::Parameters {"controller"=>"quiz_answers", "action"=>"show", "journal_id"=>"3", "quiz_id"=>"58", "id"=>"85"} permitted: false>
+    @quiz_answer = QuizAnswer.find(params.dig(:id).to_i)
+    @ai_output = @quiz_answer.ai_output
+    @original_entry_text = get_original_language_from_journal(@ai_output.identifier)
+  end
+
+  def edit
+    @quiz_entry = @quiz_answer.ai_output
+  end
+
   def create
-    # #<ActionController::Parameters {"quiz_answer"=>{"user_response"=>"test", "ai_output_id"=>"391", "identifier"=>"2"}, "controller"=>"quiz_answers", "action"=>"create", "journal_id"=>"5", "quiz_id"=>"72"} permitted: false>
     @ai_output = AiOutput.find(params.dig("quiz_answer", "ai_output_id"))
     @ai_query = @ai_output.ai_query
     @quiz_answer = @quiz.quiz_answers.build(quiz_answer_params)
@@ -16,6 +27,12 @@ class QuizAnswersController < ApplicationController
         format.turbo_stream
       end
     end
+  end
+
+  def retry
+    @quiz_entry = @quiz_answer.ai_output
+    # #<ActionController::Parameters {"controller"=>"quiz_answers", "action"=>"retry", "journal_id"=>"3", "quiz_id"=>"60", "id"=>"604"} permitted: false>
+    render :edit
   end
 
   private
@@ -46,6 +63,10 @@ class QuizAnswersController < ApplicationController
 
   def set_quiz
     @quiz = @journal.quizzes.find(params[:quiz_id])
+  end
+
+  def set_quiz_answer
+    @quiz_answer = QuizAnswer.find(params.expect(:id))
   end
 
   def quiz_answer_params

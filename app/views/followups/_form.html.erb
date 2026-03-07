@@ -9,7 +9,7 @@
       <%= followup_prompt.text_area :base_content, html5: true, placeholder: t('followup.placeholder'), value: @base_content %>
 
       <%= followup_prompt.label t('followup.reference_text') %>
-      <%= followup_prompt.text_area :user_generated_content, html5: true, value: @reference_text %>
+      <%= followup_prompt.text_area :user_generated_content, html5: true, class: 'form__input__button_block', value: @reference_text %>
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
       <%= followup_prompt.hidden_field :ai_model, value: "grok-4-fast-non-reasoning" %>
       <%#= followup_prompt.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning"), {} %>

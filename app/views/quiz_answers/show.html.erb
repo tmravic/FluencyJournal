@@ -1,0 +1,14 @@
+<% content_for :title, "Showing quiz answer" %>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Showing quiz_answer</h1>
+  </div>
+
+  <%= render partial: "quiz_answers/compared_quiz_answer" %>
+
+  <div>
+    <%= link_to "Edit this quiz answer", edit_journal_quiz_quiz_answer_path(@journal, @quiz, @quiz_answer) %>
+  </div>
+</div>

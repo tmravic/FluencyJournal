@@ -1,0 +1,10 @@
+@use '../components';
+
+.quiz_answer {
+  font-size: var(--font-size-l);
+
+  @include components.media(tabletAndUp) {
+    padding: var(--space-xs) var(--space-m);
+    font-size: var(--font-size-xl);
+  }
+}

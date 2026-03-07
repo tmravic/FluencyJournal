@@ -1,3 +1,5 @@
+@use '../components';
+
 .request_form {
   margin-top: var(--space-xxs);
   margin-bottom: var(--space-xxs);
@@ -13,13 +15,21 @@
     width: 100%;
     padding: var(--space-xxxs);
     margin: var(--space-xxxxs);
-    font-size: var(--font-size-m);
+    font-size: var(--font-size-l);
+
+    @include components.media(tabletAndUp) {
+      font-size: var(--font-size-xl);
+    }
   }
 }
 
 #send_button {
   flex-grow:1;
-  font-size: var(--font-size-m);
+  font-size: var(--font-size-l);
+
+  @include components.media(tabletAndUp) {
+    font-size: var(--font-size-xl);
+  }
 }
 
 .send_button_box {

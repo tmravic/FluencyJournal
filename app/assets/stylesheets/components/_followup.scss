@@ -8,8 +8,13 @@
 
   textarea {
     min-height: 10vh;
-    font-size: var(--font-size-m);
+    font-size: var(--font-size-l);
+
     padding: var(--space-xxxs);
+    @include components.media(tabletAndUp) {
+      padding: var(--space-xs) var(--space-m);
+      font-size: var(--font-size-xl);
+    }
   }
 
   &__header {

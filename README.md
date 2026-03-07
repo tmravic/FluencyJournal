@@ -101,3 +101,8 @@ aws ec2 describe-instances
 aws ec2 terminate-instances --instance-ids i-047bf70413bc40e54
 aws ec2 delete-security-group --group-id sg-0ba4d56db09d1997e
 ```
+
+## How to use ngrok
+```
+ngrok http 3000
+```

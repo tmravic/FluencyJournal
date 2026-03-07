@@ -11,9 +11,11 @@
   box-shadow: var(--shadow-small);
   margin-bottom: var(--space-m);
   padding: var(--space-xs);
+  font-size: var(--font-size-l);
 
   @include components.media(tabletAndUp) {
     padding: var(--space-xs) var(--space-m);
+    font-size: var(--font-size-xl);
   }
 
   &__actions {

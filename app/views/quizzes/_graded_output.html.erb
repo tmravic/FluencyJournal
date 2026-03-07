@@ -39,7 +39,6 @@
           <% end %>
         </div>
       </div>
-
       <div class="card__change__corrected">
         <%= assessment %>
       </div>
@@ -61,6 +60,20 @@
               <%= "Entry #{output.identifier}" %>
             </h4>
             <div>
+              <% quiz_number = output.identifier.to_i - 1 %>
+              <% quiz_answer = quiz.quiz_answers.slice(quiz_number) %>
+              <%= link_to "Retry",
+                            retry_journal_quiz_quiz_answer_path(ai_query.journal, quiz, quiz_answer),
+                            method: :get,
+                            data: {
+                              turbo_frame: "quiz_answer_#{output.identifier}",
+                              controller: "scroll",
+                              action: "click->scroll#scrollToTarget",
+                              scroll_target_value: "quiz_answer_#{output.identifier}",
+                              turbo_confirm: t("quiz_answer.retry"),
+                              turbo_method: :get
+                            },
+                            class: "btn btn--dark" %>
               <%= button_to t("delete"),
                             ai_output_path(output.id, source_tag: source_tag),
                             method: :delete,
@@ -94,13 +107,23 @@
       <% end %>
     <% end %>
   <% end %>
-
-  <% if assessment.present? %>
-    <script>
-        const quizResultsFrame = document.getElementById("quiz_results");
-        if (quizResultsFrame) {
-            quizResultsFrame.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-    </script>
-  <% end %>
 </div>
+<% if ai_query %>
+  <div style="display:flex;justify-content:center; margin-bottom: 5px;">
+    <%= button_to "Delete Quiz",
+                  journal_ai_query_path(ai_query.journal, ai_query),
+                  method: :delete,
+                  data: { turbo_stream: true },
+                  class: "btn btn--light", id: "send_button" %>
+  </div>
+<% end %>
+
+<% if assessment.present? %>
+  <script>
+    const quizResultsFrame = document.getElementById("quiz_results");
+    if (quizResultsFrame) {
+      quizResultsFrame.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  </script>
+<% end %>
+

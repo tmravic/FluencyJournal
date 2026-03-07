@@ -1,3 +1,4 @@
+#TODO: Try using the Japanese-native Eliza LLM
 require 'aws-sdk-bedrockruntime'
 require 'json'
 
