@@ -77,6 +77,8 @@ en:
     created: "Journal was successfully created."
     updated: "Journal was successfully updated."
     deleted: "Journal was successfully deleted."
+  quiz_answer:
+    retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
   entry:
     entry: "Entry %{number}"
     start_entry: "Start entry"

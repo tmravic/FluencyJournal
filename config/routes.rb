@@ -14,13 +14,11 @@ Rails.application.routes.draw do
         get :reset_quiz
       end
       member do
-        # get :prepare_quiz
-        # get :reset_quiz
         get :grade_quiz
       end
-      resources :quiz_answers, only: [:new, :create, :destroy, :show] do
+      resources :quiz_answers, except: [:index, :destroy, :update] do
         member do
-          post :retry
+          get :retry
         end
       end
     end
