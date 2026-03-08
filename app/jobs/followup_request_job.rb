@@ -5,8 +5,8 @@ class FollowupRequestJob < ApplicationJob
   queue_as :default
 
   def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
-    if user.learning_language == "Japanese"
-    # if false
+    # if user.learning_language == "Japanese"
+    if false
       followup_prompt.update(ai_model: "elyza_llm")
       bedrock_service = BedrockService.new(
         prompt: followup_prompt,

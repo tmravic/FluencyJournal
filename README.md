@@ -78,6 +78,9 @@ exit
 `bundle exec kamal setup`<br>
 `kamal app exec -i 'bin/rails db:prepare'`<br>
 `kamal deploy`<br>
+(For an update)<br>
+`kamal accessory reboot solid_queue`<br>
+`kamal accessory reboot solid_cable`<br>
 `kamal app exec -i 'bin/rails console'`
 
 Check containers<br>
