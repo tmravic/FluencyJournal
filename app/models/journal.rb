@@ -28,7 +28,7 @@ class Journal < ApplicationRecord
   # that is the first argument of the broadcasts_to method: [journals.group, "journals"].
 
   def full_journal
-    self.entries.pluck(:content)
+    self.entries.order(:id).pluck(:content)
     # ["先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。",
     #  "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。",
     #  "東京にいる面白い人との繋がりが多くてうらやましかった。"]

@@ -189,6 +189,10 @@ class AiQuery < ApplicationRecord
     # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
     return content["corrected_japanese"] if is_hash?(content) && content["corrected_japanese"]
 
+    # { "corrected_text"=>
+    #   {"リフレッシュする自然の景色のおかげで、私たちの態度と心境はほとんど一夜にして変わりました。"=>"This is the full corrected sentence in natural Japanese."} }
+    # TODO: handle this case with a regex pattern which returns either key or value if either one has no alphabet characters.
+
     # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
     return content["corrected_text"] if is_hash?(content) && content["corrected_text"]
 

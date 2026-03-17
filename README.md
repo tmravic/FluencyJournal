@@ -109,3 +109,7 @@ aws ec2 delete-security-group --group-id sg-0ba4d56db09d1997e
 ```
 ngrok http 3000
 ```
+
+## How to check montly costs
+# Cost and billing check (month to-date)
+- `aws ce get-cost-and-usage --time-period Start=$(date +%Y-%m-01),End=$(date +%Y-%m-%d) --granularity MONTHLY --metrics BlendedCost`
