@@ -71,7 +71,7 @@ class QuizzesController < ApplicationController
 
   def reset_quiz
     @source_tag = 'ai_assistant'
-    @entries = @journal.entries
+    @entries = @journal.entries.order(:id)
     destroy_all_unfinished_quizzes!
 
     respond_to do |format|
