@@ -1,4 +1,5 @@
 <% if ai_outputs.present? %>
+  <% ai_outputs.sort_by! { |output| output.identifier.to_i } %>
   <%= render partial: 'quizzes/quiz_entry',
              collection: ai_outputs, # each referred to as "quiz_entry"
              locals: { journal:, source_tag:, quiz: } %>
