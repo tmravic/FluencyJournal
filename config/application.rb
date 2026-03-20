@@ -40,8 +40,8 @@ module FluencyJournal
 
     config.time_zone = "Asia/Tokyo"
     config.i18n.available_locales = %i[en ja]
-    config.i18n.default_locale = :en
-    config.i18n.fallbacks = [:en]
+    config.i18n.default_locale = :ja
+    config.i18n.fallbacks = [:ja]
 
     # Ensure Active Record uses the local timezone for timestamps
     config.active_record.default_timezone = :local
