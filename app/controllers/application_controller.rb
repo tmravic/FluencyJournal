@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_group
 
   def set_locale
-    I18n.locale = :ja
+    I18n.locale = :en
     # I18n.locale = extract_locale_from_accept_language_header || I18n.default_locale
   end
 
