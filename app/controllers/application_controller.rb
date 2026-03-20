@@ -32,7 +32,12 @@ class ApplicationController < ActionController::Base
   end
 
   def extract_locale_from_accept_language_header
-    request.env['HTTP_ACCEPT_LANGUAGE']&.scan(/^[a-z]{2}/)&.first&.to_sym
+    return nil if request.env['HTTP_ACCEPT_LANGUAGE'].blank?
+
+    # Picks the first language the browser prefers that we actually support (ja or en)
+    request.env['HTTP_ACCEPT_LANGUAGE'].scan(/[a-z]{2}/).find do |code|
+      I18n.available_locales.include?(code.to_sym)
+    end&.to_sym
   end
 
   def set_faraday_connection(api_key)
