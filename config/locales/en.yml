@@ -115,20 +115,19 @@ en:
   ai_output:
     change_deleted: "Change was successfully deleted."
 
-    en:
-      activerecord:
-        errors:
-          models:
-            note:
-              attributes:
-                category:
-                  inclusion: "%{value} is not a valid category"
-          messages:
-            blank: " is blank."
-        attributes:
-          note:
-            categories:
-              vocab: "Vocab"
-              grammar: "Grammar"
-              draft_journal: "Draft Journal"
-              automatic: "Automatic"
+  activerecord:
+    errors:
+      models:
+        note:
+          attributes:
+            category:
+              inclusion: "%{value} is not a valid category"
+      messages:
+        blank: " is blank."
+    attributes:
+      note:
+        categories:
+          vocab: "Vocab"
+          grammar: "Grammar"
+          draft_journal: "Draft Journal"
+          automatic: "Automatic"
