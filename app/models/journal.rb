@@ -34,6 +34,10 @@ class Journal < ApplicationRecord
     #  "東京にいる面白い人との繋がりが多くてうらやましかった。"]
   end
 
+  def char_count
+    self.full_journal.join.length
+  end
+
   def previous_journal
     all_journals = Current.user&.journals.order(:next_study_date)
     journals_table = Journal.arel_table
