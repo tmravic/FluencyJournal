@@ -5,4 +5,5 @@
   <% end %>
   <%= turbo_stream.update "quiz_buttons", '' %>
 <% end %>
+<%= turbo_stream.update "character_count", partial: 'journals/character_count', locals: { journal: @journal } %>
 <%= render_turbo_stream_flash_messages %>
