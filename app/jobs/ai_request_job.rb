@@ -29,5 +29,12 @@ class AiRequestJob < ApplicationJob
       partial: "journals/previous_queries",
       locals: { journal: }
     )
+
+    Turbo::StreamsChannel.broadcast_update_to(
+      "channel_#{entry_prompt.uuid}",
+      target: "ai_request_form_delete_buttons",
+      partial: "ai_queries/delete_buttons",
+      locals: { journal:, ai_query: }
+    )
   end
 end

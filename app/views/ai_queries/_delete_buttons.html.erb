@@ -1,0 +1,11 @@
+<div class="delete_buttons">
+  <%= button_to t('ai_query.delete'),
+                journal_ai_query_path(journal, ai_query),
+                method: :delete,
+                data: { turbo_stream: true },
+                class: "btn btn--light", id: "send_button" %>
+
+  <%= link_to "Close",
+              journal_path(journal),
+              class: "btn btn--dark", data: { turbo_frame: "workspace" } %>
+</div>
