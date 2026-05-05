@@ -11,7 +11,7 @@
     <%= link_to t("cancel"),
                 journal_path(journal, cancel: true),
                 class: "btn btn--light",
-                data: { turbo_frame: dom_id(@entry) } %>
+                data: { turbo_frame: dom_id(@entry), turbo_stream: true } %>
     <%= f.submit class: "btn btn--secondary", name: nil %>
   </div>
 <% end %>

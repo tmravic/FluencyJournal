@@ -1,4 +1,5 @@
 <%= turbo_stream.update("quiz_buttons", partial: 'quizzes/quiz_buttons') %>
+<%= turbo_stream.update "start_entry_button", partial: 'entries/start_entry_button' %>
 <%= turbo_stream.replace(
       "quizzes",
       partial: "entries/entries_frame",

@@ -43,6 +43,7 @@ class EntriesController < ApplicationController
 
   # PATCH/PUT /entries/1 or /entries/1.json
   def update
+    @source_tag = "ai_assistant"
     respond_to do |format|
       if @entry.update(entry_params)
         format.html { redirect_to journal_path(@journal), notice: t("entry.updated") }

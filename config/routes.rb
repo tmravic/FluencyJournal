@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     end
     member do
       get :open_ai_assistant
+      get :reading_mode
       post :mark_journal_as_studied
     end
     resources :entries

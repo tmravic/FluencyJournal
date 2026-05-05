@@ -1,5 +1,5 @@
 class JournalsController < ApplicationController
-  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied]
+  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied reading_mode]
   before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
   # GET /journals or /journals.json
@@ -23,13 +23,14 @@ class JournalsController < ApplicationController
 
   # GET /journals/1 or /journals/1.json
   def show
-    cancel = params["cancel"]
+    @cancel = ActiveModel::Type::Boolean.new.cast(params["cancel"])
     @entries = @journal.entries.ordered
     @source_tag = "ai_assistant"
+
     respond_to do |format|
       format.html
       format.turbo_stream do
-        render "journals/show", locals: { cancel: cancel }
+        render "journals/show"
       end
     end
   end
@@ -118,6 +119,18 @@ class JournalsController < ApplicationController
           flash.now[:notice] = notice
         end
       end
+    end
+  end
+
+  # GET /journals/:id/reading_mode
+  def reading_mode
+    @reading_mode = ActiveModel::Type::Boolean.new.cast(params[:reading_mode]) || false
+    @entries = @journal.entries.ordered
+    @source_tag = "ai_assistant"
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
     end
   end
 

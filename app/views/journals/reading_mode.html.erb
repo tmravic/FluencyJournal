@@ -1,0 +1,11 @@
+<%= turbo_frame_tag "entries" do %>
+  <h2 style="margin: 10px 0px;">
+    <%= @journal.title %>
+  </h2>
+
+  <% @entries.each do |entry| %>
+    <p style="margin: 10px 0px;">
+      <%= simple_format(entry.content) %>
+    </p>
+  <% end %>
+<% end %>

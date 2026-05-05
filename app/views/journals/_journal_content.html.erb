@@ -20,6 +20,10 @@
     <% end %>
   <% end %>
 
+  <%= turbo_frame_tag "reading_mode_button" do %>
+    <%= render 'journals/reading_mode_button', locals: { journal: @journal } if @entries.present? %>
+  <% end %>
+
   <%= turbo_frame_tag "quiz_buttons" do %>
     <%= render 'quizzes/quiz_buttons' if @entries.present? %>
   <% end %>
@@ -27,17 +31,23 @@
 </div>
 <br>
 <div style="display:flex;justify-content:space-between;align-items:center;">
-  <span class="journal__date">First written: <%= @journal.created_at.strftime("%m/%d/%Y") %></span>
+
+  <span class="journal__date">
+    First written: <%= @journal.created_at.strftime("%m/%d/%Y") %>
+  </span>
+
   <span class="journal__date">
     <%= turbo_frame_tag "character_count" do %>
       <%= render partial: 'journals/character_count', locals: { journal: @journal } %>
     <% end %>
   </span>
+
   <span class="journal__date">
     <%= turbo_frame_tag "next_review_timestamp" do %>
       <%= render partial: 'journals/next_review_timestamp', locals: { journal: @journal } %>
     <% end %>
   </span>
+
 </div>
 <%= render 'entries/entries_frame' %>
 
