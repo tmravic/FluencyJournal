@@ -115,6 +115,10 @@
                   method: :delete,
                   data: { turbo_stream: true },
                   class: "btn btn--light", id: "send_button" %>
+
+    <%= link_to "Close",
+                journal_path(ai_query.journal),
+                class: "btn btn--dark" %>
   </div>
 <% end %>
 

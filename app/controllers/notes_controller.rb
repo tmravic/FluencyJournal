@@ -4,6 +4,7 @@ class NotesController < ApplicationController
   def index
     @source_tag = "notes_box"
     @todays_notes = Current.user&.notes.next_to_study
+    @due_today = @todays_notes.count
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -125,6 +126,7 @@ class NotesController < ApplicationController
     # TODO: Translate
 
     if @note.update(next_study_date: next_study_date, last_interval: new_interval)
+      @due_today = Current.user&.notes.next_to_study.count
       respond_to do |format|
         format.html { redirect_to note_path(@note), notice: notice }
         format.turbo_stream do

@@ -5,6 +5,7 @@ class JournalsController < ApplicationController
   # GET /journals or /journals.json
   def index
     @todays_journals = current_group.journals.next_to_study
+    @due_today = @todays_journals.count
     @from_all_or_todays = "todays"
     respond_to do |format|
       format.html
@@ -113,6 +114,7 @@ class JournalsController < ApplicationController
     # TODO: Translate
 
     if @journal.update(next_study_date: next_study_date, last_interval: new_interval)
+      @due_today = current_group.journals.next_to_study.count
       respond_to do |format|
         format.html { redirect_to journal_path(@journal), notice: notice }
         format.turbo_stream do

@@ -15,6 +15,7 @@
 <% end %>
 
 <%= turbo_stream.update "workspace", "" %>
+<%= turbo_stream.update "due_today_journals_count", "" %>
 <%= turbo_stream.update "close_journal_button", "" %>
 <%= turbo_stream.update "start_journal_button", partial: "journals/start_journal_button", locals: { from_all_or_todays: @from_all_or_todays } %>
 <%= render_turbo_stream_flash_messages %>

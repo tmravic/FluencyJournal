@@ -9,7 +9,10 @@
 
   <div class="header">
     <%= turbo_frame_tag "journals_title" do %>
-      <h1><%= t("journal.todays_journals") %></h1>
+      <h1>
+        <!--Today's Journals-->
+        <%= t("journal.todays_journals") %>
+      </h1>
     <% end %>
 
       <%= turbo_frame_tag "switch_button" do %>
@@ -22,6 +25,10 @@
       <%= render partial: 'journals/start_journal_button', locals: { from_all_or_todays: 'todays' } %>
     <% end %>
   </div>
+
+  <%= turbo_frame_tag "due_today_journals_count" do %>
+    <%= render partial: "journals/todays_journal_count" %>
+  <% end %>
 
   <%= turbo_frame_tag Journal.new do %>
     <%= render partial: 'journals/empty_state_today', locals: { from_all_or_todays: 'todays' } unless @todays_journals.present? %>

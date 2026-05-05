@@ -9,7 +9,10 @@
 
   <div class="header">
     <%= turbo_frame_tag "journals_title" do %>
-      <h1><%= t("journal.all_journals") %></h1>
+      <h1>
+        <!--All Journals-->
+        <%= t("journal.all_journals") %>
+      </h1>
     <% end %>
 
       <%= turbo_frame_tag "switch_button" do %>
