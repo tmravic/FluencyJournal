@@ -7,7 +7,7 @@
   flex-direction: column;
 
   label {
-    display:block;
+    display: block;
   }
 
   textarea {
@@ -20,6 +20,16 @@
     @include components.media(tabletAndUp) {
       font-size: var(--font-size-xl);
     }
+  }
+
+  a {
+    font-size: var(--font-size-l);
+  }
+
+  .delete_buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 5px;
   }
 }
 

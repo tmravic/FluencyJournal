@@ -83,11 +83,15 @@
       <% end %>
     <% end %>
   </div>
-  <div style="display:flex;justify-content:center; margin-bottom: 5px;">
+  <div class="quiz_delete_buttons">
     <%= button_to "Delete Quiz",
                   journal_ai_query_path(@ai_query.journal, @ai_query),
                   method: :delete,
                   data: { turbo_stream: true },
                   class: "btn btn--light", id: "send_button" %>
+
+    <%= link_to "Close",
+                journal_path(@ai_query.journal),
+                class: "btn btn--dark" %>
   </div>
 <% end %>
