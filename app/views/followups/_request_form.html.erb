@@ -12,7 +12,7 @@
     </label>
     <textarea id="user_generated_content" readonly><%= followup.prompt.user_generated_content %></textarea>
   </div>
-  <div style="display:flex;justify-content:space-evenly; margin-bottom: 5px;">
+  <div class="followup__request_form">
     <% if followup.origin.is_a?(Note) %>
       <%= button_to t("followup.delete_followup"),
                     followup_path(followup, source_tag: source_tag),
