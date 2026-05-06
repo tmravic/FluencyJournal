@@ -2,9 +2,11 @@
 
   <%= turbo_stream.update "entries" do %>
     <% @entries.each do |entry| %>
-      <p style="margin: 10px 0px;">
-        <%= simple_format(entry.content) %>
-      </p>
+      <div class="entry">
+        <p>
+          <%= simple_format(entry.content) %>
+        </p>
+      </div>
     <% end %>
   <% end %>
 
