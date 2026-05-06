@@ -28,6 +28,9 @@
       <%= render 'quizzes/quiz_buttons' if @entries.present? %>
     <% end %>
 
+    <%= turbo_frame_tag "change_journal_due_date_button" do %>
+      <%= render 'journals/change_journal_due_date_button', locals: { journal: @journal } if @entries.present? %>
+    <% end %>
   </div>
   <br>
   <div style="display:flex;justify-content:space-between;align-items:center;">

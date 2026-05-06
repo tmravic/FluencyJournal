@@ -7,6 +7,11 @@
 <% end %>
 <%= turbo_stream.update "ai_assistant", partial: "quizzes/ai_assistant" %>
 <%= turbo_stream.update "start_entry_button", "" %>
+<%= turbo_stream.update "reading_mode_button", "" %>
+<%= turbo_stream.update "open_ai_assistant_button", "" %>
+<%= turbo_stream.update "close_ai_assistant_button", "" %>
+<%= turbo_stream.update "mark_studied_button", "" %>
+<%= turbo_stream.update "change_journal_due_date_button", '' %>
 <%= turbo_stream.replace "previous_queries" do %>
   <%= turbo_frame_tag "grade_quiz_button" %>
 <% end %>

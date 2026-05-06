@@ -1,5 +1,5 @@
 class JournalsController < ApplicationController
-  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied reading_mode]
+  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied reading_mode change_due_date update_due_date]
   before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
   # GET /journals or /journals.json
@@ -132,6 +132,17 @@ class JournalsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.turbo_stream
+    end
+  end
+
+  def change_due_date
+  end
+
+  def update_due_date
+    @journal.update(next_study_date: params.dig(:next_study_date))
+
+    respond_to do |format|
       format.turbo_stream
     end
   end

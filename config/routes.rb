@@ -7,6 +7,8 @@ Rails.application.routes.draw do
       get :open_ai_assistant
       get :reading_mode
       post :mark_journal_as_studied
+      get :change_due_date
+      post :update_due_date
     end
     resources :entries
     resources :quizzes, only: [:show] do
@@ -36,6 +38,8 @@ Rails.application.routes.draw do
     end
     member do
       post :mark_note_as_studied
+      get :change_due_date
+      post :update_due_date
     end
   end
   resources :followups, only: [ :new, :create, :show, :destroy ]

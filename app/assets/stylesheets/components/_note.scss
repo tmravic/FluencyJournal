@@ -25,6 +25,14 @@
       font-size: var(--font-size-xs);
       line-height: var(--font-size-xs);
     }
+
+    a, button {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  &__change_due_date {
+    font-size: var(--font-size-xs);
   }
 
   &__title {

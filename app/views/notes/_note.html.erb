@@ -1,7 +1,9 @@
 <%= turbo_frame_tag note do %>
   <div class="note">
     <div class="note__header">
-      <h5><%= t("activerecord.attributes.note.categories.#{note.category}") %></h5>
+      <%= turbo_frame_tag "note_#{note.id}_category" do %>
+        <%= render partial: 'notes/note_category', locals: { note: note } %>
+      <% end %>
 
       <div class="note__actions">
 
@@ -12,29 +14,35 @@
                         class: "btn btn--light" %>
         <% else %>
           <span class="note__next_review">
-            <%= t('note.next_review') %>: <br><%= display_next_review_time(note) %>
+            <%= turbo_frame_tag "next_review_timestamp_#{note.id}" do %>
+              <%= render partial: 'notes/next_review_timestamp', locals: { note: note } %>
+            <% end %>
           </span>
+
+          <%= turbo_frame_tag "change_note_due_date_#{note.id}" do %>
+            <%= render partial: 'notes/change_note_due_date_button', locals: { note: note } %>
+          <% end %>
         <% end %>
 
-        <%= link_to t('followup.followup'),
-                    new_followup_path(
-                      class_name: note.class,
-                      id: note.id,
-                      source_tag: @source_tag,
-                      followup_from_todays_notes: @todays_notes.present?
-                    ),
-                    data: { turbo_frame: "notes_box" },
-                    class: "btn btn--light" %>
-
-        <%= link_to t("edit"),
-                    edit_note_path(note, update_from_todays_notes: @todays_notes.present?),
-                    class: "btn btn--light" %>
-
-        <%= button_to t("delete"),
-                      note_path(note, delete_from_todays_notes: @todays_notes.present?),
-                      method: :delete,
-                      form: { data: { turbo_confirm: t("note.really_delete") } },
+          <%= link_to t('followup.followup'),
+                      new_followup_path(
+                        class_name: note.class,
+                        id: note.id,
+                        source_tag: @source_tag,
+                        followup_from_todays_notes: @todays_notes.present?
+                      ),
+                      data: { turbo_frame: "notes_box" },
                       class: "btn btn--light" %>
+
+          <%= link_to t("edit"),
+                      edit_note_path(note, update_from_todays_notes: @todays_notes.present?),
+                      class: "btn btn--light" %>
+
+          <%= button_to t("delete"),
+                        note_path(note, delete_from_todays_notes: @todays_notes.present?),
+                        method: :delete,
+                        form: { data: { turbo_confirm: t("note.really_delete") } },
+                        class: "btn btn--light" %>
       </div>
     </div>
     <p><%= simple_format(note.content) %></p>

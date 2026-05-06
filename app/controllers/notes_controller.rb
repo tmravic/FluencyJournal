@@ -1,5 +1,5 @@
 class NotesController < ApplicationController
-  before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied ]
+  before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied change_due_date update_due_date ]
 
   def index
     @source_tag = "notes_box"
@@ -132,6 +132,20 @@ class NotesController < ApplicationController
         format.turbo_stream do
           flash.now[:notice] = notice
         end
+      end
+    end
+  end
+
+  def change_due_date
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def update_due_date
+    if @note.update(next_study_date: params.dig(:next_study_date))
+      respond_to do |format|
+        format.turbo_stream
       end
     end
   end

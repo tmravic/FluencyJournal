@@ -1,0 +1,4 @@
+<%= turbo_stream.update "note_#{@note.id}_category", "" %>
+<%= turbo_stream.update "next_review_timestamp_#{@note.id}", "" %>
+<%= turbo_stream.update "change_note_due_date_#{@note.id}",
+                        partial: "notes/change_note_due_date_form" %>

@@ -1,5 +1,20 @@
 <%= turbo_stream.update("quiz_buttons", partial: 'quizzes/quiz_buttons') %>
 <%= turbo_stream.update "start_entry_button", partial: 'entries/start_entry_button' %>
+<%= turbo_stream.update "open_ai_assistant_button", partial: "entries/open_ai_assistant_button" %>
+
+<% if @entries.present? %>
+  <%= turbo_stream.update "mark_studied_button",
+                          partial: "journals/mark_studied_button",
+                          locals: { journal: @journal } %>
+  <%= turbo_stream.update "reading_mode_button",
+                          partial: 'journals/reading_mode_button',
+                          locals: { journal: @journal } %>
+  <%= turbo_stream.update "change_journal_due_date_button",
+                          partial: 'journals/change_journal_due_date_button',
+                          locals: { journal: @journal }  %>
+
+<% end %>
+
 <%= turbo_stream.replace(
       "quizzes",
       partial: "entries/entries_frame",
