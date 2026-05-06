@@ -23,7 +23,7 @@
     <% else %>
       <%= f.select :category, hide_automatic_notes_option %>
     <% end %>
-    <%= link_to t("cancel"), notes_path, class: "btn btn--light", data: { turbo_frame: "notes_box" } %>
+    <%= link_to t("cancel"), determine_cancel_path, class: "btn btn--light", data: { turbo_frame: "notes_box" } %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>
 <% end %>
