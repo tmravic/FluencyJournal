@@ -1,4 +1,10 @@
 <%= link_to t('entry.start_entry'),
             new_journal_entry_path(@journal),
             class: "btn btn--primary",
-            data: { turbo_frame: dom_id(Entry.new), turbo_stream: true } %>
+            data: {
+              turbo_frame: dom_id(Entry.new),
+              turbo_stream: true,
+              controller: "scroll",
+              action: "click->scroll#scrollToTarget",
+              scroll_target_value: "new_entry"
+            } %>

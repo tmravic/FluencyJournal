@@ -14,7 +14,12 @@
                       id: entry.id,
                       source_tag: @source_tag
                     ),
-                    data: { turbo_frame: @source_tag },
+                    data: {
+                      turbo_frame: @source_tag,
+                      controller: "scroll",
+                      action: "click->scroll#scrollToTarget",
+                      scroll_target_value: "followup_output_#{@source_tag}"
+                    },
                     class: "btn btn--light" %>
         <%= link_to t("edit"),
                     [:edit, journal, entry], # edit_journal_entry_path(journal, entry)

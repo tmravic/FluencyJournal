@@ -9,16 +9,31 @@
     <%= link_to t("followup.short"),
                 followup_path(query.followups.first, source_tag: "ai_assistant"),
                 class: "btn btn--primary",
-                data: { turbo_frame: "ai_assistant" } %>
+                data: {
+                  turbo_frame: "ai_assistant",
+                  controller: "scroll",
+                  action: "click->scroll#scrollToTarget",
+                  scroll_target_value: "ai_assistant"
+                } %>
   <% elsif query_unrelated_to_quizzes?(query) %>
     <%= link_to t("ai_query.short"),
                 journal_ai_query_path(journal, query),
                 class: "btn btn--secondary",
-                data: { turbo_frame: "ai_assistant" } %>
+                data: {
+                  turbo_frame: "ai_assistant",
+                  controller: "scroll",
+                  action: "click->scroll#scrollToTarget",
+                  scroll_target_value: "ai_assistant"
+                } %>
   <% elsif query.prompt.is_a?(QuizResultPrompt) %>
     <%= link_to "T",
                 journal_quiz_path(journal, query.quizzes.last),
                 class: "btn btn--dark",
-                data: { turbo_frame: "ai_assistant" } %>
+                data: {
+                  turbo_frame: "ai_assistant",
+                  controller: "scroll",
+                  action: "click->scroll#scrollToTarget",
+                  scroll_target_value: "ai_assistant"
+                } %>
   <% end %>
 <% end %>

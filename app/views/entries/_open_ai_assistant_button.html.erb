@@ -1,4 +1,10 @@
 <%= link_to t('journal.open_ai_assistant'),
             open_ai_assistant_journal_path(@journal),
             class: "btn btn--secondary",
-            data: { turbo_frame: "ai_assistant", turbo_stream: true } %>
+            data: {
+              turbo_frame: "ai_assistant",
+              turbo_stream: true,
+              controller: "scroll",
+              action: "click->scroll#scrollToTarget",
+              scroll_target_value: "ai_assistant"
+            } %>

@@ -21,7 +21,13 @@
 
     <div class="form__input__button_block">
       <%= render_correct_cancel_button %>
-      <%= f.submit class: "btn btn--secondary", data: { turbo_stream: true } %>
+      <%= f.submit class: "btn btn--secondary", data:
+        {
+          turbo_stream: true,
+          controller: "scroll",
+          action: "click->scroll#scrollToTarget",
+          scroll_target_value: "followup_output_#{@source_tag}"
+        } %>
     </div>
   <% end %>
 <% end %>
