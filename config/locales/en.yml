@@ -78,6 +78,9 @@ en:
     created: "Journal was successfully created."
     updated: "Journal was successfully updated."
     deleted: "Journal was successfully deleted."
+    actions:
+      studied: "Studied"
+      studied_warning: "A journal is studied if you used the quiz feature to review its contents. Mark this journal as studied and set it to return on a future date?"
   quiz_answer:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
   entry:

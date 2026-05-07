@@ -5,9 +5,9 @@
                 data: { turbo_frame: "_top" } %>
     <div class="journal__actions">
       <% if @todays_journals.present? %>
-        <%= button_to 'Studied',
+        <%= button_to t('journal.actions.studied'),
                       mark_journal_as_studied_journal_path(journal),
-                      form: { data: { turbo_confirm: t('note.actions.studied_warning') } },
+                      form: { data: { turbo_confirm: t('journal.actions.studied_warning') } },
                       class: "btn btn--light" %>
       <% elsif @all_journals.present? %>
         <span class="journal__date">
