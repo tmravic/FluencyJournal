@@ -1,4 +1,4 @@
-<%= button_to 'Mark Studied',
+<%= button_to t('journal.actions.mark_studied'),
               mark_journal_as_studied_journal_path(journal),
-              form: { data: { turbo_confirm: "A journal is studied if you used its contents in a journal entry today. Mark this journal as studied and set it to return on a future date?" } },
+              form: { data: { turbo_confirm: t('journal.actions.studied_warning') } },
               class: "btn btn--light" %>

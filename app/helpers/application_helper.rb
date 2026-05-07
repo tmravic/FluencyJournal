@@ -104,8 +104,12 @@ module ApplicationHelper
   end
 
   def display_next_review_time(object)
-    next_review_time = object.next_study_date.strftime("%m/%d/%Y")
-    today = Date.today.strftime("%m/%d/%Y")
-    next_review_time == today ? "Today" : next_review_time
+    if object.next_study_date.present?
+      next_review_time = object.next_study_date.strftime("%m/%d/%Y")
+      today = Date.today.strftime("%m/%d/%Y")
+      next_review_time == today ? "Today" : next_review_time
+    else
+      t('note.no_date_set')
+    end
   end
 end

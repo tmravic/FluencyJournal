@@ -122,8 +122,7 @@ class NotesController < ApplicationController
     @source_tag = "notes_box"
     new_interval = @note.last_interval * 2.5
     next_study_date = (new_interval).days.from_now
-    notice = "Note will return on #{next_study_date.strftime("%m/%d/%Y")}"
-    # TODO: Translate
+    notice = t('note.actions.will_return', date: next_study_date.strftime("%m/%d/%Y"))
 
     if @note.update(next_study_date: next_study_date, last_interval: new_interval)
       @due_today = Current.user&.notes.next_to_study.count

@@ -58,9 +58,11 @@ en:
     customize_auto_note: "You can customize this automatically created note before saving it."
     updated: "Note was successfully updated."
     deleted: "Note was successfully deleted."
+    no_date_set: "日付なし"
     actions:
       studied: "Studied"
       studied_warning: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?"
+      will_return: "Note will return on %{date}"
   journal:
     close_journal: "Close journal"
     empty_state: "You don't have any journals yet!"
@@ -80,7 +82,12 @@ en:
     deleted: "Journal was successfully deleted."
     actions:
       studied: "Studied"
+      mark_studied: "Mark Studied"
       studied_warning: "A journal is studied if you used the quiz feature to review its contents. Mark this journal as studied and set it to return on a future date?"
+      will_return: "Journal will return on %{date}"
+      change_date: "Change Date"
+      reading_mode: "Reading Mode"
+      quiz_me: "Quiz me"
   quiz_answer:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
   entry:

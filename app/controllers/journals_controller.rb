@@ -110,8 +110,7 @@ class JournalsController < ApplicationController
   def mark_journal_as_studied
     new_interval = @journal.last_interval * 2.5
     next_study_date = (new_interval).days.from_now
-    notice = "Journal will return on #{next_study_date.strftime("%m/%d/%Y")}"
-    # TODO: Translate
+    notice = t('journal.actions.will_return', date: next_study_date.strftime("%m/%d/%Y"))
 
     if @journal.update(next_study_date: next_study_date, last_interval: new_interval)
       @due_today = current_group.journals.next_to_study.count

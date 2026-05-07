@@ -57,9 +57,11 @@ ja:
     customize_auto_note: "自動作成ノートを保存前にカスタマイズできます。"
     updated: "ノートを更新しました。"
     deleted: "ノートを削除しました。"
+    no_date_set: "日付なし"
     actions:
       studied: "学習済み"
       studied_warning: "今日の日記の文章で内容を使用した場合、ノートを学習としてマークします。学習済みにマークし、将来の日に設定しますか？"
+      will_return: "このノートは%{date}に復習が再開されます。"
   journal:
     close_journal: "日記を閉じる"
     empty_state: "まだ日記がありません。"
@@ -76,7 +78,12 @@ ja:
     deleted: "日記を削除しました。"
     actions:
       studied: "学習済み"
+      mark_studied: "学習済み"
       studied_warning: "クイズ機能を使ってこの日記の内容を復習した場合に学習済みとなります。学習済みにマークして、次回の復習日を将来に設定しますか？"
+      will_return: "この日記は%{date}に復習が再開されます。"
+      change_date: "日付変更"
+      reading_mode: "読書モード"
+      quiz_me: "クイズ"
   quiz_answer:
     retry: "「リトライ」は、このクイズの保存されたクイズ回答の試行を変更しません。これは練習のためだけにエクササイズを繰り返すためのものです。このクイズ回答をクリアしてリトライしますか？"
   entry:
