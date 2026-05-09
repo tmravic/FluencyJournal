@@ -2,15 +2,19 @@
   <%= form_error_notification(note) %>
 
   <% if automatic %>
-    <%= f.input :content, input_html: {
+    <%= f.input :content, placeholder: 'Input the key word, grammar, or draft journal entry.', input_html: {
       value: render_ai_query_change_content(@ai_query, @ai_output.identifier, @ai_query.prompt.change_keyword, @user, html: false),
       style: "height: 20vh;"
     } %>
+    <%= f.input :meaning, placeholder: '*Optional - Input the meaning in your language.' %>
+    <%= f.input :extras, placeholder: '*Optional - Anything extra like an example sentence' %>
     <%= hidden_field_tag :made_note_from_ai_question, true %>
     <%= hidden_field_tag :ai_query_id, @ai_query.id %>
     <%= hidden_field_tag :ai_output_identifier, @ai_output.identifier %>
   <% else %>
-    <%= f.input :content %>
+    <%= f.input :content, placeholder: 'Input the key word, grammar, or draft journal entry.' %>
+    <%= f.input :meaning, placeholder: '*Optional - Input the meaning in your language if needed.' %>
+    <%= f.input :extras, placeholder: '*Optional - Anything extra like an example sentence' %>
   <% end %>
 
   <%= hidden_field_tag :view_context, view_context if local_assigns[:view_context] %>

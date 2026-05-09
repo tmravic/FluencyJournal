@@ -55,7 +55,7 @@ class NotesController < ApplicationController
     previous_note = @note.previous_note
 
     respond_to do |format|
-      if @note.save!
+      if @note.save
         @ai_output.update(made_note: true) if note_made_automatically?
         format.html { redirect_to note_path(@note), notice: t("note.note_added") }
         format.turbo_stream do
@@ -180,6 +180,6 @@ class NotesController < ApplicationController
   end
 
   def note_params
-    params.expect(note: [ :content, :user_id, :journal_id, :category, :ai_query_id ])
+    params.expect(note: [ :content, :meaning, :extras, :user_id, :journal_id, :category, :ai_query_id ])
   end
 end
