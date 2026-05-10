@@ -51,7 +51,11 @@ class FollowupsController < ApplicationController
     @followup_template_prompts = FollowupTemplatePrompt.order(:id).pluck(:base_content).map { |text| [text, text] }
 
     if saving_new_template_prompt?
-      followup_template_prompt = create_new_template_prompt
+      base_content = followup_params.dig(:followup_prompt, :base_content).to_s.strip
+
+      if base_content.present?
+        followup_template_prompt = FollowupTemplatePrompt.find_or_create_by!(base_content: base_content)
+      end
     end
 
     # create followup prompt
@@ -111,14 +115,6 @@ class FollowupsController < ApplicationController
   end
 
   private
-
-  def create_new_template_prompt
-    base_content = followup_params.dig(:followup_prompt, :base_content).to_s.strip
-    if base_content.present?
-      followup_template_prompt = FollowupTemplatePrompt.find_or_create_by!(base_content: base_content)
-    end
-    followup_template_prompt
-  end
 
   def saving_new_template_prompt?
     params[:save_as_template] == "1"

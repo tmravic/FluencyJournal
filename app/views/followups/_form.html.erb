@@ -23,10 +23,10 @@
                                     placeholder: t('followup.placeholder'),
                                     value: @base_content %>
       </div>
-      <label class="form__checkbox-label" style="margin-top: var(--space-xxxxs); display: block;">
+      <%= label_tag :save_as_template, class: "form__checkbox-label", style: "margin-top: var(--space-xxxxs); display: block;" do %>
         <%= check_box_tag :save_as_template, "1", false %>
         <%= t("followup.form.save_as_template") %>
-      </label>
+      <% end %>
 
       <%= followup_prompt.label t('followup.reference_text') %>
       <%= followup_prompt.text_area :user_generated_content,
