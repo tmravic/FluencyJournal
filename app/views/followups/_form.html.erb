@@ -6,13 +6,40 @@
 
     <%= f.fields_for :followup_prompt do |followup_prompt| %>
       <%= followup_prompt.label t('followup.followup_question') %>
-      <%= followup_prompt.text_area :base_content, html5: true, placeholder: t('followup.placeholder'), value: @base_content %>
+
+      <div data-controller="template-prompt-select">
+        <%= label_tag "prompt_template", "Prompt templates:", class: "form__label" %>
+        <%= select_tag "prompt_template",
+             options_for_select(
+               [["— Choose a template —", ""]] +
+               @followup_template_prompts
+             ),
+             id: "prompt_template_select",
+             class: "form__input",
+             data: { action: "change->template-prompt-select#fill" } %>
+      <%= followup_prompt.text_area :base_content,
+      data: { template_prompt_select_target: "textarea" },
+                                    html5: true,
+                                    placeholder: t('followup.placeholder'),
+                                    value: @base_content %>
+      </div>
+      <label class="form__checkbox-label" style="margin-top: var(--space-xxxxs); display: block;">
+        <%= check_box_tag :save_as_template, "1", false %>
+        <%= t("followup.form.save_as_template") %>
+      </label>
 
       <%= followup_prompt.label t('followup.reference_text') %>
-      <%= followup_prompt.text_area :user_generated_content, html5: true, class: 'form__input__button_block', value: @reference_text %>
+      <%= followup_prompt.text_area :user_generated_content,
+                                    html5: true,
+                                    class: 'form__input__button_block',
+                                    value: @reference_text %>
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
       <%#= followup_prompt.hidden_field :ai_model, value: "grok-4-fast-non-reasoning" %>
-      <%= followup_prompt.select :ai_model, options_for_select(["grok-4-fast-non-reasoning", "elyza_llm"], "grok-4-fast-non-reasoning") {} %>
+      <%= followup_prompt.select :ai_model,
+                                 options_for_select(
+                                   ["grok-4-fast-non-reasoning", "elyza_llm"],
+                                   "grok-4-fast-non-reasoning"
+                                 ) {} %>
     <% end %>
 
     <%= f.hidden_field :followup_origin_class, value: @followup_origin.class %>

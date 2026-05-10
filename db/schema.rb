@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_09_043422) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_10_010442) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_043422) do
     t.index ["entry_id", "followup_id"], name: "index_entries_followups_on_entry_id_and_followup_id", unique: true
     t.index ["entry_id"], name: "index_entries_followups_on_entry_id"
     t.index ["followup_id"], name: "index_entries_followups_on_followup_id"
+  end
+
+  create_table "followup_template_prompts", force: :cascade do |t|
+    t.string "base_content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "followups", force: :cascade do |t|
@@ -130,6 +136,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_043422) do
     t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "followup_template_prompt_id"
+    t.index ["followup_template_prompt_id"], name: "index_prompts_on_followup_template_prompt_id"
   end
 
   create_table "quiz_answers", force: :cascade do |t|
@@ -184,6 +192,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_043422) do
   add_foreign_key "journals", "groups"
   add_foreign_key "journals", "users"
   add_foreign_key "notes", "users"
+  add_foreign_key "prompts", "followup_template_prompts"
   add_foreign_key "quiz_answers", "ai_outputs"
   add_foreign_key "quiz_answers", "quizzes"
   add_foreign_key "quizzes", "ai_queries"

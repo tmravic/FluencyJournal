@@ -4,6 +4,7 @@ class Prompt < ApplicationRecord
   has_one :ai_query, dependent: :destroy
   delegate :user, to: :ai_query, allow_nil: true
   has_one :followup, dependent: :destroy
+  belongs_to :followup_template_prompt, optional: true
   accepts_nested_attributes_for :followup
 
   validates :raw_prompt, presence: true

@@ -14,6 +14,7 @@ class FollowupsController < ApplicationController
     @followup_origin = klass.find(followup_origin_id)
     @reference_text = @followup_origin.content
 
+    @followup_template_prompts = FollowupTemplatePrompt.order(:id).pluck(:base_content).map { |text| [text, text] }
     @followup_prompt = set_correct_prompt_type(class_name)
     # Disabled this until I can make a clear distinction between FreeQuestionPrompt and ExampleSentencePrompt
     # Now just uses FreeQuestionPrompt by default
@@ -47,11 +48,16 @@ class FollowupsController < ApplicationController
     # note, entry, or ai_output
     set_user_and_journal_based_on_origin_class(followup_origin_class)
 
+    @followup_template_prompts = FollowupTemplatePrompt.order(:id).pluck(:base_content).map { |text| [text, text] }
+
+    if saving_new_template_prompt?
+      followup_template_prompt = create_new_template_prompt
+    end
 
     # create followup prompt
     followup_prompt_params = followup_params.dig(:followup_prompt)
 
-    # FreeQuestionPrompt or
+    # FreeQuestionPrompt
     @followup_prompt = set_correct_prompt_type(
       followup_origin_class,
       params: followup_prompt_params
@@ -67,6 +73,8 @@ class FollowupsController < ApplicationController
       origin: @followup_origin,
       source_tag: followup_params[:source_tag]
     )
+    @followup_prompt.followup_template_prompt = followup_template_prompt if followup_template_prompt
+
     @followup_prompt.sent_role_prompt = @followup_prompt.role_prompt(@user, @journal)
 
     if @followup_prompt.save! && @followup_prompt.followup.save!
@@ -103,6 +111,18 @@ class FollowupsController < ApplicationController
   end
 
   private
+
+  def create_new_template_prompt
+    base_content = followup_params.dig(:followup_prompt, :base_content).to_s.strip
+    if base_content.present?
+      followup_template_prompt = FollowupTemplatePrompt.find_or_create_by!(base_content: base_content)
+    end
+    followup_template_prompt
+  end
+
+  def saving_new_template_prompt?
+    params[:save_as_template] == "1"
+  end
 
   def set_user_and_journal_based_on_origin_class(followup_origin_class)
     @user = Current.user

@@ -105,6 +105,8 @@ ja:
     reference_text: "参照文"
     placeholder: "追及質問を書いてください。"
     request_sent: "追及リクエスト送信済み。"
+    form:
+      save_as_template: "このフォローアップ質問を新しいテンプレートプロンプトとして保存する"
   ai_query:
     short: "問"
     corrected_text: "修正文"

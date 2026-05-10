@@ -109,6 +109,8 @@ en:
     reference_text: "Reference Text"
     placeholder: "Write your followup question here"
     request_sent: "Followup request sent."
+    form:
+      save_as_template: "Save this followup question as a new template prompt"
   ai_query:
     short: "Q"
     corrected_text: "Corrected text"
