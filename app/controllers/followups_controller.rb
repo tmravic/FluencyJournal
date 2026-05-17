@@ -16,7 +16,7 @@ class FollowupsController < ApplicationController
     @followup_origin = klass.find(followup_origin_id)
     @reference_text = @followup_origin.content
 
-    @followup_template_prompts = get_template_prompts_scoped_by_user
+    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user)
     @followup_prompt = set_correct_prompt_type(class_name)
     # Disabled this until I can make a clear distinction between FreeQuestionPrompt and ExampleSentencePrompt
     # Now just uses FreeQuestionPrompt by default
@@ -61,7 +61,7 @@ class FollowupsController < ApplicationController
       end
     end
 
-    @followup_template_prompts = get_template_prompts_scoped_by_user
+    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user)
 
     # create followup prompt
     followup_prompt_params = followup_params.dig(:followup_prompt)
