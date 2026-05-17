@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_10_010442) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_16_113800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,6 +74,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_10_010442) do
     t.string "base_content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_followup_template_prompts_on_user_id"
   end
 
   create_table "followups", force: :cascade do |t|
@@ -188,6 +190,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_10_010442) do
   add_foreign_key "ai_queries", "journals"
   add_foreign_key "ai_queries", "prompts"
   add_foreign_key "entries", "journals"
+  add_foreign_key "followup_template_prompts", "users"
   add_foreign_key "followups", "prompts"
   add_foreign_key "journals", "groups"
   add_foreign_key "journals", "users"

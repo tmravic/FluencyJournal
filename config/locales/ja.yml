@@ -30,7 +30,7 @@
 ja:
   english: "英語"
   japanese: "日本語"
-  cancel: "取り消し"
+  cancel: "キャンセル"
   delete: "削除"
   edit: "編集"
   app_name: "流ちょう日記"
@@ -86,6 +86,8 @@ ja:
       quiz_me: "クイズ"
   quiz_answer:
     retry: "「リトライ」は、このクイズの保存されたクイズ回答の試行を変更しません。これは練習のためだけにエクササイズを繰り返すためのものです。このクイズ回答をクリアしてリトライしますか？"
+    check_answer: "返答を確認"
+    peek: "返答を覗く"
   entry:
     entry: "%{number}文章"
     start_entry: "文章を作成"
@@ -106,7 +108,7 @@ ja:
     placeholder: "追及質問を書いてください。"
     request_sent: "追及リクエスト送信済み。"
     form:
-      save_as_template: "このフォローアップ質問を新しいテンプレートプロンプトとして保存する"
+      save_as_template: "プロンプトを保存?？"
   ai_query:
     short: "問"
     corrected_text: "修正文"
@@ -123,6 +125,14 @@ ja:
     request_sent: "AIリクエスト送信済み。"
   ai_output:
     change_deleted: "修正が削除されました。"
+  prompt_templates:
+    label: "プロンプトテンプレート："
+    choose_a_template: "— テンプレートを選択 —"
+    delete_prompt: "プロンプトを削除"
+    delete_selected_prompt: "選択したプロンプトを削除"
+    confirm_delete: "このプロンプトを削除しますか？"
+    deleted: "プロンプトテンプレートを削除しました"
+    no_selection: "プロンプトが選択されていません"
 
   activerecord:
     errors:

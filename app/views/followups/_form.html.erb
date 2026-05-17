@@ -6,28 +6,16 @@
 
     <%= f.fields_for :followup_prompt do |followup_prompt| %>
       <%= followup_prompt.label t('followup.followup_question') %>
-
       <div data-controller="template-prompt-select">
-        <%= label_tag "prompt_template", "Prompt templates:", class: "form__label" %>
-        <%= select_tag "prompt_template",
-             options_for_select(
-               [["— Choose a template —", ""]] +
-               @followup_template_prompts
-             ),
-             id: "prompt_template_select",
-             class: "form__input",
-             data: { action: "change->template-prompt-select#fill" } %>
-      <%= followup_prompt.text_area :base_content,
-      data: { template_prompt_select_target: "textarea" },
-                                    html5: true,
-                                    placeholder: t('followup.placeholder'),
-                                    value: @base_content %>
+        <%= followup_prompt.text_area :base_content,
+                                      data: { template_prompt_select_target: "textarea" },
+                                      html5: true,
+                                      placeholder: t('followup.placeholder') %>
+        <%= render partial: 'followup_template_prompts/template_select',
+        locals: {
+          followup_template_prompts: @followup_template_prompts
+        } %>
       </div>
-      <%= label_tag :save_as_template, class: "form__checkbox-label", style: "margin-top: var(--space-xxxxs); display: block;" do %>
-        <%= check_box_tag :save_as_template, "1", false %>
-        <%= t("followup.form.save_as_template") %>
-      <% end %>
-
       <%= followup_prompt.label t('followup.reference_text') %>
       <%= followup_prompt.text_area :user_generated_content,
                                     html5: true,

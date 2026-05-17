@@ -66,6 +66,10 @@
       color: var(--color-dark);
       filter: brightness(92%);
     }
+
+    &--short {
+      padding: 0 var(--space-xxxs);
+    }
   }
 
   &--dark {

@@ -34,8 +34,9 @@
                     data: { turbo_stream: true },
                     class: "btn btn--light", id: "send_button" %>
       <%= link_to "Close",
-                 journal_path(followup.origin&.journal),
-                 class: "btn btn--dark" %>
+                  journal_path(followup.origin&.journal),
+                  data: { turbo_frame: source_tag },
+                  class: "btn btn--dark" %>
     <% end %>
   </div>
 </div>

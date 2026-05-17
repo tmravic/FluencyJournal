@@ -1,0 +1,20 @@
+<%= turbo_frame_tag "template_select" do %>
+    <%= label_tag "prompt_template", t('prompt_templates.label'), class: "form__label" %>
+    <%= select_tag "prompt_template",
+                   options_for_select([[t('prompt_templates.choose_a_template'), ""]] + followup_template_prompts),
+                   id: "prompt_template_select",
+                   class: "form__input",
+                   data: { action: "change->template-prompt-select#fill" } %>
+  <div class="followup__prompt_template_buttons">
+    <%= label_tag :save_as_template, class: "form__checkbox-label" do %>
+      <%= check_box_tag :save_as_template, "1", false %>
+      <%= t("followup.form.save_as_template") %>
+    <% end %>
+    <%= link_to t('prompt_templates.delete_prompt'),
+                followup_template_prompts_path,
+                class: "btn btn--primary btn--primary--short",
+                data: {
+                  turbo_frame: "template_select",
+                } %>
+  </div>
+<% end %>

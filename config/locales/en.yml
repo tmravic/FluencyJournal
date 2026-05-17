@@ -90,6 +90,8 @@ en:
       quiz_me: "Quiz me"
   quiz_answer:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
+    check_answer: "Check answer"
+    peek: "Peek at the answer"
   entry:
     entry: "Entry %{number}"
     start_entry: "Start entry"
@@ -110,7 +112,7 @@ en:
     placeholder: "Write your followup question here"
     request_sent: "Followup request sent."
     form:
-      save_as_template: "Save this followup question as a new template prompt"
+      save_as_template: "Save prompt?"
   ai_query:
     short: "Q"
     corrected_text: "Corrected text"
@@ -127,6 +129,14 @@ en:
     request_sent: "AI request sent."
   ai_output:
     change_deleted: "Change was successfully deleted."
+  prompt_templates:
+    label: "Prompt templates:"
+    choose_a_template: "— Choose a template —"
+    delete_prompt: "Delete prompt"
+    delete_selected_prompt: "Delete selected prompt"
+    confirm_delete: "Delete this prompt?"
+    deleted: "Prompt template deleted"
+    no_selection: "No prompt selected"
 
   activerecord:
     errors:

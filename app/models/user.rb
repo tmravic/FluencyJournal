@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :journals, dependent: :destroy
   has_many :notes, dependent: :destroy
-
+  has_many :followup_template_prompts, dependent: :destroy
   validates :original_language, presence: true
   validates :learning_language, presence: true
 

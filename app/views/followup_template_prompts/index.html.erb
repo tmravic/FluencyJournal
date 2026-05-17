@@ -1,0 +1,21 @@
+<%= turbo_frame_tag "template_select" do %>
+  <%= form_with url: destroy_selected_followup_template_prompts_path,
+                method: :delete,
+                style: "font-size: var(--font-size-s);",
+                data: { turbo_confirm: t('prompt_templates.confirm_delete') } do %>
+
+    <%= hidden_field_tag :source_tag, @source_tag %>
+
+    <%= label_tag "prompt_template", "Prompt templates:", class: "form__label" %>
+    <%= select_tag "prompt_template",
+                   options_for_select([["— Choose a template —", ""]] + @followup_template_prompts),
+                   class: "form__input" %>
+    <div class="followup__prompt_template_buttons">
+      <%= submit_tag t('prompt_templates.delete_selected_prompt'), class: "btn btn--primary btn--primary--short" %>
+      <%= link_to t('cancel'),
+                  cancel_followup_template_prompts_path(source_tag: @source_tag),
+                  data: { turbo_stream: true },
+                  class: "btn btn--light btn--light--short" %>
+    </div>
+  <% end %>
+<% end %>

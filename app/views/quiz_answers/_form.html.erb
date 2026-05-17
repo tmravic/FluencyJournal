@@ -12,6 +12,6 @@
   <%= f.hidden_field :ai_output_id %>
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
   <div class="form__input__button_block">
-    <%= f.submit "Check answer", class: "btn btn--secondary", name: nil %>
+    <%= f.submit t("quiz_answer.check_answer"), class: "btn btn--secondary", name: nil %>
   </div>
 <% end %>

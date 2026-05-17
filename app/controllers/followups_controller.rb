@@ -1,4 +1,6 @@
 class FollowupsController < ApplicationController
+  include TemplatePromptConcern
+
   before_action :set_followup, only: %i[show destroy]
   ALLOWED_CLASSES = %w[Entry AiOutput Note Followup].freeze
 
@@ -14,7 +16,7 @@ class FollowupsController < ApplicationController
     @followup_origin = klass.find(followup_origin_id)
     @reference_text = @followup_origin.content
 
-    @followup_template_prompts = FollowupTemplatePrompt.order(:id).pluck(:base_content).map { |text| [text, text] }
+    @followup_template_prompts = get_template_prompts_scoped_by_user
     @followup_prompt = set_correct_prompt_type(class_name)
     # Disabled this until I can make a clear distinction between FreeQuestionPrompt and ExampleSentencePrompt
     # Now just uses FreeQuestionPrompt by default
@@ -48,15 +50,18 @@ class FollowupsController < ApplicationController
     # note, entry, or ai_output
     set_user_and_journal_based_on_origin_class(followup_origin_class)
 
-    @followup_template_prompts = FollowupTemplatePrompt.order(:id).pluck(:base_content).map { |text| [text, text] }
-
     if saving_new_template_prompt?
       base_content = followup_params.dig(:followup_prompt, :base_content).to_s.strip
 
       if base_content.present?
-        followup_template_prompt = FollowupTemplatePrompt.find_or_create_by!(base_content: base_content)
+        followup_template_prompt = FollowupTemplatePrompt.find_or_create_by!(
+          base_content: base_content,
+          user: Current.user
+        )
       end
     end
+
+    @followup_template_prompts = get_template_prompts_scoped_by_user
 
     # create followup prompt
     followup_prompt_params = followup_params.dig(:followup_prompt)

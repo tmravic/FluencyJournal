@@ -50,11 +50,20 @@
       font-size: var(--font-size-l);
     }
   }
+
+  &__prompt_template_buttons {
+    padding: var(--space-xxxs);
+  }
 }
 
-#prompt_template_select {
+#prompt_template_select,
+#prompt_template {
   font-size: var(--font-size-s);
 }
 #followup_followup_prompt_base_content {
   width: 100%;
+}
+.followup .form__checkbox-label {
+  margin-top: var(--space-xxxxs);
+  margin-right: var(--space-xs);
 }

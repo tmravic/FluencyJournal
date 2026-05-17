@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :followup_template_prompts, only: [:index] do
+    collection do
+      delete :destroy_selected
+      get    :cancel
+    end
+  end
   resources :journals do
     collection do
       get :all

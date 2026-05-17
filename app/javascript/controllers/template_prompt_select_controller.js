@@ -10,7 +10,7 @@ export default class extends Controller {
 
     if (value) {
       this.textareaTarget.value = value
-      select.value = "" // reset dropdown so you can pick the same template again
+      // select.value = "" // reset dropdown
     }
   }
 }
