@@ -13,5 +13,9 @@
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
   <div class="form__input__button_block">
     <%= f.submit t("quiz_answer.check_answer"), class: "btn btn--secondary", name: nil %>
+    <%= link_to t("quiz_answer.peek"),
+                peek_journal_quizzes_path(quiz.journal, ai_output: quiz_entry, quiz_id: quiz),
+                data: { turbo_stream: true },
+                class: "btn btn--light" %>
   </div>
 <% end %>

@@ -6,7 +6,7 @@ class PrepareQuizPrompt < Prompt
   end
 
   def response_format(journal)
-    "Include json marker and return json in this exact format, " +
+    "Include json marker and return json in this exact format with exactly #{journal.full_journal.count} lines, " +
       "where each line corresponds to a line in #{journal.full_journal}: " +
       "{ { line_1: { translation: '... → ...', " +
       "line_2: { translation: '... → ...', " +

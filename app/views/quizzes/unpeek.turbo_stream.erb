@@ -1,0 +1,3 @@
+<%= turbo_stream.update @frame,
+                        partial: 'quizzes/quiz_entry',
+                        locals: { journal: @journal, quiz: @quiz, quiz_entry: @ai_output } %>

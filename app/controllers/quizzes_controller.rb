@@ -28,6 +28,30 @@ class QuizzesController < ApplicationController
     end
   end
 
+  def peek
+    @quiz_entry_frame = "ai_output_#{params.dig(:ai_output)}"
+    @journal = Journal.find(params.dig(:journal_id))
+    @quiz = Quiz.find(params.dig(:quiz_id))
+    @ai_output = AiOutput.find(params.dig(:ai_output))
+    identifier = @ai_output.identifier
+    @entry_content = @journal.full_journal.slice(identifier.to_i - 1)
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def unpeek
+    @frame = params.dig(:frame) # "ai_output_1119"
+    @ai_output = AiOutput.find(@frame.split("_").last)
+    @journal = @ai_output.journal
+    @quiz = Quiz.find(params.dig(:quiz_id))
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   def grade_quiz
     uuid = SecureRandom.uuid
     original_journal = @journal.full_journal

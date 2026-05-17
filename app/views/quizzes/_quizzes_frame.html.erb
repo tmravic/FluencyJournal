@@ -1,5 +1,5 @@
 <% if ai_outputs.present? %>
   <%= render partial: 'quizzes/quiz_entry',
              collection: ai_outputs, # each referred to as "quiz_entry"
-             locals: { journal:, source_tag:, quiz: } %>
+             locals: { journal:, quiz: } %>
 <% end %>
