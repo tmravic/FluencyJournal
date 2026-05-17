@@ -8,7 +8,7 @@
 
   <%= f.input :user_response,
               html5: true,
-              placeholder: "try to translate this entry back to #{journal.user.learning_language}" %>
+              placeholder: t("quiz_answer.try_to_answer", language: journal.user.learning_language) %>
   <%= f.hidden_field :ai_output_id %>
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
   <div class="form__input__button_block">
