@@ -1,5 +1,10 @@
 <%= turbo_frame_tag @quiz_entry_frame do %>
   <div class="entry">
+    <div class="entry__header">
+      <h2 class="entry__title">
+        <%= t('entry.entry', number: identifier) %>
+      </h2>
+    </div>
     <p>
       <%= entry_content %>
     </p>

@@ -33,8 +33,8 @@ class QuizzesController < ApplicationController
     @journal = Journal.find(params.dig(:journal_id))
     @quiz = Quiz.find(params.dig(:quiz_id))
     @ai_output = AiOutput.find(params.dig(:ai_output))
-    identifier = @ai_output.identifier
-    @entry_content = @journal.full_journal.slice(identifier.to_i - 1)
+    @identifier = @ai_output.identifier
+    @entry_content = @journal.full_journal.slice(@identifier.to_i - 1)
 
     respond_to do |format|
       format.turbo_stream
