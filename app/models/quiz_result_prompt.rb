@@ -8,8 +8,9 @@ class QuizResultPrompt < Prompt
       "but just assume that the #{user.original_language} Quiz questions are correct and don't grade them" +
       "Keep in mind the full content of the " +
       "journal such that conveying the same meaning overall in grammatically correct #{user.learning_language} is " +
-      "more important than an exact word-for-word replication of the original text. Include both an assessment of " +
-      "the accuracy as a whole, pointing out any overall mistakes, and check each entry's translation one by one."
+      "more important than an exact word-for-word replication of the original text. Check each entry's translation " +
+      "one by one, and include an assessment pointing out any grammar points that I seem to not understand based " +
+      "on my mistakes, if any."
   end
 
   def change_keyword
