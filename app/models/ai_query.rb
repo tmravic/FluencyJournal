@@ -56,17 +56,41 @@ class AiQuery < ApplicationRecord
     prompt.ai_model
   end
 
-  def create_quiz_questions(translated_response)
-    line_count = translated_response.keys.count
-    (1..line_count).each do |count|
+  def create_quiz_questions(translated_response, expected_count: nil)
+    # Filter and sort only the real line_N keys the model actually returned
+    line_keys = translated_response.keys
+      .select { |k| k.match?(/\Aline_\d+\z/) }
+      .sort_by { |k| k[/\d+/].to_i }
+
+    actual = line_keys.size
+    expected = expected_count || actual
+
+    if expected > 0 && actual != expected
+      Rails.logger.warn(
+        "PrepareQuiz line-count mismatch: " \
+        "journal_id=#{journal&.id} ai_query_id=#{id} prompt_id=#{prompt_id} " \
+        "expected=#{expected} actual=#{actual} keys=#{line_keys.inspect} " \
+        "raw_snippet=#{translated_response.to_json[0..800]}"
+      )
+    end
+
+    # Always create *exactly* the expected number of quiz questions.
+    # Use whatever the model gave us for the first min(actual, expected) items.
+    (1..expected).each do |count|
+      key = line_keys[count - 1] # may be nil if model gave fewer
+      translation = if key
+                      translated_response.dig(key, "translation")
+                    else
+                      # graceful fallback if model under-returned
+                      (line_keys.last && translated_response.dig(line_keys.last, "translation")) || "Translation missing"
+                    end
+
       ai_outputs.create(
         made_note: false,
         identifier: count.to_s
       ).tap do |ai_output|
-        # Did I add translation but this is specific to PrepareQuizJob?
-        ai_output.content = translated_response.dig("line_#{count}", "translation").split('→ ').last
-        # ["明日、彼女のお母さんに初めて会う予定です。 ",
-        #  "Tomorrow, I have plans to meet her mother for the first time."]
+        content = translation.to_s.split('→ ').last.presence || translation.to_s
+        ai_output.content = content
         ai_output.save!
       end
     end
@@ -138,6 +162,9 @@ class AiQuery < ApplicationRecord
 
     # {"overall_accuracy"=> "The translations are mostly accurate..."}
     return content["overall_accuracy"] if is_hash?(content) && content["overall_accuracy"]
+
+    # {"grammar_points"=>"Particle usage (へ vs せずに) and noun phrase ..."}
+    return content["grammar_points"] if is_hash?(content) && content["grammar_points"]
 
     # content.keys
     # ["entry_1", "entry_2", "entry_3", "entry_4", "assessment"]

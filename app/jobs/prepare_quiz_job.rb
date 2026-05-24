@@ -63,8 +63,9 @@ class PrepareQuizJob < ApplicationJob
     #    {"translation"=>
     #       "明日のどこかで、聞きたい質問のリストを作ろうと思っています。 → I think I'll make a list of questions I want to ask somewhere tomorrow."}}
 
-    # Make an AiOutput for each translation of Journal#full_journal
-    ai_query.create_quiz_questions(translated_response)
+    expected = journal.full_journal.count
+    # Enforce exactly `expected` quiz questions no matter what the LLM returns
+    ai_query.create_quiz_questions(translated_response, expected_count: expected)
     quiz = Quiz.create(ai_query: ai_query, journal: journal)
 
     source_tag = "ai_assistant"
