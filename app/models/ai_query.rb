@@ -163,6 +163,8 @@ class AiQuery < ApplicationRecord
     # {"overall_accuracy"=> "The translations are mostly accurate..."}
     return content["overall_accuracy"] if is_hash?(content) && content["overall_accuracy"]
 
+    return content["main_points"] if is_hash?(content) && content["main_points"]
+
     # {"grammar_points"=>"Particle usage (へ vs せずに) and noun phrase ..."}
     return content["grammar_points"] if is_hash?(content) && content["grammar_points"]
 
