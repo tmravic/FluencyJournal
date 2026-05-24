@@ -15,7 +15,7 @@
     <%= f.submit t("quiz_answer.check_answer"), class: "btn btn--secondary", name: nil %>
     <%= link_to t("quiz_answer.peek"),
                 peek_journal_quizzes_path(quiz.journal, ai_output: quiz_entry, quiz_id: quiz),
-                data: { turbo_stream: true },
+                data: { turbo_stream: true, turbo_confirm: t("quiz_answer.peek_warning") },
                 class: "btn btn--light" %>
   </div>
 <% end %>
