@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       collection do
         get :prepare_quiz
         get :reset_quiz
+        get :close_quiz
         get :peek
         get :unpeek
       end

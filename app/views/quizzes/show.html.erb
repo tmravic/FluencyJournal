@@ -91,7 +91,11 @@
                   class: "btn btn--light", id: "send_button" %>
 
     <%= link_to "Close",
-                journal_path(@ai_query.journal),
-                class: "btn btn--dark" %>
+                close_quiz_journal_quizzes_path(@ai_query.journal),
+                class: "btn btn--dark",
+                data: {
+                  turbo_frame: "quizzes",
+                  turbo_stream: true
+                } %>
   </div>
 <% end %>

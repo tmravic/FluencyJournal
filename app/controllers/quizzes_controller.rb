@@ -103,6 +103,15 @@ class QuizzesController < ApplicationController
     end
   end
 
+  def close_quiz
+    @source_tag = 'ai_assistant'
+    @entries = @journal.entries.order(:id)
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
 
   def destroy_all_unfinished_quizzes!
