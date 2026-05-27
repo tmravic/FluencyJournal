@@ -37,6 +37,8 @@ module SharedServiceMethods
         followup_origin.followups.push(followup)
       elsif followup_origin.is_a?(Note)
         followup_origin.followups.push(followup)
+      elsif followup_origin.is_a?(JournalFollowup)
+        followup_origin.followups.push(followup)
       end
     end
   end

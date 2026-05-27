@@ -1,7 +1,8 @@
 <%= turbo_frame_tag "template_select" do %>
     <%= label_tag "prompt_template", t('prompt_templates.label'), class: "form__label" %>
+    <% templates = @followup_template_prompts || [] %>
     <%= select_tag "prompt_template",
-                   options_for_select([[t('prompt_templates.choose_a_template'), ""]] + @followup_template_prompts),
+                   options_for_select([[t('prompt_templates.choose_a_template'), ""]] + templates),
                    id: "prompt_template_select",
                    class: "form__input",
                    data: { action: "change->template-prompt-select#fill" } %>

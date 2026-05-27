@@ -84,6 +84,7 @@ ja:
       change_date: "日付変更"
       reading_mode: "読書モード"
       quiz_me: "クイズ"
+      double_check: "ダブルチェック"
   quiz_answer:
     retry: "「リトライ」は、このクイズの保存されたクイズ回答の試行を変更しません。これは練習のためだけにエクササイズを繰り返すためのものです。このクイズ回答をクリアしてリトライしますか？"
     check_answer: "返答を確認"

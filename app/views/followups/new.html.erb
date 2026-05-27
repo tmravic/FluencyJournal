@@ -8,10 +8,10 @@
   <%= turbo_frame_tag @source_tag do %>
     <% if @source_tag == "notes_box" %>
       <div class="notes_box_scroll">
-        <%= render "form", followup: @followup %>
+        <%= render "form", followup: (@followup || Followup.new) %>
       </div>
     <% else %>
-      <%= render "form", followup: @followup %>
+      <%= render "form", followup: (@followup || Followup.new) %>
     <% end %>
   <% end %>
 </main>

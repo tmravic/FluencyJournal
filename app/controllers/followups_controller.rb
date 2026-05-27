@@ -2,38 +2,73 @@ class FollowupsController < ApplicationController
   include TemplatePromptConcern
 
   before_action :set_followup, only: %i[show destroy]
-  ALLOWED_CLASSES = %w[Entry AiOutput Note Followup].freeze
+  ALLOWED_CLASSES = %w[Entry AiOutput Note Followup JournalFollowup].freeze
 
   def new
-    if params[:class_name].blank? || params[:id].blank?
-      Rails.logger.warn "Invalid followup request: #{params.inspect} from referrer #{request.referer}"
+    @source_tag = params[:source_tag]
+    class_name = params[:class_name]
+
+    if class_name.blank?
       redirect_to(@journal ? journal_path(@journal) : root_path) && return
     end
-    render layout: false if @source_tag == "ai_assistant"
-    class_name = params[:class_name]
-    klass = check_allowed_classes_for_followup(class_name)
-    followup_origin_id = params[:id].to_i
-    @followup_origin = klass.find(followup_origin_id)
-    @reference_text = @followup_origin.content
 
     @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user)
+
     @followup_prompt = set_correct_prompt_type(class_name)
-    # Disabled this until I can make a clear distinction between FreeQuestionPrompt and ExampleSentencePrompt
-    # Now just uses FreeQuestionPrompt by default
     @followup = @followup_prompt.build_followup
 
-    @source_tag = params[:source_tag]
+    klass = check_allowed_classes_for_followup(class_name)
+
+    if class_name == "JournalFollowup"
+      journal_id = params[:journal_id].presence || params[:id]
+      journal = Journal.find(journal_id)
+      @followup_origin = JournalFollowup.find_or_create_by!(journal: journal)
+      @reference_text = journal.full_journal.join("\n\n")
+      @journal = journal
+
+      @followup = @followup_prompt.build_followup if @followup.nil?
+    else
+      if params[:id].blank?
+        redirect_to(@journal ? journal_path(@journal) : root_path) && return
+      end
+      followup_origin_id = params[:id].to_i
+      @followup_origin = klass.find(followup_origin_id)
+      @reference_text = @followup_origin.content
+
+      if klass == AiOutput
+        @journal = @followup_origin.ai_query.journal
+      elsif klass == Entry
+        @journal = @followup_origin.journal
+      end
+    end
+
     @uuid = SecureRandom.uuid
     @ai_models = get_ai_models
 
-    if klass == AiOutput
-      @journal = @followup_origin.ai_query.journal
-    elsif klass == Entry
-      @journal = @followup_origin.journal
-    else
+    if @journal.nil?
       session[:followup_from_todays_notes] = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
       # this is just so the Cancel button knows which screen to return to
     end
+
+
+    # Belt-and-suspenders safety net (temporary for debugging this nil followup issue)
+    @followup ||= @followup_prompt&.build_followup
+    @followup_template_prompts ||= []
+
+    # Safety for @followup_origin (especially important for JournalFollowup / Double Check)
+    if @followup_origin.nil? && @journal.present?
+      @followup_origin = JournalFollowup.find_or_create_by!(journal: @journal)
+    end
+
+    if @followup.nil?
+      raise "DEBUG: @followup is still nil at end of FollowupsController#new. " \
+            "class_name=#{class_name.inspect}, " \
+            "@followup_prompt=#{@followup_prompt.inspect}, " \
+            "@source_tag=#{@source_tag.inspect}"
+    end
+
+
+    render layout: false if @source_tag == "ai_assistant"
   end
 
   def create
@@ -44,7 +79,16 @@ class FollowupsController < ApplicationController
 
 
     # define what object this followup references
-    followup_origin_class = followup_params[:followup_origin_class].constantize
+    origin_class_str = followup_params[:followup_origin_class].to_s
+    if origin_class_str.blank? || origin_class_str == "Unknown" || origin_class_str == "0"
+      Rails.logger.error "FOLLOWUPS#CREATE: Received invalid followup_origin_class=#{origin_class_str.inspect} (id=#{followup_params[:followup_origin_id]}). This usually means the form was rendered before @followup_origin was set."
+      respond_to do |format|
+        format.turbo_stream { flash.now[:alert] = "Something went wrong preparing the followup. Please try again." }
+        format.html { redirect_to root_path, alert: "Invalid followup origin." }
+      end
+      return
+    end
+    followup_origin_class = origin_class_str.constantize
     followup_origin_id = followup_params[:followup_origin_id].to_i
     @followup_origin = followup_origin_class.find(followup_origin_id)
     # note, entry, or ai_output
@@ -130,6 +174,8 @@ class FollowupsController < ApplicationController
     if followup_origin_class == AiOutput
       @journal = @followup_origin.ai_query.journal
     elsif followup_origin_class == Entry
+      @journal = @followup_origin.journal
+    elsif followup_origin_class == JournalFollowup
       @journal = @followup_origin.journal
     end
   end

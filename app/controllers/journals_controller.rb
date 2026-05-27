@@ -28,6 +28,12 @@ class JournalsController < ApplicationController
     @entries = @journal.entries.ordered
     @source_tag = "ai_assistant"
 
+    # Eager load associations used by _previous_queries.html.erb to avoid N+1 queries
+    # (followups, quizzes, prompt.class checks)
+    @journal = current_group.journals
+                            .includes(ai_queries: [:prompt, :quizzes, :followups])
+                            .find(@journal.id)
+
     respond_to do |format|
       format.html
       format.turbo_stream do

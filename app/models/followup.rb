@@ -21,7 +21,7 @@ class Followup < ApplicationRecord
       origin.user
     elsif origin.is_a?(AiOutput)
       origin.ai_query.user
-    elsif origin.is_a?(Entry)
+    elsif origin.is_a?(Entry) || origin.is_a?(JournalFollowup)
       origin.journal.user
     elsif origin.nil?
       Current.user

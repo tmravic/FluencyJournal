@@ -30,8 +30,16 @@
                                  ) {} %>
     <% end %>
 
-    <%= f.hidden_field :followup_origin_class, value: @followup_origin.class %>
-    <%= f.hidden_field :followup_origin_id, value: @followup_origin.id %>
+    <% if @followup_origin.present? %>
+      <% origin_class = @followup_origin.class %>
+      <% origin_id    = @followup_origin.id %>
+    <% else %>
+      <% Rails.logger.error "FOLLOWUPS_FORM: @followup_origin was nil when rendering form! This must be set by FollowupsController#new before any render. class_name=#{params[:class_name].inspect}" %>
+      <% origin_class = "Unknown" %>
+      <% origin_id    = 0 %>
+    <% end %>
+    <%= f.hidden_field :followup_origin_class, value: origin_class %>
+    <%= f.hidden_field :followup_origin_id, value: origin_id %>
     <%= f.hidden_field :source_tag, value: @source_tag %>
 
     <div class="form__input__button_block">
