@@ -11,7 +11,8 @@ class QuizResultPrompt < Prompt
       "more important than an exact word-for-word replication of the original text. Check each entry's translation " +
       "one by one, and include an assessment pointing out any grammar points that I seem to not understand or " +
       "words used incorrectly based on on my mistakes. If there are any such mistake, add an example sentence " +
-      "to the assessment to show the correction for it."
+      "to the assessment which is distinct from the original journal content to show the correct usage of that " +
+      "word or grammar point."
   end
 
   def change_keyword
