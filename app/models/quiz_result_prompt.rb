@@ -9,8 +9,9 @@ class QuizResultPrompt < Prompt
       "Keep in mind the full content of the " +
       "journal such that conveying the same meaning overall in grammatically correct #{user.learning_language} is " +
       "more important than an exact word-for-word replication of the original text. Check each entry's translation " +
-      "one by one, and include an assessment pointing out any grammar points that I seem to not understand based " +
-      "on my mistakes, if any."
+      "one by one, and include an assessment pointing out any grammar points that I seem to not understand or " +
+      "words used incorrectly based on on my mistakes. If there are any such mistake, add an example sentence " +
+      "to the assessment to show the correction for it."
   end
 
   def change_keyword
