@@ -4,5 +4,6 @@
 <%= turbo_stream.update "quiz_buttons", partial: 'quizzes/quiz_buttons' %>
 <%= turbo_stream.update "character_count", partial: 'journals/character_count', locals: { journal: @journal } %>
 <%= turbo_stream.update "reading_mode_button", partial: 'journals/reading_mode_button', locals: { journal: @journal } %>
+<%= turbo_stream.update "double_check_button", partial: 'journals/double_check_button', locals: { journal: @journal } %>
 <%= turbo_stream.append "entries", partial: "entries/entry", locals: { entry: @entry, journal: @journal, source_tag: @source_tag } %>
 <%= render_turbo_stream_flash_messages %>

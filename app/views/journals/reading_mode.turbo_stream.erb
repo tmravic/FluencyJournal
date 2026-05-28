@@ -16,6 +16,7 @@
   <%= turbo_stream.update "quiz_buttons", '' %>
   <%= turbo_stream.update "mark_studied_button", '' %>
   <%= turbo_stream.update "change_journal_due_date_button", '' %>
+  <%= turbo_stream.update "double_check_button", '' %>
   <%= turbo_stream.update "reading_mode_button",
                           partial: 'journals/reading_mode_button',
                           locals: { journal: @journal, reading_mode: false } %>
@@ -41,6 +42,9 @@
     <%= turbo_stream.update "change_journal_due_date_button",
                             partial: 'journals/change_journal_due_date_button',
                             locals: { journal: @journal, reading_mode: false } %>
+    <%= turbo_stream.update "double_check_button",
+                            partial: 'journals/double_check_button',
+                            locals: { journal: @journal } %>
   <% end %>
 
   <% if @journal.ai_queries.any? %>

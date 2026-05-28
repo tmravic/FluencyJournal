@@ -14,6 +14,9 @@
   <%= turbo_stream.update "change_journal_due_date_button",
                           partial: 'journals/change_journal_due_date_button',
                           locals: { journal: @journal } %>
+  <%= turbo_stream.update "double_check_button",
+                          partial: 'journals/double_check_button',
+                          locals: { journal: @journal } %>
 <% end %>
 
 <%= turbo_stream.replace(
