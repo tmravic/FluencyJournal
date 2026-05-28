@@ -49,6 +49,7 @@
   --color-background: hsl(30, 50%, 98%);
   --color-light:      hsl(0, 6%, 93%);
   --color-dark:       var(--color-text-header);
+  --color-inverse:    hsl(0, 0%, 18%);  /* dark surface used for dark buttons & flash in light mode */
 
   // Border radius
   --border-radius: 0.375rem;
@@ -60,4 +61,23 @@
   // Shadows
   --shadow-large:  2px 4px 10px hsl(0 0% 0% / 0.1);
   --shadow-small:  1px 3px 6px hsl(0 0% 0% / 0.1);
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --color-text-header: hsl(0, 0%, 94%);
+  --color-text-body:   hsl(0, 0%, 82%);
+  --color-text-muted:  hsl(0, 0%, 62%);
+
+  --color-background: hsl(220, 14%, 9%);
+  --color-white:      hsl(220, 11%, 15%);   /* surface for cards, navbar, journals */
+  --color-light:      hsl(220, 9%, 22%);    /* borders, subtle backgrounds */
+  --color-dark:       hsl(0, 0%, 90%);
+  --color-inverse:    hsl(0, 0%, 92%);  /* light surface for dark buttons & flash in dark mode */
+
+  --color-primary-bg: hsl(350, 32%, 18%);
+  --color-glint:      hsl(210, 18%, 22%);   /* .card backgrounds */
+
+  --shadow-large:  2px 4px 14px hsl(0 0% 0% / 0.55);
+  --shadow-small:  1px 3px 8px hsl(0 0% 0% / 0.4);
 }

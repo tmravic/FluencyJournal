@@ -5,7 +5,7 @@
   box-shadow: var(--shadow-large);
   padding: var(--space-xs) var(--space-m);
   margin-bottom: var(--space-l);
-  background-color: (var(--color-white));
+  background-color: var(--color-white);
 
   &__group {
     font-weight: bold;
@@ -30,4 +30,11 @@
   &__notes_button {
     color: var(--color-white);
   }
+}
+
+.theme-toggle {
+  font-size: var(--font-size-l);
+  padding: var(--space-xxxs) var(--space-xxs);
+  line-height: 1;
+  min-width: 2rem;
 }

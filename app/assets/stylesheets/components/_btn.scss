@@ -74,14 +74,15 @@
 
   &--dark {
     color: var(--color-white);
-    border-color: var(--color-dark);
-    background-color: var(--color-dark);
+    border-color: var(--color-inverse);
+    background-color: var(--color-inverse);
 
     &:hover,
     &:focus,
     &:focus-within,
     &:active {
       color: var(--color-white);
+      filter: brightness(110%);
     }
   }
 

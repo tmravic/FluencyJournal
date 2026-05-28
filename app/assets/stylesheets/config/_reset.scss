@@ -12,6 +12,11 @@
 html {
   overflow-y: scroll;
   height: 100%;
+  color-scheme: light dark;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -37,6 +42,21 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+/* Theme-aware form controls */
+input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background-color: var(--color-white);
+  color: var(--color-text-body);
+  border-color: var(--color-light);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
 }
 
 h1,

@@ -20,11 +20,27 @@
               data: { turbo_frame: "notes_box" },
               class: "btn btn--primary navbar__notes_button" %>
 
+    <button type="button"
+            data-controller="theme"
+            data-action="click->theme#toggle"
+            class="btn btn--light theme-toggle"
+            aria-label="Toggle dark mode">
+      <span data-theme-target="icon">🌙</span>
+    </button>
+
     <%= button_to t('logout'),
                   session_path,
                   method: :delete,
                   class: "btn btn--dark navbar__right" %>
   <% else %>
+    <button type="button"
+            data-controller="theme"
+            data-action="click->theme#toggle"
+            class="btn btn--light theme-toggle"
+            aria-label="Toggle dark mode">
+      <span data-theme-target="icon">🌙</span>
+    </button>
+
     <%= link_to t('sign_in'),
                 new_session_path,
                 class: "btn btn--dark navbar__right" %>
