@@ -232,12 +232,12 @@ class AiQuery < ApplicationRecord
       return content.keys.first
     end
 
-    if keys.first == query.corrected_text.values.first
-
     #  "昨年のクリスマスに私はあなたに心を捧げました"
     if content["corrected_text"].keys.first == content["corrected_text"].values.first
       return content["corrected_text"].values.first
     end
+
+    content
   end
 
   def is_hash?(content)

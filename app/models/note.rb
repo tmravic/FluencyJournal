@@ -13,6 +13,8 @@ class Note < ApplicationRecord
 
   enum :category, { vocab: 0, grammar: 1, draft_journal: 2, automatic: 3 }
 
+  scope :by_user, ->(user = Current.user) { where(user_id: user&.id) }
+
   scope :next_to_study, -> {
     where(arel_table[:next_study_date].lteq(DateTime.now))
       .order(:next_study_date)
