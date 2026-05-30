@@ -1,0 +1,20 @@
+# .grok/config.toml
+#
+# Project-specific Grok configuration for Fluency Journal.
+# This takes precedence over the global ~/.grok/config.toml.
+#
+# Goal: Prevent Grok (and any subagents) from reading sensitive
+# deployment secrets that are stored in the .kamal/ directory.
+
+[permission]
+rules = [
+  # Deny reading any file under .kamal/
+  { action = "deny", tool = "read",  pattern = ".kamal/**" },
+
+  # Deny grep operations that could scan inside .kamal/
+  { action = "deny", tool = "grep",  pattern = ".kamal/**" },
+
+  # Defense in depth: also block listing the secrets directory
+  { action = "deny", tool = "list_dir", pattern = ".kamal" },
+  { action = "deny", tool = "list_dir", pattern = ".kamal/**" },
+]

@@ -202,6 +202,8 @@ class AiQuery < ApplicationRecord
     # {"..."=>0}
     return "No content" if is_hash?(content) && content["..."]
 
+    return content[""] if is_hash?(content) && content[""]
+
     # {"お時間がかかってしまい申し訳ございません。"=>"お時間がかかってしまい申し訳ございません。"}
     return content.keys.first if is_hash?(content) && content.keys.first == content.values.first
 
@@ -230,8 +232,12 @@ class AiQuery < ApplicationRecord
       return content.keys.first
     end
 
+    if keys.first == query.corrected_text.values.first
+
     #  "昨年のクリスマスに私はあなたに心を捧げました"
-    content
+    if content["corrected_text"].keys.first == content["corrected_text"].values.first
+      return content["corrected_text"].values.first
+    end
   end
 
   def is_hash?(content)
