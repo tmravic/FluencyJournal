@@ -2,4 +2,9 @@
 <%= link_to t('journal.actions.double_check'),
             new_followup_path(class_name: "JournalFollowup", journal_id: journal.id, source_tag: "ai_assistant"),
             class: "btn btn--light",
-            data: { turbo_frame: "ai_assistant" } %>
+            data: {
+              turbo_frame: "ai_assistant",
+              controller: "scroll",
+              action: "click->scroll#scrollToTarget",
+              scroll_target_value: "ai_assistant"
+            } %>
