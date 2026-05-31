@@ -181,6 +181,11 @@ class AiQuery < ApplicationRecord
     end
 
     return content["assessment"] if is_hash?(content) && content["assessment"]
+    return content["grammar_points_to_improve"] if is_hash?(content) && content["grammar_points_to_improve"]
+
+    if is_hash?(content) && content.keys.any? { |key| key.to_s.match?(entry_regex) }
+      return nil
+    end
 
     content
   end
@@ -257,5 +262,11 @@ class AiQuery < ApplicationRecord
     # hash["answers"] = new_answers
     # hash
     new_answers
+  end
+
+  private
+
+  def entry_regex
+    /\Aentry_\d+\z/
   end
 end
