@@ -4,6 +4,7 @@ class Journal < ApplicationRecord
   has_many :entries, dependent: :destroy
   has_many :ai_queries, dependent: :destroy
   has_many :quizzes, dependent: :destroy
+  has_many :journal_followups, dependent: :destroy
 
   validates :title, presence: true
   validates :next_study_date, presence: true

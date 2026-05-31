@@ -1,7 +1,5 @@
 class EntryPrompt < Prompt
   def role_prompt(user, journal)
-    user_notes = Note.by_user.pluck(:content)
-
     "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes " +
       "and reword journal entries into more natural and correct #{user.learning_language}. " +
       "'Learning Language' is the student's error-prone #{user.learning_language} attempt. " +
@@ -10,7 +8,6 @@ class EntryPrompt < Prompt
       "student's intended meaning, but ignore this if no #{user.original_language} is in the prompt. " +
       "If 'Learning Language' contains no #{user.learning_language}, but 'Original Language' has an " +
       "#{user.original_language} entry, then simply translate without any changes. " +
-      "Try to use anything from the user's notes #{user_notes} that fits the current entry. " +
       "Each item in this array is part of a previous entry in this journal, which you " +
       "should not correct or comment on but refer to as context to understand the current entry: #{journal.full_journal}. " +
       "Avoid vague feedback, instead pointing out each change clearly. When the content of " +

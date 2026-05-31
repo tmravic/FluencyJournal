@@ -227,6 +227,9 @@ class AiQuery < ApplicationRecord
     # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
     return content["corrected_text"] if is_hash?(content) && content["corrected_text"]
 
+    # {"text"=>"仕事で上司に「ITパスポート」という資格を取るように頼まれました"}
+    return content["text"] if is_hash?(content) && content["text"]
+
     #  {"Today was such a hot day."=>""}
     if is_hash?(content) && content.values.first.empty?
       return content.keys.first

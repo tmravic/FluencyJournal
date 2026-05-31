@@ -15,18 +15,20 @@ class FollowupTemplatePromptsController < ApplicationController
   end
 
   def destroy_selected
-    prompt = FollowupTemplatePrompt.find_by(base_content: (params.dig(:prompt_template)))
+    selected = params.dig(:prompt_template).to_s.strip
+    prompt = FollowupTemplatePrompt.find_by(base_content: selected)
+
     if prompt&.destroy
-      prompt.destroy
       notice = t('prompt_templates.deleted')
       @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user)
 
       respond_to do |format|
         format.turbo_stream { flash.now[:notice] = notice }
       end
-
     else
-      flash.now[:alert] = t('prompt_templates.no_selection')
+      # This can happen for the auto-generated "due notes" template,
+      # which is not a real persisted record and cannot be deleted.
+      flash.now[:alert] = t('prompt_templates.cannot_delete_system', default: "This template is provided automatically and cannot be deleted.")
     end
   end
 end
