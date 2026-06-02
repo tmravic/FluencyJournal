@@ -234,6 +234,9 @@ class AiQuery < ApplicationRecord
     #   {"リフレッシュする自然の景色のおかげで、私たちの態度と心境はほとんど一夜にして変わりました。"=>"This is the full corrected sentence in natural Japanese."} }
     # TODO: handle this case with a regex pattern which returns either key or value if either one has no alphabet characters.
 
+    # "corrected_text"=>{"full_text"=>"日本語で即答はたまにできません。理由は、その時に言おうとしていることが 頭の奥から出てこないからです。"}}
+    return content.dig("corrected_text", "full_text") if content.dig("corrected_text", "full_text")
+
     # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
     return content["corrected_text"] if content["corrected_text"]
 
