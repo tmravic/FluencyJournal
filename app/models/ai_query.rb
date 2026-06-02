@@ -235,7 +235,9 @@ class AiQuery < ApplicationRecord
     # TODO: handle this case with a regex pattern which returns either key or value if either one has no alphabet characters.
 
     # "corrected_text"=>{"full_text"=>"日本語で即答はたまにできません。理由は、その時に言おうとしていることが 頭の奥から出てこないからです。"}}
-    return content.dig("corrected_text", "full_text") if content.dig("corrected_text", "full_text")
+    if is_hash?(content["corrected_text"]) && content["corrected_text"]["full_text"]
+      return content.dig("corrected_text", "full_text")
+    end
 
     # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
     return content["corrected_text"] if content["corrected_text"]
