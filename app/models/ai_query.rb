@@ -156,34 +156,38 @@ class AiQuery < ApplicationRecord
 
   def assessment
     content = self.parsed_response
+    return content unless is_hash?(content)
 
     # {"overall"=> "Overall, the quiz answers are..."}
-    return content["overall"] if is_hash?(content) && content["overall"]
+    return content["overall"] if content["overall"]
 
     # {"overall_accuracy"=> "The translations are mostly accurate..."}
-    return content["overall_accuracy"] if is_hash?(content) && content["overall_accuracy"]
+    return content["overall_accuracy"] if content["overall_accuracy"]
+    return content.dig("assessment", "overall_accuracy") if content.dig("assessment", "overall_accuracy")
 
-    return content["main_points"] if is_hash?(content) && content["main_points"]
+    return content["main_points"] if content["main_points"]
+    return content.dig("assessment", "main_points") if content.dig("assessment", "main_points")
 
     # {"grammar_points"=>"Particle usage (へ vs せずに) and noun phrase ..."}
-    return content["grammar_points"] if is_hash?(content) && content["grammar_points"]
+    return content["grammar_points"] if content["grammar_points"]
+    return content.dig("assessment", "grammar_points") if content.dig("assessment", "grammar_points")
 
     # content.keys
     # ["entry_1", "entry_2", "entry_3", "entry_4", "assessment"]
     # content.dig("assessment")
     # {"overall_accuracy"=> "..."
-    if is_hash?(content) && is_hash?(content.dig("assessment")) && content.dig("assessment", "overall_accuracy")
+    if is_hash?(content.dig("assessment")) && content.dig("assessment", "overall_accuracy")
       return content.dig("assessment", "overall_accuracy")
     end
 
-    if is_hash?(content) && is_hash?(content.dig("assessment")) && content.dig("assessment", "overall")
+    if is_hash?(content.dig("assessment")) && content.dig("assessment", "overall")
       return content.dig("assessment", "overall")
     end
 
-    return content["assessment"] if is_hash?(content) && content["assessment"]
-    return content["grammar_points_to_improve"] if is_hash?(content) && content["grammar_points_to_improve"]
+    return content["assessment"] if content["assessment"]
+    return content["grammar_points_to_improve"] if content["grammar_points_to_improve"]
 
-    if is_hash?(content) && content.keys.any? { |key| key.to_s.match?(entry_regex) }
+    if content.keys.any? { |key| key.to_s.match?(entry_regex) }
       return nil
     end
 
@@ -193,6 +197,7 @@ class AiQuery < ApplicationRecord
   def corrected_text
     # Sometimes a string is returned and sometimes it's a Hash
     content = parsed_response
+    return content unless is_hash?(content)
     # {
     #   "change_1"=>
     #    { "content" => "ryokan → 旅館", "explanation_en"=>"「ryokan」は日 本語で「旅館」を意味するため、正しい表現に修正しました。" },
@@ -205,38 +210,38 @@ class AiQuery < ApplicationRecord
 
     # When the user input nothing
     # {"..."=>0}
-    return "No content" if is_hash?(content) && content["..."]
+    return "No content" if content["..."]
 
-    return content[""] if is_hash?(content) && content[""]
+    return content[""] if content[""]
 
     # {"お時間がかかってしまい申し訳ございません。"=>"お時間がかかってしまい申し訳ございません。"}
-    return content.keys.first if is_hash?(content) && content.keys.first == content.values.first
+    return content.keys.first if content.keys.first == content.values.first
 
     #  {"text"=>"昨年のクリスマスに心をあげた"},
     #  {"text"=>"昨年のクリスマスに私はあなたに心を捧げました"}]
-    return content["text"] if is_hash?(content) && content["text"]
+    return content["text"] if content["text"]
 
     # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content["内容"] if is_hash?(content) && content["内容"]
+    return content["内容"] if content["内容"]
 
     # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content["content"] if is_hash?(content) && content["content"]
+    return content["content"] if content["content"]
 
     # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content["corrected_japanese"] if is_hash?(content) && content["corrected_japanese"]
+    return content["corrected_japanese"] if content["corrected_japanese"]
 
     # { "corrected_text"=>
     #   {"リフレッシュする自然の景色のおかげで、私たちの態度と心境はほとんど一夜にして変わりました。"=>"This is the full corrected sentence in natural Japanese."} }
     # TODO: handle this case with a regex pattern which returns either key or value if either one has no alphabet characters.
 
     # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
-    return content["corrected_text"] if is_hash?(content) && content["corrected_text"]
+    return content["corrected_text"] if content["corrected_text"]
 
     # {"text"=>"仕事で上司に「ITパスポート」という資格を取るように頼まれました"}
-    return content["text"] if is_hash?(content) && content["text"]
+    return content["text"] if content["text"]
 
     #  {"Today was such a hot day."=>""}
-    if is_hash?(content) && content.values.first.empty?
+    if content.values.first.empty?
       return content.keys.first
     end
 
