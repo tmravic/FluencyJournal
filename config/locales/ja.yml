@@ -84,7 +84,7 @@ ja:
       change_date: "日付変更"
       reading_mode: "読書モード"
       quiz_me: "クイズ"
-      double_check: "ダブルチェック"
+      double_check: "追加質問"
   quiz_answer:
     retry: "「リトライ」は、このクイズの保存されたクイズ回答の試行を変更しません。これは練習のためだけにエクササイズを繰り返すためのものです。このクイズ回答をクリアしてリトライしますか？"
     check_answer: "返答を確認"
@@ -100,16 +100,16 @@ ja:
     updated: "文章を更新しました。"
     deleted: "文章を削除しました。"
   followup:
-    followup: "追及"
-    previous: "過去のAI質問と追及"
+    followup: "追加質問"
+    previous: "過去のAI質問と追加質問"
     short: "追"
     answer: "回答"
-    followup_answer: "追及回答"
-    delete_followup: "追及削除"
-    followup_question: "追及質問"
+    followup_answer: "追加質問回答"
+    delete_followup: "追加質問削除"
+    followup_question: "追加質問質問"
     reference_text: "参照文"
-    placeholder: "追及質問を書いてください。"
-    request_sent: "追及リクエスト送信済み。"
+    placeholder: "追加質問質問を書いてください。"
+    request_sent: "追加質問リクエスト送信済み。"
     form:
       save_as_template: "プロンプトを保存?？"
   ai_query:

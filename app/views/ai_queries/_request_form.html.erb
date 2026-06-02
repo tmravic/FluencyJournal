@@ -18,11 +18,13 @@
     <div class="send_button_box">
       <%= f.hidden_field :ai_model, value: "grok-4-fast-non-reasoning" %>
 
-      <% if @journal.user.learning_language == "Japanese" %>
-        <%= f.select :ai_model, options_for_select(["grok-4-fast-non-reasoning", "elyza_llm"], "grok-4-fast-non-reasoning") {} %>
-      <% else %>
-        <%= f.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning"), {} %>
-      <% end %>
+      <%# model_options = ["grok-4-fast-non-reasoning", "elyza_llm"] %>
+      <% model_options = ["grok-4-fast-non-reasoning"] %>
+      <%# if @journal.user.learning_language == "Japanese" %>
+        <%= f.select :ai_model, options_for_select(model_options, "grok-4-fast-non-reasoning") {} %>
+      <%# else %>
+        <%#= f.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning"), {} %>
+      <%# end %>
 
       <%= f.submit t('ai_query.send'), class: "btn btn--primary", id: "send_button",
                    data: {
