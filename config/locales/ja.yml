@@ -126,6 +126,9 @@ ja:
     delete: "質問削除"
     send: "送信"
     request_sent: "AIリクエスト送信済み。"
+    model:
+      fast: "高速"
+      higher_quality: "高品質（低速）"
   ai_output:
     change_deleted: "修正が削除されました。"
   prompt_templates:

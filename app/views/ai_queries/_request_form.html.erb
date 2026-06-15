@@ -2,7 +2,6 @@
              method: :post, remote: true, html: { class: "request_form" } do |f| %>
   <%= f.hidden_field :uuid, value: @uuid %>
   <%= f.hidden_field :journal_id, value: @journal.id %>
-  <%= f.hidden_field :ai_model, value: "grok-4-fast-non-reasoning" %>
 
   <div>
     <%= f.text_area :base_content, label: t('ai_query.original_language'),
@@ -16,15 +15,13 @@
 
   <%= turbo_frame_tag "ai_request_form_delete_buttons" do %>
     <div class="send_button_box">
-      <%= f.hidden_field :ai_model, value: "grok-4-fast-non-reasoning" %>
-
       <%# model_options = ["grok-4-fast-non-reasoning", "elyza_llm"] %>
-      <% model_options = ["grok-4-fast-non-reasoning"] %>
-      <%# if @journal.user.learning_language == "Japanese" %>
-        <%#= f.select :ai_model, options_for_select(model_options, "grok-4-fast-non-reasoning") {} %>
-      <%# else %>
-        <%= f.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning"), {} %>
-      <%# end %>
+      <% model_options = [
+        [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
+        [t("ai_query.model.higher_quality"), "grok-4.3"]
+      ] %>
+        <%= f.select :ai_model, options_for_select(model_options, "grok-4-fast-non-reasoning") %>
+        <%#= f.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning") %>
 
       <%= f.submit t('ai_query.send'), class: "btn btn--primary", id: "send_button",
                    data: {

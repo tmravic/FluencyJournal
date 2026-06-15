@@ -130,6 +130,9 @@ en:
     delete: "Delete AI Question"
     send: "Send"
     request_sent: "AI request sent."
+    model:
+      fast: "Fast"
+      higher_quality: "Higher quality (slower)"
   ai_output:
     change_deleted: "Change was successfully deleted."
   prompt_templates:
