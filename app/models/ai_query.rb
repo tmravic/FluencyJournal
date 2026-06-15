@@ -170,6 +170,7 @@ class AiQuery < ApplicationRecord
 
     # {"grammar_points"=>"Particle usage (へ vs せずに) and noun phrase ..."}
     return content["grammar_points"] if content["grammar_points"]
+    return content["overall_comment"] if content["overall_comment"]
     return content.dig("assessment", "grammar_points") if content.dig("assessment", "grammar_points")
 
     # content.keys
@@ -237,6 +238,10 @@ class AiQuery < ApplicationRecord
     # "corrected_text"=>{"full_text"=>"日本語で即答はたまにできません。理由は、その時に言おうとしていることが 頭の奥から出てこないからです。"}}
     if is_hash?(content["corrected_text"]) && content["corrected_text"]["full_text"]
       return content.dig("corrected_text", "full_text")
+    end
+
+    if is_hash?(content["corrected_text"]) && content.dig("corrected_text", "text")
+      return content.dig("corrected_text", "text")
     end
 
     # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
