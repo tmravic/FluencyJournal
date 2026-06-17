@@ -93,6 +93,7 @@ ja:
     try_to_answer: "%{language}に訳してみてください。"
   entry:
     entry: "%{number}文章"
+    listen: "聞く"
     start_entry: "文章を作成"
     really_delete: "この文章を本当に削除しますか？"
     empty_state: "この日記にはまだ文章がありません。"

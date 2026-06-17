@@ -8,6 +8,13 @@
       <span class="entry__date"><%= entry.created_at.strftime("%m/%d/%Y") %></span>
 
       <div class="entry__actions">
+        <button type="button"
+                class="btn btn--light"
+                data-controller="tts"
+                data-tts-url-value="<%= speak_journal_entry_path(journal, entry) %>"
+                data-action="click->tts#play">
+          <%= t("entry.listen") %>
+        </button>
         <%= link_to t('followup.followup'),
                     new_followup_path(
                       class_name: entry.class,

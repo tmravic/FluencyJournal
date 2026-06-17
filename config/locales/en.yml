@@ -97,6 +97,7 @@ en:
     try_to_answer: "Try to translate this entry back to %{language}."
   entry:
     entry: "Entry %{number}"
+    listen: "Listen"
     start_entry: "Start entry"
     really_delete: "Really delete this entry?"
     empty_state: "No entries yet for this journal."

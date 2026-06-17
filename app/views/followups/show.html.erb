@@ -21,6 +21,13 @@
                 <!--Answer 1 or Example 1-->
               </h4>
               <div>
+                <button type="button"
+                        class="btn btn--light"
+                        data-controller="tts"
+                        data-tts-url-value="<%= speak_ai_output_path(output) %>"
+                        data-action="click->tts#play">
+                  <%= t("entry.listen") %>
+                </button>
                 <%= button_to t("delete"),
                               ai_output_path(output.id, source_tag: @source_tag), # source_tag will be either notes_box or ai_assistant
                               method: :delete,

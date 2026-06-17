@@ -1,8 +1,8 @@
 class EntriesController < ApplicationController
   require "securerandom"
-  before_action :set_journal, only: %i[ new create show edit update destroy ]
-  before_action :set_entry, only: %i[ show edit update destroy ]
-  before_action :get_ai_models
+  before_action :set_journal, only: %i[ new create show edit update destroy speak ]
+  before_action :set_entry, only: %i[ show edit update destroy speak ]
+  before_action :get_ai_models, except: :speak
 
   # GET /entries/1 or /entries/1.json
   def show
@@ -54,6 +54,21 @@ class EntriesController < ApplicationController
         format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # GET /journals/:journal_id/entries/:id/speak
+  def speak
+    language = XAiTtsService::LANGUAGE_CODES.fetch(Current.user.learning_language, "auto")
+
+    audio = XAiTtsService.new(
+      api_key: @api_key,
+      text: @entry.content,
+      language: language
+    ).call
+
+    send_data audio, type: "audio/mpeg", disposition: "inline"
+  rescue XAiTtsService::TtsError
+    head :service_unavailable
   end
 
   # DELETE /entries/1 or /entries/1.json

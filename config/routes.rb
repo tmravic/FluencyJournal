@@ -16,7 +16,11 @@ Rails.application.routes.draw do
       get :change_due_date
       post :update_due_date
     end
-    resources :entries
+    resources :entries do
+      member do
+        get :speak
+      end
+    end
     resources :quizzes, only: [:show] do
       collection do
         get :prepare_quiz
@@ -52,7 +56,11 @@ Rails.application.routes.draw do
     end
   end
   resources :followups, only: [ :new, :create, :show, :destroy ]
-  resources :ai_outputs, only: [ :destroy ]
+  resources :ai_outputs, only: [ :destroy ] do
+    member do
+      get :speak
+    end
+  end
 
   resource :session
   resources :passwords, param: :token
