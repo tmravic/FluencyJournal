@@ -165,6 +165,8 @@ class AiQuery < ApplicationRecord
     return content["overall_accuracy"] if content["overall_accuracy"]
     return content.dig("assessment", "overall_accuracy") if content.dig("assessment", "overall_accuracy")
 
+    return content["summary"] if content["summary"]
+
     return content["main_points"] if content["main_points"]
     return content.dig("assessment", "main_points") if content.dig("assessment", "main_points")
 
