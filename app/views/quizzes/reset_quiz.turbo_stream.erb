@@ -15,8 +15,11 @@
   <%= turbo_stream.update "double_check_button",
                           partial: 'journals/double_check_button',
                           locals: { journal: @journal } %>
-
 <% end %>
+
+<%= turbo_stream.update "linked_notes_button",
+                        partial: "journals/linked_notes_button",
+                        locals: { journal: @journal } %>
 
 <%= turbo_stream.replace(
       "quizzes",

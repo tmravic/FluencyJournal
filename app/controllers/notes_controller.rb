@@ -23,6 +23,15 @@ class NotesController < ApplicationController
     end
   end
 
+  def drafts
+    @source_tag = "notes_box"
+    @draft_notes = Current.user&.notes.draft_journal.order(:next_study_date).includes(:followups, :journals)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
   def for_journal
     @source_tag = "notes_box"
     @journal = Current.user.journals.find(params[:journal_id])
@@ -196,18 +205,21 @@ class NotesController < ApplicationController
   end
 
   def get_header_from_view_context(view_context)
-    if view_context == "todays_notes"
-      "notes/notes_header_todays"
-    elsif view_context == "all_notes"
-      "notes/notes_header_all"
+    case view_context
+    when "todays_notes" then "notes/notes_header_todays"
+    when "all_notes" then "notes/notes_header_all"
+    when "draft_notes" then "notes/notes_header_drafts"
     end
   end
 
   def get_collection_from_view_context(view_context)
-    if view_context == "todays_notes"
+    case view_context
+    when "todays_notes"
       @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
-    elsif view_context == "all_notes"
+    when "all_notes"
       @all_notes = Current.user&.notes.order(:next_study_date).includes(:followups, :journals)
+    when "draft_notes"
+      @draft_notes = Current.user&.notes.draft_journal.order(:next_study_date).includes(:followups, :journals)
     end
   end
 

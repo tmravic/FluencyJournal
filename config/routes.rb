@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   resources :notes do
     collection do
       get :all
+      get :drafts
       get :for_journal
       get :new_automatic, as: :new_automatic
     end

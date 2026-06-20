@@ -45,6 +45,9 @@ en:
   note:
     todays_notes: "Today's Notes"
     all_notes: "All Notes"
+    drafts: "Drafts"
+    draft_journals: "Draft Journals"
+    empty_state_drafts: "You don't have any draft journal notes yet!"
     close: "Close"
     new: "New"
     next_review: "Next review"

@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "drafts_notes_button" do %>
+  <%= link_to t("note.drafts"),
+              drafts_notes_path,
+              class: "btn btn--secondary",
+              data: { turbo_frame: "notes_box" } %>
+<% end %>

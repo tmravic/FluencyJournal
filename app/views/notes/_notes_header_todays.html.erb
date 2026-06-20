@@ -2,6 +2,7 @@
   <h2><%= t("note.todays_notes") %></h2>
   <div class="header">
 
+    <%= render "notes/drafts_notes_button" %>
     <%= render "notes/all_notes_button" %>
 
     <%= link_to t('note.new'),

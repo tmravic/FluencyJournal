@@ -13,6 +13,7 @@
 <%= turbo_stream.update "mark_studied_button", "" %>
 <%= turbo_stream.update "change_journal_due_date_button", '' %>
 <%= turbo_stream.update "double_check_button", '' %>
+<%= turbo_stream.update "linked_notes_button", '' %>
 <%= turbo_stream.replace "previous_queries" do %>
   <%= turbo_frame_tag "grade_quiz_button" %>
 <% end %>

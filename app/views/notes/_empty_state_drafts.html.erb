@@ -1,0 +1,15 @@
+<div class="empty-state empty-state--only-child">
+  <p class="empty-state__text">
+    <%= t("note.empty_state_drafts") %>
+  </p>
+
+  <%= render "notes/todays_notes_button" %>
+  <%= render "notes/all_notes_button" %>
+
+  <%= link_to t("note.add_note"),
+              new_note_path(view_context: "draft_notes"),
+              class: "btn btn--primary",
+              data: { turbo_frame: dom_id(Note.new) } %>
+
+  <%= render "notes/close_notes_button" %>
+</div>

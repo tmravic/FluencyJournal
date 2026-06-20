@@ -42,7 +42,7 @@ module TemplatePromptConcern
   end
 
   def build_due_notes_template(user, format: :full)
-    contents = Note.by_user(user).next_to_study.pluck(:content).compact_blank.uniq
+    contents = Note.by_user(user).due_for_study_prompt.pluck(:content).compact_blank.uniq
     return nil if contents.empty?
 
     return due_notes_short_label if format == :short

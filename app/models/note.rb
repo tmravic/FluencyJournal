@@ -21,6 +21,10 @@ class Note < ApplicationRecord
       .order(:next_study_date)
   }
 
+  scope :due_for_study_prompt, -> {
+    next_to_study.where.not(category: :draft_journal)
+  }
+
   def previous_note
     all_notes = Current.user&.notes.order(:next_study_date)
     notes_table = Note.arel_table

@@ -5,25 +5,27 @@
     <% end %>
 
     <div class="note__actions">
-      <%= link_to t("note.actions.journal"),
-                  link_journals_note_path(note, from_todays_notes: @todays_notes.present?),
-                  class: "btn btn--light",
-                  data: { turbo_frame: dom_id(note) } %>
+      <% unless note.draft_journal? %>
+        <%= link_to t("note.actions.journal"),
+                    link_journals_note_path(note, from_todays_notes: @todays_notes.present?),
+                    class: "btn btn--light",
+                    data: { turbo_frame: dom_id(note) } %>
 
-      <% if @todays_notes.present? %>
-        <%= button_to t("note.actions.studied"),
-                      mark_note_as_studied_note_path(note),
-                      form: { data: { turbo_confirm: t("note.actions.studied_warning") } },
-                      class: "btn btn--light" %>
-      <% else %>
-        <span class="note__next_review">
-          <%= turbo_frame_tag "next_review_timestamp_#{note.id}" do %>
-            <%= render partial: "notes/next_review_timestamp", locals: { note: note } %>
+        <% if @todays_notes.present? %>
+          <%= button_to t("note.actions.studied"),
+                        mark_note_as_studied_note_path(note),
+                        form: { data: { turbo_confirm: t("note.actions.studied_warning") } },
+                        class: "btn btn--light" %>
+        <% else %>
+          <span class="note__next_review">
+            <%= turbo_frame_tag "next_review_timestamp_#{note.id}" do %>
+              <%= render partial: "notes/next_review_timestamp", locals: { note: note } %>
+            <% end %>
+          </span>
+
+          <%= turbo_frame_tag "change_note_due_date_#{note.id}" do %>
+            <%= render partial: "notes/change_note_due_date_button", locals: { note: note } %>
           <% end %>
-        </span>
-
-        <%= turbo_frame_tag "change_note_due_date_#{note.id}" do %>
-          <%= render partial: "notes/change_note_due_date_button", locals: { note: note } %>
         <% end %>
       <% end %>
 

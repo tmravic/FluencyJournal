@@ -17,6 +17,12 @@
     justify-content: space-between;
     gap: var(--space-xs);
 
+    h2 {
+      margin: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
     h5 {
       font-size: var(--font-size-s);
     }
@@ -28,6 +34,40 @@
 
     a, button {
       font-size: var(--font-size-xs);
+    }
+
+    .header {
+      display: flex;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-xxs);
+      margin: 0;
+
+      turbo-frame {
+        display: inline-flex;
+        flex-shrink: 0;
+      }
+
+      .btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 50rem) {
+      align-items: center;
+      gap: var(--space-xxs);
+
+      .header {
+        gap: var(--space-xxxs);
+
+        .btn {
+          padding: var(--space-xxxs);
+          font-size: var(--font-size-xs);
+        }
+      }
     }
   }
 

@@ -44,6 +44,9 @@ ja:
   note:
     todays_notes: "今日のノート"
     all_notes: "全ノート"
+    drafts: "下書き"
+    draft_journals: "下書き日記"
+    empty_state_drafts: "下書き日記のノートはまだありません！"
     close: "閉じる"
     new: "新規"
     next_review: "次回復習"
