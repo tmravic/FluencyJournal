@@ -11,7 +11,7 @@ class Note < ApplicationRecord
     message: "%{value} is not a valid category"
   }
 
-  enum :category, { vocab: 0, grammar: 1, draft_journal: 2, automatic: 3 }
+  enum :category, { vocab: 0, grammar: 1, draft_journal: 2 }
 
   scope :by_user, ->(user = Current.user) { where(user_id: user&.id) }
 

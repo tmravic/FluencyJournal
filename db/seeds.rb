@@ -63,9 +63,9 @@ entries.each do |entry_attrs|
 end
 
 user1.notes.create(content: '24 hours ago', category: 2, next_study_date: DateTime.now - 24.hours)
-user1.notes.create(content: 'そんなもんか', category: 3, next_study_date: DateTime.now)
+user1.notes.create(content: 'そんなもんか', category: 0, next_study_date: DateTime.now)
 user1.notes.create(content: '24 hours later', category: 0, next_study_date: DateTime.now + 24.hours)
 
 user2.notes.create(content: '24 hours ago', category: 2, next_study_date: DateTime.now - 24.hours)
-user2.notes.create(content: 'そんなもんか', category: 3, next_study_date: DateTime.now)
+user2.notes.create(content: 'そんなもんか', category: 0, next_study_date: DateTime.now)
 user2.notes.create(content: '24 hours later', category: 0, next_study_date: DateTime.now + 24.hours)

@@ -21,12 +21,8 @@
   <%= hidden_field_tag :update_from_todays_notes, @update_from_todays_notes if @update_from_todays_notes %>
 
   <div class="form__input__button_block">
-    <% if automatic %>
-      <%= f.select :category, Note.categories.keys.map { |key| [ Note.human_attribute_name("categories.#{key}"), key ] },
-                   { selected: 'automatic' } %>
-    <% else %>
-      <%= f.select :category, hide_automatic_notes_option %>
-    <% end %>
+    <%= f.select :category, note_category_options,
+                 { selected: automatic ? "vocab" : note.category } %>
     <%= link_to t("cancel"), determine_cancel_path, class: "btn btn--light", data: { turbo_frame: "notes_box" } %>
     <%= f.submit class: "btn btn--secondary" %>
   </div>
