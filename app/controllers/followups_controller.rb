@@ -12,7 +12,10 @@ class FollowupsController < ApplicationController
       redirect_to(@journal ? journal_path(@journal) : root_path) && return
     end
 
-    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user)
+    @followup_template_prompts = get_template_prompts_scoped_by_user(
+      Current.user,
+      due_notes_dropdown: class_name == "JournalFollowup" ? :short : :full
+    )
 
     @followup_prompt = set_correct_prompt_type(class_name)
     @followup = @followup_prompt.build_followup
@@ -105,17 +108,28 @@ class FollowupsController < ApplicationController
       end
     end
 
-    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user)
+    @followup_template_prompts = get_template_prompts_scoped_by_user(
+      Current.user,
+      due_notes_dropdown: followup_origin_class == JournalFollowup ? :short : :full
+    )
 
     # create followup prompt
-    followup_prompt_params = followup_params.dig(:followup_prompt)
+    followup_prompt_params = followup_params.dig(:followup_prompt).to_h
+
+    if followup_origin_class == JournalFollowup
+      expanded_base_content = expand_due_notes_prompt(
+        followup_prompt_params[:base_content],
+        Current.user
+      )
+      followup_prompt_params[:base_content] = expanded_base_content if expanded_base_content
+    end
 
     # FreeQuestionPrompt
     @followup_prompt = set_correct_prompt_type(
       followup_origin_class,
       params: followup_prompt_params
     )
-    base_content = "Followup Question: #{followup_prompt_params.dig(:base_content)}"
+    base_content = "Followup Question: #{followup_prompt_params[:base_content]}"
     user_generated_content = "Reference text: #{followup_prompt_params.dig(:user_generated_content)}"
     raw_prompt = base_content + "\n" + user_generated_content
     @followup_prompt.raw_prompt = raw_prompt

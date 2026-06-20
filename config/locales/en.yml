@@ -153,6 +153,7 @@ en:
     no_selection: "No prompt selected"
     cannot_delete_system: "This template is provided automatically and cannot be deleted."
     due_notes_prefix: "Show me how to edit an existing sentence or add a new one using words from this list in my journal: "
+    due_notes_short: "Use my due notes in this journal"
 
   activerecord:
     errors:

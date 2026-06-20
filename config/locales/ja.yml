@@ -149,6 +149,7 @@ ja:
     no_selection: "プロンプトが選択されていません"
     cannot_delete_system: "このテンプレートは自動的に提供されるもので、削除できません。"
     due_notes_prefix: "このリストの言葉を使って、日記で既存の文を編集したり、新しい文を追加したりする方法を教えて： "
+    due_notes_short: "復習期限のノートをこの日記で使う"
 
   activerecord:
     errors:
