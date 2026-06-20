@@ -99,6 +99,8 @@ en:
       quiz_me: "Quiz me"
       double_check: "Double Check"
       linked_notes: "Linked Notes"
+  quiz:
+    assessment: "Assessment"
   quiz_answer:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
     check_answer: "Check answer"

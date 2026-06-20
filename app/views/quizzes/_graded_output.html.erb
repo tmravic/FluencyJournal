@@ -7,13 +7,8 @@
   <% if assessment.present? %>
     <%= turbo_frame_tag "#{entry_keyword}#{assessment_output.identifier}" do %>
       <div class="card__change__title">
-        <h4><%= "Assessment" %></h4>
+        <h4><%= t("quiz.assessment") %></h4>
         <div>
-          <%= button_to t("delete"),
-                        ai_output_path(assessment_output.id, source_tag: source_tag),
-                        method: :delete,
-                        data: { turbo_stream: true },
-                        class: "btn btn--light" %>
           <%= link_to t('followup.followup'),
                       new_followup_path(
                         class_name: assessment_output.class,

@@ -3,13 +3,8 @@
     <% if @assessment_output %>
       <%= turbo_frame_tag "#{@prompt.change_keyword}#{@assessment_output.identifier}" do %>
         <div class="card__change__title">
-          <h4>Assessment</h4>
+          <h4><%= t("quiz.assessment") %></h4>
           <div>
-            <%= button_to t("delete"),
-                          ai_output_path(@assessment_output.id),
-                          method: :delete,
-                          data: { turbo_stream: true },
-                          class: "btn btn--light" %>
             <%= link_to t('followup.followup'),
                         new_followup_path(
                           class_name: @assessment_output.class,
