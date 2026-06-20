@@ -35,6 +35,7 @@ class QuizzesController < ApplicationController
     @ai_output = AiOutput.find(params.dig(:ai_output))
     @identifier = @ai_output.identifier
     @entry_content = @journal.full_journal.slice(@identifier.to_i - 1)
+    @entry = @journal.entries.order(:id).offset(@identifier.to_i - 1).first
 
     respond_to do |format|
       format.turbo_stream

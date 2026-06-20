@@ -1,3 +1,8 @@
 <%= turbo_stream.update @quiz_entry_frame,
                         partial: "quizzes/peek",
-                        locals: { journal: @journal, entry_content: @entry_content, identifier: @identifier } %>
+                        locals: {
+                          journal: @journal,
+                          entry_content: @entry_content,
+                          identifier: @identifier,
+                          entry: @entry
+                        } %>

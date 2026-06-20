@@ -9,9 +9,19 @@
       <%= entry_content %>
     </p>
   </div>
-  <%= link_to "Go back", unpeek_journal_quizzes_path(journal, frame: @quiz_entry_frame, quiz_id: @quiz),
-              class: "btn btn--secondary",
-              style: "margin: var(--space-xxs) 0",
-              data: { turbo_stream: true }
-  %>
+  <div class="form__input__button_block" style="margin: var(--space-xxs) 0">
+    <% if entry %>
+      <button type="button"
+              class="btn btn--light"
+              data-controller="tts"
+              data-tts-url-value="<%= speak_journal_entry_path(journal, entry) %>"
+              data-action="click->tts#play">
+        <%= t("entry.listen") %>
+      </button>
+    <% end %>
+    <%= link_to "Go back",
+                unpeek_journal_quizzes_path(journal, frame: @quiz_entry_frame, quiz_id: @quiz),
+                class: "btn btn--secondary",
+                data: { turbo_stream: true } %>
+  </div>
 <% end %>
