@@ -1,4 +1,11 @@
 <% if @reading_mode %>
+  <button type="button"
+          class="btn btn--light"
+          data-controller="tts"
+          data-tts-url-value="<%= speak_journal_path(@journal) %>"
+          data-action="click->tts#play">
+    <%= t("entry.listen") %>
+  </button>
   <%= link_to t('journal.actions.reading_mode'),
               reading_mode_journal_path(@journal, reading_mode: false),
               class: "btn btn--dark",

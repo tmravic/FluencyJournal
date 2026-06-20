@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     member do
       get :open_ai_assistant
       get :reading_mode
+      get :speak
       post :mark_journal_as_studied
       get :change_due_date
       post :update_due_date
