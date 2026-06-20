@@ -92,3 +92,53 @@
   width: 100%;
   margin-top: var(--space-xs); /* extra space above the buttons */
 }
+
+.note--link-journals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.note__link-journals-label {
+  font-size: var(--font-size-s);
+  font-weight: bold;
+  color: var(--color-text-body);
+}
+
+.note__journal-select {
+  width: 100%;
+  padding: var(--space-xxs);
+  border: var(--border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-white);
+  color: var(--color-text-body);
+  font-size: var(--font-size-s);
+  line-height: 1.5;
+  box-shadow: var(--shadow-small);
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px hsl(101 45% 56% / 0.25), var(--shadow-small);
+  }
+
+  option {
+    padding: var(--space-xxs) var(--space-xs);
+    border-radius: var(--border-radius);
+  }
+}
+
+[data-theme="dark"] {
+  .btn--journal-short {
+    color: var(--color-text-header);
+    background-image: linear-gradient(to right, hsl(45, 45%, 32%), hsl(40, 40%, 26%));
+  }
+
+  .note__journal-select {
+    &:focus {
+      border-color: var(--color-secondary);
+      box-shadow: 0 0 0 2px hsl(101 45% 56% / 0.35), var(--shadow-small);
+    }
+  }
+}

@@ -1,9 +1,12 @@
 class NotesController < ApplicationController
-  before_action :set_note, only: %i[ show edit update destroy mark_note_as_studied change_due_date update_due_date ]
+  before_action :set_note, only: %i[
+    show edit update destroy mark_note_as_studied change_due_date update_due_date
+    link_journals update_journals cancel_link_journals
+  ]
 
   def index
     @source_tag = "notes_box"
-    @todays_notes = Current.user&.notes.next_to_study
+    @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
     @due_today = @todays_notes.count
     respond_to do |format|
       format.html
@@ -13,10 +16,19 @@ class NotesController < ApplicationController
 
   def all
     @source_tag = "notes_box"
-    @all_notes = Current.user&.notes.order(:next_study_date)
+    @all_notes = Current.user&.notes.order(:next_study_date).includes(:followups, :journals)
     respond_to do |format|
       format.html
       format.turbo_stream
+    end
+  end
+
+  def for_journal
+    @source_tag = "notes_box"
+    @journal = Current.user.journals.find(params[:journal_id])
+    @journal_notes = @journal.notes.order(:next_study_date).includes(:followups, :journals)
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -149,6 +161,30 @@ class NotesController < ApplicationController
     end
   end
 
+  def link_journals
+    set_notes_view_context
+    @note = Current.user.notes.includes(:journals).find(params[:id])
+    @journals = Current.user.journals.order(:title)
+  end
+
+  def cancel_link_journals
+    set_notes_view_context
+    @note = Current.user.notes.includes(:followups, :journals).find(params[:id])
+  end
+
+  def update_journals
+    set_notes_view_context
+    @note = Current.user.notes.includes(:journals, :followups).find(params[:id])
+    @note.journal_ids = journal_link_params[:journal_ids] || []
+
+    if @note.save
+      render :update_journals
+    else
+      @journals = Current.user.journals.order(:title)
+      render :link_journals, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def delete_came_from_todays_notes?
@@ -169,9 +205,9 @@ class NotesController < ApplicationController
 
   def get_collection_from_view_context(view_context)
     if view_context == "todays_notes"
-      @todays_notes = Current.user&.notes.next_to_study
+      @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
     elsif view_context == "all_notes"
-      @all_notes = Current.user&.notes.order(:next_study_date)
+      @all_notes = Current.user&.notes.order(:next_study_date).includes(:followups, :journals)
     end
   end
 
@@ -179,7 +215,17 @@ class NotesController < ApplicationController
     @note = Current.user.notes.find(params.expect(:id))
   end
 
+  def set_notes_view_context
+    @from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:from_todays_notes])
+    @source_tag = "notes_box"
+    @todays_notes = @from_todays_notes ? Current.user&.notes.next_to_study : nil
+  end
+
+  def journal_link_params
+    params.fetch(:note, {}).permit(journal_ids: [])
+  end
+
   def note_params
-    params.expect(note: [ :content, :meaning, :extras, :user_id, :journal_id, :category, :ai_query_id ])
+    params.expect(note: [ :content, :meaning, :extras, :user_id, :journal_ids, :category, :ai_query_id ])
   end
 end

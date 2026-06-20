@@ -1,0 +1,31 @@
+<div class="note note--link-journals">
+  <%= form_with model: note,
+                url: update_journals_note_path(note),
+                method: :post,
+                data: { turbo_frame: dom_id(note) } do |f| %>
+    <%= hidden_field_tag :from_todays_notes, from_todays_notes %>
+
+    <label for="<%= dom_id(note, :journal_ids) %>" class="note__link-journals-label">
+      <%= t("note.link_journals_label") %>
+    </label>
+    <%= f.collection_select :journal_ids,
+                            journals,
+                            :id,
+                            :title,
+                            { selected: note.journals.map(&:id) },
+                            {
+                              multiple: true,
+                              id: dom_id(note, :journal_ids),
+                              class: "note__journal-select",
+                              size: [ journals.size, 6 ].min.clamp(3, 6)
+                            } %>
+
+    <div class="form__input__button_block">
+      <%= link_to t("cancel"),
+                  cancel_link_journals_note_path(note, from_todays_notes: from_todays_notes),
+                  class: "btn btn--light",
+                  data: { turbo_frame: dom_id(note) } %>
+      <%= f.submit t("note.link_journals_save"), class: "btn btn--secondary" %>
+    </div>
+  <% end %>
+</div>

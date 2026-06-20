@@ -1,0 +1,19 @@
+<div class="container">
+  <%= turbo_frame_tag "notes_box" do %>
+    <div class="notes_box_scroll">
+      <%= turbo_frame_tag Note.new do %>
+        <%= render "notes/empty_state_journal" unless @journal_notes.present? %>
+      <% end %>
+
+      <%= turbo_frame_tag "note_header" do %>
+        <%= render "notes/notes_header_journal" if @journal_notes.present? %>
+      <% end %>
+
+      <%= turbo_frame_tag "notes" do %>
+        <% if @journal_notes.present? %>
+          <%= render @journal_notes, source_tag: @source_tag %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

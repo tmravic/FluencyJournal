@@ -14,10 +14,13 @@
       <%= render 'entries/start_entry_button' %>
     <% end %>
 
-    <%= turbo_frame_tag "mark_studied_button" do %>
-      <% if @entries.present? %>
-        <%= render partial: 'journals/mark_studied_button', locals: { journal: @journal } %>
-      <% end %>
+    <%= turbo_frame_tag "double_check_button" do %>
+      <!-- changed this to just say "Followup" -->
+      <%= render 'journals/double_check_button', journal: @journal if @entries.present? %>
+    <% end %>
+
+    <%= turbo_frame_tag "linked_notes_button" do %>
+      <%= render "journals/linked_notes_button", journal: @journal %>
     <% end %>
 
     <%= turbo_frame_tag "reading_mode_button" do %>
@@ -32,8 +35,10 @@
       <%= render 'quizzes/quiz_buttons' if @entries.present? %>
     <% end %>
 
-    <%= turbo_frame_tag "double_check_button" do %>
-      <%= render 'journals/double_check_button', journal: @journal if @entries.present? %>
+    <%= turbo_frame_tag "mark_studied_button" do %>
+      <% if @entries.present? %>
+        <%= render partial: 'journals/mark_studied_button', locals: { journal: @journal } %>
+      <% end %>
     <% end %>
   </div>
   <br>

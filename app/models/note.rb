@@ -1,5 +1,6 @@
 class Note < ApplicationRecord
   belongs_to :user
+  has_and_belongs_to_many :journals
   has_and_belongs_to_many :followups
   has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
 

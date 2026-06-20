@@ -59,11 +59,17 @@ en:
     updated: "Note was successfully updated."
     deleted: "Note was successfully deleted."
     no_date_set: "日付なし"
+    link_journals_label: "Link to journals"
+    link_journals_save: "Save"
+    linked_to_journal: "Notes linked to %{title}"
+    empty_state_linked: "No notes linked to %{title} yet."
     actions:
+      journal: "Journal"
       studied: "Studied"
       studied_warning: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?"
       will_return: "Note will return on %{date}"
   journal:
+    short: "J"
     close_journal: "Close journal"
     empty_state: "You don't have any journals yet!"
     empty_state_due: "You don't have any journals due today!"
@@ -89,6 +95,7 @@ en:
       reading_mode: "Reading Mode"
       quiz_me: "Quiz me"
       double_check: "Double Check"
+      linked_notes: "Linked Notes"
   quiz_answer:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
     check_answer: "Check answer"

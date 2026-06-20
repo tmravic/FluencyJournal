@@ -42,6 +42,20 @@
     }
   }
 
+  &--journal-short {
+    padding: 0 var(--space-xxxs);
+    color: var(--color-text-header);
+    background-image: linear-gradient(to right, var(--color-tertiary), hsl(45, 85%, 58%));
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &:active {
+      color: var(--color-text-header);
+      filter: saturate(1.15) brightness(108%);
+    }
+  }
+
   &--secondary {
     color: var(--color-white);
     background-image: linear-gradient(to right, var(--color-secondary), var(--color-secondary-rotate));

@@ -58,11 +58,17 @@ ja:
     updated: "ノートを更新しました。"
     deleted: "ノートを削除しました。"
     no_date_set: "日付なし"
+    link_journals_label: "日記にリンク"
+    link_journals_save: "保存"
+    linked_to_journal: "%{title}にリンクされたノート"
+    empty_state_linked: "%{title}にリンクされたノートはまだありません。"
     actions:
+      journal: "日記"
       studied: "学習済み"
       studied_warning: "今日の日記の文章で内容を使用した場合、ノートを学習としてマークします。学習済みにマークし、将来の日に設定しますか？"
       will_return: "このノートは%{date}に復習が再開されます。"
   journal:
+    short: "日"
     close_journal: "日記を閉じる"
     empty_state: "まだ日記がありません。"
     add_journal: "日記追加"
@@ -85,6 +91,7 @@ ja:
       reading_mode: "読書モード"
       quiz_me: "クイズ"
       double_check: "追加質問"
+      linked_notes: "リンクノート"
   quiz_answer:
     retry: "「リトライ」は、このクイズの保存されたクイズ回答の試行を変更しません。これは練習のためだけにエクササイズを繰り返すためのものです。このクイズ回答をクリアしてリトライしますか？"
     check_answer: "返答を確認"

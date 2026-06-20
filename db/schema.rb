@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_20_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_20_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -120,6 +120,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_20_120000) do
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_journals_on_group_id"
     t.index ["user_id"], name: "index_journals_on_user_id"
+  end
+
+  create_table "journals_notes", id: false, force: :cascade do |t|
+    t.bigint "journal_id", null: false
+    t.bigint "note_id", null: false
+    t.index ["journal_id", "note_id"], name: "index_journals_notes_on_journal_id_and_note_id", unique: true
+    t.index ["journal_id"], name: "index_journals_notes_on_journal_id"
+    t.index ["note_id"], name: "index_journals_notes_on_note_id"
   end
 
   create_table "notes", force: :cascade do |t|

@@ -47,12 +47,16 @@ Rails.application.routes.draw do
   resources :notes do
     collection do
       get :all
+      get :for_journal
       get :new_automatic, as: :new_automatic
     end
     member do
       post :mark_note_as_studied
       get :change_due_date
       post :update_due_date
+      get :link_journals
+      post :update_journals
+      get :cancel_link_journals
     end
   end
   resources :followups, only: [ :new, :create, :show, :destroy ]

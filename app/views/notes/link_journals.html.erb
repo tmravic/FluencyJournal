@@ -1,0 +1,8 @@
+<%= turbo_frame_tag @note do %>
+  <%= render partial: "notes/link_journals_form",
+             locals: {
+               note: @note,
+               journals: @journals,
+               from_todays_notes: @from_todays_notes
+             } %>
+<% end %>
