@@ -12,11 +12,6 @@ class FollowupsController < ApplicationController
       redirect_to(@journal ? journal_path(@journal) : root_path) && return
     end
 
-    @followup_template_prompts = get_template_prompts_scoped_by_user(
-      Current.user,
-      due_notes_dropdown: class_name == "JournalFollowup" ? :short : :full
-    )
-
     @followup_prompt = set_correct_prompt_type(class_name)
     @followup = @followup_prompt.build_followup
 
@@ -40,10 +35,18 @@ class FollowupsController < ApplicationController
 
       if klass == AiOutput
         @journal = @followup_origin.ai_query.journal
+        if quiz_assessment_followup?(@followup_origin)
+          @reference_text = helpers.quiz_graded_entries_reference_text(@followup_origin.ai_query, Current.user)
+        end
       elsif klass == Entry
         @journal = @followup_origin.journal
       end
     end
+
+    @followup_template_prompts = get_template_prompts_scoped_by_user(
+      Current.user,
+      due_notes_dropdown: due_notes_dropdown_format(@followup_origin)
+    )
 
     @uuid = SecureRandom.uuid
     @ai_models = get_ai_models
@@ -110,13 +113,13 @@ class FollowupsController < ApplicationController
 
     @followup_template_prompts = get_template_prompts_scoped_by_user(
       Current.user,
-      due_notes_dropdown: followup_origin_class == JournalFollowup ? :short : :full
+      due_notes_dropdown: due_notes_dropdown_format(@followup_origin)
     )
 
     # create followup prompt
     followup_prompt_params = followup_params.dig(:followup_prompt).to_h
 
-    if followup_origin_class == JournalFollowup
+    if followup_origin_class == JournalFollowup || quiz_assessment_followup?(@followup_origin)
       expanded_base_content = expand_due_notes_prompt(
         followup_prompt_params[:base_content],
         Current.user
@@ -167,6 +170,14 @@ class FollowupsController < ApplicationController
     set_user_and_journal_based_on_origin_class(@followup.origin.class)
   end
 
+  def cancel
+    @source_tag = params[:source_tag].presence || "ai_assistant"
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   def destroy
     @journal = Journal.find(params.dig(:journal)) if params.dig(:journal)
     @source_tag = params.dig(:source_tag)
@@ -178,6 +189,20 @@ class FollowupsController < ApplicationController
   end
 
   private
+
+  def quiz_assessment_followup?(followup_origin)
+    followup_origin.is_a?(AiOutput) &&
+      followup_origin.identifier == "assessment" &&
+      followup_origin.ai_query.prompt.is_a?(QuizResultPrompt)
+  end
+
+  def due_notes_dropdown_format(followup_origin)
+    if followup_origin.is_a?(JournalFollowup) || quiz_assessment_followup?(followup_origin)
+      :short
+    else
+      :full
+    end
+  end
 
   def saving_new_template_prompt?
     params[:save_as_template] == "1"

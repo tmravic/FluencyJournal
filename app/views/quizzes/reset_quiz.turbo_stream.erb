@@ -27,3 +27,4 @@
       locals: { entries: @entries, journal: @journal, source_tag: @source_tag }
     ) %>
 <%= turbo_stream.update "ai_assistant", "" %>
+<%= turbo_stream.update "followup_output_ai_assistant", "" %>

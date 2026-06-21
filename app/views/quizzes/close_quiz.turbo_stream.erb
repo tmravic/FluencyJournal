@@ -30,6 +30,7 @@
     ) %>
 
 <%= turbo_stream.update "ai_assistant", "" %>
+<%= turbo_stream.update "followup_output_ai_assistant", "" %>
 
 <%# Restore previous queries so the completed graded quiz appears in history %>
 <%= turbo_stream.update "previous_queries",

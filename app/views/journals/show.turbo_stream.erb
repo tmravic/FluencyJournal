@@ -13,6 +13,7 @@
   <%= turbo_stream.update("open_ai_assistant_button", partial: "entries/open_ai_assistant_button")%>
   <%= turbo_stream.update("start_entry_button", partial: "entries/start_entry_button")%>
   <%= turbo_stream.update("ai_assistant", "") %>
+  <%= turbo_stream.update("followup_output_ai_assistant", "") %>
   <%= turbo_stream.update(dom_id(@entry), "") if @entry.present? %>
 
 <% end %>

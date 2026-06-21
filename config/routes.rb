@@ -61,7 +61,11 @@ Rails.application.routes.draw do
       get :cancel_link_journals
     end
   end
-  resources :followups, only: [ :new, :create, :show, :destroy ]
+  resources :followups, only: [ :new, :create, :show, :destroy ] do
+    collection do
+      get :cancel
+    end
+  end
   resources :ai_outputs, only: [ :destroy ] do
     member do
       get :speak

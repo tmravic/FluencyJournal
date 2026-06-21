@@ -163,17 +163,27 @@ class AiQuery < ApplicationRecord
 
     # {"overall_accuracy"=> "The translations are mostly accurate..."}
     return content["overall_accuracy"] if content["overall_accuracy"]
-    return content.dig("assessment", "overall_accuracy") if content.dig("assessment", "overall_accuracy")
+    if is_hash?(content.dig("assessment"))
+      return content.dig("assessment", "overall_accuracy") if content.dig("assessment", "overall_accuracy")
+    end
 
     return content["summary"] if content["summary"]
 
     return content["main_points"] if content["main_points"]
-    return content.dig("assessment", "main_points") if content.dig("assessment", "main_points")
+    if is_hash?(content.dig("assessment"))
+      return content.dig("assessment", "main_points") if content.dig("assessment", "main_points")
+    end
 
     # {"grammar_points"=>"Particle usage (へ vs せずに) and noun phrase ..."}
     return content["grammar_points"] if content["grammar_points"]
+    return content["grammar_points_to_review"] if content["grammar_points_to_review"]
+    return content["grammar_points_to_improve"] if content["grammar_points_to_improve"]
+    return content["particle usage"] if content["particle usage"]
     return content["overall_comment"] if content["overall_comment"]
-    return content.dig("assessment", "grammar_points") if content.dig("assessment", "grammar_points")
+
+    if is_hash?(content.dig("assessment"))
+      return content.dig("assessment", "grammar_points") if content.dig("assessment", "grammar_points")
+    end
 
     # content.keys
     # ["entry_1", "entry_2", "entry_3", "entry_4", "assessment"]
@@ -188,7 +198,6 @@ class AiQuery < ApplicationRecord
     end
 
     return content["assessment"] if content["assessment"]
-    return content["grammar_points_to_improve"] if content["grammar_points_to_improve"]
 
     if content.keys.any? { |key| key.to_s.match?(entry_regex) }
       return nil

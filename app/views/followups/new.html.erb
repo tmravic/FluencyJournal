@@ -5,13 +5,13 @@
     <h1>New followup</h1>
   </div>
 
-  <%= turbo_frame_tag @source_tag do %>
-    <% if @source_tag == "notes_box" %>
+  <% if @source_tag == "notes_box" %>
+    <%= turbo_frame_tag @source_tag do %>
       <div class="notes_box_scroll">
         <%= render "form", followup: (@followup || Followup.new) %>
       </div>
-    <% else %>
-      <%= render "form", followup: (@followup || Followup.new) %>
     <% end %>
+  <% else %>
+    <%= render "form", followup: (@followup || Followup.new) %>
   <% end %>
 </main>

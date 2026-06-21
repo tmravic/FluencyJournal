@@ -20,9 +20,36 @@ module QuizzesHelper
         concat content_tag(:div, "(#{contents_hash[:explanation]})")
       end
     else
-      # Plain text fallback (e.g., for non-HTML contexts)
-      output.content
+      render_ai_query_entry_reference_text(ai_query, identifier, entry_keyword, user)
     end
+  end
+
+  def quiz_graded_entries_reference_text(ai_query, user)
+    entry_keyword = ai_query.prompt.change_keyword
+    assessment_output = set_assessment_output(ai_query)
+
+    ai_query.ai_outputs
+      .reject { |output| output == assessment_output }
+      .sort_by { |output| output.identifier.to_i }
+      .map do |output|
+        [
+          "Entry #{output.identifier}:",
+          render_ai_query_entry_reference_text(ai_query, output.identifier, entry_keyword, user)
+        ].join("\n")
+      end
+      .join("\n\n")
+  end
+
+  def render_ai_query_entry_reference_text(ai_query, identifier, entry_keyword, user)
+    contents_hash = create_contents_hash(ai_query, identifier, entry_keyword, user)
+    return "" unless contents_hash[:content_first].present? && contents_hash[:content_last].present?
+
+    [
+      contents_hash[:content_first],
+      "↓",
+      contents_hash[:content_last],
+      "(#{contents_hash[:explanation]})"
+    ].join("\n")
   end
 
   def create_contents_hash(ai_query, identifier, change_keyword, user = nil)

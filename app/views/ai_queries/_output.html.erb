@@ -19,7 +19,7 @@
                         id: corrected_text_output.id,
                         source_tag: source_tag,
                       ),
-                      data: { turbo_frame: source_tag },
+                      data: { turbo_frame: followup_turbo_frame(source_tag) },
                       class: "btn btn--secondary" %>
           <% unless ai_query && corrected_text_output.made_note %>
             <%= turbo_frame_tag "make_note_button_#{corrected_text_output.identifier}" do %>
@@ -70,7 +70,7 @@
                             class: "btn btn--light" %>
               <%= link_to t('followup.followup'),
                           new_followup_path(class_name: output.class, id: output.id, source_tag: source_tag),
-                          data: { turbo_frame: source_tag },
+                          data: { turbo_frame: followup_turbo_frame(source_tag) },
                           class: "btn btn--secondary" %>
               <% unless output.made_note %>
                 <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>

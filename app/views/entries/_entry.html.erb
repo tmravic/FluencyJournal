@@ -22,7 +22,7 @@
                       source_tag: @source_tag
                     ),
                     data: {
-                      turbo_frame: @source_tag,
+                      turbo_frame: followup_turbo_frame(@source_tag),
                       controller: "scroll",
                       action: "click->scroll#scrollToTarget",
                       scroll_target_value: "followup_output_#{@source_tag}"
