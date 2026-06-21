@@ -181,6 +181,11 @@ class FollowupsController < ApplicationController
   def destroy
     @journal = Journal.find(params.dig(:journal)) if params.dig(:journal)
     @source_tag = params.dig(:source_tag)
+    @display_frames = if params[:display_frame].present?
+                        [ params[:display_frame] ]
+                      else
+                        [ helpers.followup_turbo_frame(@source_tag), @source_tag ].uniq
+                      end
     # ex: "ai_assistant" or "notes_box"
     # Used to find the HTML items for turbo streams to delete, ex:
     # "ai_assistant_answer_1"

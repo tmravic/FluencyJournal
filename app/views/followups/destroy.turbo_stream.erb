@@ -1,6 +1,8 @@
 <% if @journal # deleting from the ai_assistant %>
   <%= turbo_stream.update "previous_queries", partial: "journals/previous_queries", locals: { journal: @journal } %>
-  <%= turbo_stream.update followup_turbo_frame(@source_tag), "" %>
+  <% @display_frames.each do |frame| %>
+    <%= turbo_stream.update frame, "" %>
+  <% end %>
 <% else # deleting from the notes_box %>
   <%= turbo_stream.update "notes_box" do %>
     <div class="notes_box_scroll">

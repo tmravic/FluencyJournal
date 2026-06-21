@@ -70,7 +70,11 @@
     <p>Model: <%= ai_query.model_used %></p>
   </div>
 
-  <%= render partial: 'followups/request_form',
-             locals: { followup: followup, source_tag: source_tag } %>
+  <%= render partial: "followups/request_form",
+             locals: {
+               followup: followup,
+               source_tag: source_tag,
+               display_frame: followup_turbo_frame(source_tag)
+             } %>
 <% end %>
 

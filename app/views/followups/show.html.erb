@@ -1,4 +1,5 @@
-<%= turbo_frame_tag @source_tag do %>
+<% followup_frame = @source_tag == "notes_box" ? "notes_box" : followup_turbo_frame(@source_tag) %>
+<%= turbo_frame_tag followup_frame do %>
 
   <% if @source_tag == "notes_box" %>
     <div class="notes_box_scroll">
@@ -64,8 +65,8 @@
       <p>Model: <%= ai_query.model_used %></p>
     </div>
 
-    <%= render partial: 'followups/request_form',
-               locals: { followup: @followup, source_tag: @source_tag } %>
+    <%= render partial: "followups/request_form",
+               locals: { followup: @followup, source_tag: @source_tag, display_frame: followup_frame } %>
 
   <% if @source_tag == "notes_box" %>
     </div>

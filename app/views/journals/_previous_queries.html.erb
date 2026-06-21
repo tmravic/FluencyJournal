@@ -10,10 +10,10 @@
                 followup_path(query.followups.first, source_tag: "ai_assistant"),
                 class: "btn btn--primary",
                 data: {
-                  turbo_frame: "ai_assistant",
+                  turbo_frame: followup_turbo_frame("ai_assistant"),
                   controller: "scroll",
                   action: "click->scroll#scrollToTarget",
-                  scroll_target_value: "ai_assistant"
+                  scroll_target_value: followup_turbo_frame("ai_assistant")
                 } %>
   <% elsif query_unrelated_to_quizzes?(query) %>
     <%= link_to t("ai_query.short"),
