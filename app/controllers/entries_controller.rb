@@ -29,7 +29,8 @@ class EntriesController < ApplicationController
     @source_tag = "ai_assistant"
 
     respond_to do |format|
-      format.turbo_stream
+      format.html { render_entry_display }
+      format.turbo_stream { render_entry_display_stream }
     end
   end
 
@@ -93,6 +94,20 @@ class EntriesController < ApplicationController
   end
 
   private
+
+  def render_entry_display
+    render partial: "entries/entry",
+           locals: { entry: @entry, journal: @journal, source_tag: @source_tag },
+           layout: false
+  end
+
+  def render_entry_display_stream
+    render turbo_stream: turbo_stream.replace(
+      dom_id(@entry),
+      partial: "entries/entry",
+      locals: { entry: @entry, journal: @journal, source_tag: @source_tag }
+    )
+  end
 
   def set_entry
     @entry = Entry.find(params.expect(:id))

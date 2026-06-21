@@ -11,8 +11,7 @@
     <% if entry.persisted? %>
       <%= link_to t("cancel"),
                   cancel_journal_entry_path(journal, entry),
-                  class: "btn btn--light",
-                  data: { turbo_stream: true } %>
+                  class: "btn btn--light" %>
     <% else %>
       <%= link_to t("cancel"),
                   journal_path(journal, cancel: true),

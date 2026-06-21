@@ -1,3 +1,4 @@
+<% source_tag = local_assigns[:source_tag] || @source_tag %>
 <%= turbo_frame_tag entry do %>
   <div class="entry">
     <div class="entry__header">
@@ -19,13 +20,13 @@
                     new_followup_path(
                       class_name: entry.class,
                       id: entry.id,
-                      source_tag: @source_tag
+                      source_tag: source_tag
                     ),
                     data: {
-                      turbo_frame: followup_turbo_frame(@source_tag),
+                      turbo_frame: followup_turbo_frame(source_tag),
                       controller: "scroll",
                       action: "click->scroll#scrollToTarget",
-                      scroll_target_value: "followup_output_#{@source_tag}"
+                      scroll_target_value: followup_turbo_frame(source_tag)
                     },
                     class: "btn btn--light" %>
         <%= link_to t("edit"),
