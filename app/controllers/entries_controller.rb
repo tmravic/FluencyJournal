@@ -1,6 +1,6 @@
 class EntriesController < ApplicationController
   require "securerandom"
-  before_action :set_journal, only: %i[ new create show edit update destroy speak ]
+  before_action :set_journal, only: %i[ new create show edit update destroy speak cancel ]
   before_action :set_entry, only: %i[ show edit update destroy speak cancel ]
   before_action :get_ai_models, except: :speak
 
