@@ -180,6 +180,7 @@ class AiQuery < ApplicationRecord
     return content["grammar_points_to_improve"] if content["grammar_points_to_improve"]
     return content["particle usage"] if content["particle usage"]
     return content["overall_comment"] if content["overall_comment"]
+    return content["content"] if content["content"]
 
     if is_hash?(content.dig("assessment"))
       return content.dig("assessment", "grammar_points") if content.dig("assessment", "grammar_points")
