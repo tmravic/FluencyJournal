@@ -8,10 +8,17 @@
               placeholder: t('simple_form.placeholders.entry.content') %>
 
   <div class="form__input__button_block">
-    <%= link_to t("cancel"),
-                journal_path(journal, cancel: true),
-                class: "btn btn--light",
-                data: { turbo_frame: dom_id(@entry), turbo_stream: true } %>
+    <% if entry.persisted? %>
+      <%= link_to t("cancel"),
+                  cancel_journal_entry_path(journal, entry),
+                  class: "btn btn--light",
+                  data: { turbo_stream: true } %>
+    <% else %>
+      <%= link_to t("cancel"),
+                  journal_path(journal, cancel: true),
+                  class: "btn btn--light",
+                  data: { turbo_frame: dom_id(entry), turbo_stream: true } %>
+    <% end %>
     <%= f.submit class: "btn btn--secondary", name: nil %>
   </div>
 <% end %>

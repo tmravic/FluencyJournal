@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@entry),
+                         partial: "entries/entry",
+                         locals: { entry: @entry, journal: @journal, source_tag: @source_tag } %>

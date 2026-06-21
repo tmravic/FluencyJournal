@@ -29,8 +29,9 @@
                     },
                     class: "btn btn--light" %>
         <%= link_to t("edit"),
-                    [:edit, journal, entry], # edit_journal_entry_path(journal, entry)
-                    class: "btn btn--light" %>
+                    [:edit, journal, entry],
+                    class: "btn btn--light",
+                    data: { turbo_frame: dom_id(entry) } %>
         <%= button_to t("delete"),
                       [journal, entry],
                       method: :delete,

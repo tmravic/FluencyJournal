@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     resources :entries do
       member do
         get :speak
+        get :cancel
       end
     end
     resources :quizzes, only: [:show] do

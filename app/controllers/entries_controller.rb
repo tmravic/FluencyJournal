@@ -1,7 +1,7 @@
 class EntriesController < ApplicationController
   require "securerandom"
   before_action :set_journal, only: %i[ new create show edit update destroy speak ]
-  before_action :set_entry, only: %i[ show edit update destroy speak ]
+  before_action :set_entry, only: %i[ show edit update destroy speak cancel ]
   before_action :get_ai_models, except: :speak
 
   # GET /entries/1 or /entries/1.json
@@ -22,6 +22,15 @@ class EntriesController < ApplicationController
   # GET /entries/1/edit
   def edit
     @source_tag = "ai_assistant"
+  end
+
+  # GET /journals/:journal_id/entries/:id/cancel
+  def cancel
+    @source_tag = "ai_assistant"
+
+    respond_to do |format|
+      format.turbo_stream
+    end
   end
 
   # POST /entries or /entries.json
