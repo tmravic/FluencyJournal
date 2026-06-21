@@ -1,3 +1,5 @@
+<%= turbo_stream_from "channel_#{uuid}" %>
+
 <% if ai_query_id == t('ai_query.processing') %>
   <div class="card">
     <h4><%= ai_query_id %></h4>

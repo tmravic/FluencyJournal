@@ -1,39 +1,47 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="scroll"
 export default class extends Controller {
-  static values = { target: String }
+  static values = { target: String, scrollOnConnect: Boolean }
+
+  connect() {
+    if (this.scrollOnConnectValue) {
+      requestAnimationFrame(() => this.scrollElementIntoView(this.scrollTarget()))
+    }
+  }
 
   scrollToTop() {
-    console.log("✅ scrollToTop was called");
-    // Scroll to the top of the page
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   scrollToTarget() {
-    console.log("✅ scrollToTarget was called with target:", this.targetValue)
-
     const targetId = this.targetValue
 
-    // Wait for Turbo to finish inserting/updating the frame
-    const onFrameRender = (event) => {
-      if (event.target && event.target.id === targetId) {
-        setTimeout(() => {
-          event.target.scrollIntoView({ behavior: "smooth", block: "start" })
-        }, 30)
+    const scrollToFrame = () => {
+      const element = document.getElementById(targetId)
+      if (element) this.scrollElementIntoView(element)
+    }
 
-        document.removeEventListener("turbo:frame-render", onFrameRender)
+    const handleFrameEvent = (event) => {
+      if (event.target?.id === targetId) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(scrollToFrame)
+        })
+        document.removeEventListener("turbo:frame-load", handleFrameEvent)
+        document.removeEventListener("turbo:frame-render", handleFrameEvent)
       }
     }
 
-    document.addEventListener("turbo:frame-render", onFrameRender)
+    document.addEventListener("turbo:frame-load", handleFrameEvent)
+    document.addEventListener("turbo:frame-render", handleFrameEvent)
 
-    // Safety fallback
-    setTimeout(() => {
-      const element = document.getElementById(targetId)
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" })
-      }
-    }, 800)
+    setTimeout(scrollToFrame, 1000)
+  }
+
+  scrollTarget() {
+    return this.element.closest("turbo-frame") || this.element
+  }
+
+  scrollElementIntoView(element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 }
