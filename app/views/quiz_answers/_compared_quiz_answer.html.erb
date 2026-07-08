@@ -3,7 +3,7 @@
   <div class="quiz_answer">
     <p><%= @original_entry_text %></p>
     <p><%= @ai_output.content %></p>
-    <p><%= @quiz_answer.user_response %></p>
+    <p><%= highlighted_quiz_answer(@original_entry_text, @quiz_answer.user_response) %></p>
   </div>
 <% end %>
 

@@ -7,4 +7,12 @@
     padding: var(--space-xs) var(--space-m);
     font-size: var(--font-size-xl);
   }
+
+  &__match {
+    background-color: color-mix(in srgb, var(--color-secondary) 28%, transparent);
+    border-radius: 0.15em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0.05em 0;
+  }
 }
