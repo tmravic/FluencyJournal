@@ -1,21 +1,31 @@
 <!--QuizAnswer form-->
 <%= simple_form_for [journal, quiz, quiz_answer],
                     html: {
-                      data: { turbo_frame: quiz_answer.ai_output },
+                      data: {
+                        turbo_frame: quiz_answer.ai_output,
+                        controller: "quiz-draft",
+                        quiz_draft_output_id_value: quiz_entry.id,
+                        action: "submit->quiz-draft#clear"
+                      },
                       class: "form entry"
                     } do |f| %>
   <%= form_error_notification(quiz_answer) %>
 
   <%= f.input :user_response,
               html5: true,
-              placeholder: t("quiz_answer.try_to_answer", language: journal.user.learning_language) %>
+              placeholder: t("quiz_answer.try_to_answer", language: journal.user.learning_language),
+              input_html: { data: { quiz_draft_target: "input" } } %>
   <%= f.hidden_field :ai_output_id %>
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
   <div class="form__input__button_block">
     <%= f.submit t("quiz_answer.check_answer"), class: "btn btn--secondary", name: nil %>
     <%= link_to t("quiz_answer.peek"),
                 peek_journal_quizzes_path(quiz.journal, ai_output: quiz_entry, quiz_id: quiz),
-                data: { turbo_stream: true, turbo_confirm: t("quiz_answer.peek_warning") },
+                data: {
+                  turbo_stream: true,
+                  turbo_confirm: t("quiz_answer.peek_warning"),
+                  action: "click->quiz-draft#save"
+                },
                 class: "btn btn--light" %>
   </div>
 <% end %>

@@ -105,7 +105,7 @@ en:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
     check_answer: "Check answer"
     peek: "Peek"
-    peek_warning: "Peek at the answer? This will clear the input field."
+    peek_warning: "Peek at the answer?"
     try_to_answer: "Try to translate this entry back to %{language}."
   entry:
     entry: "Entry %{number}"
