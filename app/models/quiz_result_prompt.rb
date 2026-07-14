@@ -6,11 +6,10 @@ class QuizResultPrompt < Prompt
       "back into #{user.learning_language} sticking closely to the original." +
       "Compare my #{user.learning_language} Quiz Answers to the #{user.learning_language} Original journal entries, " +
       "but just assume that the #{user.original_language} Quiz questions are correct and don't grade them. " +
-      "Keep in mind the full content of the " +
-      "journal such that conveying the same meaning overall in grammatically correct #{user.learning_language} is " +
-      "more important than an exact word-for-word replication of the original text. Check each entry's translation " +
-      "one by one, and include an assessment pointing out any grammar points that I seem to not understand or " +
-      "words used incorrectly based on on my mistakes."
+      "Keep in mind the full content of the journal such that conveying the same meaning overall in grammatically " +
+      "correct #{user.learning_language} is more important than an exact word-for-word replication of the original " +
+      "text. Include an assessment pointing out any grammar points that I seem to not understand or words used " +
+      "incorrectly based on on my mistakes."
   end
 
   def change_keyword
