@@ -3,7 +3,11 @@
 <% ai_query = set_ai_query_when_job_finishes(ai_query_id, "Quiz grading in progress...") %>
 <% assessment_output = set_assessment_output(ai_query) %>
 <% entry_keyword = ai_query.prompt.change_keyword if ai_query %>
-<div class="card">
+<div class="card"
+     <% if assessment.present? %>
+       data-controller="scroll"
+       data-scroll-on-connect-value="true"
+     <% end %>>
   <% if assessment.present? %>
     <%= turbo_frame_tag "#{entry_keyword}#{assessment_output.identifier}" do %>
       <div class="card__change__title">
@@ -129,11 +133,5 @@
                   turbo_stream: true
                 } %>
   </div>
-<% end %>
-
-<% if assessment.present? %>
-  <script>
-    document.getElementById("quiz_results")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  </script>
 <% end %>
 

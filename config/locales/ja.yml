@@ -95,6 +95,7 @@ ja:
       quiz_me: "クイズ"
       double_check: "追加質問"
       linked_notes: "リンクノート"
+      suggest: "提案"
   quiz:
     assessment: "総評"
   quiz_answer:

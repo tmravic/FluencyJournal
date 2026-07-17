@@ -99,6 +99,7 @@ en:
       quiz_me: "Quiz me"
       double_check: "Double Check"
       linked_notes: "Linked Notes"
+      suggest: "Suggest"
   quiz:
     assessment: "Assessment"
   quiz_answer:
