@@ -5,6 +5,10 @@ module QuizAnswerHelper
     safe_join(segments.map { |segment| render_quiz_answer_segment(segment) })
   end
 
+  def quiz_answer_entry(journal, quiz_entry)
+    journal.entries.order(:id).offset(quiz_entry.identifier.to_i - 1).first
+  end
+
   def quiz_answer_match_segments(original, user_response)
     original_text = original.to_s
     user_text = user_response.to_s

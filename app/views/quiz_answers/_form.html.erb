@@ -17,6 +17,7 @@
               input_html: { data: { quiz_draft_target: "input" } } %>
   <%= f.hidden_field :ai_output_id %>
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
+  <% answer_entry = quiz_answer_entry(journal, quiz_entry) %>
   <div class="form__input__button_block">
     <%= f.submit t("quiz_answer.check_answer"), class: "btn btn--secondary", name: nil %>
     <%= link_to t("quiz_answer.peek"),
@@ -27,5 +28,14 @@
                   action: "click->quiz-draft#save"
                 },
                 class: "btn btn--light" %>
+    <% if answer_entry %>
+      <button type="button"
+              class="btn btn--light"
+              data-controller="tts"
+              data-tts-url-value="<%= speak_journal_entry_path(journal, answer_entry) %>"
+              data-action="click->tts#play">
+        <%= t("entry.listen") %>
+      </button>
+    <% end %>
   </div>
 <% end %>
