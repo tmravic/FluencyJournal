@@ -14,6 +14,10 @@
       <%= render 'entries/start_entry_button' %>
     <% end %>
 
+    <%= turbo_frame_tag "compare_button" do %>
+      <%= render 'journals/compare_button' %>
+    <% end %>
+
     <%= turbo_frame_tag "double_check_button" do %>
       <!-- changed this to just say "Followup" -->
       <%= render 'journals/double_check_button', journal: @journal if @entries.present? %>
@@ -27,10 +31,6 @@
       <%= render 'journals/reading_mode_button', locals: { journal: @journal } if @entries.present? %>
     <% end %>
 
-    <%= turbo_frame_tag "change_journal_due_date_button" do %>
-      <%= render 'journals/change_journal_due_date_button', locals: { journal: @journal } if @entries.present? %>
-    <% end %>
-
     <%= turbo_frame_tag "quiz_buttons" do %>
       <%= render 'quizzes/quiz_buttons' if @entries.present? %>
     <% end %>
@@ -39,6 +39,10 @@
       <% if @entries.present? %>
         <%= render partial: 'journals/mark_studied_button', locals: { journal: @journal } %>
       <% end %>
+    <% end %>
+
+    <%= turbo_frame_tag "change_journal_due_date_button" do %>
+      <%= render 'journals/change_journal_due_date_button', locals: { journal: @journal } if @entries.present? %>
     <% end %>
   </div>
   <br>

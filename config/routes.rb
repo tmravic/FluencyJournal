@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       post :mark_journal_as_studied
       get :change_due_date
       post :update_due_date
+      get :compare
     end
     resources :entries do
       member do

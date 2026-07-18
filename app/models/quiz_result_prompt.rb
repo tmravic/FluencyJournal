@@ -2,8 +2,8 @@ class QuizResultPrompt < Prompt
   def role_prompt(user)
     "You are a helpful translator and #{user.learning_language} teacher who will check the answers of my quiz. " +
       "The quiz was based on a journal entry originally written in #{user.learning_language}, where each part " +
-      "was translated into #{user.original_language} to create quiz questions, then I tried to translate each part " +
-      "back into #{user.learning_language} sticking closely to the original." +
+      "was translated into #{user.original_language} to create quiz questions, then I tried to rewrite each part " +
+      "in #{user.learning_language} based roughly on the original." +
       "Compare my #{user.learning_language} Quiz Answers to the #{user.learning_language} Original journal entries, " +
       "but just assume that the #{user.original_language} Quiz questions are correct and don't grade them. " +
       "Keep in mind the full content of the journal such that conveying the same meaning overall in grammatically " +

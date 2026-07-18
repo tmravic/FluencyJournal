@@ -168,6 +168,11 @@ class JournalsController < ApplicationController
     end
   end
 
+  def compare
+    binding.break
+    @journal = Journal.find(params.dig(:id))
+  end
+
   private
 
   def set_journal
