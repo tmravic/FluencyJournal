@@ -48,7 +48,7 @@
       <%= turbo_frame_tag "#{@prompt.change_keyword}#{output.identifier}" do %>
         <div class="card__change">
           <div class="card__change__title">
-            <h4><%= "Entry #{output.identifier}" %></h4>
+            <h4><%= t("entry.entry", number: output.identifier) %></h4>
             <div>
               <%= button_to t("delete"),
                             ai_output_path(output.id),
@@ -89,13 +89,13 @@
     <% end %>
   </div>
   <div class="quiz_delete_buttons">
-    <%= button_to "Delete Quiz",
+    <%= button_to t("quiz.delete"),
                   journal_ai_query_path(@ai_query.journal, @ai_query),
                   method: :delete,
                   data: { turbo_stream: true },
                   class: "btn btn--light", id: "send_button" %>
 
-    <%= link_to "Close",
+    <%= link_to t("close"),
                 close_quiz_journal_quizzes_path(@ai_query.journal),
                 class: "btn btn--dark",
                 data: {

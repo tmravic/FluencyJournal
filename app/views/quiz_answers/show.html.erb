@@ -1,14 +1,14 @@
-<% content_for :title, "Showing quiz answer" %>
+<% content_for :title, t("quiz_answer.showing_title") %>
 
 <div class="container">
 
   <div class="header">
-    <h1>Showing quiz_answer</h1>
+    <h1><%= t("quiz_answer.showing_title") %></h1>
   </div>
 
   <%= render partial: "quiz_answers/compared_quiz_answer" %>
 
   <div>
-    <%= link_to "Edit this quiz answer", edit_journal_quiz_quiz_answer_path(@journal, @quiz, @quiz_answer) %>
+    <%= link_to t("quiz_answer.edit_this"), edit_journal_quiz_quiz_answer_path(@journal, @quiz, @quiz_answer) %>
   </div>
 </div>

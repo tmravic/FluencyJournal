@@ -1,0 +1,58 @@
+<%= turbo_frame_tag "compare" do %>
+  <% selectable_journals = @journals.where.not(id: @journal.id) %>
+
+  <%= form_with url: compare_journal_path(@journal),
+                method: :get,
+                data: { turbo_frame: "compare" } do |f| %>
+    <% if @todays_filter %>
+      <%= hidden_field_tag :todays, true %>
+    <% end %>
+
+    <label for="compare_journal_ids">
+      <%= t("journal.compare_label") %>
+    </label>
+
+    <%= select_tag "journal_ids[]",
+                   options_from_collection_for_select(
+                     selectable_journals,
+                     :id,
+                     :title,
+                     params[:journal_ids]
+                   ),
+                   multiple: true,
+                   required: true,
+                   id: "compare_journal_ids",
+                   class: "note__journal-select",
+                   size: [ [ selectable_journals.size, 1 ].max, 6 ].min.clamp(3, 6) %>
+
+    <div class="form__input__button_block">
+      <%= link_to t("cancel"),
+                  compare_journal_path(@journal, cancel: true),
+                  class: "btn btn--light",
+                  data: { turbo_frame: "compare" } %>
+      <%= link_to t("journal.compare_todays"),
+                  compare_journal_path(@journal, todays: !@todays_filter),
+                  class: @todays_filter ? "btn btn--dark" : "btn btn--light",
+                  data: { turbo_frame: "compare" } %>
+      <%= f.submit t("journal.compare_show"), class: "btn btn--secondary" %>
+    </div>
+  <% end %>
+
+  <% if @compared_journals.present? %>
+    <div class="compare-results">
+      <% @compared_journals.each do |journal| %>
+        <div class="compare-results__journal">
+          <h2 style="margin: 10px 0;">
+            <%= journal.title %>
+          </h2>
+
+          <% journal.entries.ordered.each do |entry| %>
+            <p style="margin: 10px 0;">
+              <%= simple_format(entry.content) %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

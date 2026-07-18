@@ -26,7 +26,7 @@
                   scroll_target_value: "ai_assistant"
                 } %>
   <% elsif query.prompt.is_a?(QuizResultPrompt) %>
-    <%= link_to "T",
+    <%= link_to t("quiz.short"),
                 journal_quiz_path(journal, query.quizzes.last),
                 class: "btn btn--dark",
                 data: {

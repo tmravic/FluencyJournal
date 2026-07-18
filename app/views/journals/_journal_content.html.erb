@@ -46,10 +46,13 @@
     <% end %>
   </div>
   <br>
+
+  <%= turbo_frame_tag "compare" %>
+
   <div style="display:flex;justify-content:space-between;align-items:center;">
 
     <span class="journal__date">
-      First written: <%= @journal.created_at.strftime("%m/%d/%Y") %>
+      <%= t("journal.first_written") %>: <%= @journal.created_at.strftime("%m/%d/%Y") %>
     </span>
 
     <span class="journal__date">

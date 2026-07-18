@@ -1,10 +1,10 @@
 <br>
-<% ai_query = set_ai_query_when_job_finishes(ai_query_id, "Quiz being prepared...") %>
+<% ai_query = set_ai_query_when_job_finishes(ai_query_id, t("quiz.preparing")) %>
 <% if ai_query %>
   <%= render partial: 'quizzes/quizzes_frame', locals: {
     quiz:, ai_query:, journal:, source_tag:, user:, ai_outputs:
   } %>
   <!-- It gets all the locals from PrepareQuizJob -->
-<% elsif ai_query_id == "Quiz being prepared..." %>
+<% elsif ai_query_id == t("quiz.preparing") %>
   <%= ai_query_id %>
 <% end %>

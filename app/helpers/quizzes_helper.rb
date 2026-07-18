@@ -33,7 +33,7 @@ module QuizzesHelper
       .sort_by { |output| output.identifier.to_i }
       .map do |output|
         [
-          "Entry #{output.identifier}:",
+          "#{I18n.t("entry.entry", number: output.identifier)}:",
           render_ai_query_entry_reference_text(ai_query, output.identifier, entry_keyword, user)
         ].join("\n")
       end

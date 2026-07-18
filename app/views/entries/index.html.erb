@@ -1,16 +1,16 @@
 <p style="color: green"><%= notice %></p>
 
-<% content_for :title, "entries" %>
+<% content_for :title, t("entry.index_title") %>
 
-<h1>entries</h1>
+<h1><%= t("entry.index_title") %></h1>
 
 <div id="entries">
   <% @entries.each do |entry| %>
     <%= render entry %>
     <p>
-      <%= link_to "Show this entry", entry %>
+      <%= link_to t("entry.show_this"), [@journal, entry] %>
     </p>
   <% end %>
 </div>
 
-<%= link_to "New entry", new_entry_path %>
+<%= link_to t("entry.new_title"), new_journal_entry_path(@journal) %>

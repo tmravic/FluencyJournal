@@ -1,9 +1,9 @@
-<% content_for :title, "New note" %>
+<% content_for :title, t("note.new_title") %>
 <div class="container">
   <%= link_to sanitize("&larr; #{t("note.back_to_notes")}"), notes_path %>
 
   <div class="header">
-    <h1>New note</h1>
+    <h1><%= t("note.new_title") %></h1>
   </div>
 
   <%= turbo_frame_tag @note do %>

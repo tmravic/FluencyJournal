@@ -89,8 +89,8 @@ class FollowupsController < ApplicationController
     if origin_class_str.blank? || origin_class_str == "Unknown" || origin_class_str == "0"
       Rails.logger.error "FOLLOWUPS#CREATE: Received invalid followup_origin_class=#{origin_class_str.inspect} (id=#{followup_params[:followup_origin_id]}). This usually means the form was rendered before @followup_origin was set."
       respond_to do |format|
-        format.turbo_stream { flash.now[:alert] = "Something went wrong preparing the followup. Please try again." }
-        format.html { redirect_to root_path, alert: "Invalid followup origin." }
+        format.turbo_stream { flash.now[:alert] = t("followup.prepare_error") }
+        format.html { redirect_to root_path, alert: t("followup.invalid_origin") }
       end
       return
     end

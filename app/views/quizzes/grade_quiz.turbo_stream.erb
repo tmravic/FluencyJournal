@@ -1,7 +1,7 @@
 <%= turbo_stream.update(
       "quiz_results",
       partial: "quizzes/graded_output",
-      locals: { ai_query_id: "Quiz grading in progress...", assessment: nil }
+      locals: { ai_query_id: t("quiz.grading"), assessment: nil }
     ) %>
 <%= turbo_stream.replace "grade_quiz_button" do %>
   <%= turbo_frame_tag "previous_queries" do %>

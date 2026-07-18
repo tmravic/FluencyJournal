@@ -6,9 +6,9 @@
 
     <%= hidden_field_tag :source_tag, @source_tag %>
 
-    <%= label_tag "prompt_template", "Prompt templates:", class: "form__label" %>
+    <%= label_tag "prompt_template", t("prompt_templates.label"), class: "form__label" %>
     <%= select_tag "prompt_template",
-                   options_for_select([["— Choose a template —", ""]] + @followup_template_prompts),
+                   options_for_select([[t("prompt_templates.choose_a_template"), ""]] + @followup_template_prompts),
                    class: "form__input" %>
     <div class="followup__prompt_template_buttons">
       <%= submit_tag t('prompt_templates.delete_selected_prompt'), class: "btn btn--primary btn--primary--short" %>

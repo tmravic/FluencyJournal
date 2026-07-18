@@ -169,9 +169,33 @@ class JournalsController < ApplicationController
   end
 
   def compare
-    binding.break
-    @journal = Journal.find(params.dig(:id))
+    @journal = current_group.journals.find(params[:id])
+    @todays_filter = ActiveModel::Type::Boolean.new.cast(params[:todays])
+
+    @journals =
+      if @todays_filter
+        current_group.journals.next_to_study.reorder(:title)
+      else
+        current_group.journals.order(:title)
+      end
+
+    if ActiveModel::Type::Boolean.new.cast(params[:cancel])
+      render html: helpers.turbo_frame_tag("compare"), layout: false
+      return
+    end
+
+    selected_ids = Array(params[:journal_ids]).map(&:presence).compact
+    @compared_journals =
+      if selected_ids.any?
+        current_group.journals
+                     .where(id: selected_ids)
+                     .includes(:entries)
+                     .order(:title)
+      else
+        Journal.none
+      end
   end
+
 
   private
 

@@ -95,19 +95,29 @@ module ApplicationHelper
     { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
   end
 
+  LANGUAGE_CODES = {
+    "English" => "En",
+    "Japanese" => "Ja",
+    "Thai" => "Th"
+  }.freeze
+
   def generate_original_and_learning_language
-    # 英語 → 日本語
-    # or
-    # English → Japanese
-    language_setting = "#{t("#{Current.user.original_language.downcase}")}"
-    language_setting += " → #{t("#{Current.user.learning_language.downcase}")}"
+    # e.g. En → Ja
+    original = language_code(Current.user.original_language)
+    learning = language_code(Current.user.learning_language)
+    "#{original} → #{learning}"
   end
+
+  def language_code(language)
+    LANGUAGE_CODES.fetch(language.to_s) { language.to_s[0, 2].capitalize }
+  end
+
 
   def display_next_review_time(object)
     if object.next_study_date.present?
       next_review_time = object.next_study_date.strftime("%m/%d/%Y")
       today = Date.today.strftime("%m/%d/%Y")
-      next_review_time == today ? "Today" : next_review_time
+      next_review_time == today ? t("today") : next_review_time
     else
       t('note.no_date_set')
     end

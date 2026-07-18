@@ -19,7 +19,7 @@
         <%= t("entry.listen") %>
       </button>
     <% end %>
-    <%= link_to "Go back",
+    <%= link_to t("go_back"),
                 unpeek_journal_quizzes_path(journal, frame: @quiz_entry_frame, quiz_id: @quiz),
                 class: "btn btn--secondary",
                 data: { turbo_stream: true } %>

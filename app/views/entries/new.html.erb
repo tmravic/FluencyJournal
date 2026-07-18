@@ -1,10 +1,10 @@
-<% content_for :title, "New entry" %>
+<% content_for :title, t("entry.new_title") %>
 
 <main class="container">
-  <%= link_to sanitize("&larr; Back to journal"), journal_path(@journal) %>
+  <%= link_to sanitize("&larr; #{t("entry.back_to_journal")}"), journal_path(@journal) %>
 
   <div class="header">
-    <h1>New Entry</h1>
+    <h1><%= t("entry.new_title") %></h1>
   </div>
 
   <%= turbo_frame_tag @entry do %>

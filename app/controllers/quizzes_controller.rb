@@ -18,7 +18,7 @@ class QuizzesController < ApplicationController
       PrepareQuizJob.perform_later(@journal, @api_key, prepare_quiz_prompt)
       @uuid = prepare_quiz_prompt.uuid
 
-      @ai_query_id = "Quiz being prepared..."
+      @ai_query_id = I18n.t("quiz.preparing")
       set_answered_status_in_session
 
       respond_to do |format|

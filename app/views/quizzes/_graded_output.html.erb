@@ -1,6 +1,6 @@
 <br>
 <%= turbo_stream_from "channel_#{@uuid}" %>
-<% ai_query = set_ai_query_when_job_finishes(ai_query_id, "Quiz grading in progress...") %>
+<% ai_query = set_ai_query_when_job_finishes(ai_query_id, t("quiz.grading")) %>
 <% assessment_output = set_assessment_output(ai_query) %>
 <% entry_keyword = ai_query.prompt.change_keyword if ai_query %>
 <div class="card"
@@ -47,10 +47,10 @@
         <%= assessment %>
       </div>
     <% end %>
-  <% elsif ai_query_id == "Quiz grading in progress..." %>
+  <% elsif ai_query_id == t("quiz.grading") %>
     <h4><%= ai_query_id %></h4>
   <% else %>
-    <h4><%= "Quiz results will appear below after grading" %></h4>
+    <h4><%= t("quiz.results_pending") %></h4>
   <% end %>
 
   <% if ai_query %>
@@ -61,12 +61,12 @@
         <div class="card__change">
           <div class="card__change__title">
             <h4>
-              <%= "Entry #{output.identifier}" %>
+              <%= t("entry.entry", number: output.identifier) %>
             </h4>
             <div>
               <% quiz_number = output.identifier.to_i - 1 %>
               <% quiz_answer = quiz.quiz_answers.slice(quiz_number) %>
-              <%= link_to "Retry",
+              <%= link_to t("quiz.retry"),
                             retry_journal_quiz_quiz_answer_path(ai_query.journal, quiz, quiz_answer),
                             method: :get,
                             data: {
@@ -119,13 +119,13 @@
 </div>
 <% if ai_query %>
   <div class="quiz_delete_buttons">
-    <%= button_to "Delete Quiz",
+    <%= button_to t("quiz.delete"),
                   journal_ai_query_path(ai_query.journal, ai_query),
                   method: :delete,
                   data: { turbo_stream: true },
                   class: "btn btn--light", id: "send_button" %>
 
-    <%= link_to "Close",
+    <%= link_to t("close"),
                 close_quiz_journal_quizzes_path(ai_query.journal),
                 class: "btn btn--dark",
                 data: {

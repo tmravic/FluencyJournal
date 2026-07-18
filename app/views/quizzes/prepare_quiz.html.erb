@@ -1,4 +1,4 @@
 <main class="container">
-  <h1>Prepare Quiz view</h1>
-  <%= render 'quizzes/output', locals: { uuid: @uuid, ai_query_id: "Quiz being prepared..." } %>
+  <h1><%= t("quiz.prepare_title") %></h1>
+  <%= render 'quizzes/output', locals: { uuid: @uuid, ai_query_id: t("quiz.preparing") } %>
 </main>

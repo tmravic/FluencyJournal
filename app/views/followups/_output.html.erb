@@ -67,7 +67,7 @@
       <% end %>
     <% end %>
     <hr>
-    <p>Model: <%= ai_query.model_used %></p>
+    <p><%= t("model_label", model: ai_query.model_used) %></p>
   </div>
 
   <%= render partial: "followups/request_form",

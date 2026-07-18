@@ -3,7 +3,7 @@
     <%= form_with url: update_due_date_journal_path(@journal),
                   method: :post do |f| %>
       <%= f.date_field :next_study_date, value: @journal.next_study_date&.to_date %>
-      <%= f.submit "Save", class: "btn btn--light" %>
+      <%= f.submit t("save"), class: "btn btn--light" %>
     <% end %>
   </div>
 <% end %>
