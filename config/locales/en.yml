@@ -141,7 +141,6 @@ en:
       quiz_me: "Quiz"
       double_check: "Double Check"
       linked_notes: "Linked Notes"
-      suggest: "Suggest"
       compare: "Compare"
   quiz:
     short: "T"

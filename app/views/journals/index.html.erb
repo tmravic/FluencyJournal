@@ -21,10 +21,6 @@
 
     <%= turbo_frame_tag "close_journal_button" %>
 
-    <%= turbo_frame_tag "suggest_button" do %>
-      <%= render "journals/suggest_button" %>
-    <% end %>
-
     <%= turbo_frame_tag "start_journal_button" do %>
       <%= render partial: 'journals/start_journal_button', locals: { from_all_or_todays: 'todays' } %>
     <% end %>
