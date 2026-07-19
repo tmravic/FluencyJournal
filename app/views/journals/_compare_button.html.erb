@@ -1,5 +1,5 @@
 <%= link_to t("journal.actions.compare"),
-            compare_journal_path,
+            compare_journal_path(@journal),
             class: "btn btn--light",
             data: {
               turbo_frame: "compare"
