@@ -113,6 +113,24 @@ class QuizzesController < ApplicationController
     end
   end
 
+  def show_hint
+    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
+    @quiz = Quiz.find(params.dig(:quiz))
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def hide_hint
+    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
+    @quiz = Quiz.find(params.dig(:quiz))
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
 
   def destroy_all_unfinished_quizzes!

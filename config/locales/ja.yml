@@ -156,9 +156,11 @@ ja:
     prepare_title: "クイズ準備"
   quiz_answer:
     retry: "「リトライ」は、このクイズの保存されたクイズ回答の試行を変更しません。これは練習のためだけにエクササイズを繰り返すためのものです。このクイズ回答をクリアしてリトライしますか？"
-    check_answer: "返答を確認"
+    submit_answer: "返答を提供"
     peek: "返答を覗く"
     peek_warning: "返答を覗きますか？"
+    show_hint: "%{language}を表示"
+    hide_hint: "%{language}を非表示"
     try_to_answer: "%{language}に訳してみてください。"
     new_title: "クイズ回答 新規"
     editing_title: "クイズ回答 編集"

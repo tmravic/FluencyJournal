@@ -156,9 +156,11 @@ en:
     prepare_title: "Prepare Quiz"
   quiz_answer:
     retry: "Retry doesn't change the saved quiz answer attempt for this quiz. It's only for your practice to repeat the exercise. Clear this one quiz answer and retry it?"
-    check_answer: "Check answer"
+    submit_answer: "Submit answer"
     peek: "Peek"
     peek_warning: "Peek at the answer?"
+    show_hint: "Show %{language}"
+    hide_hint: "Hide %{language}"
     try_to_answer: "Try to translate this entry back to %{language}."
     new_title: "New Quiz Answer"
     editing_title: "Editing quiz answer"

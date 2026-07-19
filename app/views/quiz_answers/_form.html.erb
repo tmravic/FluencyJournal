@@ -19,7 +19,15 @@
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
   <% answer_entry = quiz_answer_entry(journal, quiz_entry) %>
   <div class="form__input__button_block">
-    <%= f.submit t("quiz_answer.check_answer"), class: "btn btn--secondary", name: nil %>
+    <%= f.submit t("quiz_answer.submit_answer"), class: "btn btn--secondary", name: nil %>
+    <%= turbo_frame_tag "show_original_language_button_#{quiz_entry.id}" do %>
+      <%= link_to t("quiz_answer.show_hint", language: journal.user.original_language),
+                  show_hint_journal_quizzes_path(journal, quiz_entry: quiz_entry, quiz: quiz),
+                  data: { turbo_stream: true },
+                  class: "btn btn--light"
+      %>
+    <% end %>
+
     <%= link_to t("quiz_answer.peek"),
                 peek_journal_quizzes_path(quiz.journal, ai_output: quiz_entry, quiz_id: quiz),
                 data: {
