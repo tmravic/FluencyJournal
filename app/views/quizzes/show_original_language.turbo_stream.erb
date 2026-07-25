@@ -2,8 +2,8 @@
   <p><%= simple_format(@quiz_entry.content) %></p>
 <% end %>
 <%= turbo_stream.update "show_original_language_button_#{@quiz_entry.id}" do %>
-  <%= link_to t("quiz_answer.hide_hint", language: @journal.user.original_language),
-              hide_hint_journal_quizzes_path(@journal, quiz_entry: @quiz_entry, quiz: @quiz),
+  <%= link_to t("quiz_answer.hide_original_language", language: @journal.user.original_language),
+              hide_original_language_journal_quizzes_path(@journal, quiz_entry: @quiz_entry, quiz: @quiz),
               data: { turbo_stream: true },
               class: "btn btn--light" %>
 <% end %>

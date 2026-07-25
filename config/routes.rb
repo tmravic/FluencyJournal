@@ -31,8 +31,8 @@ Rails.application.routes.draw do
         get :close_quiz
         get :peek
         get :unpeek
-        get :show_hint
-        get :hide_hint
+        get :show_original_language
+        get :hide_original_language
       end
       member do
         get :grade_quiz

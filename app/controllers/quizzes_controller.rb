@@ -113,7 +113,7 @@ class QuizzesController < ApplicationController
     end
   end
 
-  def show_hint
+  def show_original_language
     @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
     @quiz = Quiz.find(params.dig(:quiz))
 
@@ -122,7 +122,7 @@ class QuizzesController < ApplicationController
     end
   end
 
-  def hide_hint
+  def hide_original_language
     @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
     @quiz = Quiz.find(params.dig(:quiz))
 
