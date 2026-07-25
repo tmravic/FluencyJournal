@@ -9,6 +9,7 @@ class AiQuery < ApplicationRecord
   has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
   has_and_belongs_to_many :followups
   has_many :quizzes, dependent: :destroy
+  has_many :quiz_hints, dependent: :destroy
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true
   validates :raw_response, presence: true
@@ -55,6 +56,27 @@ class AiQuery < ApplicationRecord
   def model_used
     prompt.ai_model
   end
+
+  def create_quiz_hints(translated_response, quiz)
+    translated_response.each do |key, value|
+      # key = "hint_1"
+      identifier = key.split("_").last
+      entry_index = (identifier.to_i - 1)
+      entry = self.journal.entries[entry_index]
+      # value = {"content"=>"子供の頃からどんな飲み物をよく飲んでいましたか？"}
+      content = value.dig("content")
+      ai_outputs.create(
+        made_note: false,
+        identifier: identifier
+      ).tap do |ai_output|
+        content = content
+        QuizHint.create(hint_content: content, quiz: quiz, ai_query: self, entry: entry)
+        ai_output.content = content
+        ai_output.save!
+      end
+    end
+  end
+
 
   def create_quiz_questions(translated_response, expected_count: nil)
     # Filter and sort only the real line_N keys the model actually returned

@@ -1,0 +1,12 @@
+<%# locals: journal, quiz, quiz_entry, enabled (optional) %>
+<% enabled = local_assigns.fetch(:enabled) { quiz.quiz_hints.exists? } %>
+<% if enabled %>
+  <%= link_to t("quiz_answer.show_hint"),
+              show_hint_journal_quizzes_path(journal, quiz_entry: quiz_entry, quiz: quiz),
+              data: { turbo_stream: true },
+              class: "btn btn--light" %>
+<% else %>
+  <span class="btn btn--light" aria-disabled="true" style="opacity: 0.5; pointer-events: none;">
+    <%= t("quiz_answer.show_hint") %>
+  </span>
+<% end %>

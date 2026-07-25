@@ -1,0 +1,10 @@
+<%= turbo_stream.update "hint_entry_#{@quiz_entry.id}" do %>
+  <p><%= simple_format(@hint_content) %></p>
+<% end %>
+
+<%= turbo_stream.update "show_hint_button_#{@quiz_entry.id}" do %>
+  <%= link_to t("quiz_answer.hide_hint"),
+              hide_hint_journal_quizzes_path(@journal, quiz_entry: @quiz_entry, quiz: @quiz),
+              data: { turbo_stream: true },
+              class: "btn btn--light" %>
+<% end %>

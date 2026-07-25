@@ -6,6 +6,7 @@
       </h2>
       <!-- Each quiz_entry is an AiOutput class object-->
     </div>
+    <%= turbo_frame_tag "hint_entry_#{quiz_entry.id}" %>
     <%= turbo_frame_tag "original_language_entry_#{quiz_entry.id}" %>
     <!-- Add form for user to input Japanese translation -->
     <% quiz_answer = build_quiz_answer(quiz, quiz_entry) %>

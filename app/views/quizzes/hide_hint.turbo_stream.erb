@@ -1,0 +1,8 @@
+<%= turbo_stream.update "hint_entry_#{@quiz_entry.id}", "" %>
+<%= turbo_stream.update "show_hint_button_#{@quiz_entry.id}" do %>
+  <%= render "quiz_answers/show_hint_button",
+             journal: @journal,
+             quiz: @quiz,
+             quiz_entry: @quiz_entry,
+             enabled: true %>
+<% end %>

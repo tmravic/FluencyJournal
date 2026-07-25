@@ -125,6 +125,31 @@ class QuizzesController < ApplicationController
   def hide_original_language
     @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
     @quiz = Quiz.find(params.dig(:quiz))
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def show_hint
+    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
+    @quiz = Quiz.find(params.dig(:quiz))
+    quiz_hint = @quiz.quiz_hints.offset(@quiz_entry.identifier.to_i - 1).first
+
+    unless quiz_hint
+      head :unprocessable_entity
+      return
+    end
+
+    @hint_content = quiz_hint.hint_content
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def hide_hint
+    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
+    @quiz = Quiz.find(params.dig(:quiz))
 
     respond_to do |format|
       format.turbo_stream

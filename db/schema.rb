@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_20_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_25_053631) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -168,6 +168,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_20_140000) do
     t.index ["quiz_id"], name: "index_quiz_answers_on_quiz_id"
   end
 
+  create_table "quiz_hints", force: :cascade do |t|
+    t.string "hint_content", null: false
+    t.bigint "quiz_id", null: false
+    t.bigint "entry_id", null: false
+    t.bigint "ai_query_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ai_query_id"], name: "index_quiz_hints_on_ai_query_id"
+    t.index ["entry_id"], name: "index_quiz_hints_on_entry_id"
+    t.index ["quiz_id"], name: "index_quiz_hints_on_quiz_id"
+  end
+
   create_table "quizzes", force: :cascade do |t|
     t.text "feedback"
     t.bigint "journal_id", null: false
@@ -214,6 +226,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_20_140000) do
   add_foreign_key "prompts", "followup_template_prompts"
   add_foreign_key "quiz_answers", "ai_outputs"
   add_foreign_key "quiz_answers", "quizzes"
+  add_foreign_key "quiz_hints", "ai_queries"
+  add_foreign_key "quiz_hints", "entries"
+  add_foreign_key "quiz_hints", "quizzes"
   add_foreign_key "quizzes", "ai_queries"
   add_foreign_key "quizzes", "ai_queries", column: "grading_ai_query_id"
   add_foreign_key "quizzes", "journals"

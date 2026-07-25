@@ -160,6 +160,8 @@ ja:
     peek_warning: "返答を覗きますか？"
     show_original_language: "%{language}を表示"
     hide_original_language: "%{language}を非表示"
+    show_hint: "ヒントを表示"
+    hide_hint: "ヒントを隠す"
     try_to_answer: "%{language}に訳してみてください。"
     new_title: "クイズ回答 新規"
     editing_title: "クイズ回答 編集"
