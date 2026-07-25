@@ -1,5 +1,4 @@
 <% if ai_outputs.present? %>
-  <% start_preparing_hints(quiz) %>
   <%= render partial: 'quizzes/quiz_entry',
              collection: ai_outputs, # each referred to as "quiz_entry"
              locals: { journal:, quiz: } %>

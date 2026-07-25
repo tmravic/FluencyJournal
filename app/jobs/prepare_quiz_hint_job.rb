@@ -1,9 +1,10 @@
 class PrepareQuizHintJob < ApplicationJob
   queue_as :default
 
-  def perform(quiz, api_key, user)
+  def perform(quiz, api_key)
     uuid = SecureRandom.uuid
     journal = quiz.journal
+    user = quiz.journal.user
 
     quiz_hint_prompt = QuizHintPrompt.build(
       raw_prompt: journal.full_journal,

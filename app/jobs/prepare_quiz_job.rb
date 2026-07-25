@@ -68,6 +68,8 @@ class PrepareQuizJob < ApplicationJob
     ai_query.create_quiz_questions(translated_response, expected_count: expected)
     quiz = Quiz.create(ai_query: ai_query, journal: journal)
 
+    PrepareQuizHintJob.perform_later(quiz, api_key)
+
     source_tag = "ai_assistant"
     ai_query_id = quiz.ai_query.id
     ai_outputs = ai_query.ai_outputs.sort_by { |output| output.identifier.to_i }

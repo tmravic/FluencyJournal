@@ -63,9 +63,4 @@ module QuizzesHelper
 
     { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
   end
-
-  def start_preparing_hints(quiz)
-    @api_key = Rails.application.credentials.xai[:api_key]
-    PrepareQuizHintJob.perform_later(quiz, @api_key, quiz.journal.user)
-  end
 end
