@@ -3,7 +3,9 @@
 
 <div class="container">
 
-  <%= turbo_frame_tag "notes_box" %>
+  <%= turbo_frame_tag "notes_box", src: notes_path do %>
+
+  <% end %>
 
   <%= turbo_frame_tag "workspace" %>
 

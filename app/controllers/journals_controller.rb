@@ -7,6 +7,13 @@ class JournalsController < ApplicationController
     @todays_journals = current_group.journals.next_to_study
     @due_today = @todays_journals.count
     @from_all_or_todays = "todays"
+
+    # Open today's notes in the notes_box frame
+    @source_tag = "notes_box"
+    @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
+    @due_today = @todays_notes.count
+
+
     respond_to do |format|
       format.html
       format.turbo_stream
