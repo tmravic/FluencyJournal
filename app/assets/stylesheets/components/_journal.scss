@@ -27,5 +27,14 @@
 
   &__date {
     font-size: var(--font-size-xs);
+
+    // Full-width row with content on opposite ends (e.g. due / finished counts)
+    &--split {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: var(--space-s);
+    }
   }
 }

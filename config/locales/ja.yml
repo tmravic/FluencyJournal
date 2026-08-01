@@ -131,6 +131,7 @@ ja:
     new_title: "日記新規作成"
     editing_title: "日記編集"
     due_today_count: "本日復習期限: %{count}"
+    finished_today: "本日学習済み: %{titles}"
     actions:
       studied: "学習済み"
       mark_studied: "学習済み"

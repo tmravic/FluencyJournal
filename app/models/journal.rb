@@ -22,6 +22,10 @@ class Journal < ApplicationRecord
       .order(:next_study_date)
   }
 
+  scope :finished_today, -> {
+    where(last_studied_at: 24.hours.ago..).order(:last_studied_at)
+  }
+
   # after_create_commit -> { broadcast_prepend_later_to "journals" }
   # after_update_commit -> { broadcast_replace_later_to "journals" }
   # after_destroy_commit -> { broadcast_remove_to "journals" }

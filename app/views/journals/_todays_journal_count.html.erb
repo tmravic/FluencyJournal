@@ -1,3 +1,4 @@
-<span class="journal__date">
-  <%= t("journal.due_today_count", count: @due_today) %>
+<span class="journal__date journal__date--split">
+  <span><%= t("journal.due_today_count", count: @due_today) %></span>
+  <span><%= t("journal.finished_today", titles: @journals_finished_today) %></span>
 </span>

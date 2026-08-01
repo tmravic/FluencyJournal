@@ -131,6 +131,7 @@ en:
     new_title: "New journal"
     editing_title: "Editing journal"
     due_today_count: "Due today: %{count}"
+    finished_today: "Finished today: %{titles}"
     actions:
       studied: "Studied"
       mark_studied: "Mark Studied"

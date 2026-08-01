@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_25_053631) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_01_031214) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -118,7 +118,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_25_053631) do
     t.datetime "next_study_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_studied_at"
     t.index ["group_id"], name: "index_journals_on_group_id"
+    t.index ["last_studied_at"], name: "index_journals_on_last_studied_at"
     t.index ["user_id"], name: "index_journals_on_user_id"
   end
 

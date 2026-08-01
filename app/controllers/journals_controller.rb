@@ -7,12 +7,11 @@ class JournalsController < ApplicationController
     @todays_journals = current_group.journals.next_to_study
     @due_today = @todays_journals.count
     @from_all_or_todays = "todays"
+    @journals_finished_today = finished_today_titles
 
     # Open today's notes in the notes_box frame
     @source_tag = "notes_box"
     @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
-    @due_today = @todays_notes.count
-
 
     respond_to do |format|
       format.html
@@ -125,8 +124,13 @@ class JournalsController < ApplicationController
     next_study_date = (new_interval).days.from_now
     notice = t('journal.actions.will_return', date: next_study_date.strftime("%m/%d/%Y"))
 
-    if @journal.update(next_study_date: next_study_date, last_interval: new_interval)
+    if @journal.update(
+      next_study_date: next_study_date,
+      last_interval: new_interval,
+      last_studied_at: Time.current
+    )
       @due_today = current_group.journals.next_to_study.count
+      @journals_finished_today = finished_today_titles
       respond_to do |format|
         format.html { redirect_to journal_path(@journal), notice: notice }
         format.turbo_stream do
@@ -216,5 +220,9 @@ class JournalsController < ApplicationController
 
   def journal_params
     params.expect(journal: [ :title, :content, :user_id ])
+  end
+
+  def finished_today_titles
+    current_group.journals.finished_today.pluck(:title).join(", ")
   end
 end
