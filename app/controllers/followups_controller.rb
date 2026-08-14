@@ -150,7 +150,7 @@ class FollowupsController < ApplicationController
     if @followup_prompt.save! && @followup_prompt.followup.save!
 
       FollowupRequestJob.perform_later(
-        @user, @journal, @api_key, @followup_prompt, @followup_origin, @source_tag
+        @user, @journal, @followup_prompt, @followup_origin, @source_tag
       )
 
       notice = t("followup.request_sent")

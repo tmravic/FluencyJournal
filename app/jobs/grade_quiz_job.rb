@@ -1,7 +1,7 @@
 class GradeQuizJob < ApplicationJob
   queue_as :default
 
-  def perform(journal, api_key, quiz_result_prompt, quiz)
+  def perform(journal, quiz_result_prompt, quiz)
     user = journal.user
 
     connection = Faraday.new(url: "https://api.x.ai")
@@ -10,7 +10,7 @@ class GradeQuizJob < ApplicationJob
       req.options.timeout = 120
       req.options.open_timeout = 30
       req.headers["Content-Type"] = "application/json"
-      req.headers["Authorization"] = "Bearer #{api_key}"
+      req.headers["Authorization"] = "Bearer #{xai_api_key}"
       req.body = {
         model: quiz_result_prompt.ai_model,
         response_format: { type: "json_object" },

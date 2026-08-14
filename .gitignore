@@ -39,3 +39,4 @@
 .kamal/registry_password
 .kamal/postgres_password
 /config/credentials/staging.key
+*.dump

@@ -43,8 +43,7 @@ module SanitizingHelper
   end
 
   def sanitized_response5
-    @api_key = Rails.application.credentials.xai[:api_key]
-    response = RescueBadFormatJob.perform_now(@api_key, self)
+    response = RescueBadFormatJob.perform_now(self)
     return response
     #TODO: Should probably overwrite save the raw_response with what this returns
   end

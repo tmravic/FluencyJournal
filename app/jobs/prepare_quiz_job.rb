@@ -1,7 +1,7 @@
 class PrepareQuizJob < ApplicationJob
   queue_as :default
 
-  def perform(journal, api_key, prepare_quiz_prompt)
+  def perform(journal, prepare_quiz_prompt)
     user = journal.user
     connection = Faraday.new(url: "https://api.x.ai")
     response = connection.post do |req|
@@ -9,7 +9,7 @@ class PrepareQuizJob < ApplicationJob
       req.options.timeout = 120
       req.options.open_timeout = 30
       req.headers["Content-Type"] = "application/json"
-      req.headers["Authorization"] = "Bearer #{api_key}"
+      req.headers["Authorization"] = "Bearer #{xai_api_key}"
       req.body = {
         model: prepare_quiz_prompt.ai_model,
         response_format: { type: "json_object" },
@@ -68,7 +68,7 @@ class PrepareQuizJob < ApplicationJob
     ai_query.create_quiz_questions(translated_response, expected_count: expected)
     quiz = Quiz.create(ai_query: ai_query, journal: journal)
 
-    PrepareQuizHintJob.perform_later(quiz, api_key)
+    PrepareQuizHintJob.perform_later(quiz)
 
     source_tag = "ai_assistant"
     ai_query_id = quiz.ai_query.id

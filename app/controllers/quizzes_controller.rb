@@ -15,7 +15,7 @@ class QuizzesController < ApplicationController
     prepare_quiz_prompt.sent_role_prompt = prepare_quiz_prompt.role_prompt(@journal.user)
 
     if prepare_quiz_prompt.save!
-      PrepareQuizJob.perform_later(@journal, @api_key, prepare_quiz_prompt)
+      PrepareQuizJob.perform_later(@journal, prepare_quiz_prompt)
       @uuid = prepare_quiz_prompt.uuid
 
       @ai_query_id = I18n.t("quiz.preparing")
@@ -76,7 +76,7 @@ class QuizzesController < ApplicationController
 
     if quiz_result_prompt.save
       @uuid = quiz_result_prompt.uuid
-      GradeQuizJob.perform_later(@journal, @api_key, quiz_result_prompt, @quiz)
+      GradeQuizJob.perform_later(@journal, quiz_result_prompt, @quiz)
       respond_to do |format|
         format.turbo_stream
       end

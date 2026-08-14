@@ -1,7 +1,7 @@
 class PrepareQuizHintJob < ApplicationJob
   queue_as :default
 
-  def perform(quiz, api_key)
+  def perform(quiz)
     uuid = SecureRandom.uuid
     journal = quiz.journal
     user = quiz.journal.user
@@ -22,7 +22,7 @@ class PrepareQuizHintJob < ApplicationJob
         req.options.timeout = 120
         req.options.open_timeout = 30
         req.headers["Content-Type"] = "application/json"
-        req.headers["Authorization"] = "Bearer #{api_key}"
+        req.headers["Authorization"] = "Bearer #{xai_api_key}"
         req.body = {
           model: quiz_hint_prompt.ai_model,
           response_format: { type: "json_object" },

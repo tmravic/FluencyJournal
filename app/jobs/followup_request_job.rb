@@ -4,7 +4,7 @@ class FollowupRequestJob < ApplicationJob
   include ActionView::Helpers::TranslationHelper
   queue_as :default
 
-  def perform(user, journal, api_key, followup_prompt, followup_origin, source_tag)
+  def perform(user, journal, followup_prompt, followup_origin, source_tag)
     # if user.learning_language == "Japanese"
     if false
       followup_prompt.update(ai_model: "elyza_llm")
@@ -17,7 +17,7 @@ class FollowupRequestJob < ApplicationJob
       ai_query = bedrock_service.call
     else
       x_ai_service = XAiService.new(
-        api_key: api_key,
+        api_key: xai_api_key,
         prompt: followup_prompt,
         user: user,
         journal: journal,

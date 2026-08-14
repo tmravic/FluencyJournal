@@ -1,7 +1,7 @@
 class RescueBadFormatJob < ApplicationJob
   queue_as :default
 
-  def perform(api_key, ai_query)
+  def perform(ai_query)
     bad_response = ai_query.raw_response
 
     connection = Faraday.new("https://api.x.ai") do |conn|
@@ -20,7 +20,7 @@ class RescueBadFormatJob < ApplicationJob
     }
 
     response = connection.post("/v1/chat/completions") do |req|
-      req.headers["Authorization"] = "Bearer #{api_key}"
+      req.headers["Authorization"] = "Bearer #{xai_api_key}"
       req.body = payload.to_json
     end
 
