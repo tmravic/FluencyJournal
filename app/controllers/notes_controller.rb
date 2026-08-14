@@ -105,6 +105,7 @@ class NotesController < ApplicationController
   end
 
   def update
+    @source_tag = "notes_box"
     update_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:update_from_todays_notes])
     respond_to do |format|
       if @note.update(note_params)

@@ -1,3 +1,4 @@
+<% source_tag = local_assigns[:source_tag] || @source_tag %>
 <div class="note">
   <div class="note__header">
     <%= turbo_frame_tag "note_#{note.id}_category" do %>
@@ -33,7 +34,7 @@
                   new_followup_path(
                     class_name: note.class,
                     id: note.id,
-                    source_tag: @source_tag,
+                    source_tag: source_tag,
                     followup_from_todays_notes: @todays_notes.present?
                   ),
                   data: { turbo_frame: "notes_box" },
