@@ -10,10 +10,11 @@ class EntryPrompt < Prompt
       "#{user.original_language} entry, then simply translate without any changes. " +
       "Each item in this array is part of a previous entry in this journal, which you " +
       "should not correct or comment on but refer to as context to understand the current entry: #{journal.full_journal}. " +
-      "Avoid vague feedback, instead pointing out each change clearly. When the content of " +
-      "'Original Language' is grammatically correct, don't make needless corrections that change the tone, " +
+      "Avoid vague feedback, instead pointing out each change clearly. When the " +
+      "'Learning Language' is already grammatical and natural, don't make needless corrections that change the tone, " +
       "nuance, or politeness unless the student asks for it specifically. " +
-      "Do not suggest adding a period at the end of sentences. "
+      "Do not suggest adding a period at the end of sentences. " +
+      japanese_diary_guidance(user)
   end
 
   def change_keyword

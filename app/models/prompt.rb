@@ -1,4 +1,6 @@
 class Prompt < ApplicationRecord
+  include NativeJapaneseGuidance
+
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
 
   has_one :ai_query, dependent: :destroy

@@ -1,6 +1,5 @@
 class AiQuery < ApplicationRecord
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
-  include SanitizingHelper
 
   belongs_to :journal, optional: true
   belongs_to :prompt
@@ -36,15 +35,12 @@ class AiQuery < ApplicationRecord
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
   def parsed_response
-    parsed_response = JSON.parse(self.raw_response) rescue sanitized_response
-
-    if parsed_response.kind_of?(String)
-      parsed_response = JSON.parse(parsed_response)
+    @parsed_response ||= begin
+      parsed = parse_raw_response
+      parsed = JSON.parse(parsed) if parsed.is_a?(String)
+      parsed = transform_keys(parsed, "answer_") if parsed.is_a?(Hash) && parsed["answers"]
+      parsed
     end
-    if parsed_response["answers"]
-      parsed_response = transform_keys(parsed_response, "answer_")
-    end
-    parsed_response
   end
 
   def count_changes(string)
@@ -314,6 +310,20 @@ class AiQuery < ApplicationRecord
   end
 
   private
+
+  def parse_raw_response
+    JSON.parse(raw_response)
+  rescue JSON::ParserError
+    begin
+      JSON.parse(json_without_markdown_fences)
+    rescue JSON::ParserError
+      RescueBadFormatJob.perform_now(self)
+    end
+  end
+
+  def json_without_markdown_fences
+    raw_response.to_s.sub(/\A\s*```(?:json)?\s*/i, "").sub(/\s*```\s*\z/, "").strip
+  end
 
   def entry_regex
     /\Aentry_\d+\z/

@@ -15,7 +15,6 @@
 
   <%= turbo_frame_tag "ai_request_form_delete_buttons" do %>
     <div class="send_button_box">
-      <%# model_options = ["grok-4-fast-non-reasoning", "elyza_llm"] %>
       <% model_options = [
         [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
         [t("ai_query.model.higher_quality"), "grok-4.5"]

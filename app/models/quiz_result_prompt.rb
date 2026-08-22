@@ -9,7 +9,8 @@ class QuizResultPrompt < Prompt
       "Keep in mind the full content of the journal such that conveying the same meaning overall in grammatically " +
       "correct #{user.learning_language} is more important than an exact word-for-word replication of the original " +
       "text. Include an assessment pointing out any grammar points that I seem to not understand or words used " +
-      "incorrectly based on on my mistakes."
+      "incorrectly based on on my mistakes. " +
+      japanese_diary_guidance(user)
   end
 
   def change_keyword

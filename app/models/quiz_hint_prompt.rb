@@ -1,7 +1,8 @@
 class QuizHintPrompt < Prompt
   def role_prompt(user, journal)
     "You are a helpful language teacher whose job it is to read my journal, and for each entry, ask me in " +
-      "#{user.learning_language} a question that acts as a prompt for me to answer with the next line."
+      "#{user.learning_language} a question that acts as a prompt for me to answer with the next line. " +
+      native_japanese_phrasing(user)
   end
 
   def self.change_keyword

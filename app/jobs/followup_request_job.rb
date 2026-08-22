@@ -5,27 +5,14 @@ class FollowupRequestJob < ApplicationJob
   queue_as :default
 
   def perform(user, journal, followup_prompt, followup_origin, source_tag)
-    # if user.learning_language == "Japanese"
-    if false
-      followup_prompt.update(ai_model: "elyza_llm")
-      bedrock_service = BedrockService.new(
-        prompt: followup_prompt,
-        user: user,
-        journal: journal,
-        followup_origin: followup_origin
-      )
-      ai_query = bedrock_service.call
-    else
-      x_ai_service = XAiService.new(
-        api_key: xai_api_key,
-        prompt: followup_prompt,
-        user: user,
-        journal: journal,
-        followup_origin: followup_origin
-      )
-      ai_query = x_ai_service.call
-    end
-
+    x_ai_service = XAiService.new(
+      api_key: xai_api_key,
+      prompt: followup_prompt,
+      user: user,
+      journal: journal,
+      followup_origin: followup_origin
+    )
+    ai_query = x_ai_service.call
 
     followup = followup_prompt.followup
     ai_query_id = ai_query.id
@@ -45,8 +32,8 @@ class FollowupRequestJob < ApplicationJob
         target: "previous_queries",
         partial: "journals/previous_queries",
         locals: { journal: }
-      # in the case of a note journal isn't used
-      # need origin: or reference: instead
+        # in the case of a note journal isn't used
+        # need origin: or reference: instead
       )
     end
   rescue Faraday::ConnectionFailed => e
@@ -61,36 +48,8 @@ class FollowupRequestJob < ApplicationJob
 
   private
 
-  def parse_response_from_x_api(response)
-    JSON.parse(response.body)
-    # {"id"=>"12f4fceb-5b18-610d-6d08-50b474977829",
-    #  "object"=>"chat.completion",
-    #  "created"=>1770524310,
-    #  "model"=>"grok-4-fast-non-reasoning",
-    #  "choices"=>
-    #    [{"index"=>0,
-    #      "message"=>
-    #        {"role"=>"assistant",
-    #         "content"=>
-    #           "{\"answer_1\":{\"content\":\"壁の塗装が剥げ落ちるほど古い日本酒の醸造所を訪れました。\",\"explanation_en\":\"This rephrasing uses '塗装' (tosō) for 'paint' to vary the vocabulary, '剥げ落ちる' (hageochiru) for a more descriptive peeling action, and '醸造所' (jōzōsho) to specify 'sake brewery' more clearly. '訪れました' (tazunemashita) is a synonym for '行きました' to change the verb while keeping the meaning intact.\"},\"answer_2\":{\"content\":\"古くて壁のペンキがめくれていた日本酒の醸造所に行きました。\",\"explanation_en\":\"Here, the sentence structure is adjusted by placing '古くて' (furukute) at the beginning to emphasize age, and 'めくれていた' (mekureteita) as a synonym for 'peeling' to make it sound more natural. '醸造所' adds specificity to the location.\"},\"answer_3\":{\"content\":\"日本酒の醸造所で、壁のペンキが剥げた古い建物を見学しました。\",\"explanation_en\":\"This version breaks the sentence into parts for better flow, using '見学しました' (kenkyō shimashita) instead of '行きました' to imply 'visited for viewing,' and '建物' (tatemono) to describe the building, providing a slightly more detailed and varied expression.\"}}",
-    #         "refusal"=>nil},
-    #      "finish_reason"=>"stop"}],
-    #  "usage"=>
-    #    {
-    #      "prompt_tokens"=>507, "completion_tokens"=>326, "total_tokens"=>833,
-    #      "prompt_tokens_details"=>{"text_tokens"=>507, "audio_tokens"=>0, "image_tokens"=>0, "cached_tokens"=>161},
-    #      "completion_tokens_details"=>
-    #        {
-    #          "reasoning_tokens"=>0, "audio_tokens"=>0, "accepted_prediction_tokens"=>0, "rejected_prediction_tokens"=>0
-    #        },
-    #      "num_sources_used"=>0, "cost_in_usd_ticks"=>2402500}, "system_fingerprint"=>"fp_f7a6b84626"
-    # }
+  def handle_error(exception, context)
+    Rails.logger.error("FollowupRequestJob error: #{context}: #{exception.message}")
+    Rails.logger.error(exception.backtrace.join("\n"))
   end
-end
-
-private
-
-def handle_error(exception, context)
-  Rails.logger.error("FollowupRequestJob error: #{context}: #{exception.message}")
-  Rails.logger.error(exception.backtrace.join("\n"))
 end

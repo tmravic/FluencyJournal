@@ -9,7 +9,8 @@ class FreeQuestionPrompt < Prompt
       "#{user.learning_language} and #{user.original_language}. Look at both their 'Reference text' and " +
       "'Followup Question' to give them answers and explanations in #{user.original_language}. " +
       "If the student asks for a reading for languages that contain kanji or something similar, " +
-      "provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率."
+      "provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. " +
+      native_japanese_phrasing(user)
 
     if journal
       journal_prompt = "Each item in this array is part of a previous entry in this journal, which you " +
