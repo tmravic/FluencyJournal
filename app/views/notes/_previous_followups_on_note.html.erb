@@ -1,6 +1,6 @@
 <% note.journals.each do |journal| %>
   <%= link_to t("journal.short"),
-              for_journal_notes_path(journal_id: journal.id),
+              journal_path(journal),
               class: "btn btn--journal-short",
               title: journal.title,
               data: { turbo_frame: "notes_box" } %>

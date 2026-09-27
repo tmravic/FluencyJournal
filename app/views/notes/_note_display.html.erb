@@ -7,11 +7,6 @@
 
     <div class="note__actions">
       <% unless note.draft_journal? %>
-        <%= link_to t("note.actions.journal"),
-                    link_journals_note_path(note, from_todays_notes: @todays_notes.present?),
-                    class: "btn btn--light",
-                    data: { turbo_frame: dom_id(note) } %>
-
         <% if @todays_notes.present? %>
           <%= button_to t("note.actions.studied"),
                         mark_note_as_studied_note_path(note),
@@ -29,6 +24,11 @@
           <% end %>
         <% end %>
       <% end %>
+
+      <%= link_to t("note.actions.journal"),
+                  link_journals_note_path(note, from_todays_notes: @todays_notes.present?),
+                  class: "btn btn--light",
+                  data: { turbo_frame: dom_id(note) } %>
 
       <%= link_to t("followup.followup"),
                   new_followup_path(
