@@ -81,6 +81,8 @@ exit
 (For an update)<br>
 `kamal accessory reboot solid_queue`<br>
 `kamal accessory reboot solid_cable`<br>
+`kamal redeploy && kamal accessory reboot solid_queue && kamal accessory reboot solid_cable`<br>
+(access the console)
 `kamal app exec -i 'bin/rails console'`
 
 Check containers<br>

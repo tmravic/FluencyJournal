@@ -1,6 +1,16 @@
 class XAiService
   include SharedServiceMethods
 
+  class ApiError < StandardError
+    attr_reader :status, :body
+
+    def initialize(response)
+      @status = response.status
+      @body = response.body
+      super("xAI API #{response.status}: #{response.body}")
+    end
+  end
+
   def initialize(attributes = {})
     @api_key = attributes[:api_key]
     @prompt = attributes[:prompt]
@@ -11,6 +21,8 @@ class XAiService
 
   def call
     response = make_call_to_x_api(@api_key, @prompt, @user, @journal)
+    raise ApiError, response unless response.success?
+
     json_response = parse_response_from_x_api(response)
     token_data = organize_token_data(json_response)
     response_from_x_ai = json_response["choices"][0]["message"].dig("content")
