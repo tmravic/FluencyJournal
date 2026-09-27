@@ -23,7 +23,7 @@
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
       <% model_options = [
         [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
-        [t("ai_query.model.higher_quality"), "grok-4.3"]
+        [t("ai_query.model.higher_quality"), "grok-4.7"]
       ] %>
       <%= followup_prompt.select :ai_model,
                                  options_for_select(model_options, "grok-4-fast-non-reasoning") %>
