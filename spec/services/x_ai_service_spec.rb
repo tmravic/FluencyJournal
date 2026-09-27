@@ -7,7 +7,7 @@ RSpec.describe XAiService do
         Faraday::Response,
         success?: false,
         status: 404,
-        body: '{"code":"not-found","error":"The model grok-4.7 does not exist or your team does not have access to it."}'
+        body: '{"code":"not-found","error":"The model grok-4.6 does not exist or your team does not have access to it."}'
       )
       service = described_class.new(api_key: "key", prompt: double, user: double, journal: double)
       allow(service).to receive(:make_call_to_x_api).and_return(response)

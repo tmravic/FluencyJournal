@@ -17,7 +17,7 @@
     <div class="send_button_box">
       <% model_options = [
         [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
-        [t("ai_query.model.higher_quality"), "grok-4.7"]
+        [t("ai_query.model.higher_quality"), "grok-4.6"]
       ] %>
         <%= f.select :ai_model, options_for_select(model_options, "grok-4-fast-non-reasoning") %>
         <%#= f.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning") %>
