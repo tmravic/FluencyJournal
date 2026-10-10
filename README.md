@@ -1,6 +1,6 @@
 # README
 
-* Ruby version: 3.3.6
+* Ruby version: 4.0.5
 * Rails version: 8.0.0
 * Node version: v20.18.0
 * Yarn version: 1.22.22

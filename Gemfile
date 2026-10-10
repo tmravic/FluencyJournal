@@ -33,6 +33,9 @@ gem "solid_cable"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+# Rails loads tsort from the standard library. Ruby 4.1 will stop shipping it as a default gem.
+gem "tsort"
+
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
 
