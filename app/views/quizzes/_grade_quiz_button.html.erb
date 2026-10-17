@@ -1,4 +1,5 @@
-<%= link_to t("quiz.grade"),
-            grade_quiz_journal_quiz_path(journal, quiz),
-            class: "btn btn--secondary",
-            data: { turbo_frame: "entries", turbo_stream: true } %>
+<%= button_to t("quiz.grade"),
+              grade_quiz_journal_quiz_path(journal, quiz),
+              method: :post,
+              class: "btn btn--secondary",
+              data: { turbo_frame: "entries", turbo_stream: true } %>

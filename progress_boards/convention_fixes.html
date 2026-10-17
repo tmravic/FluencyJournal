@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>16. Make prepare, grade, and reset real writes</h3>
-    <p><span class="path">config/routes.rb</span>, <span class="path">app/controllers/quizzes_controller.rb</span>, <span class="path">app/views/quizzes/_quiz_buttons.html.erb</span>, <span class="path">_grade_quiz_button.html.erb</span>, <span class="path">_reset_quiz_button.html.erb</span></p>
-    <p><code>prepare_quiz</code> saves a prompt and enqueues <code>PrepareQuizJob</code>. <code>grade_quiz</code> does the same for grading. <code>reset_quiz</code> calls <code>destroy_all_unfinished_quizzes!</code>, which destroys every unfinished quiz on the journal, not one quiz. All three are <code>get</code> routes hit by <code>link_to</code>. GET is allowed to be prefetched, cached, and retried. It also carries no CSRF token, so another site can start a paid xAI call or delete in-progress quizzes.</p>
-    <p>Use <code>button_to</code> with POST for prepare and grade, and DELETE for reset. Keep the turbo-stream response. Rename reset so the label matches “every unfinished quiz on this journal,” or scope the destroy to the one quiz on the page.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>17. Do not create a row inside <code>new</code></h3>
     <p><span class="path">app/controllers/followups_controller.rb</span></p>
     <p>For <code>JournalFollowup</code>, <code>new</code> calls <code>find_or_create_by!</code>, then calls it again if the origin is still nil. Note followups also write <code>session[:followup_from_todays_notes]</code>. The Double Check button is a normal link. The first prefetch creates a <code>JournalFollowup</code>. <code>params[:id]</code> on this action is the origin id, not a followup id.</p>

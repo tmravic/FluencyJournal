@@ -147,7 +147,7 @@ ja:
     short: "テ"
     assessment: "総評"
     grade: "クイズ採点"
-    reset: "クイズリセット"
+    reset: "未完了のクイズをすべてリセット"
     delete: "クイズ削除"
     retry: "リトライ"
     preparing: "クイズ準備中..."

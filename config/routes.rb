@@ -26,8 +26,8 @@ Rails.application.routes.draw do
     end
     resources :quizzes, only: [:show] do
       collection do
-        get :prepare_quiz
-        get :reset_quiz
+        post :prepare_quiz
+        delete :reset_quiz
         get :close_quiz
         get :peek
         get :unpeek
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
         get :hide_hint
       end
       member do
-        get :grade_quiz
+        post :grade_quiz
       end
       resources :quiz_answers, except: [:index, :destroy, :update] do
         member do

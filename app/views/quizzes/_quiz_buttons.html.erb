@@ -1,5 +1,6 @@
 <% journal = local_assigns[:journal] || @journal %>
-<%= link_to t('journal.actions.quiz_me'),
-            prepare_quiz_journal_quizzes_path(journal),
-            class: "btn btn--light",
-            data: { turbo_frame: "entries", turbo_stream: true } %>
+<%= button_to t('journal.actions.quiz_me'),
+              prepare_quiz_journal_quizzes_path(journal),
+              method: :post,
+              class: "btn btn--light",
+              data: { turbo_frame: "entries", turbo_stream: true } %>
