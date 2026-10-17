@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>8. Format dates with the locale</h3>
-    <p><span class="path">app/helpers/application_helper.rb</span> <code>display_next_review_time</code>, and the same <code>strftime("%m/%d/%Y")</code> in <span class="path">app/views/journals/_journal_content.html.erb</span> and <span class="path">app/views/entries/_entry.html.erb</span></p>
-    <p>The app has English and Japanese locales. <code>strftime</code> ignores both, and comparing formatted strings to decide “today” is a second clock. Rails already has <code>l</code> / <code>I18n.l</code> and <code>to_date</code>.</p>
-    <p>Compare dates, then format the one you show with <code>l(date)</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>9. Use <code>Time.current</code> for due dates</h3>
     <p><span class="path">app/models/journal.rb</span>, <span class="path">app/models/note.rb</span>, <span class="path">app/controllers/journals_controller.rb</span>, <span class="path">app/controllers/notes_controller.rb</span></p>
     <p><code>next_to_study</code> compares with <code>DateTime.now</code>. <code>finished_today</code> uses <code>24.hours.ago</code>, which follows <code>Time.zone</code>. Creates also assign <code>next_study_date = DateTime.now</code> in the controller, even though the model requires the column and the column has no default. <code>config.time_zone</code> does not affect <code>DateTime.now</code>. On a UTC server those two clocks disagree by the offset of Asia/Tokyo.</p>

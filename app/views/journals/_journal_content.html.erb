@@ -52,7 +52,7 @@
   <div style="display:flex;justify-content:space-between;align-items:center;">
 
     <span class="journal__date">
-      <%= t("journal.first_written") %>: <%= @journal.created_at.strftime("%m/%d/%Y") %>
+      <%= t("journal.first_written") %>: <%= l(@journal.created_at.to_date) %>
     </span>
 
     <span class="journal__date">
