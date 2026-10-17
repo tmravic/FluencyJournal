@@ -8,13 +8,18 @@ class Note < ApplicationRecord
   validates :next_study_date, presence: true
   validates :last_interval, numericality: true
 
+  before_validation :set_initial_next_study_date, on: :create
+
+  def set_initial_next_study_date
+    self.next_study_date ||= Time.current
+  end
+
   enum :category, { vocab: 0, grammar: 1, draft_journal: 2 }
 
   scope :by_user, ->(user = Current.user) { where(user_id: user&.id) }
 
   scope :next_to_study, -> {
-    where(arel_table[:next_study_date].lteq(DateTime.now))
-      .order(:next_study_date)
+    where(next_study_date: ..Time.current).order(:next_study_date)
   }
 
   scope :due_for_study_prompt, -> {

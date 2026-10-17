@@ -61,7 +61,6 @@ class NotesController < ApplicationController
 
   def create
     @note = Current.user.notes.build(note_params)
-    @note.next_study_date = DateTime.now
 
     if params[:ai_query_id].present?
       @ai_query = AiQuery.find(params[:ai_query_id])

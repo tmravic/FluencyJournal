@@ -61,7 +61,6 @@ class JournalsController < ApplicationController
   def create
     @journal = current_group.journals.build(journal_params)
     @journal.user = Current.user
-    @journal.next_study_date = DateTime.now
 
     respond_to do |format|
       if @journal.save

@@ -11,6 +11,12 @@ class Journal < ApplicationRecord
   validates :next_study_date, presence: true
   validates :last_interval, numericality: true
 
+  before_validation :set_initial_next_study_date, on: :create
+
+  def set_initial_next_study_date
+    self.next_study_date ||= Time.current
+  end
+
   scope :ordered, -> { order(:next_study_date) }
   # scope :personal, -> {  }
   # scope :private, -> {  }
@@ -18,8 +24,7 @@ class Journal < ApplicationRecord
   # scope :shared (either private or publish, not personal), -> {  }
 
   scope :next_to_study, -> {
-    where(arel_table[:next_study_date].lteq(DateTime.now))
-      .order(:next_study_date)
+    where(next_study_date: ..Time.current).order(:next_study_date)
   }
 
   scope :finished_today, -> {
