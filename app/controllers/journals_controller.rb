@@ -67,7 +67,7 @@ class JournalsController < ApplicationController
       if @journal.save
         # flash[:notice] = "..."
         format.html { redirect_to journal_path(@journal), notice: t("journal.created") }
-        format.json { render :index, status: :created, location: @journal }
+        format.json { render :show, status: :created, location: @journal }
         format.turbo_stream { flash.now[:notice] = t("journal.created") }
       else
         format.html { render :new, status: :unprocessable_entity }

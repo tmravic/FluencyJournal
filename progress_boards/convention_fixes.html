@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>7. Return the journal you just created</h3>
-    <p><span class="path">app/controllers/journals_controller.rb</span> <code>create</code>, <span class="path">app/views/journals/index.json.jbuilder</span></p>
-    <p>The JSON format renders <code>:index</code> with status 201. That template dumps <code>@todays_journals</code>, which <code>create</code> never sets. <code>show.json.jbuilder</code> is the template that serializes one journal.</p>
-    <p>Render <code>:show</code>. Keep status 201.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>8. Format dates with the locale</h3>
     <p><span class="path">app/helpers/application_helper.rb</span> <code>display_next_review_time</code>, and the same <code>strftime("%m/%d/%Y")</code> in <span class="path">app/views/journals/_journal_content.html.erb</span> and <span class="path">app/views/entries/_entry.html.erb</span></p>
     <p>The app has English and Japanese locales. <code>strftime</code> ignores both, and comparing formatted strings to decide “today” is a second clock. Rails already has <code>l</code> / <code>I18n.l</code> and <code>to_date</code>.</p>
