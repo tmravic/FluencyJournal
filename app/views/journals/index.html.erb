@@ -3,8 +3,12 @@
 
 <div class="container">
 
-  <%= turbo_frame_tag "notes_box", src: notes_path do %>
+  <% if params[:close_notes].present? %>
+    <%= turbo_frame_tag "notes_box" %>
+  <% else %>
+    <%= turbo_frame_tag "notes_box", src: notes_path do %>
 
+    <% end %>
   <% end %>
 
   <%= turbo_frame_tag "workspace" %>

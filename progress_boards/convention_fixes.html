@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>15. Close notes should close the panel</h3>
-    <p><span class="path">app/views/notes/_close_notes_button.html.erb</span>, <span class="path">app/views/journals/index.html.erb</span></p>
-    <p>The close control targets <code>#notes_box</code> at <code>journals_path</code>. On the journals index that frame is empty and has <code>src: notes_path</code>, so Turbo loads today’s notes again.</p>
-    <p>Point the close action at a response whose <code>notes_box</code> frame is empty and has no <code>src</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>16. Make prepare, grade, and reset real writes</h3>
     <p><span class="path">config/routes.rb</span>, <span class="path">app/controllers/quizzes_controller.rb</span>, <span class="path">app/views/quizzes/_quiz_buttons.html.erb</span>, <span class="path">_grade_quiz_button.html.erb</span>, <span class="path">_reset_quiz_button.html.erb</span></p>
     <p><code>prepare_quiz</code> saves a prompt and enqueues <code>PrepareQuizJob</code>. <code>grade_quiz</code> does the same for grading. <code>reset_quiz</code> calls <code>destroy_all_unfinished_quizzes!</code>, which destroys every unfinished quiz on the journal, not one quiz. All three are <code>get</code> routes hit by <code>link_to</code>. GET is allowed to be prefetched, cached, and retried. It also carries no CSRF token, so another site can start a paid xAI call or delete in-progress quizzes.</p>

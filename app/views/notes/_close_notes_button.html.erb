@@ -1,4 +1,4 @@
 <%= link_to t('note.close'),
-            journals_path,
+            journals_path(close_notes: true),
             class: "btn btn--dark",
             data: { turbo: true, turbo_frame: "notes_box" } %>
