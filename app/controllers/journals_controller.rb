@@ -214,7 +214,9 @@ class JournalsController < ApplicationController
   end
 
   def set_from_all_or_todays
-    @from_all_or_todays = params.dig("journal", "from_all_or_todays")
+    @from_all_or_todays =
+      params.dig("journal", "from_all_or_todays").presence ||
+      params.dig("from_all_or_todays").presence
   end
 
   def journal_params

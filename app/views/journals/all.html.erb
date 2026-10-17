@@ -22,12 +22,12 @@
     <%= turbo_frame_tag "close_journal_button" %>
 
     <%= turbo_frame_tag "start_journal_button" do %>
-      <%= render partial: 'journals/start_journal_button', locals: { from_all_or_todays: 'todays' } %>
+      <%= render partial: 'journals/start_journal_button', locals: { from_all_or_todays: @from_all_or_todays } %>
     <% end %>
   </div>
 
   <%= turbo_frame_tag Journal.new do %>
-    <%= render partial: 'journals/empty_state', locals: { from_all_or_todays: 'todays' } unless @all_journals.present? %>
+    <%= render partial: 'journals/empty_state', locals: { from_all_or_todays: @from_all_or_todays } unless @all_journals.present? %>
   <% end %>
 
   <%= turbo_frame_tag "journals" do %>

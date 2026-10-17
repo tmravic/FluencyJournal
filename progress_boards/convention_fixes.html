@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>12. Pass <code>"all"</code> from the All Journals page</h3>
-    <p><span class="path">app/views/journals/all.html.erb</span></p>
-    <p>The start button and the empty state get <code>from_all_or_todays: 'todays'</code>. The controller sets <code>@from_all_or_todays = "all"</code>, and the turbo-stream template uses that variable. A full page load of All Journals then creates a journal as if you were on today’s list, so the close button returns to <code>journals_path</code> instead of <code>all_journals_path</code>.</p>
-    <p>Pass <code>@from_all_or_todays</code>. <code>all_or_todays</code> in <span class="path">app/helpers/journals_helper.rb</span> has a related guess: it returns <code>"todays"</code> only when <code>@todays_journals</code> is present. Broadcasts and the mark-studied re-render never set that variable, so edit and delete links get stamped <code>"all"</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>13. Stop passing <code>locals:</code> into a turbo frame tag</h3>
     <p><span class="path">app/views/notes/index.html.erb</span>, <span class="path">all.html.erb</span>, <span class="path">drafts.html.erb</span></p>
     <p><code>locals:</code> is an option for <code>render</code>, not for <code>turbo_frame_tag</code>. Rails prints it as an HTML attribute. The frame id still works, so this is noise, not a crash.</p>
