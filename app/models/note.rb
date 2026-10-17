@@ -7,10 +7,6 @@ class Note < ApplicationRecord
   validates :content, presence: true
   validates :next_study_date, presence: true
   validates :last_interval, numericality: true
-  validates :category, inclusion: {
-    in: ->(_) { Note.categories.keys },
-    message: "%{value} is not a valid category"
-  }
 
   enum :category, { vocab: 0, grammar: 1, draft_journal: 2 }
 

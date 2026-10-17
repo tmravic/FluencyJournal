@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>2. Use the nested entry route helper</h3>
-    <p><span class="path">app/views/entries/show.html.erb</span></p>
-    <p>Entries only exist under journals, so the helper is <code>edit_journal_entry_path</code>. This template calls <code>edit_entry_path(@entry)</code>, which is not a route. The destroy button on the same page already uses <code>[@journal, @entry]</code>.</p>
-    <p>Point the edit link at <code>edit_journal_entry_path(@journal, @entry)</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>3. Delete the category validator that never runs</h3>
     <p><span class="path">app/models/note.rb</span></p>
     <p>Rails 8 <code>enum</code> already raises <code>ArgumentError</code> on a bad assignment. The extra <code>inclusion</code> validator checks the same keys, but the raise happens first, so the custom message is dead.</p>
