@@ -19,8 +19,8 @@ class FollowupsController < ApplicationController
 
     if class_name == "JournalFollowup"
       journal_id = params[:journal_id].presence || params[:id]
-      journal = Journal.find(journal_id)
-      @followup_origin = JournalFollowup.find_or_create_by!(journal: journal)
+      journal = current_group.journals.find(journal_id)
+      @followup_origin = journal.journal_followups.build
       @reference_text = journal.full_journal.join("\n\n")
       @journal = journal
 
@@ -52,8 +52,8 @@ class FollowupsController < ApplicationController
     @ai_models = get_ai_models
 
     if @journal.nil?
-      session[:followup_from_todays_notes] = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
-      # this is just so the Cancel button knows which screen to return to
+      # Cancel chooses today's notes or all notes from this flag.
+      @followup_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
     end
 
 
@@ -63,7 +63,7 @@ class FollowupsController < ApplicationController
 
     # Safety for @followup_origin (especially important for JournalFollowup / Double Check)
     if @followup_origin.nil? && @journal.present?
-      @followup_origin = JournalFollowup.find_or_create_by!(journal: @journal)
+      @followup_origin = @journal.journal_followups.build
     end
 
     if @followup.nil?
@@ -95,9 +95,13 @@ class FollowupsController < ApplicationController
       return
     end
     followup_origin_class = origin_class_str.constantize
-    followup_origin_id = followup_params[:followup_origin_id].to_i
-    @followup_origin = followup_origin_class.find(followup_origin_id)
-    # note, entry, or ai_output
+    if followup_origin_class == JournalFollowup
+      journal = current_group.journals.find(followup_params[:journal_id])
+      @followup_origin = JournalFollowup.find_or_create_by!(journal: journal)
+    else
+      followup_origin_id = followup_params[:followup_origin_id].to_i
+      @followup_origin = followup_origin_class.find(followup_origin_id)
+    end
     set_user_and_journal_based_on_origin_class(followup_origin_class)
 
     if saving_new_template_prompt?
@@ -267,7 +271,7 @@ class FollowupsController < ApplicationController
     # }
     params.expect(
       followup:
-        [ :source_tag, :followup_origin_class, :followup_origin_id,
+        [ :source_tag, :followup_origin_class, :followup_origin_id, :journal_id,
           followup_prompt: [ :base_content, :user_generated_content, :raw_prompt, :ai_model, :uuid ]
         ]
     )

@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>17. Do not create a row inside <code>new</code></h3>
-    <p><span class="path">app/controllers/followups_controller.rb</span></p>
-    <p>For <code>JournalFollowup</code>, <code>new</code> calls <code>find_or_create_by!</code>, then calls it again if the origin is still nil. Note followups also write <code>session[:followup_from_todays_notes]</code>. The Double Check button is a normal link. The first prefetch creates a <code>JournalFollowup</code>. <code>params[:id]</code> on this action is the origin id, not a followup id.</p>
-    <p>Build the followup in memory. Create the origin in <code>create</code>, which is already POST.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>18. Leave a studied note or journal off today’s list</h3>
     <p><span class="path">app/views/journals/mark_journal_as_studied.turbo_stream.erb</span>, <span class="path">app/views/notes/mark_note_as_studied.turbo_stream.erb</span></p>
     <p>Both templates remove the record, then render that same record again with <code>turbo_stream.after</code> or <code>prepend</code>. That is the create-stream pattern. After “studied,” <code>next_study_date</code> is in the future, so the row should stay off today’s list. If nothing else is due, the journal stream also replaces the whole <code>journals</code> frame with the today’s empty state, even when that frame is All Journals. Both templates also query <code>Current.user</code> from the view.</p>

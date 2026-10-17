@@ -5,7 +5,7 @@ module FollowupsHelper
 
   def render_correct_cancel_button
     if @source_tag == "notes_box"
-      path = session[:followup_from_todays_notes] ? notes_path : all_notes_path
+      path = @followup_from_todays_notes ? notes_path : all_notes_path
       link_to t("cancel"), path, class: "btn btn--light", data: { turbo_frame: "notes_box" }
     elsif @journal
       link_to t("cancel"),
