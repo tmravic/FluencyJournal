@@ -2,21 +2,13 @@
 
 * Ruby version: 4.0.5
 * Rails version: 8.1.4
-* Node version: v20.18.0
-* Yarn version: 1.22.22
-* npm Version: 10.9.0
 
 ## How I made this app
 This app was created by initializing a new rails app within a Ruby docker container.
 - `docker run -i -t --rm -v ${PWD}:/usr/src/app ruby:latest bash`
 - `cd /usr/src/app`
 ```
-touch ~/.bashrc \
-&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
-&& source ~/.bashrc \
-&& nvm install --lts \
-&& npm install -g yarn \
-&& gem install rails \
+gem install rails \
 && rails new fluency_journal --database postgresql --css sass --skip-test -T   \
 && cd fluency_journal/ \
 ```
@@ -34,12 +26,9 @@ docker compose build --build-arg USER=$(whoami) --build-arg UID=$(id -u) --build
 - Total reset deleting all Fluency Journal resources:
 ```
 docker compose down && \
-docker rmi -f fluency_journal-cable:latest fluency_journal-css:latest fluency_journal-js:latest fluency_journal-web:latest fluency_journal-worker:latest && \
-docker volume rm -f fluency_journal_bundle fluency_journal_postgres fluency_journal_redis fluency_journal_node_modules
+docker rmi -f fluency_journal-cable:latest fluency_journal-web:latest fluency_journal-worker:latest && \
+docker volume rm -f fluency_journal_bundle fluency_journal_postgres fluency_journal_redis
 ```
-
-- [x] Can run yarn --version and npm --version
-- [x] Can install a node_module like: `npm install lodash --save`
 
 ## Kamal deployment to single EC2
 `aws ec2 describe-vpcs`

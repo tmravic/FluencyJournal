@@ -20,14 +20,6 @@ RUN groupadd -g $GID $USER && \
 RUN chown -R $USER:$USER /usr/local
 RUN chown -R $USER:$USER /rails
 
-# Install Node.js v22.11.0 and Yarn using NodeSource
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g yarn && \
-    ln -sf $(which node) /usr/local/bin/node && \
-    ln -sf $(which npm) /usr/local/bin/npm && \
-    ln -sf $(which yarn) /usr/local/bin/yarn
-
 USER $USER
 
 COPY --chown=$USER:$USER Gemfile* ./
@@ -35,18 +27,8 @@ COPY --chown=$USER:$USER Gemfile* ./
 RUN gem install rails
 RUN bundle install
 
-# Change working directory for npm and yarn
-ENV NODE_PATH="/usr/local/node_modules"
-ENV PATH="$NODE_PATH/.bin:$PATH"
-
-COPY --chown=$USER:$USER package.json yarn.lock ./
-# retry loop for yarn install
-RUN for i in $(seq 1 3); do yarn install --modules-folder $NODE_PATH && break || sleep 5; echo "Yarn install failed, retrying ($i/3)"; done
-
 ARG RAILS_ENV="development"
-ARG NODE_ENV="development"
-ENV RAILS_ENV="${RAILS_ENV}" \
-    NODE_ENV="${NODE_ENV}"
+ENV RAILS_ENV="${RAILS_ENV}"
 
 # Move the entire build context into the image
 COPY . .
@@ -87,14 +69,11 @@ RUN chown -R $USER:$USER /rails
 USER $USER
 
 COPY --from=assets --chown=$USER:$USER /usr/local/bundle /usr/local/bundle
-COPY --from=assets --chown=$USER:$USER /usr/local/node_modules /usr/local/node_modules
 COPY --from=assets --chown=$USER:$USER /usr/bin /usr/bin
-COPY --from=assets --chown=$USER:$USER /usr/lib/node_modules /usr/lib/node_modules
 COPY --from=assets --chown=$USER:$USER /rails /rails
 
 # Set environment variables for the runtime
-ENV RAILS_ENV="development" \
-    NODE_ENV="development"
+ENV RAILS_ENV="development"
 
 # Expose the Rails server port
 EXPOSE 3000

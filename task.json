@@ -20,10 +20,6 @@
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/rails_env"
         },
         {
-          "name": "NODE_ENV",
-          "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/node_env"
-        },
-        {
           "name": "POSTGRES_DB",
           "valueFrom": "arn:aws:ssm:ap-northeast-1:182181248970:parameter/fluency_journal/postgres_db"
         },

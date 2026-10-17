@@ -7,7 +7,6 @@ x-app: &default-app
     args:
       - "RUBY_VERSION=${RUBY_VERSION:-4.0.5}"
       - "RAILS_ENV=${RAILS_ENV:-production}"
-      - "NODE_ENV=${NODE_ENV:-production}"
   depends_on:
     postgres:
       condition: "service_healthy"
@@ -16,25 +15,9 @@ x-app: &default-app
     - ".env"
   volumes:
     - "${DOCKER_WEB_VOLUME:-.:/rails}"
-    - node_modules:/usr/local/node_modules
     - bundle:/usr/local/bundle
   stdin_open: true
   tty: true
-
-x-assets: &default-assets
-  build:
-    context: "."
-    target: "assets"
-    args:
-      - "RAILS_ENV=${RAILS_ENV:-production}"
-      - "NODE_ENV=${NODE_ENV:-production}"
-  env_file:
-    - ".env"
-  profiles: [ "assets" ]
-  restart: no
-  stop_grace_period: "3s"
-  volumes:
-    - ".:/rails"
 
 services:
   postgres:
@@ -101,15 +84,6 @@ services:
     entrypoint: []
     profiles: ["solid_queue"]
 
-  js:
-    <<: *default-assets
-    command: "yarn build"
-
-  css:
-    <<: *default-assets
-    command: "yarn build:css"
-
 volumes:
   postgres: {}
-  node_modules: {}
   bundle: {}
