@@ -3,7 +3,7 @@
               journal_path(journal),
               class: "btn btn--journal-short",
               title: journal.title,
-              data: { turbo_frame: "notes_box" } %>
+              data: { turbo_frame: "_top" } %>
 <% end %>
 <% note.followups.each do |followup| %>
   <%= link_to t("followup.short"),

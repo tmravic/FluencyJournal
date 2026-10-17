@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>14. Open a journal from a note in the top window</h3>
-    <p><span class="path">app/views/notes/_previous_followups_on_note.html.erb</span>, <span class="path">app/views/journals/show.html.erb</span></p>
-    <p>The journal chip sets <code>data-turbo-frame="notes_box"</code>. Turbo then looks for <code>notes_box</code> in the response. The journal page’s copy of that frame is empty, so the notes panel is replaced by nothing and the journal never opens.</p>
-    <p>Use <code>data: { turbo_frame: "_top" }</code> if the journal should take the whole page, or target <code>workspace</code> if it should open beside the notes.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>15. Close notes should close the panel</h3>
     <p><span class="path">app/views/notes/_close_notes_button.html.erb</span>, <span class="path">app/views/journals/index.html.erb</span></p>
     <p>The close control targets <code>#notes_box</code> at <code>journals_path</code>. On the journals index that frame is empty and has <code>src: notes_path</code>, so Turbo loads today’s notes again.</p>
