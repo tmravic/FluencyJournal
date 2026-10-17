@@ -74,20 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>3. Delete the category validator that never runs</h3>
-    <p><span class="path">app/models/note.rb</span></p>
-    <p>Rails 8 <code>enum</code> already raises <code>ArgumentError</code> on a bad assignment. The extra <code>inclusion</code> validator checks the same keys, but the raise happens first, so the custom message is dead.</p>
-    <p>Remove the inclusion validator. If you want a validation error instead of an exception, pass <code>validate: true</code> to <code>enum</code> and stop assigning raw strings.</p>
-  </article>
-
-  <article>
-    <h3><span class="tag easy">Easy</span>4. Look up an AI output with <code>find_by</code></h3>
-    <p><span class="path">app/models/ai_query.rb</span> <code>find_ai_output_by_identifier</code></p>
-    <p>The method loads every output for the query and uses <code>Enumerable#find</code>. ActiveRecord already does this in the database.</p>
-    <p>Replace the body with <code>ai_outputs.find_by(identifier: identifier)</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>5. Stop writing <code>presence: false</code></h3>
     <p><span class="path">app/models/prompt.rb</span></p>
     <p><code>validates :base_content, presence: false</code> does not forbid a value. In Rails 8, <code>validates</code> skips a validator whose option is false, so these lines do nothing. The option that requires a blank value is <code>absence: true</code>.</p>

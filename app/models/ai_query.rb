@@ -23,7 +23,7 @@ class AiQuery < ApplicationRecord
   end
 
   def find_ai_output_by_identifier(identifier)
-    self.ai_outputs.find { |output| output.identifier == identifier }
+    ai_outputs.find_by(identifier: identifier)
   end
 
   # {"change_1"=>
