@@ -1,5 +1,5 @@
 <%= simple_form_for EntryPrompt.new, url: ai_request_journal_ai_queries_path(@journal),
-             method: :post, remote: true, html: { class: "request_form" } do |f| %>
+             method: :post, html: { class: "request_form" } do |f| %>
   <%= f.hidden_field :uuid, value: @uuid %>
   <%= f.hidden_field :journal_id, value: @journal.id %>
 
