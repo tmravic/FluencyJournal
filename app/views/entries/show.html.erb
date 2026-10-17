@@ -3,7 +3,7 @@
 <%= render 'entries/entry', entry: @entry %>
 
 <div>
-  <%= link_to t("entry.edit_this"), edit_entry_path(@entry) %> |
+  <%= link_to t("entry.edit_this"), edit_journal_entry_path(@journal, @entry) %> |
   <%= link_to t("entry.back_to_entries"), journal_entries_path(@journal) %>
 
   <%= button_to t("entry.destroy_this"), [@journal, @entry], method: :delete %>

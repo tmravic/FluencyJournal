@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>1. Drop the old UJS flag on the AI form</h3>
-    <p><span class="path">app/views/ai_queries/_request_form.html.erb</span></p>
-    <p><code>remote: true</code> is the Rails UJS option. Turbo ignores it. <code>form_with</code> already submits without a full page load.</p>
-    <p>Remove <code>remote: true</code>. Leave <code>method: :post</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>2. Use the nested entry route helper</h3>
     <p><span class="path">app/views/entries/show.html.erb</span></p>
     <p>Entries only exist under journals, so the helper is <code>edit_journal_entry_path</code>. This template calls <code>edit_entry_path(@entry)</code>, which is not a route. The destroy button on the same page already uses <code>[@journal, @entry]</code>.</p>
