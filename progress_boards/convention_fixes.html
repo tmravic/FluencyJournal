@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Convention fixes</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f4ef;
+      --ink: #1c1915;
+      --muted: #5c564c;
+      --card: #fffdf8;
+      --line: #e4ddd0;
+      --easy: #1f7a4d;
+      --medium: #8a5a00;
+      --hard: #8f2d2d;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #161411;
+        --ink: #f3efe6;
+        --muted: #b7ad9e;
+        --card: #221e19;
+        --line: #3a342c;
+        --easy: #8ddeaf;
+        --medium: #e6c27a;
+        --hard: #f0a3a3;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto;
+      max-width: 46rem;
+      padding: 2.5rem 1.25rem 4rem;
+      background: var(--bg);
+      color: var(--ink);
+      font: 1.05rem/1.55 "Iowan Old Style", Palatino, Georgia, serif;
+    }
+    h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 0.5rem; }
+    h2 { font-size: 1.45rem; margin: 2.5rem 0 0.75rem; }
+    p { margin: 0.6rem 0; }
+    .lede { color: var(--muted); }
+    article {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 0.6rem;
+      padding: 1rem 1.1rem 0.9rem;
+      margin: 0.85rem 0;
+    }
+    article h3 { margin: 0 0 0.35rem; font-size: 1.12rem; line-height: 1.3; }
+    .tag {
+      display: inline-block;
+      font: 0.72rem/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-right: 0.4rem;
+    }
+    .easy { color: var(--easy); }
+    .medium { color: var(--medium); }
+    .hard { color: var(--hard); }
+    code, .path {
+      font: 0.86rem/1.45 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    ul { margin: 0.4rem 0 0.2rem; padding-left: 1.2rem; }
+    li + li { margin-top: 0.35rem; }
+  </style>
+</head>
+<body>
+  <h1>Convention fixes</h1>
+  <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
+
+  <h2>Easy</h2>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>1. Drop the old UJS flag on the AI form</h3>
+    <p><span class="path">app/views/ai_queries/_request_form.html.erb</span></p>
+    <p><code>remote: true</code> is the Rails UJS option. Turbo ignores it. <code>form_with</code> already submits without a full page load.</p>
+    <p>Remove <code>remote: true</code>. Leave <code>method: :post</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>2. Use the nested entry route helper</h3>
+    <p><span class="path">app/views/entries/show.html.erb</span></p>
+    <p>Entries only exist under journals, so the helper is <code>edit_journal_entry_path</code>. This template calls <code>edit_entry_path(@entry)</code>, which is not a route. The destroy button on the same page already uses <code>[@journal, @entry]</code>.</p>
+    <p>Point the edit link at <code>edit_journal_entry_path(@journal, @entry)</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>3. Delete the category validator that never runs</h3>
+    <p><span class="path">app/models/note.rb</span></p>
+    <p>Rails 8 <code>enum</code> already raises <code>ArgumentError</code> on a bad assignment. The extra <code>inclusion</code> validator checks the same keys, but the raise happens first, so the custom message is dead.</p>
+    <p>Remove the inclusion validator. If you want a validation error instead of an exception, pass <code>validate: true</code> to <code>enum</code> and stop assigning raw strings.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>4. Look up an AI output with <code>find_by</code></h3>
+    <p><span class="path">app/models/ai_query.rb</span> <code>find_ai_output_by_identifier</code></p>
+    <p>The method loads every output for the query and uses <code>Enumerable#find</code>. ActiveRecord already does this in the database.</p>
+    <p>Replace the body with <code>ai_outputs.find_by(identifier: identifier)</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>5. Stop writing <code>presence: false</code></h3>
+    <p><span class="path">app/models/prompt.rb</span></p>
+    <p><code>validates :base_content, presence: false</code> does not forbid a value. In Rails 8, <code>validates</code> skips a validator whose option is false, so these lines do nothing. The option that requires a blank value is <code>absence: true</code>.</p>
+    <p>Delete the two lines, or switch them to <code>absence: true</code> if a blank column is actually a rule.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>6. Use 303 after logout, and 422 when a password is wrong</h3>
+    <p><span class="path">app/controllers/sessions_controller.rb</span>, <span class="path">app/controllers/passwords_controller.rb</span></p>
+    <p><code>redirect_to</code> defaults to 302. Turbo follows redirects with <code>fetch</code>, and a 302 keeps the original method, so <code>DELETE /session</code> can be replayed as <code>DELETE /session/new</code>. Journal and entry destroys in this app already pass <code>status: :see_other</code>, which forces the next request to be GET.</p>
+    <p>A failed password update also redirects. The form is still on the screen the user needs. Render <code>edit</code> with status 422 instead, and use 303 only for the success redirect.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>7. Return the journal you just created</h3>
+    <p><span class="path">app/controllers/journals_controller.rb</span> <code>create</code>, <span class="path">app/views/journals/index.json.jbuilder</span></p>
+    <p>The JSON format renders <code>:index</code> with status 201. That template dumps <code>@todays_journals</code>, which <code>create</code> never sets. <code>show.json.jbuilder</code> is the template that serializes one journal.</p>
+    <p>Render <code>:show</code>. Keep status 201.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>8. Format dates with the locale</h3>
+    <p><span class="path">app/helpers/application_helper.rb</span> <code>display_next_review_time</code>, and the same <code>strftime("%m/%d/%Y")</code> in <span class="path">app/views/journals/_journal_content.html.erb</span> and <span class="path">app/views/entries/_entry.html.erb</span></p>
+    <p>The app has English and Japanese locales. <code>strftime</code> ignores both, and comparing formatted strings to decide “today” is a second clock. Rails already has <code>l</code> / <code>I18n.l</code> and <code>to_date</code>.</p>
+    <p>Compare dates, then format the one you show with <code>l(date)</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>9. Use <code>Time.current</code> for due dates</h3>
+    <p><span class="path">app/models/journal.rb</span>, <span class="path">app/models/note.rb</span>, <span class="path">app/controllers/journals_controller.rb</span>, <span class="path">app/controllers/notes_controller.rb</span></p>
+    <p><code>next_to_study</code> compares with <code>DateTime.now</code>. <code>finished_today</code> uses <code>24.hours.ago</code>, which follows <code>Time.zone</code>. Creates also assign <code>next_study_date = DateTime.now</code> in the controller, even though the model requires the column and the column has no default. <code>config.time_zone</code> does not affect <code>DateTime.now</code>. On a UTC server those two clocks disagree by the offset of Asia/Tokyo.</p>
+    <p>Use <code>Time.current</code>, write the scope as <code>where(next_study_date: ..Time.current)</code>, and set the initial date in the model with <code>attribute</code> or <code>before_validation</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>10. Fix the spacing token used as a font size</h3>
+    <p><span class="path">app/assets/stylesheets/layouts/_header.scss</span></p>
+    <p>Inside the small-phone mixin, <code>h1</code> gets <code>font-size: var(--space-l)</code> and <code>h3</code> gets <code>var(--space-m)</code>. Those custom properties are spacing steps, not type steps. The type scale is already <code>--font-size-*</code>.</p>
+    <p>Use a font-size token. Same file family: <span class="path">config/_variables.scss</span> comments both <code>--space-xxxxs</code> (0.125rem) and <code>--space-xxxs</code> (0.25rem) as “4px”. Only the second one is 4px.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>11. Use the breakpoint mixin you already wrote</h3>
+    <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">app/assets/stylesheets/mixins/_media.scss</span></p>
+    <p>Dart Sass setup is in good shape: partials use <code>@use</code>, and <code>components/_index.scss</code> <code>@forward</code>s the media mixin. One block ignores that and writes <code>@media (max-width: 50rem)</code> by hand. <code>tabletAndUp</code> is <code>min-width: 50rem</code>, so this raw query is the other side of the same breakpoint, spelled a second time.</p>
+    <p>Add a <code>tabletAndDown</code> arm to the mixin, or call the mixin. A later cleanup can store the widths in a <code>sass:map</code> so the numbers live in one place. Do not go back to <code>@import</code>.</p>
+  </article>
+
+  <h2>Medium</h2>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>12. Pass <code>"all"</code> from the All Journals page</h3>
+    <p><span class="path">app/views/journals/all.html.erb</span></p>
+    <p>The start button and the empty state get <code>from_all_or_todays: 'todays'</code>. The controller sets <code>@from_all_or_todays = "all"</code>, and the turbo-stream template uses that variable. A full page load of All Journals then creates a journal as if you were on today’s list, so the close button returns to <code>journals_path</code> instead of <code>all_journals_path</code>.</p>
+    <p>Pass <code>@from_all_or_todays</code>. <code>all_or_todays</code> in <span class="path">app/helpers/journals_helper.rb</span> has a related guess: it returns <code>"todays"</code> only when <code>@todays_journals</code> is present. Broadcasts and the mark-studied re-render never set that variable, so edit and delete links get stamped <code>"all"</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>13. Stop passing <code>locals:</code> into a turbo frame tag</h3>
+    <p><span class="path">app/views/notes/index.html.erb</span>, <span class="path">all.html.erb</span>, <span class="path">drafts.html.erb</span></p>
+    <p><code>locals:</code> is an option for <code>render</code>, not for <code>turbo_frame_tag</code>. Rails prints it as an HTML attribute. The frame id still works, so this is noise, not a crash.</p>
+    <p>Delete the option.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>14. Open a journal from a note in the top window</h3>
+    <p><span class="path">app/views/notes/_previous_followups_on_note.html.erb</span>, <span class="path">app/views/journals/show.html.erb</span></p>
+    <p>The journal chip sets <code>data-turbo-frame="notes_box"</code>. Turbo then looks for <code>notes_box</code> in the response. The journal page’s copy of that frame is empty, so the notes panel is replaced by nothing and the journal never opens.</p>
+    <p>Use <code>data: { turbo_frame: "_top" }</code> if the journal should take the whole page, or target <code>workspace</code> if it should open beside the notes.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>15. Close notes should close the panel</h3>
+    <p><span class="path">app/views/notes/_close_notes_button.html.erb</span>, <span class="path">app/views/journals/index.html.erb</span></p>
+    <p>The close control targets <code>#notes_box</code> at <code>journals_path</code>. On the journals index that frame is empty and has <code>src: notes_path</code>, so Turbo loads today’s notes again.</p>
+    <p>Point the close action at a response whose <code>notes_box</code> frame is empty and has no <code>src</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>16. Make prepare, grade, and reset real writes</h3>
+    <p><span class="path">config/routes.rb</span>, <span class="path">app/controllers/quizzes_controller.rb</span>, <span class="path">app/views/quizzes/_quiz_buttons.html.erb</span>, <span class="path">_grade_quiz_button.html.erb</span>, <span class="path">_reset_quiz_button.html.erb</span></p>
+    <p><code>prepare_quiz</code> saves a prompt and enqueues <code>PrepareQuizJob</code>. <code>grade_quiz</code> does the same for grading. <code>reset_quiz</code> calls <code>destroy_all_unfinished_quizzes!</code>, which destroys every unfinished quiz on the journal, not one quiz. All three are <code>get</code> routes hit by <code>link_to</code>. GET is allowed to be prefetched, cached, and retried. It also carries no CSRF token, so another site can start a paid xAI call or delete in-progress quizzes.</p>
+    <p>Use <code>button_to</code> with POST for prepare and grade, and DELETE for reset. Keep the turbo-stream response. Rename reset so the label matches “every unfinished quiz on this journal,” or scope the destroy to the one quiz on the page.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>17. Do not create a row inside <code>new</code></h3>
+    <p><span class="path">app/controllers/followups_controller.rb</span></p>
+    <p>For <code>JournalFollowup</code>, <code>new</code> calls <code>find_or_create_by!</code>, then calls it again if the origin is still nil. Note followups also write <code>session[:followup_from_todays_notes]</code>. The Double Check button is a normal link. The first prefetch creates a <code>JournalFollowup</code>. <code>params[:id]</code> on this action is the origin id, not a followup id.</p>
+    <p>Build the followup in memory. Create the origin in <code>create</code>, which is already POST.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>18. Leave a studied note or journal off today’s list</h3>
+    <p><span class="path">app/views/journals/mark_journal_as_studied.turbo_stream.erb</span>, <span class="path">app/views/notes/mark_note_as_studied.turbo_stream.erb</span></p>
+    <p>Both templates remove the record, then render that same record again with <code>turbo_stream.after</code> or <code>prepend</code>. That is the create-stream pattern. After “studied,” <code>next_study_date</code> is in the future, so the row should stay off today’s list. If nothing else is due, the journal stream also replaces the whole <code>journals</code> frame with the today’s empty state, even when that frame is All Journals. Both templates also query <code>Current.user</code> from the view.</p>
+    <p>Remove the row and update the count. Do not insert it again. Pass the empty-list decision in from the controller.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>19. Do not nest a frame inside the same id</h3>
+    <p><span class="path">app/views/journals/reading_mode.turbo_stream.erb</span>, <span class="path">app/views/entries/_entries_frame.html.erb</span>, <span class="path">app/views/quizzes/peek.turbo_stream.erb</span>, <span class="path">app/views/notes/_note_display.html.erb</span> with <span class="path">_change_note_due_date_button.html.erb</span></p>
+    <p>A turbo-stream <code>update</code> replaces the inside of a frame. These templates put a partial back in that is itself <code>turbo_frame_tag</code> with the same id. Reading mode does it to <code>#entries</code>. Peek and unpeek do it to the quiz-entry frame. The note due-date button is wrapped in <code>change_note_due_date_#{id}</code>, and the partial renders that id again. <code>getElementById</code> then hits whichever copy comes first.</p>
+    <p>The partial that fills a frame should be the inner HTML only. One owner renders the <code>turbo_frame_tag</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>20. Delete the quiz, and restore the journal around it</h3>
+    <p><span class="path">app/views/quizzes/show.html.erb</span>, <span class="path">app/views/quizzes/_graded_output.html.erb</span>, <span class="path">app/views/ai_queries/destroy.turbo_stream.erb</span></p>
+    <p>The button says delete the quiz. The path is <code>journal_ai_query_path</code>. <code>AiQuery</code> has <code>has_many :quizzes, dependent: :destroy</code>, so the quiz, its outputs, and its hints go with the query. The destroy stream clears the assistant and does not put entries and journal buttons back. <code>close_quiz.turbo_stream.erb</code> already knows how to do that. <code>AiQueriesController#destroy</code> also has an empty <code>format.html</code> and no template, so a non-Turbo DELETE has nowhere to go. Followup destroy and <code>destroy_selected</code> have the same missing 303.</p>
+    <p>Add <code>quizzes#destroy</code> and a 303 back to the journal. Reuse the close-quiz stream for the Turbo case.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>21. Delete a prompt template by id, for this user</h3>
+    <p><span class="path">app/controllers/followup_template_prompts_controller.rb</span>, <span class="path">app/controllers/concerns/template_prompt_concern.rb</span></p>
+    <p>DELETE is the right verb. The body is the template text, and <code>find_by(base_content:)</code> has no <code>user_id</code>. <code>base_content</code> is not unique, so the row that comes back can belong to someone else. The route never names a record.</p>
+    <p>Submit the id. Scope the destroy with <code>by_user(Current.user)</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>22. Give each quiz UI action one member id</h3>
+    <p><span class="path">config/routes.rb</span> <code>peek</code>, <code>unpeek</code>, hint, and original-language routes; <span class="path">app/controllers/quizzes_controller.rb</span></p>
+    <p>These GETs do not write, so the verb is fine. They are collection routes that load one quiz from the query string, and each action uses a different parameter name: <code>quiz_id</code>, <code>ai_output</code>, <code>quiz</code>, <code>quiz_entry</code>. <code>unpeek</code> does <code>AiOutput.find(params[:frame].split("_").last)</code> on a DOM id. The path never contains the quiz id.</p>
+    <p>Make them member routes. Pass the output id as a parameter, not as a piece of a frame id.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>23. Followup create should redirect to the row it saved</h3>
+    <p><span class="path">app/controllers/followups_controller.rb</span> <code>create</code></p>
+    <p>The saved record is <code>@followup_prompt.followup</code>. The HTML branch redirects to <code>followup_path(@followup)</code>, and <code>create</code> never assigns <code>@followup</code>. Turbo hides this because it does not use that redirect.</p>
+    <p>Redirect to the followup that was just saved, with status 303.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>24. Put <code>previous_journal</code> on the list the page is showing</h3>
+    <p><span class="path">app/models/journal.rb</span>, <span class="path">app/models/note.rb</span></p>
+    <p>Both methods call <code>Current.user&.journals.order</code> (notes do the same). If <code>Current.user</code> is nil, <code>&amp;.</code> does not cover <code>.order</code>, so this raises. The journal page lists <code>current_group.journals</code>, not <code>Current.user.journals</code>, so the Turbo insert can land after a row that is not on the page. The Arel <code>lt</code> is a range query written by hand.</p>
+    <p>Pass in the relation, and write <code>where(next_study_date: ...next_study_date).order(:next_study_date).last</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>25. Flatten button modifiers</h3>
+    <p><span class="path">app/assets/stylesheets/components/_btn.scss</span></p>
+    <p>BEM modifiers sit beside the block: <code>.btn--primary</code> and <code>.btn--short</code> together on one element. Nesting <code>&amp;--short</code> inside <code>&amp;--primary</code> compiles to <code>.btn--primary--short</code>, a modifier of a modifier. The views then have to repeat that chain (<code>btn btn--primary btn--primary--short</code>). <code>.btn--journal-short</code> is the same idea with a hyphen that does not match the element separator.</p>
+    <p>One class per modifier, both on the element: <code>btn btn--primary btn--short</code>. Put <code>&amp;--short</code> next to <code>&amp;--primary</code>, not inside it.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>26. An element does not contain another element</h3>
+    <p><span class="path">app/assets/stylesheets/components/_form.scss</span>, <span class="path">app/assets/stylesheets/components/_card.scss</span></p>
+    <p><code>&amp;__button_block</code> inside <code>&amp;__input</code> compiles to <code>.form__input__button_block</code>. <code>.card__change__title</code> and <code>.card__change__corrected</code> are the same shape. BEM allows <code>block__element</code> only one level deep. A second <code>__</code> means the element has been treated as a block without being named as one.</p>
+    <p>Use <code>.form__actions</code> and <code>.card__title</code>, or start a new block (<code>.change</code>) if “change” has its own elements. <code>.card__change_content</code> should be <code>.card__change-content</code> so the separator is a hyphen, not a second underscore.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>27. One naming scheme, and no id selectors</h3>
+    <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">_quiz.scss</span>, <span class="path">_quiz_answer.scss</span>, <span class="path">_request_form.scss</span>, <span class="path">_navbar.scss</span>, <span class="path">_followup.scss</span></p>
+    <p>Blocks and elements are mixed three ways. <code>.empty-state</code> and <code>.visually-hidden</code> use hyphens. <code>.note__change_due_date</code>, <code>.notes_box_scroll</code>, <code>.quiz_delete_buttons</code>, <code>.quiz_answer</code>, <code>.request_form</code>, and <code>.send_button_box</code> use underscores as if they were elements of a block that was never named. <code>.note__link-journals-label</code> then switches back to hyphens. <code>#send_button</code> styles an id. BEM does not style ids, because an id cannot be reused and it overrides every class.</p>
+    <p><code>.header</code> is also a layout block in <span class="path">layouts/_header.scss</span> and a nested class inside <code>.note__header</code>. Those are two components sharing a name, so a header rule in one file changes the other.</p>
+    <p>Pick hyphens for multi-word blocks and elements (<code>.notes-box</code>, <code>.note__due-date</code>, <code>.quiz__delete</code>). Rename <code>.header</code> inside a note to <code>.note__toolbar</code>. Replace <code>#send_button</code> with <code>.request-form__submit</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>28. Keep each block’s rules in its own file</h3>
+    <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">_entry.scss</span>, <span class="path">_followup.scss</span></p>
+    <p>Dark-theme <code>.btn--journal-short</code> lives in the note file. <code>.note .form__group</code>, <code>.note .form__input__button_block</code>, and <code>.form.entry textarea.form__input</code> reach into the form block from outside it. <code>.followup .form__checkbox-label</code> does the same. A block owns its elements. Another block may sit next to it; it should not retune its insides.</p>
+    <p>Move the dark button rule into <span class="path">_btn.scss</span> under <code>[data-theme="dark"]</code>. If a form inside a note needs a different layout, add a form modifier such as <code>.form--stacked</code> and put that rule in <span class="path">_form.scss</span>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>29. Replace the one-off inline styles</h3>
+    <p><span class="path">app/views/journals/_journal_content.html.erb</span>, <span class="path">reading_mode.html.erb</span>, <span class="path">compare.html.erb</span>, <span class="path">app/views/pages/home.html.erb</span>, scaffold <code>style="color: green"</code> notices on entry and note show pages</p>
+    <p>These repeat the same margin and flex rules the spacing tokens and <code>.flash</code> already express. Inline style skips the dark theme and the type scale.</p>
+    <p>Use <code>.journal__date--split</code> (it already exists), a small <code>.stack</code> utility or a block modifier for the vertical rhythm, and the flash partial for notices.</p>
+  </article>
+
+  <h2>Hard</h2>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>30. Let followup and quiz jobs fail in the open</h3>
+    <p><span class="path">app/jobs/followup_request_job.rb</span>, <span class="path">app/jobs/application_job.rb</span>, <span class="path">app/jobs/prepare_quiz_job.rb</span>, <span class="path">grade_quiz_job.rb</span>, <span class="path">prepare_quiz_hint_job.rb</span>, <span class="path">app/services/x_ai_service.rb</span></p>
+    <p><code>FollowupRequestJob</code> rescues <code>StandardError</code>, logs it, and returns. ActiveJob then marks the job successful, so there is no retry and no Turbo update. The page stays on “processing.” <code>ApplicationJob</code> only retries deadlocks.</p>
+    <p>The three quiz jobs copy the Faraday call, slice token counts by hand, and <code>JSON.parse</code> the body without checking status. A 429 or 500 becomes <code>NoMethodError</code> or <code>JSON::ParserError</code>. <code>XAiService</code> already raises <code>ApiError</code> unless the response succeeded, and it already reads usage. <code>AiRequestJob</code> uses that service, but <code>ApiError</code> is still not in <code>retry_on</code>.</p>
+    <p>Call <code>XAiService</code> from the quiz jobs. Add <code>retry_on</code> for <code>ApiError</code> and Faraday timeouts. On the final failure, broadcast an error into the same frame the success path uses. Delete the <code>rescue StandardError</code> that swallows the job.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>31. Take the repair job out of the parser</h3>
+    <p><span class="path">app/models/ai_query.rb</span> <code>parsed_response</code>, <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
+    <p>A reader calls <code>RescueBadFormatJob.perform_now</code> when JSON is invalid. That is a synchronous xAI call from a parse, including from <code>count_changes</code> before the query has a prompt. The job updates <code>raw_response</code>, rescues <code>JSON::ParserError</code> and a bare <code>rescue</code>, and still returns the string. Callers then see <code>nil</code> or a second parse error, and the job has no failed state.</p>
+    <p><code>change_content</code> in the same model returns <code>nil</code> as soon as the backup key is missing, so the later error branch never runs. <code>AiOutput#assemble_ai_output_content</code> then calls <code>.first</code> on that nil.</p>
+    <p>Parse in the job that received the HTTP body. If the body is bad, retry or discard there. A model method should return data or raise, not start work.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>32. Use one entry order</h3>
+    <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, <span class="path">app/models/ai_query.rb</span> hint creation, <span class="path">app/helpers/quiz_answer_helper.rb</span></p>
+    <p><code>full_journal</code> orders entries by <code>id</code>. Hint creation uses <code>journal.entries[index]</code> with no <code>ORDER BY</code>. PostgreSQL does not promise that matches <code>id</code> order. <code>entry_number</code> orders by <code>created_at</code> and loads every entry once per row. The quiz helper runs <code>offset</code> per form. <code>Quiz#full_journal</code> is a third meaning: it plucks <code>quiz_answers.user_response</code>, while <code>Journal#full_journal</code> plucks entry text. <code>AiOutput#identifier</code> is also three kinds of value in one string: <code>"1"</code>, <code>"corrected_text"</code>, or <code>"assessment"</code>.</p>
+    <p>Pick <code>entries.order(:id)</code> and use it in the hint job, the helper, and <code>entry_number</code>. Rename <code>Quiz#full_journal</code> to something like <code>responses</code>. Split identifier into an enum, or at least stop overloading one column for a line number and a role. <code>NotesFollowup</code> expects a table named <code>notes_followups</code>; the HABTM table is <code>followups_notes</code>. Nothing in the app uses that model. Delete it or point it at the real table.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>33. Make Prompt subclasses substitutable</h3>
+    <p><span class="path">app/models/prompt.rb</span> and the subclasses under <span class="path">app/models/</span>, <span class="path">app/services/x_ai_service.rb</span></p>
+    <p>Single-table inheritance only pays off when every subclass answers the same messages. Here <code>role_prompt</code> and <code>response_format</code> take <code>(user)</code>, <code>(user, journal)</code>, <code>(journal)</code>, or <code>(journal, quiz, user)</code> depending on the class. <code>XAiService</code> always calls <code>role_prompt(user, journal)</code> and <code>response_format(user)</code>. <code>base_content</code> means journal text, a followup question, or reference text. <code>Prompt#original_language</code> returns that column, not a language name, and it collides with the same method on <code>User</code>. <code>abbr</code> is copied on <code>Prompt</code> and <code>AiQuery</code>, and an unknown language falls back to the word <code>"English"</code> rather than <code>"en"</code>. TTS uses <code>"ja"</code>; the models use <code>"jp"</code>.</p>
+    <p>Give every prompt the same two methods with the same arguments. Keep language names on <code>User</code>. One abbreviation map should feed both the chat client and TTS.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>34. Store a followup link once</h3>
+    <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/entry.rb</span>, <span class="path">note.rb</span>, <span class="path">ai_output.rb</span>, <span class="path">ai_query.rb</span></p>
+    <p><code>Followup</code> already <code>belongs_to :origin, polymorphic: true</code>. Entry, Note, AiOutput, and AiQuery also keep a HABTM to followups, and the service pushes the followup onto both. <code>origin_followups</code> is a third name for the polymorphic side. HABTM cannot <code>dependent: :destroy</code> the other side, which is why <code>before_destroy</code> walks the joins by hand. <code>dependent: :nullify</code> clears <code>origin_id</code> and leaves the join rows.</p>
+    <p>Keep the polymorphic <code>has_many :followups, as: :origin</code>. Drop the HABTM joins once every screen reads <code>origin</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>35. Break the followup destroy cycle</h3>
+    <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/ai_query.rb</span>, <span class="path">app/models/prompt.rb</span>, <span class="path">app/controllers/followups_controller.rb</span></p>
+    <p><code>Followup</code>’s <code>before_destroy</code> destroys each linked <code>AiQuery</code> and its outputs. <code>AiQuery</code>’s <code>after_destroy</code> calls <code>prompt.destroy!</code>. <code>Prompt</code> has both <code>has_one :ai_query, dependent: :destroy</code> and <code>has_one :followup, dependent: :destroy</code>, so destroying the prompt tries to destroy the followup that is already inside <code>before_destroy</code>. <code>followups.prompt_id</code> is also a foreign key, so the prompt row cannot go first. The controller calls <code>destroy</code> and ignores a false return. The Turbo stream can remove the followup from the page while the database rolls the delete back.</p>
+    <p>Pick one owner. Outputs already use <code>dependent: :destroy</code> on the query. Destroy the followup, then the prompt, in an order the foreign key allows. Delete the <code>before_destroy</code> / <code>after_destroy</code> pair that re-enters the same records. Check the return value before rendering the stream that removes the node.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>36. Stop grading from stealing <code>ai_query_id</code></h3>
+    <p><span class="path">app/jobs/grade_quiz_job.rb</span>, <span class="path">app/models/ai_query.rb</span>, <span class="path">app/models/quiz.rb</span>, <span class="path">app/controllers/quizzes_controller.rb</span> <code>show</code></p>
+    <p><code>quiz.update(grading_ai_query_id: ai_query_id)</code> is the right write. The next line, <code>quiz.grading_ai_query.quizzes.push(quiz)</code>, uses <code>has_many :quizzes</code>, and that association always sets <code>ai_query_id</code>. The push saves the quiz again with the grading query as its owner, so the quiz leaves the query that holds the questions. <code>dependent: :destroy</code> on <code>AiQuery#quizzes</code> then ties the quiz’s lifetime to the grading query. <code>QuizzesController#show</code> reads <code>@quiz.ai_query</code> for the per-entry feedback, so the show page currently depends on this overwrite.</p>
+    <p>Add <code>has_many :graded_quizzes, class_name: "Quiz", foreign_key: :grading_ai_query_id</code>. Delete the <code>push</code>. Teach <code>show</code> to read the question query and the grading query as two associations. This is the hardest item because the show page, destroy callbacks, and the job all assume the overwritten id.</p>
+  </article>
+
+  <h2>Gems that replace hand-rolled pieces</h2>
+  <p class="lede">These are libraries for work this app already does itself. None of them fix the HTTP or association bugs above. They shrink the code those bugs live in.</p>
+
+  <article>
+    <h3>ruby_llm</h3>
+    <p><span class="path">app/services/x_ai_service.rb</span>, the Faraday copies in the three quiz jobs, and <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
+    <p><a href="https://github.com/crmne/ruby_llm">ruby_llm</a> speaks xAI along with the other chat providers. It handles the HTTP call, the error status, and token usage, and it can ask for structured output so the response is a Ruby object instead of a string you parse and repair. That covers <code>XAiService</code>, the duplicated quiz-job clients, the fence-stripping in <code>parsed_response</code>, and most of <code>RescueBadFormatJob</code>.</p>
+    <p>If you would rather keep the current request shape, <a href="https://github.com/alexrudall/ruby-openai">ruby-openai</a> pointed at <code>https://api.x.ai/v1</code> is the smaller swap for <code>XAiService</code> alone. Pair it with <a href="https://github.com/lostisland/faraday-retry">faraday-retry</a> so timeouts and 429s retry in Faraday instead of disappearing inside <code>rescue StandardError</code>.</p>
+  </article>
+
+  <article>
+    <h3>local_time</h3>
+    <p><span class="path">app/helpers/application_helper.rb</span> <code>display_next_review_time</code>, and the <code>strftime</code> calls in the journal and entry views</p>
+    <p><a href="https://github.com/basecamp/local_time">local_time</a> renders a <code>&lt;time&gt;</code> tag and formats it in the browser’s zone. That replaces the hand-rolled “today” string compare and the US-only month/day/year format, and it follows the person looking at the page rather than the server’s <code>DateTime.now</code>.</p>
+  </article>
+
+  <article>
+    <h3>supermemo</h3>
+    <p><span class="path">app/controllers/journals_controller.rb</span> <code>mark_journal_as_studied</code>, and the same interval step on notes</p>
+    <p>Studied items schedule themselves with <code>last_interval * 2.5</code>. That is a short version of SM-2, with the ease factor and the lapse rules left out. <a href="https://github.com/phillbaker/supermemo">supermemo</a> is that algorithm. The model would store the interval and the ease the gem returns, instead of the controller inventing the next date.</p>
+  </article>
+
+  <article>
+    <h3>acts_as_list</h3>
+    <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, hint creation in <span class="path">app/models/ai_query.rb</span></p>
+    <p>Line numbers are three different orders: <code>id</code>, <code>created_at</code>, and whatever PostgreSQL returns with no <code>ORDER BY</code>. <a href="https://github.com/brendon/acts_as_list">acts_as_list</a> puts a <code>position</code> on <code>entries</code> and gives you <code>order(:position)</code> as the only order. Quiz lines, hints, and <code>entry_number</code> then share one sequence. This is worth it only if entries can be reordered. If they are append-only, item 32 (always <code>order(:id)</code>) is enough and you do not need the gem.</p>
+  </article>
+
+  <article>
+    <h3>view_component</h3>
+    <p>The journal action row, quiz buttons, and note header are large partials that take a shifting set of locals (<code>journal</code>, <code>from_all_or_todays</code>, <code>source_tag</code>). Several of the Turbo bugs above are a partial rendered into the wrong frame, or <code>locals:</code> passed to the wrong helper.</p>
+    <p><a href="https://viewcomponent.org/">ViewComponent</a> turns one partial into an object with an explicit initializer and a test. It does not pick HTTP verbs for you. It does stop the “which local did this partial expect?” class of bug, which this app hits often. Adopt it for new buttons and frames first. A wholesale rewrite of <span class="path">app/views</span> is a separate project.</p>
+  </article>
+</body>
+</html>

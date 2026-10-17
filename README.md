@@ -1,7 +1,7 @@
 # README
 
 * Ruby version: 4.0.5
-* Rails version: 8.0.0
+* Rails version: 8.1.4
 * Node version: v20.18.0
 * Yarn version: 1.22.22
 * npm Version: 10.9.0
