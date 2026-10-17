@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>6. Use 303 after logout, and 422 when a password is wrong</h3>
-    <p><span class="path">app/controllers/sessions_controller.rb</span>, <span class="path">app/controllers/passwords_controller.rb</span></p>
-    <p><code>redirect_to</code> defaults to 302. Turbo follows redirects with <code>fetch</code>, and a 302 keeps the original method, so <code>DELETE /session</code> can be replayed as <code>DELETE /session/new</code>. Journal and entry destroys in this app already pass <code>status: :see_other</code>, which forces the next request to be GET.</p>
-    <p>A failed password update also redirects. The form is still on the screen the user needs. Render <code>edit</code> with status 422 instead, and use 303 only for the success redirect.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>7. Return the journal you just created</h3>
     <p><span class="path">app/controllers/journals_controller.rb</span> <code>create</code>, <span class="path">app/views/journals/index.json.jbuilder</span></p>
     <p>The JSON format renders <code>:index</code> with status 201. That template dumps <code>@todays_journals</code>, which <code>create</code> never sets. <code>show.json.jbuilder</code> is the template that serializes one journal.</p>

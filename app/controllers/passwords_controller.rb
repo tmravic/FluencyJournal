@@ -18,9 +18,10 @@ class PasswordsController < ApplicationController
 
   def update
     if @user.update(params.permit(:password, :password_confirmation))
-      redirect_to new_session_path, notice: t("password.reset_success")
+      redirect_to new_session_path, notice: t("password.reset_success"), status: :see_other
     else
-      redirect_to edit_password_path(params[:token]), alert: t("password.mismatch")
+      flash.now[:alert] = t("password.mismatch")
+      render :edit, status: :unprocessable_entity
     end
   end
 
