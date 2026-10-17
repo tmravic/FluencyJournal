@@ -1,4 +1,4 @@
-
+# TODO: Is this setup for production or local development only?
 x-app: &default-app
   build:
     context: "."
