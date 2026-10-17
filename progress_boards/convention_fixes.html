@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>10. Fix the spacing token used as a font size</h3>
-    <p><span class="path">app/assets/stylesheets/layouts/_header.scss</span></p>
-    <p>Inside the small-phone mixin, <code>h1</code> gets <code>font-size: var(--space-l)</code> and <code>h3</code> gets <code>var(--space-m)</code>. Those custom properties are spacing steps, not type steps. The type scale is already <code>--font-size-*</code>.</p>
-    <p>Use a font-size token. Same file family: <span class="path">config/_variables.scss</span> comments both <code>--space-xxxxs</code> (0.125rem) and <code>--space-xxxs</code> (0.25rem) as “4px”. Only the second one is 4px.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>11. Use the breakpoint mixin you already wrote</h3>
     <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">app/assets/stylesheets/mixins/_media.scss</span></p>
     <p>Dart Sass setup is in good shape: partials use <code>@use</code>, and <code>components/_index.scss</code> <code>@forward</code>s the media mixin. One block ignores that and writes <code>@media (max-width: 50rem)</code> by hand. <code>tabletAndUp</code> is <code>min-width: 50rem</code>, so this raw query is the other side of the same breakpoint, spelled a second time.</p>

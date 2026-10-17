@@ -16,10 +16,10 @@
   @include components.media(smallPhones) {
     flex-wrap: nowrap;
     h1 {
-      font-size: var(--space-l);
+      font-size: var(--font-size-xxl);
     }
     h3 {
-      font-size: var(--space-m);
+      font-size: var(--font-size-m);
     }
   }
 }
