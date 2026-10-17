@@ -56,7 +56,7 @@
       }
     }
 
-    @media (max-width: 50rem) {
+    @include components.media(tabletAndDown) {
       align-items: center;
       gap: var(--space-xxs);
 

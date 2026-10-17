@@ -71,15 +71,6 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
-  <h2>Easy</h2>
-
-  <article>
-    <h3><span class="tag easy">Easy</span>11. Use the breakpoint mixin you already wrote</h3>
-    <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">app/assets/stylesheets/mixins/_media.scss</span></p>
-    <p>Dart Sass setup is in good shape: partials use <code>@use</code>, and <code>components/_index.scss</code> <code>@forward</code>s the media mixin. One block ignores that and writes <code>@media (max-width: 50rem)</code> by hand. <code>tabletAndUp</code> is <code>min-width: 50rem</code>, so this raw query is the other side of the same breakpoint, spelled a second time.</p>
-    <p>Add a <code>tabletAndDown</code> arm to the mixin, or call the mixin. A later cleanup can store the widths in a <code>sass:map</code> so the numbers live in one place. Do not go back to <code>@import</code>.</p>
-  </article>
-
   <h2>Medium</h2>
 
   <article>
