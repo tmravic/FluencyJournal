@@ -31,4 +31,13 @@ class AiRequestJob < ApplicationJob
       locals: { journal:, ai_query: }
     )
   end
+
+  private
+
+  def failure_stream_and_target
+    _journal, entry_prompt = arguments
+    return [nil, nil] unless entry_prompt.respond_to?(:uuid)
+
+    [ "channel_#{entry_prompt.uuid}", "ai_output" ]
+  end
 end

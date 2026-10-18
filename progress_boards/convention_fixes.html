@@ -74,14 +74,6 @@
   <h2>Hard</h2>
 
   <article>
-    <h3><span class="tag hard">Hard</span>30. Let followup and quiz jobs fail in the open</h3>
-    <p><span class="path">app/jobs/followup_request_job.rb</span>, <span class="path">app/jobs/application_job.rb</span>, <span class="path">app/jobs/ai_request_job.rb</span>, <span class="path">app/jobs/prepare_quiz_job.rb</span>, <span class="path">app/jobs/grade_quiz_job.rb</span></p>
-    <p><code>FollowupRequestJob</code> rescues <code>Faraday::ConnectionFailed</code> and <code>StandardError</code>, logs them, and returns. ActiveJob then marks the job successful, so there is no retry and no Turbo update. The page stays on “processing.” <code>ApplicationJob</code> only retries deadlocks.</p>
-    <p>The chat call itself is <code>XAiChat</code> (ruby_llm chat completions). A rejected request raises <code>RubyLLM::Error</code>, such as <code>RateLimitError</code> or <code>ServerError</code>, and the gem already retries timeouts, 429s, and 5xx inside that request. <code>PrepareQuizJob</code>, <code>GradeQuizJob</code>, and <code>AiRequestJob</code> let the error fail the job. Nothing broadcasts into the frame the success path uses, so the page still sits on “processing.”</p>
-    <p>Add <code>retry_on</code> for <code>RubyLLM::RateLimitError</code>, <code>RubyLLM::ServerError</code>, <code>RubyLLM::ServiceUnavailableError</code>, and <code>Faraday::TimeoutError</code>. On the final failure, broadcast an error into the same frame the success path uses. Delete the rescues in <code>FollowupRequestJob</code> that mark the job successful.</p>
-  </article>
-
-  <article>
     <h3><span class="tag hard">Hard</span>31. Take the repair job out of the parser</h3>
     <p><span class="path">app/models/ai_query.rb</span> <code>parsed_response</code>, <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
     <p>A reader still calls <code>RescueBadFormatJob.perform_now</code> when JSON is invalid. That is a synchronous xAI call from a parse, including from <code>count_changes</code> before the query has a prompt. New chat bodies are stored from ruby_llm’s parsed object, so a successful response no longer needs the fence strip or this job. Old rows, and a model that returns non-JSON, still hit it.</p>

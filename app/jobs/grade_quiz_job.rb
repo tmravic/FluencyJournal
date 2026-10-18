@@ -70,4 +70,13 @@ class GradeQuizJob < ApplicationJob
       locals: { journal: }
     )
   end
+
+  private
+
+  def failure_stream_and_target
+    _journal, quiz_result_prompt, _quiz = arguments
+    return [nil, nil] unless quiz_result_prompt.respond_to?(:uuid)
+
+    [ "channel_#{quiz_result_prompt.uuid}", "quiz_results" ]
+  end
 end

@@ -57,4 +57,13 @@ class PrepareQuizJob < ApplicationJob
       locals: { ai_query_id:, quiz:, journal:, source_tag:, user:, ai_outputs: }
     )
   end
+
+  private
+
+  def failure_stream_and_target
+    _journal, prepare_quiz_prompt = arguments
+    return [nil, nil] unless prepare_quiz_prompt.respond_to?(:uuid)
+
+    [ "channel_#{prepare_quiz_prompt.uuid}", "quizzes" ]
+  end
 end

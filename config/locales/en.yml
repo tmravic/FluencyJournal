@@ -213,6 +213,7 @@ en:
     change: "Change"
     ai_output: "AI Output"
     processing: "Processing..."
+    job_failed: "The request failed. Please try again."
     original_language: "Original Language:"
     learning_language: "Learning Language:"
     placeholder:

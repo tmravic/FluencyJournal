@@ -36,20 +36,14 @@ class FollowupRequestJob < ApplicationJob
         # need origin: or reference: instead
       )
     end
-  rescue Faraday::ConnectionFailed => e
-    handle_error(e, "Connection failed to Xai API")
-  rescue JSON::ParserError => e
-    handle_error(e, "Failed to parse JSON response")
-  rescue ActiveRecord::RecordInvalid => e
-    handle_error(e, "ActiveRecord validation failed")
-  rescue StandardError => e
-    handle_error(e, "An unexpected error occurred")
   end
 
   private
 
-  def handle_error(exception, context)
-    Rails.logger.error("FollowupRequestJob error: #{context}: #{exception.message}")
-    Rails.logger.error(exception.backtrace.join("\n"))
+  def failure_stream_and_target
+    _user, _journal, followup_prompt, _origin, source_tag = arguments
+    return [nil, nil] unless followup_prompt.respond_to?(:uuid)
+
+    [ "channel_#{followup_prompt.uuid}", "followup_output_#{source_tag}" ]
   end
 end
