@@ -26,9 +26,9 @@ class Note < ApplicationRecord
     next_to_study.where.not(category: :draft_journal)
   }
 
-  def previous_note
-    all_notes = Current.user&.notes.order(:next_study_date)
-    notes_table = Note.arel_table
-    all_notes.where(notes_table[:next_study_date].lt(self.next_study_date)).last
+  def previous_note(notes)
+    return nil if notes.nil? || next_study_date.nil?
+
+    notes.where(next_study_date: ...next_study_date).order(:next_study_date).last
   end
 end

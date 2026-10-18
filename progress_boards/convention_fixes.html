@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>24. Put <code>previous_journal</code> on the list the page is showing</h3>
-    <p><span class="path">app/models/journal.rb</span>, <span class="path">app/models/note.rb</span></p>
-    <p>Both methods call <code>Current.user&.journals.order</code> (notes do the same). If <code>Current.user</code> is nil, <code>&amp;.</code> does not cover <code>.order</code>, so this raises. The journal page lists <code>current_group.journals</code>, not <code>Current.user.journals</code>, so the Turbo insert can land after a row that is not on the page. The Arel <code>lt</code> is a range query written by hand.</p>
-    <p>Pass in the relation, and write <code>where(next_study_date: ...next_study_date).order(:next_study_date).last</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>25. Flatten button modifiers</h3>
     <p><span class="path">app/assets/stylesheets/components/_btn.scss</span></p>
     <p>BEM modifiers sit beside the block: <code>.btn--primary</code> and <code>.btn--short</code> together on one element. Nesting <code>&amp;--short</code> inside <code>&amp;--primary</code> compiles to <code>.btn--primary--short</code>, a modifier of a modifier. The views then have to repeat that chain (<code>btn btn--primary btn--primary--short</code>). <code>.btn--journal-short</code> is the same idea with a hyphen that does not match the element separator.</p>

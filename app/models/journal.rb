@@ -49,9 +49,9 @@ class Journal < ApplicationRecord
     self.full_journal.join.length
   end
 
-  def previous_journal
-    all_journals = Current.user&.journals.order(:next_study_date)
-    journals_table = Journal.arel_table
-    all_journals.where(journals_table[:next_study_date].lt(self.next_study_date)).last
+  def previous_journal(journals)
+    return nil if journals.nil? || next_study_date.nil?
+
+    journals.where(next_study_date: ...next_study_date).order(:next_study_date).last
   end
 end

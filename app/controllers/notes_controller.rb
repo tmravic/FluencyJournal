@@ -72,7 +72,10 @@ class NotesController < ApplicationController
     header_partial = get_header_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
     @source_tag = "notes_box"
-    previous_note = @note.previous_note
+    # The anchor is chosen before save, while this row is still off the list.
+    # next_study_date is otherwise unset until validation.
+    @note.set_initial_next_study_date
+    previous_note = @note.previous_note(collection)
 
     respond_to do |format|
       if @note.save
