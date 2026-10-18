@@ -1,8 +1,7 @@
 class AiOutput < ApplicationRecord
   include SharedMethods
   belongs_to :ai_query
-  has_and_belongs_to_many :followups
-  has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
+  has_many :followups, as: :origin, dependent: :nullify
   delegate :journal, to: :ai_query, allow_nil: true
   has_many :quiz_answers, dependent: :destroy
 

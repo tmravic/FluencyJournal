@@ -1,19 +1,4 @@
 module SharedServiceMethods
-  def save_followup_based_on_origin(ai_query, followup, followup_origin)
-    ai_query.followups.push(followup)
-    if ai_query.save!
-      if followup_origin.is_a?(Entry)
-        followup_origin.followups.push(followup)
-      elsif followup_origin.is_a?(AiOutput)
-        followup_origin.followups.push(followup)
-      elsif followup_origin.is_a?(Note)
-        followup_origin.followups.push(followup)
-      elsif followup_origin.is_a?(JournalFollowup)
-        followup_origin.followups.push(followup)
-      end
-    end
-  end
-
   def build_ai_query(response_from_model, token_data, prompt, journal)
     ai_query = AiQuery.build(
       prompt_tokens: token_data["prompt_tokens"],

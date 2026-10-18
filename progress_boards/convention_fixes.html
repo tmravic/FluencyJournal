@@ -74,13 +74,6 @@
   <h2>Hard</h2>
 
   <article>
-    <h3><span class="tag hard">Hard</span>34. Store a followup link once</h3>
-    <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/entry.rb</span>, <span class="path">note.rb</span>, <span class="path">ai_output.rb</span>, <span class="path">ai_query.rb</span></p>
-    <p><code>Followup</code> already <code>belongs_to :origin, polymorphic: true</code>. Entry, Note, AiOutput, and AiQuery also keep a HABTM to followups, and the service pushes the followup onto both. <code>origin_followups</code> is a third name for the polymorphic side. HABTM cannot <code>dependent: :destroy</code> the other side, which is why <code>before_destroy</code> walks the joins by hand. <code>dependent: :nullify</code> clears <code>origin_id</code> and leaves the join rows.</p>
-    <p>Keep the polymorphic <code>has_many :followups, as: :origin</code>. Drop the HABTM joins once every screen reads <code>origin</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag hard">Hard</span>35. Break the followup destroy cycle</h3>
     <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/ai_query.rb</span>, <span class="path">app/models/prompt.rb</span>, <span class="path">app/controllers/followups_controller.rb</span></p>
     <p><code>Followup</code>’s <code>before_destroy</code> destroys each linked <code>AiQuery</code> and its outputs. <code>AiQuery</code>’s <code>after_destroy</code> calls <code>prompt.destroy!</code>. <code>Prompt</code> has both <code>has_one :ai_query, dependent: :destroy</code> and <code>has_one :followup, dependent: :destroy</code>, so destroying the prompt tries to destroy the followup that is already inside <code>before_destroy</code>. <code>followups.prompt_id</code> is also a foreign key, so the prompt row cannot go first. The controller calls <code>destroy</code> and ignores a false return. The Turbo stream can remove the followup from the page while the database rolls the delete back.</p>

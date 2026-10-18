@@ -35,9 +35,9 @@ class JournalsController < ApplicationController
     @source_tag = "ai_assistant"
 
     # Eager load associations used by _previous_queries.html.erb to avoid N+1 queries
-    # (followups, quizzes, prompt.class checks)
+    # (the followup on the prompt, quizzes, prompt.class checks)
     @journal = current_group.journals
-                            .includes(ai_queries: [:prompt, :quizzes, :followups])
+                            .includes(ai_queries: [ :quizzes, { prompt: :followup } ])
                             .find(@journal.id)
 
     respond_to do |format|

@@ -5,9 +5,10 @@
 
 <h4><%= t("followup.previous") %></h4>
 <% journal.ai_queries.each do |query| %>
-  <% if query.followups.any? %>
+  <% followup = query.prompt&.followup %>
+  <% if followup %>
     <%= link_to t("followup.short"),
-                followup_path(query.followups.first, source_tag: "ai_assistant"),
+                followup_path(followup, source_tag: "ai_assistant"),
                 class: "btn btn--primary",
                 data: {
                   turbo_frame: followup_turbo_frame("ai_assistant"),

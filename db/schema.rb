@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_18_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_18_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,14 +23,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_160000) do
     t.datetime "updated_at", null: false
     t.string "role", default: "line", null: false
     t.index ["ai_query_id"], name: "index_ai_outputs_on_ai_query_id"
-  end
-
-  create_table "ai_outputs_followups", id: false, force: :cascade do |t|
-    t.bigint "ai_output_id", null: false
-    t.bigint "followup_id", null: false
-    t.index ["ai_output_id", "followup_id"], name: "index_ai_outputs_followups_on_ai_output_id_and_followup_id", unique: true
-    t.index ["ai_output_id"], name: "index_ai_outputs_followups_on_ai_output_id"
-    t.index ["followup_id"], name: "index_ai_outputs_followups_on_followup_id"
   end
 
   create_table "ai_queries", force: :cascade do |t|
@@ -47,14 +39,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_160000) do
     t.index ["prompt_id"], name: "index_ai_queries_on_prompt_id"
   end
 
-  create_table "ai_queries_followups", id: false, force: :cascade do |t|
-    t.bigint "ai_query_id", null: false
-    t.bigint "followup_id", null: false
-    t.index ["ai_query_id", "followup_id"], name: "index_ai_queries_followups_on_ai_query_id_and_followup_id", unique: true
-    t.index ["ai_query_id"], name: "index_ai_queries_followups_on_ai_query_id"
-    t.index ["followup_id"], name: "index_ai_queries_followups_on_followup_id"
-  end
-
   create_table "entries", force: :cascade do |t|
     t.text "content"
     t.bigint "journal_id", null: false
@@ -63,14 +47,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_160000) do
     t.integer "position", null: false
     t.index ["journal_id", "position"], name: "index_entries_on_journal_id_and_position", unique: true
     t.index ["journal_id"], name: "index_entries_on_journal_id"
-  end
-
-  create_table "entries_followups", id: false, force: :cascade do |t|
-    t.bigint "entry_id", null: false
-    t.bigint "followup_id", null: false
-    t.index ["entry_id", "followup_id"], name: "index_entries_followups_on_entry_id_and_followup_id", unique: true
-    t.index ["entry_id"], name: "index_entries_followups_on_entry_id"
-    t.index ["followup_id"], name: "index_entries_followups_on_followup_id"
   end
 
   create_table "followup_template_prompts", force: :cascade do |t|
@@ -90,14 +66,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_160000) do
     t.datetime "updated_at", null: false
     t.index ["origin_type", "origin_id"], name: "index_followups_on_origin"
     t.index ["prompt_id"], name: "index_followups_on_prompt_id"
-  end
-
-  create_table "followups_notes", id: false, force: :cascade do |t|
-    t.bigint "followup_id", null: false
-    t.bigint "note_id", null: false
-    t.index ["followup_id"], name: "index_followups_notes_on_followup_id"
-    t.index ["note_id", "followup_id"], name: "index_followups_notes_on_note_id_and_followup_id", unique: true
-    t.index ["note_id"], name: "index_followups_notes_on_note_id"
   end
 
   create_table "groups", force: :cascade do |t|

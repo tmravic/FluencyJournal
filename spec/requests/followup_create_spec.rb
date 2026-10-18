@@ -43,6 +43,7 @@ RSpec.describe "POST /followups", type: :request do
 
     followup = Followup.order(:id).last
     expect(followup.origin).to eq(entry)
+    expect(entry.followups).to contain_exactly(followup)
     expect(response).to have_http_status(:see_other)
     expect(response).to redirect_to(followup_path(followup))
     expect(flash[:notice]).to eq(I18n.t("followup.request_sent"))

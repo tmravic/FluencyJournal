@@ -46,6 +46,27 @@ RSpec.describe XAiService do
       )
     end
 
+    it "does not write a second followup link when the request has an origin" do
+      origin = instance_double(Entry)
+      allow(prompt).to receive(:role_prompt).with(user, journal).and_return("role")
+      allow(prompt).to receive(:response_format).with(user, journal, nil).and_return("format")
+      service = described_class.new(
+        api_key: "key",
+        prompt: prompt,
+        user: user,
+        journal: journal,
+        followup_origin: origin
+      )
+      ai_query = instance_double(AiQuery)
+      allow(XAiChat).to receive(:complete).and_return(result)
+      allow(service).to receive(:build_ai_query).and_return(ai_query)
+      allow(service).to receive(:create_ai_outputs_for_each_change)
+      allow(service).to receive(:create_ai_output_for_corrected_text)
+
+      expect(service.call).to eq(ai_query)
+      expect(service).not_to have_received(:create_ai_output_for_corrected_text)
+    end
+
     it "raises the ruby_llm error when xAI rejects the request" do
       response = instance_double(
         Faraday::Response,
