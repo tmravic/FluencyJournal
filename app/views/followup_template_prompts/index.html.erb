@@ -11,11 +11,11 @@
                    options_for_select([[t("prompt_templates.choose_a_template"), ""]] + @followup_template_prompts),
                    class: "form__input" %>
     <div class="followup__prompt_template_buttons">
-      <%= submit_tag t('prompt_templates.delete_selected_prompt'), class: "btn btn--primary btn--primary--short" %>
+      <%= submit_tag t('prompt_templates.delete_selected_prompt'), class: "btn btn--primary btn--short" %>
       <%= link_to t('cancel'),
                   cancel_followup_template_prompts_path(source_tag: @source_tag),
                   data: { turbo_stream: true },
-                  class: "btn btn--light btn--light--short" %>
+                  class: "btn btn--light btn--short" %>
     </div>
   <% end %>
 <% end %>

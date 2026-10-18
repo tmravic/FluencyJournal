@@ -31,15 +31,15 @@
       color: var(--color-white);
       filter: saturate(1.4) brightness(115%);
     }
+  }
 
-    &--manage-journal {
-      padding: var(--space-xxxs) var(--space-xxs);
-      font-size: var(--font-size-m);
-    }
+  &--short {
+    padding: 0 var(--space-xxxs);
+  }
 
-    &--short {
-      padding: 0 var(--space-xxxs);
-    }
+  &--manage-journal {
+    padding: var(--space-xxxs) var(--space-xxs);
+    font-size: var(--font-size-m);
   }
 
   &--journal-short {
@@ -79,10 +79,6 @@
     &:active {
       color: var(--color-dark);
       filter: brightness(92%);
-    }
-
-    &--short {
-      padding: 0 var(--space-xxxs);
     }
   }
 
