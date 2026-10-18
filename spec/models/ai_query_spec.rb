@@ -42,4 +42,31 @@ RSpec.describe AiQuery, type: :model do
       expect(RescueBadFormatJob).not_to have_received(:perform_now)
     end
   end
+
+  describe "#change_content" do
+    it "splits on the arrow the grade prompt requests" do
+      query = described_class.new(raw_response: '{"entry_1":{"content":"Test → 本当の文"}}')
+
+      expect(query.change_content("1", "entry_")).to eq([ "Test ", " 本当の文" ])
+    end
+
+    it "splits when the model uses the down arrow the card draws" do
+      query = described_class.new(raw_response: '{"entry_1":{"content":"Test ↓ 本当の文"}}')
+
+      expect(query.change_content("1", "entry_")).to eq([ "Test ", " 本当の文" ])
+    end
+
+    it "splits an ASCII arrow" do
+      query = described_class.new(raw_response: '{"entry_1":{"content":"Test -> 本当の文"}}')
+
+      expect(query.change_content("1", "entry_")).to eq([ "Test ", " 本当の文" ])
+    end
+
+    it "keeps a sentence that has no arrow as one string" do
+      query = described_class.new(raw_response: '{"entry_1":{"content":"真優の誕生日"}}')
+
+      expect(query.change_content("1", "entry_")).to eq("真優の誕生日")
+    end
+  end
+
 end

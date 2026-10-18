@@ -118,15 +118,13 @@ class AiQuery < ApplicationRecord
     "something went wrong"
   end
 
+  CHANGE_CONTENT_ARROWS = [ "→", "⇒", "->", "↓" ].freeze
+
   def change_content(num, change_keyword)
     parsed = parsed_response
     result = parsed.dig("#{change_keyword}#{num}", "content")
-    if result
-      if result.include?("→")
-        return result.split("→")
-      else
-        return result
-      end
+    if result.is_a?(String)
+      return split_change_content(result)
     end
 
     if result.nil?
@@ -135,11 +133,14 @@ class AiQuery < ApplicationRecord
       return result
     end
 
-    if result.nil?
-      result = error_message
-    end
-
     result
+  end
+
+  def split_change_content(result)
+    return result unless result.is_a?(String)
+
+    arrow = CHANGE_CONTENT_ARROWS.find { |candidate| result.include?(candidate) }
+    arrow ? result.split(arrow, 2) : result
   end
 
   def change_explanation(change_keyword, num, abbr)

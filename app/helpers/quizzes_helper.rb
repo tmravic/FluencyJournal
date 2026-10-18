@@ -13,12 +13,7 @@ module QuizzesHelper
 
     contents_hash = create_contents_hash(ai_query, identifier, entry_keyword, user)
     if html
-      content_tag(:div) do
-        concat content_tag(:div, contents_hash[:content_first])
-        concat tag.p("↓")
-        concat content_tag(:div, contents_hash[:content_last])
-        concat content_tag(:div, "(#{contents_hash[:explanation]})")
-      end
+      render_quiz_entry_html(contents_hash)
     else
       render_ai_query_entry_reference_text(ai_query, identifier, entry_keyword, user)
     end
@@ -42,14 +37,38 @@ module QuizzesHelper
 
   def render_ai_query_entry_reference_text(ai_query, identifier, entry_keyword, user)
     contents_hash = create_contents_hash(ai_query, identifier, entry_keyword, user)
-    return "" unless contents_hash[:content_first].present? && contents_hash[:content_last].present?
+    if quiz_entry_has_two_sides?(contents_hash)
+      [
+        contents_hash[:content_first],
+        "↓",
+        contents_hash[:content_last],
+        "(#{contents_hash[:explanation]})"
+      ].join("\n")
+    elsif contents_hash[:content].present?
+      "#{contents_hash[:content]}\n(#{contents_hash[:explanation]})"
+    else
+      ""
+    end
+  end
 
-    [
-      contents_hash[:content_first],
-      "↓",
-      contents_hash[:content_last],
-      "(#{contents_hash[:explanation]})"
-    ].join("\n")
+  def render_quiz_entry_html(contents_hash)
+    if quiz_entry_has_two_sides?(contents_hash)
+      content_tag(:div) do
+        concat content_tag(:div, contents_hash[:content_first])
+        concat tag.p("↓")
+        concat content_tag(:div, contents_hash[:content_last])
+        concat content_tag(:div, "(#{contents_hash[:explanation]})")
+      end
+    else
+      content_tag(:div) do
+        concat content_tag(:div, contents_hash[:content])
+        concat content_tag(:div, "(#{contents_hash[:explanation]})")
+      end
+    end
+  end
+
+  def quiz_entry_has_two_sides?(contents_hash)
+    contents_hash[:content_first].present? || contents_hash[:content_last].present?
   end
 
   def create_contents_hash(ai_query, identifier, change_keyword, user = nil)
