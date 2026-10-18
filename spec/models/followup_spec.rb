@@ -159,6 +159,20 @@ RSpec.describe Followup, type: :model do
       .and change(AiQuery, :count).by(-1)
   end
 
+  it "destroys the prompt and the answer when the note is destroyed" do
+    user = create_user
+    note = user.notes.create!(content: "覚悟")
+    prompt = create_prompt
+    followup = create_followup(note, prompt)
+    answer = AiQuery.create!(raw_response: "{}", prompt: prompt)
+
+    note.destroy!
+
+    expect(described_class.find_by(id: followup.id)).to be_nil
+    expect(Prompt.find_by(id: prompt.id)).to be_nil
+    expect(AiQuery.find_by(id: answer.id)).to be_nil
+  end
+
   it "destroys the followup and its prompt when the journal is destroyed" do
     user = create_user
     journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)

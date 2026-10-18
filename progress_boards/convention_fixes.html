@@ -73,14 +73,7 @@
 
   <h2>Medium</h2>
 
-    <article>
-    <h3><span class="tag medium">Medium</span>42. Delete note followups with the note</h3>
-    <p><span class="path">app/models/note.rb</span>, <span class="path">app/controllers/followups_controller.rb</span> <code>set_user_and_journal_based_on_origin_class</code></p>
-    <p>A note followup’s answer query is stored with no journal. <code>set_user_and_journal_based_on_origin_class</code> sets <code>@journal</code> for an entry, an output, or a journal followup, and leaves it unset for a note. <code>Note</code> then <code>dependent: :nullify</code>s its followups. After the note is gone, the followup, the prompt, and the query have no user and no journal, so nothing else deletes them.</p>
-    <p>Use <code>has_many :followups, as: :origin, dependent: :destroy</code> on <code>Note</code>, the same way <code>JournalFollowup</code> does. <code>Prompt.destroy_from</code> already removes the prompt and the answer after the followup row is gone. Leave entry and output followups on <code>nullify</code>.</p>
-  </article>
-
-  <article>
+      <article>
     <h3><span class="tag medium">Medium</span>43. Do not accept another user id</h3>
     <p><span class="path">app/controllers/journals_controller.rb</span> <code>journal_params</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>note_params</code>, <code>update_journals</code>.</p>
     <p><code>journal_params</code> permits <code>:user_id</code>. Create assigns <code>Current.user</code> afterward. Update does not, so a request can move the journal onto another user. <code>note_params</code> permits <code>:user_id</code> and <code>:journal_ids</code>. <code>update_journals</code> assigns <code>journal_ids</code> from the request with no check that those journals belong to this user or group. The forms do not show these fields.</p>

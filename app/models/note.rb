@@ -3,7 +3,7 @@ class Note < ApplicationRecord
 
   belongs_to :user
   has_and_belongs_to_many :journals
-  has_many :followups, as: :origin, dependent: :nullify
+  has_many :followups, as: :origin, dependent: :destroy
 
   validates :content, presence: true
   validates :next_study_date, presence: true
