@@ -17,6 +17,9 @@
   <%= turbo_stream.update "double_check_button",
                           partial: 'journals/double_check_button',
                           locals: { journal: @journal } %>
+  <%= turbo_stream.update "compare_button",
+                          partial: 'journals/compare_button',
+                          locals: { journal: @journal } %>
 <% end %>
 
 <%= turbo_stream.update "linked_notes_button",
