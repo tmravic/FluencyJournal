@@ -149,6 +149,7 @@ en:
     grade: "Grade quiz"
     reset: "Reset"
     delete: "Delete Quiz"
+    deleted: "Quiz was successfully deleted."
     retry: "Retry"
     preparing: "Quiz being prepared..."
     grading: "Quiz grading in progress..."

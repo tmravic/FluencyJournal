@@ -120,7 +120,7 @@
 <% if ai_query %>
   <div class="quiz_delete_buttons">
     <%= button_to t("quiz.delete"),
-                  journal_ai_query_path(ai_query.journal, ai_query),
+                  journal_quiz_path(ai_query.journal, quiz),
                   method: :delete,
                   data: { turbo_stream: true },
                   class: "btn btn--light", id: "send_button" %>

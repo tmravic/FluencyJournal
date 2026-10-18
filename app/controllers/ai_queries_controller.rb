@@ -15,7 +15,7 @@ class AiQueriesController < ApplicationController
     @uuid = SecureRandom.uuid
 
     respond_to do |format|
-      format.html
+      format.html { redirect_to journal_path(@journal), status: :see_other }
       format.turbo_stream
     end
   end

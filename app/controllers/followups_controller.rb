@@ -194,7 +194,19 @@ class FollowupsController < ApplicationController
     # Used to find the HTML items for turbo streams to delete, ex:
     # "ai_assistant_answer_1"
     # "notes_box_answer_2"
+    return_to = if @journal
+      journal_path(@journal)
+    elsif @followup.origin.is_a?(Note)
+      notes_path
+    else
+      root_path
+    end
     @followup.destroy
+
+    respond_to do |format|
+      format.html { redirect_to return_to, status: :see_other }
+      format.turbo_stream
+    end
   end
 
   private

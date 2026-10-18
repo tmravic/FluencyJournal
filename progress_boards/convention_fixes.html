@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>20. Delete the quiz, and restore the journal around it</h3>
-    <p><span class="path">app/views/quizzes/show.html.erb</span>, <span class="path">app/views/quizzes/_graded_output.html.erb</span>, <span class="path">app/views/ai_queries/destroy.turbo_stream.erb</span></p>
-    <p>The button says delete the quiz. The path is <code>journal_ai_query_path</code>. <code>AiQuery</code> has <code>has_many :quizzes, dependent: :destroy</code>, so the quiz, its outputs, and its hints go with the query. The destroy stream clears the assistant and does not put entries and journal buttons back. <code>close_quiz.turbo_stream.erb</code> already knows how to do that. <code>AiQueriesController#destroy</code> also has an empty <code>format.html</code> and no template, so a non-Turbo DELETE has nowhere to go. Followup destroy and <code>destroy_selected</code> have the same missing 303.</p>
-    <p>Add <code>quizzes#destroy</code> and a 303 back to the journal. Reuse the close-quiz stream for the Turbo case.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>21. Delete a prompt template by id, for this user</h3>
     <p><span class="path">app/controllers/followup_template_prompts_controller.rb</span>, <span class="path">app/controllers/concerns/template_prompt_concern.rb</span></p>
     <p>DELETE is the right verb. The body is the template text, and <code>find_by(base_content:)</code> has no <code>user_id</code>. <code>base_content</code> is not unique, so the row that comes back can belong to someone else. The route never names a record.</p>

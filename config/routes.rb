@@ -24,7 +24,7 @@ Rails.application.routes.draw do
         get :cancel
       end
     end
-    resources :quizzes, only: [:show] do
+    resources :quizzes, only: [:show, :destroy] do
       collection do
         post :prepare_quiz
         delete :reset_quiz

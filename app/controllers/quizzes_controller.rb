@@ -1,6 +1,6 @@
 class QuizzesController < ApplicationController
   before_action :set_journal
-  before_action :set_quiz, only: [:grade_quiz, :show]
+  before_action :set_quiz, only: [:grade_quiz, :show, :destroy]
 
   def prepare_quiz
     uuid = SecureRandom.uuid
@@ -110,6 +110,19 @@ class QuizzesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
+    end
+  end
+
+  def destroy
+    @source_tag = "ai_assistant"
+    @entries = @journal.entries.order(:id)
+    queries = [ @quiz.ai_query, @quiz.grading_ai_query ].compact.uniq
+    @quiz.destroy!
+    queries.each(&:destroy!)
+
+    respond_to do |format|
+      format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("quiz.deleted") }
+      format.turbo_stream { render "close_quiz" }
     end
   end
 

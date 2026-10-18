@@ -23,10 +23,14 @@ class FollowupTemplatePromptsController < ApplicationController
       @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user, include_due_notes_template: false)
 
       respond_to do |format|
+        format.html { redirect_to followup_template_prompts_path, status: :see_other, notice: notice }
         format.turbo_stream { flash.now[:notice] = notice }
       end
     else
-      flash.now[:alert] = t("prompt_templates.no_selection")
+      respond_to do |format|
+        format.html { redirect_to followup_template_prompts_path, status: :see_other, alert: t("prompt_templates.no_selection") }
+        format.turbo_stream { flash.now[:alert] = t("prompt_templates.no_selection") }
+      end
     end
   end
 end

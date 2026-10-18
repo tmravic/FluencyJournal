@@ -149,6 +149,7 @@ ja:
     grade: "クイズ採点"
     reset: "リセット"
     delete: "クイズ削除"
+    deleted: "クイズを削除しました。"
     retry: "リトライ"
     preparing: "クイズ準備中..."
     grading: "クイズ採点中..."
