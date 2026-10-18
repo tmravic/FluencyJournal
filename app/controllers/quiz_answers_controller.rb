@@ -1,11 +1,10 @@
 class QuizAnswersController < ApplicationController
   before_action :set_journal
-  before_action :set_quiz_answer, only: [:show, :edit, :retry]
   before_action :set_quiz
+  before_action :set_quiz_answer, only: [:show, :edit, :retry]
 
   def show
     #<ActionController::Parameters {"controller"=>"quiz_answers", "action"=>"show", "journal_id"=>"3", "quiz_id"=>"58", "id"=>"85"} permitted: false>
-    @quiz_answer = QuizAnswer.find(params.dig(:id).to_i)
     @ai_output = @quiz_answer.ai_output
     @original_entry_text = get_original_language_from_journal(@ai_output.identifier)
   end
@@ -15,7 +14,7 @@ class QuizAnswersController < ApplicationController
   end
 
   def create
-    @ai_output = AiOutput.find(params.dig("quiz_answer", "ai_output_id"))
+    @ai_output = @quiz.ai_query.ai_outputs.find(params.dig("quiz_answer", "ai_output_id"))
     @ai_query = @ai_output.ai_query
     @quiz_answer = @quiz.quiz_answers.build(quiz_answer_params)
     identifier = find_identifier
@@ -64,7 +63,7 @@ class QuizAnswersController < ApplicationController
   end
 
   def set_quiz_answer
-    @quiz_answer = QuizAnswer.find(params.expect(:id))
+    @quiz_answer = @quiz.quiz_answers.find(params.expect(:id))
   end
 
   def quiz_answer_params

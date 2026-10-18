@@ -44,7 +44,7 @@ class AiQueriesController < ApplicationController
   end
 
   def set_ai_query
-    @ai_query = AiQuery.find(params.expect(:id))
+    @ai_query = @journal.ai_queries.find(params.expect(:id))
   end
 
   def set_journal

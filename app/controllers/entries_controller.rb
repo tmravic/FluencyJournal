@@ -110,7 +110,7 @@ class EntriesController < ApplicationController
   end
 
   def set_entry
-    @entry = Entry.find(params.expect(:id))
+    @entry = @journal.entries.find(params.expect(:id))
   end
 
   def set_journal
@@ -119,6 +119,6 @@ class EntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.expect(entry: [ :content, :journal_id ])
+    params.expect(entry: [ :content ])
   end
 end

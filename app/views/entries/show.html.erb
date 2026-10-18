@@ -1,4 +1,4 @@
-<%= render 'entries/entry', entry: @entry %>
+<%= render 'entries/entry', entry: @entry, journal: @journal %>
 
 <div>
   <%= link_to t("entry.edit_this"), edit_journal_entry_path(@journal, @entry) %> |

@@ -71,15 +71,6 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
-  <h2>Medium</h2>
-
-        <article>
-    <h3><span class="tag medium">Medium</span>44. Load a nested record through its parent</h3>
-    <p><span class="path">app/controllers/entries_controller.rb</span> <code>set_entry</code>, <code>entry_params</code>. <span class="path">app/controllers/ai_queries_controller.rb</span> <code>set_ai_query</code>. <span class="path">app/controllers/quiz_answers_controller.rb</span> <code>set_quiz_answer</code>, <code>show</code>, <code>create</code>.</p>
-    <p>The journal in the URL is <code>current_group.journals.find</code>, and the quiz is <code>@journal.quizzes.find</code>. The child is still a global find: <code>Entry.find</code>, <code>AiQuery.find</code>, <code>QuizAnswer.find</code>, and <code>AiOutput.find</code> for the posted output id. Show, edit, update, destroy, speak, and cancel can act on another group’s row. <code>entry_params</code> also permits <code>:journal_id</code>, so create and update can move the entry onto a journal that is not the one in the URL.</p>
-    <p>Use <code>@journal.entries.find</code>, <code>@journal.ai_queries.find</code>, <code>@quiz.quiz_answers.find</code>, and <code>@quiz.ai_query.ai_outputs.find</code>. Drop <code>:journal_id</code> from <code>entry_params</code>. Quiz peek and hint already load the output through the quiz.</p>
-  </article>
-
   <h2>Hard</h2>
 
   <article>
