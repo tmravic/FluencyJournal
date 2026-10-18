@@ -15,6 +15,16 @@ module ApplicationHelper
     end
   end
 
+  def display_next_review_time(object)
+    if object.next_study_date.present?
+      # The browser decides today, yesterday, and tomorrow. A date further
+      # away stays a calendar day in that same zone.
+      local_relative_time(object.next_study_date, type: "weekday-or-date")
+    else
+      t("note.no_date_set")
+    end
+  end
+
   def render_ai_query_change_content(ai_query, identifier, change_keyword, user = nil, html: false)
     contents_hash = create_contents_hash(ai_query, identifier, change_keyword, user)
     # { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
@@ -110,15 +120,5 @@ module ApplicationHelper
 
   def language_code(language)
     LANGUAGE_CODES.fetch(language.to_s) { language.to_s[0, 2].capitalize }
-  end
-
-
-  def display_next_review_time(object)
-    if object.next_study_date.present?
-      date = object.next_study_date.to_date
-      date == Date.current ? t("today") : l(date)
-    else
-      t('note.no_date_set')
-    end
   end
 end

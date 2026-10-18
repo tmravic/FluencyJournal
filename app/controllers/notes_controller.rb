@@ -146,7 +146,10 @@ class NotesController < ApplicationController
     @source_tag = "notes_box"
     new_interval = @note.last_interval * 2.5
     next_study_date = (new_interval).days.from_now
-    notice = t('note.actions.will_return', date: next_study_date.strftime("%m/%d/%Y"))
+    notice = t(
+      "note.actions.will_return_html",
+      date: helpers.local_date(next_study_date, format: "%Y-%m-%d")
+    ).html_safe
 
     if @note.update(next_study_date: next_study_date, last_interval: new_interval)
       @due_today = Current.user&.notes.next_to_study.count

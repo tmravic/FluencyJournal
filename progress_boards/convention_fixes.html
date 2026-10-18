@@ -128,12 +128,6 @@
   <p class="lede">These are libraries for work this app already does itself. None of them fix the bugs in the list above.</p>
 
   <article>
-    <h3>local_time</h3>
-    <p><span class="path">app/helpers/application_helper.rb</span> <code>display_next_review_time</code>, and the <code>strftime</code> calls in the journal and entry views</p>
-    <p><a href="https://github.com/basecamp/local_time">local_time</a> renders a <code>&lt;time&gt;</code> tag and formats it in the browser’s zone. That replaces the hand-rolled “today” string compare and the US-only month/day/year format, and it follows the person looking at the page rather than the server’s <code>DateTime.now</code>.</p>
-  </article>
-
-  <article>
     <h3>supermemo</h3>
     <p><span class="path">app/controllers/journals_controller.rb</span> <code>mark_journal_as_studied</code>, and the same interval step on notes</p>
     <p>Studied items schedule themselves with <code>last_interval * 2.5</code>. That is a short version of SM-2, with the ease factor and the lapse rules left out. <a href="https://github.com/phillbaker/supermemo">supermemo</a> is that algorithm. The model would store the interval and the ease the gem returns, instead of the controller inventing the next date.</p>

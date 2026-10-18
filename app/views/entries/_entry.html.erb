@@ -6,7 +6,7 @@
         <%= t('entry.entry', number: entry.entry_number) %>
       </h2>
 
-      <span class="entry__date"><%= l(entry.created_at.to_date) %></span>
+      <span class="entry__date"><%= local_date(entry.created_at, format: "%Y-%m-%d") %></span>
 
       <div class="entry__actions">
         <button type="button"
