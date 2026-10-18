@@ -31,3 +31,12 @@
     ) %>
 <%= turbo_stream.update "ai_assistant", "" %>
 <%= turbo_stream.update "followup_output_ai_assistant", "" %>
+
+<%# Prepare replaced previous_queries with grade_quiz_button. Put the history list back. %>
+<%= turbo_stream.replace "grade_quiz_button" do %>
+  <%= turbo_frame_tag "previous_queries" do %>
+    <% if @journal.ai_queries.any? %>
+      <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
+    <% end %>
+  <% end %>
+<% end %>
