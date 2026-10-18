@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "ai_assistant" do %>
   <div class="card">
-    <% if @assessment_output %>
+    <% if @grading_ai_query && @assessment_output %>
       <%= turbo_frame_tag "#{@prompt.change_keyword}#{@assessment_output.identifier}" do %>
         <div class="change__title">
           <h4><%= t("quiz.assessment") %></h4>
@@ -22,7 +22,7 @@
               <%= turbo_frame_tag "make_note_button_#{@assessment_output.identifier}" do %>
                 <%= link_to t("note_button"),
                             new_automatic_notes_path(
-                              ai_query_id: @ai_query.id,
+                              ai_query_id: @grading_ai_query.id,
                               ai_output_id: @assessment_output.id
                             ),
                             class: "btn btn--primary",
@@ -37,54 +37,56 @@
         </div>
 
         <div class="change__corrected">
-          <%= @ai_query.assessment %>
+          <%= @grading_ai_query.assessment %>
         </div>
       <% end %>
     <% end %>
 
-    <% @ai_query.ai_outputs.each do |output| %>
-      <% next if output == @assessment_output %>
-      <hr> <!------------>
-      <%= turbo_frame_tag "#{@prompt.change_keyword}#{output.identifier}" do %>
-        <div class="change">
-          <div class="change__title">
-            <h4><%= t("entry.entry", number: output.identifier) %></h4>
-            <div>
-              <%= button_to t("delete"),
-                            ai_output_path(output.id),
-                            method: :delete,
-                            data: { turbo_stream: true },
-                            class: "btn btn--light" %>
-              <%= link_to t('followup.followup'),
-                          new_followup_path(class_name: output.class, id: output.id, source_tag: @source_tag),
-                          data: {
-                            turbo_frame: followup_turbo_frame(@source_tag),
-                            controller: "scroll",
-                            action: "click->scroll#scrollToTarget",
-                            scroll_target_value: followup_turbo_frame(@source_tag)
-                          },
-                          class: "btn btn--secondary" %>
-              <% unless output.made_note %>
-                <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
-                  <%= link_to t("note_button"),
-                              new_automatic_notes_path(
-                                ai_query_id: @ai_query.id,
-                                ai_output_id: output.id,
-                                ),
-                              class: "btn btn--primary",
-                              data: {
-                                turbo_stream: true,
-                                controller: "scroll",
-                                action: "click->scroll#scrollToTop"
-                              } %>
+    <% if @grading_ai_query %>
+      <% @grading_ai_query.ai_outputs.each do |output| %>
+        <% next if output == @assessment_output %>
+        <hr> <!------------>
+        <%= turbo_frame_tag "#{@prompt.change_keyword}#{output.identifier}" do %>
+          <div class="change">
+            <div class="change__title">
+              <h4><%= t("entry.entry", number: output.identifier) %></h4>
+              <div>
+                <%= button_to t("delete"),
+                              ai_output_path(output.id),
+                              method: :delete,
+                              data: { turbo_stream: true },
+                              class: "btn btn--light" %>
+                <%= link_to t('followup.followup'),
+                            new_followup_path(class_name: output.class, id: output.id, source_tag: @source_tag),
+                            data: {
+                              turbo_frame: followup_turbo_frame(@source_tag),
+                              controller: "scroll",
+                              action: "click->scroll#scrollToTarget",
+                              scroll_target_value: followup_turbo_frame(@source_tag)
+                            },
+                            class: "btn btn--secondary" %>
+                <% unless output.made_note %>
+                  <%= turbo_frame_tag "make_note_button_#{output.identifier}" do %>
+                    <%= link_to t("note_button"),
+                                new_automatic_notes_path(
+                                  ai_query_id: @grading_ai_query.id,
+                                  ai_output_id: output.id,
+                                  ),
+                                class: "btn btn--primary",
+                                data: {
+                                  turbo_stream: true,
+                                  controller: "scroll",
+                                  action: "click->scroll#scrollToTop"
+                                } %>
+                  <% end %>
                 <% end %>
-              <% end %>
+              </div>
+            </div>
+            <div class="change__content">
+              <%= render_ai_query_change_content(@grading_ai_query, output.identifier, 'entry_', @grading_ai_query.user, html: true) %>
             </div>
           </div>
-          <div class="change__content">
-            <%= render_ai_query_change_content(@ai_query, output.identifier, 'entry_', @ai_query.user, html: true) %>
-          </div>
-        </div>
+        <% end %>
       <% end %>
     <% end %>
   </div>
@@ -96,7 +98,7 @@
                   class: "btn btn--light request-form__submit" %>
 
     <%= link_to t("close"),
-                close_quiz_journal_quizzes_path(@ai_query.journal),
+                close_quiz_journal_quizzes_path(@journal),
                 class: "btn btn--dark",
                 data: {
                   turbo_frame: "quizzes",

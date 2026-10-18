@@ -85,13 +85,13 @@ class QuizzesController < ApplicationController
 
   def show
     @source_tag = "ai_assistant"
-    # #<ActionController::Parameters {"controller"=>"quizzes", "action"=>"show", "journal_id"=>"5", "id"=>"147"}
+    # The question query owns the quiz. The grading query holds the feedback.
     @ai_query = @quiz.ai_query
-    @ai_outputs = @ai_query.ai_outputs
-    @user = @journal.user
     @grading_ai_query = @quiz.grading_ai_query
-    @assessment_output = @grading_ai_query.ai_outputs.assessment.first
-    @prompt = @grading_ai_query.prompt
+    @user = @journal.user
+    @ai_outputs = @grading_ai_query&.ai_outputs || AiOutput.none
+    @assessment_output = @ai_outputs.assessment.first
+    @prompt = @grading_ai_query&.prompt
   end
 
   def reset_quiz

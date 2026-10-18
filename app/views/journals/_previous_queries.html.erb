@@ -26,9 +26,9 @@
                   action: "click->scroll#scrollToTarget",
                   scroll_target_value: "ai_assistant"
                 } %>
-  <% elsif query.prompt.is_a?(QuizResultPrompt) %>
+  <% elsif query.prompt.is_a?(QuizResultPrompt) && (graded_quiz = query.graded_quizzes.last) %>
     <%= link_to t("quiz.short"),
-                journal_quiz_path(journal, query.quizzes.last),
+                journal_quiz_path(journal, graded_quiz),
                 class: "btn btn--dark",
                 data: {
                   turbo_frame: "ai_assistant",

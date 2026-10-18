@@ -4,7 +4,8 @@ class AiQuery < ApplicationRecord
   delegate :user, to: :journal, allow_nil: true
   has_many :ai_outputs, dependent: :destroy
   has_many :followups, as: :origin, dependent: :nullify
-  has_many :quizzes, dependent: :destroy
+  has_many :quizzes, dependent: :destroy, inverse_of: :ai_query
+  has_many :graded_quizzes, class_name: "Quiz", foreign_key: :grading_ai_query_id, dependent: :nullify, inverse_of: :grading_ai_query
   has_many :quiz_hints, dependent: :destroy
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true

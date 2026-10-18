@@ -37,7 +37,7 @@ class JournalsController < ApplicationController
     # Eager load associations used by _previous_queries.html.erb to avoid N+1 queries
     # (the followup on the prompt, quizzes, prompt.class checks)
     @journal = current_group.journals
-                            .includes(ai_queries: [ :quizzes, { prompt: :followup } ])
+                            .includes(ai_queries: [ :quizzes, :graded_quizzes, { prompt: :followup } ])
                             .find(@journal.id)
 
     respond_to do |format|

@@ -61,7 +61,6 @@ class GradeQuizJob < ApplicationJob
     assessment = ai_query.assessment
     ai_query_id = ai_query.id
     quiz.update(grading_ai_query_id: ai_query_id)
-    quiz.grading_ai_query.quizzes.push(quiz)
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{quiz_result_prompt.uuid}",

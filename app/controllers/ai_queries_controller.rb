@@ -10,7 +10,7 @@ class AiQueriesController < ApplicationController
 
   def destroy
     @ai_models = get_ai_models
-    @deleting_a_quiz = @ai_query.quizzes.any?
+    @deleting_a_quiz = @ai_query.quizzes.any? || @ai_query.graded_quizzes.any?
     @ai_query.destroy!
     @uuid = SecureRandom.uuid
 

@@ -71,14 +71,5 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
-  <h2>Hard</h2>
-
-  <article>
-    <h3><span class="tag hard">Hard</span>36. Stop grading from stealing <code>ai_query_id</code></h3>
-    <p><span class="path">app/jobs/grade_quiz_job.rb</span>, <span class="path">app/models/ai_query.rb</span>, <span class="path">app/models/quiz.rb</span>, <span class="path">app/controllers/quizzes_controller.rb</span> <code>show</code></p>
-    <p><code>quiz.update(grading_ai_query_id: ai_query_id)</code> is the right write. The next line, <code>quiz.grading_ai_query.quizzes.push(quiz)</code>, uses <code>has_many :quizzes</code>, and that association always sets <code>ai_query_id</code>. The push saves the quiz again with the grading query as its owner, so the quiz leaves the query that holds the questions. <code>dependent: :destroy</code> on <code>AiQuery#quizzes</code> then ties the quiz’s lifetime to the grading query. <code>QuizzesController#show</code> reads <code>@quiz.ai_query</code> for the per-entry feedback, so the show page currently depends on this overwrite.</p>
-    <p>Add <code>has_many :graded_quizzes, class_name: "Quiz", foreign_key: :grading_ai_query_id</code>. Delete the <code>push</code>. Teach <code>show</code> to read the question query and the grading query as two associations. This is the hardest item because the show page, destroy callbacks, and the job all assume the overwritten id.</p>
-  </article>
-
 </body>
 </html>

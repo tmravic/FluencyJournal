@@ -29,6 +29,8 @@ RSpec.describe JournalsHelper, type: :helper do
 
   it "hides quiz preparation and graded quizzes" do
     expect(helper.query_unrelated_to_quizzes?(query_for(PrepareQuizPrompt.new))).to be false
+    expect(helper.query_unrelated_to_quizzes?(query_for(PrepareQuizPrompt.new, quizzes: [ instance_double(Quiz) ]))).to be false
+    expect(helper.query_unrelated_to_quizzes?(query_for(QuizResultPrompt.new))).to be false
     expect(helper.query_unrelated_to_quizzes?(query_for(QuizResultPrompt.new, quizzes: [ instance_double(Quiz) ]))).to be false
   end
 end
