@@ -26,7 +26,6 @@ class PrepareQuizJob < ApplicationJob
 
     ai_query.prompt = prepare_quiz_prompt
     ai_query.journal = journal
-    ai_query.save!
     # {"line_1"=>
     #    {"translation"=>
     #       "明日、彼女のお母さんに初めて会う予定です。 → Tomorrow, I have plans to meet her mother for the first time."},
@@ -41,9 +40,10 @@ class PrepareQuizJob < ApplicationJob
     #       "明日のどこかで、聞きたい質問のリストを作ろうと思っています。 → I think I'll make a list of questions I want to ask somewhere tomorrow."}}
 
     expected = journal.full_journal.count
-    # Quiz, questions, and hints commit together. Reset cannot see a quiz
-    # whose hint rows are still being inserted.
+    # Query, quiz, questions, and hints commit together. A deadlock rolls
+    # the query back, and reset cannot see hints that are still inserting.
     quiz = ActiveRecord::Base.transaction do
+      ai_query.save!
       created = Quiz.create!(ai_query: ai_query, journal: journal)
       ai_query.create_quiz_questions(translated_response, expected_count: expected, quiz: created)
       created

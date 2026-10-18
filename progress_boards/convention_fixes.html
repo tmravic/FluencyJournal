@@ -71,14 +71,5 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
-  <h2>Hard</h2>
-
-  <article>
-    <h3><span class="tag hard">Hard</span>46. Keep one query and one followup on a prompt</h3>
-    <p><span class="path">app/models/prompt.rb</span>, <span class="path">db/schema.rb</span>, <span class="path">app/jobs/prepare_quiz_job.rb</span>, <span class="path">app/jobs/grade_quiz_job.rb</span>, <span class="path">app/jobs/application_job.rb</span></p>
-    <p><code>Prompt</code> declares <code>has_one :ai_query</code> and <code>has_one :followup</code>, both <code>dependent: :destroy</code>. The indexes on <code>ai_queries.prompt_id</code> and <code>followups.prompt_id</code> are not unique. <code>has_one</code> destroys only the loaded row. A second child leaves <code>prompt_id</code> set, and deleting the prompt raises a foreign-key error. <code>PrepareQuizJob</code> saves the query before the transaction that creates the quiz and hints. <code>ApplicationJob</code> retries <code>ActiveRecord::Deadlocked</code>. A retry after that commit inserts another query for the same prompt. <code>GradeQuizJob</code> has the same shape: the query is saved, then later work can raise and the job can run again.</p>
-    <p>Add a unique index on each <code>prompt_id</code>. Create the prepare query inside the same transaction as the quiz. Item 35 assumed one child per prompt. The schema still allows more.</p>
-  </article>
-
 </body>
 </html>

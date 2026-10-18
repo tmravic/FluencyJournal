@@ -27,7 +27,6 @@ class GradeQuizJob < ApplicationJob
     ai_query.prompt = quiz_result_prompt
     ai_query.change_count = ai_query.count_changes(quiz_result_prompt.change_keyword)
     ai_query.journal = journal
-    ai_query.save!
 
     # {"entry_1"=>
     #   {"content"=>"彼女のお母さんに会いました。 → 彼女のお母さんに会いました。",
@@ -38,29 +37,36 @@ class GradeQuizJob < ApplicationJob
     # "assessment"=>
     #   "The quiz answers are perfectly accurate overall, with no mistakes in meaning, grammar, or word choice. They replicate the original journal entries precisely while aligning with the English quiz questions."}
 
-    # Make an AiOutput for each change in the journal query
-    count = ai_query.change_count.to_i
-    if count >= 1
-      (1..count).each do |number|
-        ai_query.ai_outputs.build(
-          made_note: false,
-          identifier: number.to_s,
-          role: :line
-        ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
-      end
-    end
+    # Grade query, outputs, and grading_ai_query_id commit together so a
+    # deadlock rolls the query back instead of leaving a second child.
+    ActiveRecord::Base.transaction do
+      ai_query.save!
 
-    # Make one more AiOutput for the Assessment
-    ai_query.ai_outputs.build(
-      made_note: false,
-      identifier: "assessment",
-      role: :assessment
-    ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
+      # Make an AiOutput for each change in the journal query
+      count = ai_query.change_count.to_i
+      if count >= 1
+        (1..count).each do |number|
+          ai_query.ai_outputs.build(
+            made_note: false,
+            identifier: number.to_s,
+            role: :line
+          ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
+        end
+      end
+
+      # Make one more AiOutput for the Assessment
+      ai_query.ai_outputs.build(
+        made_note: false,
+        identifier: "assessment",
+        role: :assessment
+      ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
+
+      quiz.update(grading_ai_query_id: ai_query.id)
+    end
 
     source_tag = "ai_assistant"
     assessment = ai_query.assessment
     ai_query_id = ai_query.id
-    quiz.update(grading_ai_query_id: ai_query_id)
 
     Turbo::StreamsChannel.broadcast_update_to(
       "channel_#{quiz_result_prompt.uuid}",

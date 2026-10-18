@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_18_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_18_220000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,7 +36,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_180000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["journal_id"], name: "index_ai_queries_on_journal_id"
-    t.index ["prompt_id"], name: "index_ai_queries_on_prompt_id"
+    t.index ["prompt_id"], name: "index_ai_queries_on_prompt_id", unique: true
   end
 
   create_table "entries", force: :cascade do |t|
@@ -65,7 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_180000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["origin_type", "origin_id"], name: "index_followups_on_origin"
-    t.index ["prompt_id"], name: "index_followups_on_prompt_id"
+    t.index ["prompt_id"], name: "index_followups_on_prompt_id", unique: true
   end
 
   create_table "groups", force: :cascade do |t|
