@@ -25,10 +25,18 @@ RSpec.describe NativeJapaneseGuidance do
     expect(text).to include("not textbook Japanese")
   end
 
-  it "adds native phrasing to Japanese quiz-hint prompts" do
-    text = QuizHintPrompt.new.role_prompt(japanese_user, journal_double)
+  it "adds native phrasing to Japanese quiz preparation prompts" do
+    user = japanese_user
+    text = PrepareQuizPrompt.new.role_prompt(user)
 
     expect(text).to include("not textbook Japanese")
+    expect(text).to include("short question in Japanese")
+
+    journal = instance_double(Journal, full_journal: [ "今日は雨だった。" ], user: user)
+    format = PrepareQuizPrompt.new.response_format(journal)
+
+    expect(format).to include("exactly 1")
+    expect(format).to include('"hint"')
   end
 
   it "adds diary guidance to Japanese quiz-result prompts" do
@@ -41,7 +49,7 @@ RSpec.describe NativeJapaneseGuidance do
   it "omits Japanese-only guidance for English learners" do
     expect(ExampleSentencePrompt.new.role_prompt(english_user, journal_double)).not_to include("not textbook Japanese")
     expect(FreeQuestionPrompt.new.role_prompt(english_user, nil)).not_to include("not textbook Japanese")
-    expect(QuizHintPrompt.new.role_prompt(english_user, journal_double)).not_to include("not textbook Japanese")
+    expect(PrepareQuizPrompt.new.role_prompt(english_user)).not_to include("not textbook Japanese")
     expect(QuizResultPrompt.new.role_prompt(english_user)).not_to include("personal journal")
   end
 end

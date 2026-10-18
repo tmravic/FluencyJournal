@@ -53,28 +53,7 @@ class AiQuery < ApplicationRecord
     prompt.ai_model
   end
 
-  def create_quiz_hints(translated_response, quiz)
-    translated_response.each do |key, value|
-      # key = "hint_1"
-      identifier = key.split("_").last
-      entry_index = (identifier.to_i - 1)
-      entry = self.journal.entries[entry_index]
-      # value = {"content"=>"子供の頃からどんな飲み物をよく飲んでいましたか？"}
-      content = value.dig("content")
-      ai_outputs.create(
-        made_note: false,
-        identifier: identifier
-      ).tap do |ai_output|
-        content = content
-        QuizHint.create(hint_content: content, quiz: quiz, ai_query: self, entry: entry)
-        ai_output.content = content
-        ai_output.save!
-      end
-    end
-  end
-
-
-  def create_quiz_questions(translated_response, expected_count: nil)
+  def create_quiz_questions(translated_response, expected_count: nil, quiz: nil)
     # Filter and sort only the real line_N keys the model actually returned
     line_keys = translated_response.keys
       .select { |k| k.match?(/\Aline_\d+\z/) }
@@ -94,13 +73,16 @@ class AiQuery < ApplicationRecord
 
     # Always create *exactly* the expected number of quiz questions.
     # Use whatever the model gave us for the first min(actual, expected) items.
+    # Hints are stored on quiz_hints, not as extra ai_outputs.
+    entries = journal&.entries&.order(:id)&.to_a || []
     (1..expected).each do |count|
       key = line_keys[count - 1] # may be nil if model gave fewer
+      line = key ? translated_response[key] : nil
       translation = if key
-                      translated_response.dig(key, "translation")
+                      translation_from_quiz_line(line)
                     else
-                      # graceful fallback if model under-returned
-                      (line_keys.last && translated_response.dig(line_keys.last, "translation")) || "Translation missing"
+                      fallback = line_keys.last && translated_response[line_keys.last]
+                      translation_from_quiz_line(fallback) || "Translation missing"
                     end
 
       ai_outputs.create(
@@ -111,6 +93,14 @@ class AiQuery < ApplicationRecord
         ai_output.content = content
         ai_output.save!
       end
+
+      next unless quiz && (entry = entries[count - 1])
+
+      quiz.quiz_hints.create!(
+        hint_content: hint_from_quiz_line(line) || "Hint missing",
+        ai_query: self,
+        entry: entry
+      )
     end
   end
 
@@ -328,5 +318,22 @@ class AiQuery < ApplicationRecord
 
   def entry_regex
     /\Aentry_\d+\z/
+  end
+
+  def translation_from_quiz_line(line)
+    case line
+    when Hash
+      line["translation"]
+    when String
+      line
+    end
+  end
+
+  def hint_from_quiz_line(line)
+    return unless line.is_a?(Hash)
+
+    hint = line["hint"]
+    hint = hint["content"] if hint.is_a?(Hash)
+    hint.to_s.presence
   end
 end

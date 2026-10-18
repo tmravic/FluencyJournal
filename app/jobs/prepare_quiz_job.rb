@@ -64,11 +64,13 @@ class PrepareQuizJob < ApplicationJob
     #       "明日のどこかで、聞きたい質問のリストを作ろうと思っています。 → I think I'll make a list of questions I want to ask somewhere tomorrow."}}
 
     expected = journal.full_journal.count
-    # Enforce exactly `expected` quiz questions no matter what the LLM returns
-    ai_query.create_quiz_questions(translated_response, expected_count: expected)
-    quiz = Quiz.create(ai_query: ai_query, journal: journal)
-
-    PrepareQuizHintJob.perform_later(quiz)
+    # Quiz, questions, and hints commit together. Reset cannot see a quiz
+    # whose hint rows are still being inserted.
+    quiz = ActiveRecord::Base.transaction do
+      created = Quiz.create!(ai_query: ai_query, journal: journal)
+      ai_query.create_quiz_questions(translated_response, expected_count: expected, quiz: created)
+      created
+    end
 
     source_tag = "ai_assistant"
     ai_query_id = quiz.ai_query.id

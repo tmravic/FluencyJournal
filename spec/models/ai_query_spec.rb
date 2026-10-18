@@ -69,4 +69,68 @@ RSpec.describe AiQuery, type: :model do
     end
   end
 
+  describe "#create_quiz_questions" do
+    def quiz_records
+      group = Group.create!(name: "Hint group")
+      user = User.create!(
+        email_address: "hints-#{SecureRandom.hex(4)}@example.com",
+        password: "password",
+        original_language: "English",
+        learning_language: "Japanese",
+        group: group
+      )
+      journal = Journal.create!(title: "Hints", user: user, group: group, last_interval: 1)
+      first = journal.entries.create!(content: "一行目")
+      second = journal.entries.create!(content: "二行目")
+      prompt = PrepareQuizPrompt.create!(
+        raw_prompt: "entries",
+        sent_role_prompt: "role",
+        ai_model: "grok-4-fast-non-reasoning",
+        uuid: SecureRandom.uuid
+      )
+      query = described_class.create!(
+        raw_response: "{}",
+        prompt: prompt,
+        journal: journal,
+        prompt_tokens: 1,
+        completion_tokens: 1,
+        total_tokens: 2
+      )
+      quiz = Quiz.create!(ai_query: query, journal: journal)
+      [query, quiz, first, second]
+    end
+
+    it "saves the translation and the hint for each entry" do
+      query, quiz, first, second = quiz_records
+
+      query.create_quiz_questions(
+        {
+          "line_1" => { "translation" => "一行目 → first line", "hint" => "何の一行？" },
+          "line_2" => { "translation" => "二行目 → second line", "hint" => { "content" => "何の二行？" } }
+        },
+        expected_count: 2,
+        quiz: quiz
+      )
+
+      expect(query.ai_outputs.order(:identifier).map(&:content)).to eq([ "first line", "second line" ])
+      expect(quiz.quiz_hints.order(:entry_id).map { |hint| [hint.entry_id, hint.hint_content, hint.ai_query_id] }).to eq([
+        [first.id, "何の一行？", query.id],
+        [second.id, "何の二行？", query.id]
+      ])
+    end
+
+    it "stores a placeholder when a line has no hint" do
+      query, quiz = quiz_records
+
+      query.create_quiz_questions(
+        { "line_1" => "一行目 → first line" },
+        expected_count: 2,
+        quiz: quiz
+      )
+
+      expect(query.ai_outputs.order(:identifier).map(&:content)).to eq([ "first line", "first line" ])
+      expect(quiz.quiz_hints.order(:entry_id).map(&:hint_content)).to eq([ "Hint missing", "Hint missing" ])
+    end
+  end
+
 end
