@@ -159,6 +159,8 @@ class NotesController < ApplicationController
           flash.now[:notice] = notice
         end
       end
+    else
+      head :unprocessable_entity
     end
   end
 
@@ -173,6 +175,8 @@ class NotesController < ApplicationController
       respond_to do |format|
         format.turbo_stream
       end
+    else
+      head :unprocessable_entity
     end
   end
 

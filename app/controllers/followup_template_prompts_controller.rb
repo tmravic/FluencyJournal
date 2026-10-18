@@ -28,7 +28,7 @@ class FollowupTemplatePromptsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to followup_template_prompts_path, status: :see_other, alert: t("prompt_templates.no_selection") }
-        format.turbo_stream { flash.now[:alert] = t("prompt_templates.no_selection") }
+        format.turbo_stream { head :unprocessable_entity }
       end
     end
   end

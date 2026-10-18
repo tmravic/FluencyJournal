@@ -73,14 +73,7 @@
 
   <h2>Medium</h2>
 
-  <article>
-    <h3><span class="tag medium">Medium</span>41. Do not render the success stream when the write fails</h3>
-    <p><span class="path">app/controllers/journals_controller.rb</span> <code>update_due_date</code>, <code>mark_journal_as_studied</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>update_due_date</code>, <code>mark_note_as_studied</code>. <span class="path">app/controllers/quizzes_controller.rb</span> <code>grade_quiz</code>. <span class="path">app/controllers/followup_template_prompts_controller.rb</span> <code>destroy_selected</code>. <span class="path">app/controllers/followups_controller.rb</span> <code>create</code> invalid-origin branch.</p>
-    <p>Journal due-date update always renders <code>update_due_date.turbo_stream.erb</code>, so a blank date fails <code>validates :next_study_date</code> and the form still closes around the unsaved value. Note due-date, both mark-studied actions, and grade only <code>respond_to</code> inside <code>if save</code>. A false return renders nothing, and Rails then draws that action’s turbo template at 200. Mark studied removes the card. Grade swaps in the grading frame and does not enqueue <code>GradeQuizJob</code>. A template delete that finds no row, and a followup create whose origin class was rejected, set <code>flash.now</code> and then fall through to the success stream. The picker is emptied. The followup form is replaced with the processing card.</p>
-    <p>On a false save, update, or destroy, re-render the form or <code>head :unprocessable_entity</code>. Render the success stream only when the write returns true. The followup destroy action already does this.</p>
-  </article>
-
-  <article>
+    <article>
     <h3><span class="tag medium">Medium</span>42. Delete note followups with the note</h3>
     <p><span class="path">app/models/note.rb</span>, <span class="path">app/controllers/followups_controller.rb</span> <code>set_user_and_journal_based_on_origin_class</code></p>
     <p>A note followup’s answer query is stored with no journal. <code>set_user_and_journal_based_on_origin_class</code> sets <code>@journal</code> for an entry, an output, or a journal followup, and leaves it unset for a note. <code>Note</code> then <code>dependent: :nullify</code>s its followups. After the note is gone, the followup, the prompt, and the query have no user and no journal, so nothing else deletes them.</p>

@@ -137,6 +137,8 @@ class JournalsController < ApplicationController
           flash.now[:notice] = notice
         end
       end
+    else
+      head :unprocessable_entity
     end
   end
 
@@ -172,10 +174,12 @@ class JournalsController < ApplicationController
   end
 
   def update_due_date
-    @journal.update(next_study_date: params.dig(:next_study_date))
-
-    respond_to do |format|
-      format.turbo_stream
+    if @journal.update(next_study_date: params.dig(:next_study_date))
+      respond_to do |format|
+        format.turbo_stream
+      end
+    else
+      head :unprocessable_entity
     end
   end
 
