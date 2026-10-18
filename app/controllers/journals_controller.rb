@@ -130,6 +130,8 @@ class JournalsController < ApplicationController
     )
       @due_today = current_group.journals.next_to_study.count
       @journals_finished_today = finished_today_titles
+      # All Journals still lists this journal, so it must not get today's empty state.
+      @show_todays_journals_empty_state = @from_all_or_todays != "all" && @due_today.zero?
       respond_to do |format|
         format.html { redirect_to journal_path(@journal), notice: notice }
         format.turbo_stream do

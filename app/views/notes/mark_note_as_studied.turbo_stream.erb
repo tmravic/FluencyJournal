@@ -1,18 +1,7 @@
 <%= turbo_stream.remove @note %>
-<% all_todays_notes_empty = Current.user&.notes.next_to_study.empty? %>
-<% if all_todays_notes_empty %>
-  <%= turbo_stream.update "notes", partial: "notes/empty_state_today" %>
+<% if @todays_notes_empty %>
+  <%= turbo_stream.update "new_note", partial: "notes/empty_state_today" %>
   <%= turbo_stream.update "note_header", "" %>
-<% else %>
-  <% if previous_note = @note.previous_note %>
-    <%= turbo_stream.after dom_id(previous_note) do %>
-      <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
-    <% end %>
-  <% else %>
-    <%= turbo_stream.prepend "notes" do %>
-      <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
-    <% end %>
-  <% end %>
 <% end %>
 <%= turbo_stream.update "due_today_notes_count",
                         partial: "notes/todays_notes_count" %>

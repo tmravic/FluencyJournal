@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>18. Leave a studied note or journal off today’s list</h3>
-    <p><span class="path">app/views/journals/mark_journal_as_studied.turbo_stream.erb</span>, <span class="path">app/views/notes/mark_note_as_studied.turbo_stream.erb</span></p>
-    <p>Both templates remove the record, then render that same record again with <code>turbo_stream.after</code> or <code>prepend</code>. That is the create-stream pattern. After “studied,” <code>next_study_date</code> is in the future, so the row should stay off today’s list. If nothing else is due, the journal stream also replaces the whole <code>journals</code> frame with the today’s empty state, even when that frame is All Journals. Both templates also query <code>Current.user</code> from the view.</p>
-    <p>Remove the row and update the count. Do not insert it again. Pass the empty-list decision in from the controller.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>19. Do not nest a frame inside the same id</h3>
     <p><span class="path">app/views/journals/reading_mode.turbo_stream.erb</span>, <span class="path">app/views/entries/_entries_frame.html.erb</span>, <span class="path">app/views/quizzes/peek.turbo_stream.erb</span>, <span class="path">app/views/notes/_note_display.html.erb</span> with <span class="path">_change_note_due_date_button.html.erb</span></p>
     <p>A turbo-stream <code>update</code> replaces the inside of a frame. These templates put a partial back in that is itself <code>turbo_frame_tag</code> with the same id. Reading mode does it to <code>#entries</code>. Peek and unpeek do it to the quiz-entry frame. The note due-date button is wrapped in <code>change_note_due_date_#{id}</code>, and the partial renders that id again. <code>getElementById</code> then hits whichever copy comes first.</p>
@@ -172,7 +165,7 @@
     <h3><span class="tag hard">Hard</span>31. Take the repair job out of the parser</h3>
     <p><span class="path">app/models/ai_query.rb</span> <code>parsed_response</code>, <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
     <p>A reader calls <code>RescueBadFormatJob.perform_now</code> when JSON is invalid. That is a synchronous xAI call from a parse, including from <code>count_changes</code> before the query has a prompt. The job updates <code>raw_response</code>, rescues <code>JSON::ParserError</code> and a bare <code>rescue</code>, and still returns the string. Callers then see <code>nil</code> or a second parse error, and the job has no failed state.</p>
-    <p><code>change_content</code> in the same model returns <code>nil</code> as soon as the backup key is missing, so the later error branch never runs. <code>AiOutput#assemble_ai_output_content</code> then calls <code>.first</code> on that nil.</p>
+    <p><code>change_content</code> returns <code>nil</code> when the line is missing. <code>AiOutput#assemble_ai_output_content</code> then calls <code>.first</code> on that nil.</p>
     <p>Parse in the job that received the HTTP body. If the body is bad, retry or discard there. A model method should return data or raise, not start work.</p>
   </article>
 
@@ -236,7 +229,7 @@
   <article>
     <h3>acts_as_list</h3>
     <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, hint creation in <span class="path">app/models/ai_query.rb</span></p>
-    <p>Line numbers are three different orders: <code>id</code>, <code>created_at</code>, and whatever PostgreSQL returns with no <code>ORDER BY</code>. <a href="https://github.com/brendon/acts_as_list">acts_as_list</a> puts a <code>position</code> on <code>entries</code> and gives you <code>order(:position)</code> as the only order. Quiz lines, hints, and <code>entry_number</code> then share one sequence. This is worth it only if entries can be reordered. If they are append-only, item 32 (always <code>order(:id)</code>) is enough and you do not need the gem.</p>
+    <p>Line numbers are still two orders. <code>full_journal</code> and hint rows use <code>id</code>. <code>entry_number</code> uses <code>created_at</code>. <a href="https://github.com/brendon/acts_as_list">acts_as_list</a> puts a <code>position</code> on <code>entries</code> and gives you <code>order(:position)</code> as the only order. Quiz lines, hints, and <code>entry_number</code> then share one sequence. This is worth it only if entries can be reordered. If they are append-only, item 32 (always <code>order(:id)</code>) is enough and you do not need the gem.</p>
   </article>
 
   <article>

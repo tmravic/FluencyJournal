@@ -147,6 +147,7 @@ class NotesController < ApplicationController
 
     if @note.update(next_study_date: next_study_date, last_interval: new_interval)
       @due_today = Current.user&.notes.next_to_study.count
+      @todays_notes_empty = @due_today.to_i.zero?
       respond_to do |format|
         format.html { redirect_to note_path(@note), notice: notice }
         format.turbo_stream do
