@@ -194,7 +194,8 @@ class NotesController < ApplicationController
   def update_journals
     set_notes_view_context
     @note = Current.user.notes.includes(:journals, :followups).find(params[:id])
-    @note.journal_ids = journal_link_params[:journal_ids] || []
+    submitted = Array(journal_link_params[:journal_ids]).compact_blank
+    @note.journal_ids = current_group.journals.where(id: submitted).ids
 
     if @note.save
       render :update_journals
@@ -244,6 +245,6 @@ class NotesController < ApplicationController
   end
 
   def note_params
-    params.expect(note: [ :content, :meaning, :extras, :user_id, :journal_ids, :category, :ai_query_id ])
+    params.expect(note: [ :content, :meaning, :extras, :category, :ai_query_id ])
   end
 end

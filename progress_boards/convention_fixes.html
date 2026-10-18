@@ -73,14 +73,7 @@
 
   <h2>Medium</h2>
 
-      <article>
-    <h3><span class="tag medium">Medium</span>43. Do not accept another user id</h3>
-    <p><span class="path">app/controllers/journals_controller.rb</span> <code>journal_params</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>note_params</code>, <code>update_journals</code>.</p>
-    <p><code>journal_params</code> permits <code>:user_id</code>. Create assigns <code>Current.user</code> afterward. Update does not, so a request can move the journal onto another user. <code>note_params</code> permits <code>:user_id</code> and <code>:journal_ids</code>. <code>update_journals</code> assigns <code>journal_ids</code> from the request with no check that those journals belong to this user or group. The forms do not show these fields.</p>
-    <p>Remove <code>:user_id</code> from both lists. Assign note journals only from <code>Current.user.journals</code> or <code>current_group.journals</code> whose ids were submitted. Entry <code>:journal_id</code> is item 44.</p>
-  </article>
-
-  <article>
+        <article>
     <h3><span class="tag medium">Medium</span>44. Load a nested record through its parent</h3>
     <p><span class="path">app/controllers/entries_controller.rb</span> <code>set_entry</code>, <code>entry_params</code>. <span class="path">app/controllers/ai_queries_controller.rb</span> <code>set_ai_query</code>. <span class="path">app/controllers/quiz_answers_controller.rb</span> <code>set_quiz_answer</code>, <code>show</code>, <code>create</code>.</p>
     <p>The journal in the URL is <code>current_group.journals.find</code>, and the quiz is <code>@journal.quizzes.find</code>. The child is still a global find: <code>Entry.find</code>, <code>AiQuery.find</code>, <code>QuizAnswer.find</code>, and <code>AiOutput.find</code> for the posted output id. Show, edit, update, destroy, speak, and cancel can act on another group’s row. <code>entry_params</code> also permits <code>:journal_id</code>, so create and update can move the entry onto a journal that is not the one in the URL.</p>

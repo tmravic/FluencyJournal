@@ -225,7 +225,7 @@ class JournalsController < ApplicationController
   end
 
   def journal_params
-    params.expect(journal: [ :title, :content, :user_id ])
+    params.expect(journal: [ :title, :content ])
   end
 
   def finished_today_titles
