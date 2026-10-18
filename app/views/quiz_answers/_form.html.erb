@@ -18,7 +18,7 @@
   <%= f.hidden_field :ai_output_id %>
   <%= f.hidden_field :identifier, value: quiz_entry.identifier %>
   <% answer_entry = quiz_answer_entry(journal, quiz_entry) %>
-  <div class="form__input__button_block">
+  <div class="form__actions">
     <%= f.submit t("quiz_answer.submit_answer"), class: "btn btn--secondary", name: nil %>
     <%= turbo_frame_tag "show_hint_button_#{quiz_entry.id}" do %>
       <%= render "quiz_answers/show_hint_button", journal:, quiz:, quiz_entry: %>

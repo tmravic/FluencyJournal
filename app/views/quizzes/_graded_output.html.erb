@@ -10,7 +10,7 @@
      <% end %>>
   <% if assessment.present? %>
     <%= turbo_frame_tag "#{entry_keyword}#{assessment_output.identifier}" do %>
-      <div class="card__change__title">
+      <div class="change__title">
         <h4><%= t("quiz.assessment") %></h4>
         <div>
           <%= link_to t('followup.followup'),
@@ -43,7 +43,7 @@
           <% end %>
         </div>
       </div>
-      <div class="card__change__corrected">
+      <div class="change__corrected">
         <%= assessment %>
       </div>
     <% end %>
@@ -58,8 +58,8 @@
       <% next if output == assessment_output %>
       <hr>
       <%= turbo_frame_tag "#{entry_keyword}#{output.identifier}" do %>
-        <div class="card__change">
-          <div class="card__change__title">
+        <div class="change">
+          <div class="change__title">
             <h4>
               <%= t("entry.entry", number: output.identifier) %>
             </h4>
@@ -109,7 +109,7 @@
               <% end %>
             </div>
           </div>
-          <div class="card__change_content">
+          <div class="change__content">
             <%= render_ai_query_entry_content(ai_query, output.identifier, entry_keyword, user, quiz, html: true) %>
           </div>
         </div>

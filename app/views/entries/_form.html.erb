@@ -7,7 +7,7 @@
               html5: true,
               placeholder: t('simple_form.placeholders.entry.content') %>
 
-  <div class="form__input__button_block">
+  <div class="form__actions">
     <% if entry.persisted? %>
       <%= link_to t("cancel"),
                   cancel_journal_entry_path(journal, entry),

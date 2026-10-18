@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>26. An element does not contain another element</h3>
-    <p><span class="path">app/assets/stylesheets/components/_form.scss</span>, <span class="path">app/assets/stylesheets/components/_card.scss</span></p>
-    <p><code>&amp;__button_block</code> inside <code>&amp;__input</code> compiles to <code>.form__input__button_block</code>. <code>.card__change__title</code> and <code>.card__change__corrected</code> are the same shape. BEM allows <code>block__element</code> only one level deep. A second <code>__</code> means the element has been treated as a block without being named as one.</p>
-    <p>Use <code>.form__actions</code> and <code>.card__title</code>, or start a new block (<code>.change</code>) if “change” has its own elements. <code>.card__change_content</code> should be <code>.card__change-content</code> so the separator is a hyphen, not a second underscore.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>27. One naming scheme, and no id selectors</h3>
     <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">_quiz.scss</span>, <span class="path">_quiz_answer.scss</span>, <span class="path">_request_form.scss</span>, <span class="path">_navbar.scss</span>, <span class="path">_followup.scss</span></p>
     <p>Blocks and elements are mixed three ways. <code>.empty-state</code> and <code>.visually-hidden</code> use hyphens. <code>.note__change_due_date</code>, <code>.notes_box_scroll</code>, <code>.quiz_delete_buttons</code>, <code>.quiz_answer</code>, <code>.request_form</code>, and <code>.send_button_box</code> use underscores as if they were elements of a block that was never named. <code>.note__link-journals-label</code> then switches back to hyphens. <code>#send_button</code> styles an id. BEM does not style ids, because an id cannot be reused and it overrides every class.</p>

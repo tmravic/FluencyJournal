@@ -10,28 +10,28 @@
   @include components.media(tabletAndUp) {
     font-size: var(--font-size-xl);
   }
+}
 
-  &__change {
-    padding: var(--space-xxxs) 0;
+.change {
+  padding: var(--space-xxxs) 0;
 
-    &__title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      div {
-        form {
-          display: inline;
-        }
+    div {
+      form {
+        display: inline;
       }
-    }
-
-    &__corrected {
-      margin-bottom: 5px;
     }
   }
 
-  &__change_content {
+  &__corrected {
+    margin-bottom: 5px;
+  }
+
+  &__content {
     div {
       padding: var(--space-xxxs) 0;
     }

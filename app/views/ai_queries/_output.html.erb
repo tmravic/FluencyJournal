@@ -5,7 +5,7 @@
 <div class="card">
   <% if corrected_text.present? %>
     <%= turbo_frame_tag "#{change_keyword}#{corrected_text_output.identifier}" do %>
-      <div class="card__change__title">
+      <div class="change__title">
         <h4><%= t("ai_query.corrected_text") %></h4>
         <div>
           <%= button_to t("delete"),
@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div class="card__change__corrected">
+      <div class="change__corrected">
         <%= corrected_text %>
       </div>
     <% end %>
@@ -61,8 +61,8 @@
       <%= turbo_frame_tag "#{change_keyword}#{output.identifier}" do %>
       <!-- <turbo-frame id='change_1'> -->
 
-        <div class="card__change">
-          <div class="card__change__title">
+        <div class="change">
+          <div class="change__title">
             <h4>
               <%= "#{t('ai_query.change')} #{output.identifier}" %>
               <!--Change 1-->
@@ -99,7 +99,7 @@
               <% end %>
             </div>
           </div>
-          <div class="card__change_content">
+          <div class="change__content">
             <%= render_ai_query_change_content(ai_query, output.identifier, change_keyword, user, html: true) %>
           </div>
         </div>

@@ -18,7 +18,7 @@
       <%= followup_prompt.label t('followup.reference_text') %>
       <%= followup_prompt.text_area :user_generated_content,
                                     html5: true,
-                                    class: 'form__input__button_block',
+                                    class: 'form__actions',
                                     value: @reference_text %>
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
       <% model_options = [
@@ -42,7 +42,7 @@
     <%= hidden_field_tag "followup[journal_id]", @journal.id if @journal %>
     <%= f.hidden_field :source_tag, value: @source_tag %>
 
-    <div class="form__input__button_block">
+    <div class="form__actions">
       <%= render_correct_cancel_button %>
       <%= f.submit class: "btn btn--secondary", data:
         {
