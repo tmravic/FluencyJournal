@@ -19,7 +19,6 @@ RSpec.describe ApplicationHelper, type: :helper do
       missing = AiQuery.new(raw_response: '{"change_1":{"explanation_en":"No content."}}')
       spaces = AiQuery.new(raw_response: '{"change_1":{"content":"   ","explanation_en":"Spaces."}}')
       broken = AiQuery.new(raw_response: "not json")
-      allow(RescueBadFormatJob).to receive(:perform_now).and_return("still bad")
 
       expect(helper.render_ai_query_change_content(missing, "1", "change_", nil, html: true)).to be_nil
       expect(helper.render_ai_query_change_content(spaces, "1", "change_", nil, html: false)).to be_nil

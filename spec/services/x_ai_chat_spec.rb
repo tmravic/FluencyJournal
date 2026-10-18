@@ -64,6 +64,7 @@ RSpec.describe XAiChat do
 
       expect(result.parsed).to be_nil
       expect(result.raw_response).to eq("not json")
+      expect { result.parsed_object }.to raise_error(JSON::ParserError)
       expect(result.prompt_tokens).to be_nil
       expect(result.completion_tokens).to be_nil
       expect(result.total_tokens).to be_nil

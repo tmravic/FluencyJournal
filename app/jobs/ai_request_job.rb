@@ -1,4 +1,7 @@
 class AiRequestJob < ApplicationJob
+  # A body that is not a JSON object will not become one on its own.
+  discard_on JSON::ParserError
+
   queue_as :default
 
   def perform(journal, entry_prompt)

@@ -1,4 +1,7 @@
 class PrepareQuizJob < ApplicationJob
+  # A body that is not a JSON object will not become one on its own.
+  discard_on JSON::ParserError
+
   queue_as :default
 
   def perform(journal, prepare_quiz_prompt)
@@ -12,6 +15,8 @@ class PrepareQuizJob < ApplicationJob
       ]
     )
 
+    translated_response = result.parsed_object
+
     ai_query = AiQuery.build(
       prompt_tokens: result.prompt_tokens,
       completion_tokens: result.completion_tokens,
@@ -22,8 +27,6 @@ class PrepareQuizJob < ApplicationJob
     ai_query.prompt = prepare_quiz_prompt
     ai_query.journal = journal
     ai_query.save!
-
-    translated_response = result.parsed || JSON.parse(result.raw_response)
     # {"line_1"=>
     #    {"translation"=>
     #       "明日、彼女のお母さんに初めて会う予定です。 → Tomorrow, I have plans to meet her mother for the first time."},

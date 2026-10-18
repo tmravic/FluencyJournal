@@ -25,21 +25,13 @@ RSpec.describe AiQuery, type: :model do
       )
     end
 
-    it "asks RescueBadFormatJob to repair invalid JSON" do
+    it "returns nil for invalid JSON without calling the model" do
       query = described_class.new(raw_response: "{change_1: not json")
-      allow(RescueBadFormatJob).to receive(:perform_now).with(query).and_return('{"ok":true}')
+      allow(XAiChat).to receive(:complete)
 
-      expect(query.parsed_response).to eq("ok" => true)
-      expect(RescueBadFormatJob).to have_received(:perform_now).with(query)
-    end
-
-    it "does not call RescueBadFormatJob for valid JSON" do
-      query = described_class.new(raw_response: '{"corrected_text":"ok"}')
-      allow(RescueBadFormatJob).to receive(:perform_now)
-
-      query.parsed_response
-
-      expect(RescueBadFormatJob).not_to have_received(:perform_now)
+      expect(query.parsed_response).to be_nil
+      expect(query.parsed_response).to be_nil
+      expect(XAiChat).not_to have_received(:complete)
     end
   end
 
@@ -97,13 +89,12 @@ RSpec.describe AiQuery, type: :model do
   describe "#count_changes" do
     it "returns 0 when the body is not an object" do
       query = described_class.new(raw_response: "not json")
-      allow(RescueBadFormatJob).to receive(:perform_now).and_return("still bad")
+      allow(XAiChat).to receive(:complete)
 
       expect(query.count_changes("change_")).to eq(0)
       expect(query.parsed_response).to be_nil
-      query.count_changes("change_")
-
-      expect(RescueBadFormatJob).to have_received(:perform_now).once
+      expect(query.count_changes("change_")).to eq(0)
+      expect(XAiChat).not_to have_received(:complete)
     end
   end
 

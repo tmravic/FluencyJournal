@@ -2,6 +2,10 @@ require "action_view/helpers/translation_helper"
 
 class FollowupRequestJob < ApplicationJob
   include ActionView::Helpers::TranslationHelper
+
+  # A body that is not a JSON object will not become one on its own.
+  discard_on JSON::ParserError
+
   queue_as :default
 
   def perform(user, journal, followup_prompt, followup_origin, source_tag)

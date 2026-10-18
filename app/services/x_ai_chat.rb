@@ -13,6 +13,18 @@ class XAiChat
         "total_tokens" => total_tokens
       }
     end
+
+    # The hash the model returned. Raises JSON::ParserError when the body is
+    # not a JSON object, including after a markdown fence is removed.
+    def parsed_object
+      return parsed if parsed.is_a?(Hash)
+
+      body = raw_response.to_s.sub(/\A\s*```(?:json)?\s*/i, "").sub(/\s*```\s*\z/, "").strip
+      parsed_body = JSON.parse(body)
+      return parsed_body if parsed_body.is_a?(Hash)
+
+      raise JSON::ParserError, "chat body was not a JSON object"
+    end
   end
 
   def self.complete(model:, instructions:, user_messages:)

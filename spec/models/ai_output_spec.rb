@@ -101,7 +101,6 @@ RSpec.describe AiOutput, type: :model do
 
     it "does not raise when the body is not an object" do
       user, prompt, query = assistant_records("not json")
-      allow(RescueBadFormatJob).to receive(:perform_now).and_return("still bad")
       service = XAiService.new
 
       expect {

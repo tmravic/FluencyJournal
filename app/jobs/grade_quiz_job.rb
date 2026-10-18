@@ -1,4 +1,7 @@
 class GradeQuizJob < ApplicationJob
+  # A body that is not a JSON object will not become one on its own.
+  discard_on JSON::ParserError
+
   queue_as :default
 
   def perform(journal, quiz_result_prompt, quiz)
@@ -11,6 +14,8 @@ class GradeQuizJob < ApplicationJob
         quiz_result_prompt.response_format(journal, quiz, user)
       ]
     )
+
+    result.parsed_object
 
     ai_query = AiQuery.build(
       prompt_tokens: result.prompt_tokens,

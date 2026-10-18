@@ -14,6 +14,7 @@ class XAiService
       instructions: @prompt.role_prompt(@user, @journal),
       user_messages: [@prompt.raw_prompt, @prompt.response_format(@user)]
     )
+    result.parsed_object
     ai_query = build_ai_query(result.raw_response, result.token_data, @prompt, @journal)
 
     if @followup_origin

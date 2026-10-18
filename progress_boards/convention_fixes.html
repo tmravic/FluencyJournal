@@ -74,14 +74,6 @@
   <h2>Hard</h2>
 
   <article>
-    <h3><span class="tag hard">Hard</span>31. Take the repair job out of the parser</h3>
-    <p><span class="path">app/models/ai_query.rb</span> <code>parsed_response</code>, <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
-    <p>A reader still calls <code>RescueBadFormatJob.perform_now</code> when JSON is invalid. That is a synchronous xAI call from a parse, including from <code>count_changes</code> before the query has a prompt. New chat bodies are stored from ruby_llm’s parsed object, so a successful response no longer needs the fence strip or this job. Old rows, and a model that returns non-JSON, still hit it.</p>
-    <p>The repair job uses <code>XAiChat</code> and JSON mode. It still updates <code>raw_response</code>, rescues <code>JSON::ParserError</code> and a bare <code>rescue</code>, and returns the string. A second parse of that string is rescued, so a bad repair returns <code>nil</code> instead of raising. A blank <code>change_N.content</code> is skipped, so the corrected sentence can still be saved. The reader that starts the job is still the bug.</p>
-    <p>Parse in the job that received the HTTP body. If the body is bad, retry or discard there. A model method should return data or raise, not start work.</p>
-  </article>
-
-  <article>
     <h3><span class="tag hard">Hard</span>32. Use one entry order</h3>
     <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, <span class="path">app/models/ai_query.rb</span> hint creation, <span class="path">app/helpers/quiz_answer_helper.rb</span></p>
     <p><code>full_journal</code>, hint rows, and <code>entry_number</code> now share <code>entries.position</code>. <code>entry_number</code> is that position. The quiz helper still runs <code>offset</code> per form. <code>Quiz#full_journal</code> is a third meaning: it plucks <code>quiz_answers.user_response</code>, while <code>Journal#full_journal</code> plucks entry text. <code>AiOutput#identifier</code> is also three kinds of value in one string: <code>"1"</code>, <code>"corrected_text"</code>, or <code>"assessment"</code>.</p>

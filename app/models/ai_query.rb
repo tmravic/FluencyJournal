@@ -215,11 +215,7 @@ class AiQuery < ApplicationRecord
   def parse_raw_response
     JSON.parse(raw_response)
   rescue JSON::ParserError
-    begin
-      JSON.parse(json_without_markdown_fences)
-    rescue JSON::ParserError
-      RescueBadFormatJob.perform_now(self)
-    end
+    JSON.parse(json_without_markdown_fences)
   end
 
   def json_without_markdown_fences
