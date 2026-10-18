@@ -113,26 +113,6 @@
   }
 }
 
-.note .form__input::placeholder {
-  font-size: var(--font-size-s);
-}
-.note.form {
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--space-xs);
-}
-
-.note .form__group {
-  flex: 0 0 100%; /* each input group takes full width */
-  width: 100%;
-}
-
-.note .form__actions {
-  flex: 0 0 100%;
-  width: 100%;
-  margin-top: var(--space-xs); /* extra space above the buttons */
-}
-
 .note--link-journals {
   display: flex;
   flex-direction: column;
@@ -170,11 +150,6 @@
 }
 
 [data-theme="dark"] {
-  .btn--journal-short {
-    color: var(--color-text-header);
-    background-image: linear-gradient(to right, hsl(45, 45%, 32%), hsl(40, 40%, 26%));
-  }
-
   .note__journal-select {
     &:focus {
       border-color: var(--color-secondary);

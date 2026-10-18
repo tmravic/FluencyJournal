@@ -36,4 +36,38 @@
   &__actions {
     flex-basis: 100%;
   }
+
+  &__checkbox-label {
+    margin-top: var(--space-xxxxs);
+    margin-right: var(--space-xs);
+  }
+}
+
+.form--stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-xs);
+
+  .form__group {
+    flex: 0 0 100%; /* each input group takes full width */
+    width: 100%;
+  }
+
+  .form__actions {
+    flex: 0 0 100%;
+    width: 100%;
+    margin-top: var(--space-xs); /* extra space above the buttons */
+  }
+
+  .form__input::placeholder {
+    font-size: var(--font-size-s);
+  }
+
+  textarea.form__input {
+    font-size: var(--font-size-l);
+
+    @include components.media(tabletAndUp) {
+      font-size: var(--font-size-xl);
+    }
+  }
 }

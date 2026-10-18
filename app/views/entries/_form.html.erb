@@ -1,6 +1,6 @@
 <!--Entry form-->
 
-<%= simple_form_for [journal, entry], html: { class: "form entry" } do |f| %>
+<%= simple_form_for [journal, entry], html: { class: "form form--stacked entry" } do |f| %>
   <%= form_error_notification(entry) %>
 
   <%= f.input :content,

@@ -101,3 +101,10 @@
     font-size: var(--font-size-l);
   }
 }
+
+[data-theme="dark"] {
+  .btn--journal-short {
+    color: var(--color-text-header);
+    background-image: linear-gradient(to right, hsl(45, 45%, 32%), hsl(40, 40%, 26%));
+  }
+}

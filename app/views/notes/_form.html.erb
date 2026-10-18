@@ -1,4 +1,4 @@
-<%= simple_form_for note, html: { class: "note form" }, data: { turbo: true } do |f| %>
+<%= simple_form_for note, html: { class: "note form form--stacked" }, data: { turbo: true } do |f| %>
   <%= form_error_notification(note) %>
 
   <% if automatic %>

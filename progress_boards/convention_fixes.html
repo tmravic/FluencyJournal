@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>28. Keep each block’s rules in its own file</h3>
-    <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">_entry.scss</span>, <span class="path">_followup.scss</span></p>
-    <p>Dark-theme <code>.btn--journal-short</code> lives in the note file. <code>.note .form__group</code>, <code>.note .form__input__button_block</code>, and <code>.form.entry textarea.form__input</code> reach into the form block from outside it. <code>.followup .form__checkbox-label</code> does the same. A block owns its elements. Another block may sit next to it; it should not retune its insides.</p>
-    <p>Move the dark button rule into <span class="path">_btn.scss</span> under <code>[data-theme="dark"]</code>. If a form inside a note needs a different layout, add a form modifier such as <code>.form--stacked</code> and put that rule in <span class="path">_form.scss</span>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>29. Replace the one-off inline styles</h3>
     <p><span class="path">app/views/journals/_journal_content.html.erb</span>, <span class="path">reading_mode.html.erb</span>, <span class="path">compare.html.erb</span>, <span class="path">app/views/pages/home.html.erb</span>, scaffold <code>style="color: green"</code> notices on entry and note show pages</p>
     <p>These repeat the same margin and flex rules the spacing tokens and <code>.flash</code> already express. Inline style skips the dark theme and the type scale.</p>
