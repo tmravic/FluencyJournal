@@ -71,5 +71,81 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
+  <h2>Easy</h2>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>37. Drop the retry link UJS method</h3>
+    <p><span class="path">app/views/quizzes/_graded_output.html.erb</span></p>
+    <p>The retry control is a <code>link_to</code> with <code>method: :get</code> and <code>data-turbo-method="get"</code>. Rails still turns <code>method:</code> on a link into <code>data-method</code>, which is the old UJS attribute. Turbo does not use it. The route is already GET.</p>
+    <p>Remove <code>method: :get</code> and <code>turbo_method: :get</code>. Leave the path and the frame target.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>38. Redirect a successful write with 303</h3>
+    <p><span class="path">app/controllers/journals_controller.rb</span> <code>create</code>, <code>update</code>, <code>mark_journal_as_studied</code>. <span class="path">app/controllers/entries_controller.rb</span> <code>create</code>, <code>update</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>create</code>, <code>update</code>, <code>mark_note_as_studied</code>. <span class="path">app/controllers/ai_queries_controller.rb</span> <code>ai_request</code>. <span class="path">app/controllers/sessions_controller.rb</span> <code>create</code> success branch. <span class="path">app/controllers/quizzes_controller.rb</span> <code>prepare_quiz</code> HTML branch.</p>
+    <p>Those HTML successes redirect with the default 302, or, for prepare, render the template at 200 after the prompt is saved. Fetch rewrites a 302 after POST into GET. It does not rewrite PATCH, so a refresh of a journal, entry, or note update can send PATCH again. A 200 after prepare repeats the POST. Deletes, logout, and the password-reset update already use 303. Login failure stays a 302.</p>
+    <p>Pass <code>status: :see_other</code> on each success redirect. For prepare, keep the turbo stream and redirect the HTML format to the journal with 303.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>39. Do not nest workspace or the template picker</h3>
+    <p><span class="path">app/views/journals/create.turbo_stream.erb</span>, <span class="path">app/views/journals/_journal_content.html.erb</span>, <span class="path">app/views/followup_template_prompts/destroy_selected.turbo_stream.erb</span>, <span class="path">app/views/followup_template_prompts/_template_select.html.erb</span></p>
+    <p><code>turbo_stream.update "workspace"</code> fills the empty index frame with a partial that opens <code>turbo_frame_tag "workspace"</code> again. The template-picker destroy stream does the same to <code>template_select</code>. Cancel already uses <code>turbo_stream.replace</code> for that id. Item 19 fixed entries, the quiz-entry frame, and the note due-date frame. These two streams were left as updates.</p>
+    <p>Replace the frame, or update it with the inner markup only. The id stays <code>workspace</code> and <code>template_select</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag easy">Easy</span>40. Allow a followup with no origin</h3>
+    <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/entry.rb</span>, <span class="path">app/models/note.rb</span>, <span class="path">app/models/ai_output.rb</span>, <span class="path">app/models/ai_query.rb</span></p>
+    <p><code>belongs_to :origin</code> is required. Entry, note, output, and query followups use <code>dependent: :nullify</code>. Nullify clears <code>origin_type</code> and <code>origin_id</code> with <code>update_all</code>, which skips validations. The columns are already nullable. The next save then fails with “Origin must exist”. <code>Followup#user</code> already has a branch for a missing origin.</p>
+    <p>Mark <code>belongs_to :origin, polymorphic: true, optional: true</code>. Leave the entry, output, and query associations on <code>nullify</code> so a journal answer can stay after the line or card is gone.</p>
+  </article>
+
+  <h2>Medium</h2>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>41. Do not render the success stream when the write fails</h3>
+    <p><span class="path">app/controllers/journals_controller.rb</span> <code>update_due_date</code>, <code>mark_journal_as_studied</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>update_due_date</code>, <code>mark_note_as_studied</code>. <span class="path">app/controllers/quizzes_controller.rb</span> <code>grade_quiz</code>. <span class="path">app/controllers/followup_template_prompts_controller.rb</span> <code>destroy_selected</code>. <span class="path">app/controllers/followups_controller.rb</span> <code>create</code> invalid-origin branch.</p>
+    <p>Journal due-date update always renders <code>update_due_date.turbo_stream.erb</code>, so a blank date fails <code>validates :next_study_date</code> and the form still closes around the unsaved value. Note due-date, both mark-studied actions, and grade only <code>respond_to</code> inside <code>if save</code>. A false return renders nothing, and Rails then draws that action’s turbo template at 200. Mark studied removes the card. Grade swaps in the grading frame and does not enqueue <code>GradeQuizJob</code>. A template delete that finds no row, and a followup create whose origin class was rejected, set <code>flash.now</code> and then fall through to the success stream. The picker is emptied. The followup form is replaced with the processing card.</p>
+    <p>On a false save, update, or destroy, re-render the form or <code>head :unprocessable_entity</code>. Render the success stream only when the write returns true. The followup destroy action already does this.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>42. Delete note followups with the note</h3>
+    <p><span class="path">app/models/note.rb</span>, <span class="path">app/controllers/followups_controller.rb</span> <code>set_user_and_journal_based_on_origin_class</code></p>
+    <p>A note followup’s answer query is stored with no journal. <code>set_user_and_journal_based_on_origin_class</code> sets <code>@journal</code> for an entry, an output, or a journal followup, and leaves it unset for a note. <code>Note</code> then <code>dependent: :nullify</code>s its followups. After the note is gone, the followup, the prompt, and the query have no user and no journal, so nothing else deletes them.</p>
+    <p>Use <code>has_many :followups, as: :origin, dependent: :destroy</code> on <code>Note</code>, the same way <code>JournalFollowup</code> does. <code>Prompt.destroy_from</code> already removes the prompt and the answer after the followup row is gone. Leave entry and output followups on <code>nullify</code>.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>43. Do not accept another user id</h3>
+    <p><span class="path">app/controllers/journals_controller.rb</span> <code>journal_params</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>note_params</code>, <code>update_journals</code>.</p>
+    <p><code>journal_params</code> permits <code>:user_id</code>. Create assigns <code>Current.user</code> afterward. Update does not, so a request can move the journal onto another user. <code>note_params</code> permits <code>:user_id</code> and <code>:journal_ids</code>. <code>update_journals</code> assigns <code>journal_ids</code> from the request with no check that those journals belong to this user or group. The forms do not show these fields.</p>
+    <p>Remove <code>:user_id</code> from both lists. Assign note journals only from <code>Current.user.journals</code> or <code>current_group.journals</code> whose ids were submitted. Entry <code>:journal_id</code> is item 44.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag medium">Medium</span>44. Load a nested record through its parent</h3>
+    <p><span class="path">app/controllers/entries_controller.rb</span> <code>set_entry</code>, <code>entry_params</code>. <span class="path">app/controllers/ai_queries_controller.rb</span> <code>set_ai_query</code>. <span class="path">app/controllers/quiz_answers_controller.rb</span> <code>set_quiz_answer</code>, <code>show</code>, <code>create</code>.</p>
+    <p>The journal in the URL is <code>current_group.journals.find</code>, and the quiz is <code>@journal.quizzes.find</code>. The child is still a global find: <code>Entry.find</code>, <code>AiQuery.find</code>, <code>QuizAnswer.find</code>, and <code>AiOutput.find</code> for the posted output id. Show, edit, update, destroy, speak, and cancel can act on another group’s row. <code>entry_params</code> also permits <code>:journal_id</code>, so create and update can move the entry onto a journal that is not the one in the URL.</p>
+    <p>Use <code>@journal.entries.find</code>, <code>@journal.ai_queries.find</code>, <code>@quiz.quiz_answers.find</code>, and <code>@quiz.ai_query.ai_outputs.find</code>. Drop <code>:journal_id</code> from <code>entry_params</code>. Quiz peek and hint already load the output through the quiz.</p>
+  </article>
+
+  <h2>Hard</h2>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>45. Load a followup through an owner this user can touch</h3>
+    <p><span class="path">app/controllers/followups_controller.rb</span> <code>set_followup</code>, <code>new</code>, <code>create</code>, <code>destroy</code>. <span class="path">app/controllers/ai_outputs_controller.rb</span> <code>set_ai_output</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>new_automatic</code>, <code>create</code>.</p>
+    <p><code>Followup.find</code> and <code>AiOutput.find</code> are global, so show, destroy, and speak accept any id. <code>new</code> allowlists the origin class and then calls <code>klass.find</code>. <code>create</code> <code>constantize</code>s <code>followup_origin_class</code> with no allowlist and finds that id. The journal-followup branch is the exception: it uses <code>current_group.journals.find</code>. Destroy also loads <code>Journal.find</code> from <code>params[:journal]</code> for the redirect. Automatic notes load <code>AiOutput</code> and <code>AiQuery</code> by id, and create then sets <code>made_note</code> on that output. A note-followup query often has a null <code>journal_id</code>, so scoping only through <code>current_group.journals</code> misses it.</p>
+    <p>Resolve each id through an owner this request may use. Journal-backed entries, queries, and outputs come from <code>current_group</code>. A note origin comes from <code>Current.user.notes</code>. A followup is visible only when its origin is one of those. Use the same allowlist in <code>create</code> that <code>new</code> already has. 404 otherwise.</p>
+  </article>
+
+  <article>
+    <h3><span class="tag hard">Hard</span>46. Keep one query and one followup on a prompt</h3>
+    <p><span class="path">app/models/prompt.rb</span>, <span class="path">db/schema.rb</span>, <span class="path">app/jobs/prepare_quiz_job.rb</span>, <span class="path">app/jobs/grade_quiz_job.rb</span>, <span class="path">app/jobs/application_job.rb</span></p>
+    <p><code>Prompt</code> declares <code>has_one :ai_query</code> and <code>has_one :followup</code>, both <code>dependent: :destroy</code>. The indexes on <code>ai_queries.prompt_id</code> and <code>followups.prompt_id</code> are not unique. <code>has_one</code> destroys only the loaded row. A second child leaves <code>prompt_id</code> set, and deleting the prompt raises a foreign-key error. <code>PrepareQuizJob</code> saves the query before the transaction that creates the quiz and hints. <code>ApplicationJob</code> retries <code>ActiveRecord::Deadlocked</code>. A retry after that commit inserts another query for the same prompt. <code>GradeQuizJob</code> has the same shape: the query is saved, then later work can raise and the job can run again.</p>
+    <p>Add a unique index on each <code>prompt_id</code>. Create the prepare query inside the same transaction as the quiz. Item 35 assumed one child per prompt. The schema still allows more.</p>
+  </article>
+
 </body>
 </html>
