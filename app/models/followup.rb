@@ -1,6 +1,6 @@
 class Followup < ApplicationRecord
   belongs_to :prompt
-  belongs_to :origin, polymorphic: true
+  belongs_to :origin, polymorphic: true, optional: true
 
   validates :source_tag, presence: true # string
 

@@ -71,15 +71,6 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
-  <h2>Easy</h2>
-
-  <article>
-    <h3><span class="tag easy">Easy</span>40. Allow a followup with no origin</h3>
-    <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/entry.rb</span>, <span class="path">app/models/note.rb</span>, <span class="path">app/models/ai_output.rb</span>, <span class="path">app/models/ai_query.rb</span></p>
-    <p><code>belongs_to :origin</code> is required. Entry, note, output, and query followups use <code>dependent: :nullify</code>. Nullify clears <code>origin_type</code> and <code>origin_id</code> with <code>update_all</code>, which skips validations. The columns are already nullable. The next save then fails with “Origin must exist”. <code>Followup#user</code> already has a branch for a missing origin.</p>
-    <p>Mark <code>belongs_to :origin, polymorphic: true, optional: true</code>. Leave the entry, output, and query associations on <code>nullify</code> so a journal answer can stay after the line or card is gone.</p>
-  </article>
-
   <h2>Medium</h2>
 
   <article>

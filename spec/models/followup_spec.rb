@@ -47,6 +47,21 @@ RSpec.describe Followup, type: :model do
     expect(followup.origin).to eq(entry)
   end
 
+  it "saves a followup after its entry origin is nullified" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    entry = journal.entries.create!(content: "一行")
+    followup = create_followup(entry)
+
+    entry.destroy!
+
+    expect(followup.reload.origin).to be_nil
+    expect(followup.update(source_tag: "ai_assistant")).to be(true)
+    expect(described_class.find_by(id: followup.id)).to eq(followup)
+    expect(followup.reload.origin).to be_nil
+    expect(followup.source_tag).to eq("ai_assistant")
+  end
+
   it "lists an output's followups from the origin link" do
     user = create_user
     journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
