@@ -39,7 +39,7 @@ module ApplicationHelper
       "#{contents_hash[:learning_language]}\n↓\n#{contents_hash[:corrected_sentence]}"
     elsif has_content_for_followup?(contents_hash)
       "#{contents_hash[:content]}\n#{contents_hash[:explanation]}"
-    else
+    elsif contents_hash[:content_first].present? || contents_hash[:content_last].present?
       "#{contents_hash[:content_first]} → #{contents_hash[:content_last]}\n\n(#{contents_hash[:explanation]})"
     end
   end
@@ -69,16 +69,16 @@ module ApplicationHelper
 
   def get_ai_output_change_variables(ai_query, identifier, change_keyword)
     user = ai_query.user || Current.user || @user
-    content_first = ai_query.change_content(identifier, change_keyword).first
-    content_last = ai_query.change_content(identifier, change_keyword).last
-    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(user))
+    content_first, content_last = ai_query.change_sides(identifier, change_keyword)
+    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(user)) if user
 
     [ content_first, content_last, explanation ]
   end
 
   def get_followup_variables(ai_query, identifier, change_keyword, user = nil)
     content = ai_query.change_content(identifier, change_keyword)
-    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(user))
+    reader = user || ai_query.user
+    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(reader)) if reader
 
     [ content, explanation ]
   end

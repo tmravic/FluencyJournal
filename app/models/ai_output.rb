@@ -12,10 +12,11 @@ class AiOutput < ApplicationRecord
 
   def assemble_content(change_keyword, user)
     parsed = ai_query.parsed_response
-    corrected_sentence = ai_query.corrected_text if parsed.keys.include?("corrected_text")
-    assessment = ai_query.assessment if parsed.keys.include?("assessment")
-    abbr = ai_query.abbr(user)
-    learning_language = ai_query.prompt.learning_language
+    parsed = {} unless parsed.is_a?(Hash)
+    corrected_sentence = ai_query.corrected_text if parsed.key?("corrected_text")
+    assessment = ai_query.assessment if parsed.key?("assessment")
+    abbr = ai_query.abbr(user) if user
+    learning_language = ai_query.prompt&.learning_language
 
     if used_for_journal_corrected_text?
       assemble_corrected_text(corrected_sentence, learning_language)
@@ -31,6 +32,21 @@ class AiOutput < ApplicationRecord
     end
   end
 
+  # Persists the card when there is something to show. A blank change line
+  # returns nil from assemble_content. Saving that would fail the job before
+  # the corrected sentence is stored, and leaving the unsaved build on the
+  # query would look like a card that never made it to the database.
+  def save_assembled_content(change_keyword, user)
+    assembled = assemble_content(change_keyword, user)
+    if assembled.blank?
+      ai_query.ai_outputs.target.delete(self) if new_record? && ai_query
+      return
+    end
+
+    self.content = assembled
+    save!
+  end
+
   private
 
   def used_for_journal_corrected_text?
@@ -42,9 +58,9 @@ class AiOutput < ApplicationRecord
   end
 
   def assemble_ai_output_content(abbr, change_keyword, corrected_sentence)
-    content = ai_query.change_content(self.identifier, change_keyword)
-    content_first = content.first
-    content_last = content.last
+    content_first, content_last = ai_query.change_sides(self.identifier, change_keyword)
+    return if content_first.blank? && content_last.blank?
+
     explanation = ai_query.change_explanation(change_keyword, self.identifier, abbr)
 
     # Ex:
@@ -58,6 +74,8 @@ class AiOutput < ApplicationRecord
 
   def assemble_followup_content(abbr, change_keyword)
     content = ai_query.change_content(self.identifier, change_keyword)
+    return if content.blank?
+
     explanation = ai_query.change_explanation(change_keyword, self.identifier, abbr)
 
     # Ex:
@@ -71,6 +89,8 @@ class AiOutput < ApplicationRecord
   end
 
   def assemble_corrected_text(corrected_sentence, learning_language)
+    return if corrected_sentence.blank?
+
     # Ex:
     # お寺でキラキラしてる10円玉を賽銭箱に投入しました。
     # ↓

@@ -65,3 +65,5 @@ end
 
 gem "faraday", "~> 2.12"
 gem "simple_form"
+
+gem "ruby_llm", "= 2.1.1"

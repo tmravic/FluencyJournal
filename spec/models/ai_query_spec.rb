@@ -67,6 +67,44 @@ RSpec.describe AiQuery, type: :model do
 
       expect(query.change_content("1", "entry_")).to eq("真優の誕生日")
     end
+
+    it "returns nil when the model sends an empty change" do
+      query = described_class.new(raw_response: '{"change_1":{"content":"","explanation_en":"Direct translation."}}')
+
+      expect(query.change_content("1", "change_")).to be_nil
+      expect(query.change_sides("1", "change_")).to be_nil
+    end
+
+    it "returns nil for a whitespace change and a missing line" do
+      query = described_class.new(
+        raw_response: '{"change_1":{"content":"  "},"change_2":{"explanation_en":"No content."}}'
+      )
+
+      expect(query.change_content("1", "change_")).to be_nil
+      expect(query.change_content("2", "change_")).to be_nil
+      expect(query.change_content("9", "change_")).to be_nil
+    end
+
+    it "returns both sides without taking the first character of a sentence" do
+      arrow = described_class.new(raw_response: '{"change_1":{"content":"小さい針 → マイクロニードル"}}')
+      sentence = described_class.new(raw_response: '{"change_1":{"content":"真優の誕生日"}}')
+
+      expect(arrow.change_sides("1", "change_")).to eq([ "小さい針 ", " マイクロニードル" ])
+      expect(sentence.change_sides("1", "change_")).to eq([ "真優の誕生日", "真優の誕生日" ])
+    end
+  end
+
+  describe "#count_changes" do
+    it "returns 0 when the body is not an object" do
+      query = described_class.new(raw_response: "not json")
+      allow(RescueBadFormatJob).to receive(:perform_now).and_return("still bad")
+
+      expect(query.count_changes("change_")).to eq(0)
+      expect(query.parsed_response).to be_nil
+      query.count_changes("change_")
+
+      expect(RescueBadFormatJob).to have_received(:perform_now).once
+    end
   end
 
   describe "#create_quiz_questions" do

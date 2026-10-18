@@ -3,47 +3,20 @@ class GradeQuizJob < ApplicationJob
 
   def perform(journal, quiz_result_prompt, quiz)
     user = journal.user
-
-    connection = Faraday.new(url: "https://api.x.ai")
-    response = connection.post do |req|
-      req.url "/v1/chat/completions"
-      req.options.timeout = 120
-      req.options.open_timeout = 30
-      req.headers["Content-Type"] = "application/json"
-      req.headers["Authorization"] = "Bearer #{xai_api_key}"
-      req.body = {
-        model: quiz_result_prompt.ai_model,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content: quiz_result_prompt.sent_role_prompt
-          },
-          {
-            role: "user",
-            content: quiz_result_prompt.raw_prompt
-          },
-          {
-            role: "user",
-            content: quiz_result_prompt.response_format(journal, quiz, user)
-          }
-        ]
-      }.to_json
-    end
-
-    # TODO: DRY up this repetitive bit in all the jobs
-    json_response = JSON.parse(response.body)
-    full_token_details = json_response["usage"]
-    token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
-    # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
-
-    response_from_x_ai = json_response["choices"][0]["message"].dig("content")
+    result = XAiChat.complete(
+      model: quiz_result_prompt.ai_model,
+      instructions: quiz_result_prompt.sent_role_prompt,
+      user_messages: [
+        quiz_result_prompt.raw_prompt,
+        quiz_result_prompt.response_format(journal, quiz, user)
+      ]
+    )
 
     ai_query = AiQuery.build(
-      prompt_tokens: token_data["prompt_tokens"],
-      completion_tokens: token_data["completion_tokens"],
-      total_tokens: token_data["total_tokens"],
-      raw_response: response_from_x_ai
+      prompt_tokens: result.prompt_tokens,
+      completion_tokens: result.completion_tokens,
+      total_tokens: result.total_tokens,
+      raw_response: result.raw_response
     )
 
     ai_query.prompt = quiz_result_prompt
@@ -51,7 +24,6 @@ class GradeQuizJob < ApplicationJob
     ai_query.journal = journal
     ai_query.save!
 
-    graded_response = JSON.parse(response_from_x_ai)
     # {"entry_1"=>
     #   {"content"=>"彼女のお母さんに会いました。 → 彼女のお母さんに会いました。",
     #    "explanation_en"=> "This translation is identical to the original and accurately conveys the meaning of meeting her mother in grammatically correct Japanese. No issues."},
@@ -62,24 +34,21 @@ class GradeQuizJob < ApplicationJob
     #   "The quiz answers are perfectly accurate overall, with no mistakes in meaning, grammar, or word choice. They replicate the original journal entries precisely while aligning with the English quiz questions."}
 
     # Make an AiOutput for each change in the journal query
-    (1..ai_query.change_count).each do |count|
-      ai_query.ai_outputs.create(
-        made_note: false,
-        identifier: count.to_s
-      ).tap do |ai_output|
-        ai_output.content = ai_output.assemble_content(quiz_result_prompt.change_keyword, journal.user)
-        ai_output.save!
+    count = ai_query.change_count.to_i
+    if count >= 1
+      (1..count).each do |number|
+        ai_query.ai_outputs.build(
+          made_note: false,
+          identifier: number.to_s
+        ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
       end
     end
 
     # Make one more AiOutput for the Assessment
-    ai_query.ai_outputs.create(
+    ai_query.ai_outputs.build(
       made_note: false,
       identifier: "assessment"
-    ).tap do |ai_output|
-      ai_output.content = ai_output.assemble_content(quiz_result_prompt.change_keyword, journal.user)
-      ai_output.save!
-    end
+    ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
 
     source_tag = "ai_assistant"
     assessment = ai_query.assessment

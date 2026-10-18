@@ -1,33 +1,4 @@
 module SharedServiceMethods
-  def make_call_to_x_api(api_key, prompt, user, journal)
-    connection = Faraday.new(url: "https://api.x.ai")
-    connection.post do |request|
-      request.url "/v1/chat/completions"
-      request.options.timeout = 120
-      request.options.open_timeout = 60
-      request.headers["Content-Type"] = "application/json"
-      request.headers["Authorization"] = "Bearer #{api_key}"
-      request.body = {
-        model: prompt.ai_model,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content: prompt.role_prompt(user, journal)
-          },
-          {
-            role: "user",
-            content: prompt.raw_prompt
-          },
-          {
-            role: "user",
-            content: prompt.response_format(user)
-          }
-        ]
-      }.to_json
-    end
-  end
-
   def save_followup_based_on_origin(ai_query, followup, followup_origin)
     ai_query.followups.push(followup)
     if ai_query.save!
@@ -41,20 +12,6 @@ module SharedServiceMethods
         followup_origin.followups.push(followup)
       end
     end
-  end
-
-  def organize_token_data(json_response)
-    full_token_details = json_response["usage"]
-    # {
-    #   "prompt_tokens"=>206, "completion_tokens"=>174, "total_tokens"=>380,
-    #   "prompt_tokens_details"=> { "cached_tokens"=>0, "audio_tokens"=>0 },
-    #   "completion_tokens_details"=> {
-    #     "reasoning_tokens"=>0, "audio_tokens"=>0,
-    #     "accepted_prediction_tokens"=>0, "rejected_prediction_tokens"=>0
-    #   }
-    # }
-    full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
-    # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
   end
 
   def build_ai_query(response_from_model, token_data, prompt, journal)
@@ -73,24 +30,21 @@ module SharedServiceMethods
   end
 
   def create_ai_outputs_for_each_change(ai_query, prompt, user)
-    (1..ai_query.change_count).each do |count|
-      ai_query.ai_outputs.create(
+    count = ai_query.change_count.to_i
+    return if count < 1
+
+    (1..count).each do |number|
+      ai_query.ai_outputs.build(
         made_note: false,
-        identifier: count.to_s
-      ).tap do |ai_output|
-        ai_output.content = ai_output.assemble_content(prompt.change_keyword, user)
-        ai_output.save!
-      end
+        identifier: number.to_s
+      ).save_assembled_content(prompt.change_keyword, user)
     end
   end
 
   def create_ai_output_for_corrected_text(ai_query, prompt, user)
-    ai_query.ai_outputs.create(
+    ai_query.ai_outputs.build(
       made_note: false,
       identifier: "corrected_text"
-    ).tap do |ai_output|
-      ai_output.content = ai_output.assemble_content(prompt.change_keyword, user)
-      ai_output.save!
-    end
+    ).save_assembled_content(prompt.change_keyword, user)
   end
 end

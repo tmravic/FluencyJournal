@@ -35,18 +35,30 @@ class AiQuery < ApplicationRecord
   #  "corrected_text"=>{"text"=>"今日はシルファームという肌の施術を受けます。マイクロニードルとケミカルピーリングで何年間のニキビ跡と日焼けによるダメージを治療したいです。"}}
   #
   def parsed_response
-    @parsed_response ||= begin
-      parsed = parse_raw_response
-      parsed = JSON.parse(parsed) if parsed.is_a?(String)
-      parsed = transform_keys(parsed, "answer_") if parsed.is_a?(Hash) && parsed["answers"]
-      parsed
-    end
+    return @parsed_response if instance_variable_defined?(:@parsed_response)
+
+    @parsed_response = parse_into_object
   end
 
   def count_changes(string)
     # ["change_1", "change_2", "corrected_text"]
-    parsed_response.keys.count { |key| key.include?(string) }
+    parsed = parsed_response
+    return 0 unless parsed.is_a?(Hash) && string.present?
+
+    parsed.keys.count { |key| key.include?(string) }
     # => 2
+  end
+
+  # [before, after] for a change line, or nil when the model left it blank.
+  def change_sides(num, change_keyword)
+    content = change_content(num, change_keyword)
+    return if content.blank?
+
+    if content.is_a?(String)
+      [ content, content ]
+    elsif content.respond_to?(:first) && content.respond_to?(:last)
+      [ content.first, content.last ]
+    end
   end
 
   def model_used
@@ -119,7 +131,8 @@ class AiQuery < ApplicationRecord
 
     backup_key = parsed.keys[num.to_i - 1]
     result = backup_key && parsed.dig(backup_key, "content")
-    return result if result.is_a?(String) || result.nil?
+    return if result.nil? || (result.is_a?(String) && result.blank?)
+    return result if result.is_a?(String)
 
     present_change(result)
   end
@@ -189,6 +202,15 @@ class AiQuery < ApplicationRecord
   end
 
   private
+
+  def parse_into_object
+    parsed = parse_raw_response
+    parsed = JSON.parse(parsed) if parsed.is_a?(String)
+    parsed = transform_keys(parsed, "answer_") if parsed.is_a?(Hash) && parsed["answers"]
+    parsed
+  rescue JSON::ParserError
+    nil
+  end
 
   def parse_raw_response
     JSON.parse(raw_response)

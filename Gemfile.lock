@@ -109,8 +109,12 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
+    faraday-multipart (1.2.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    faraday-retry (2.4.0)
+      faraday (~> 2.0)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -172,6 +176,7 @@ GEM
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.7.5)
+    multipart-post (2.4.1)
     net-http (0.6.0)
       uri
     net-imap (0.5.4)
@@ -314,6 +319,16 @@ GEM
       rubocop-performance
       rubocop-rails
     ruby-progressbar (1.13.0)
+    ruby_llm (2.1.1)
+      base64
+      faraday (>= 1.10.0, != 2.0.0)
+      faraday-multipart (>= 1)
+      faraday-net_http (>= 1)
+      faraday-retry (>= 1)
+      json (< 4)
+      marcel (>= 1.0, < 3)
+      schematist (~> 1.1)
+      zeitwerk (~> 2)
     sass-embedded (1.83.0-aarch64-linux-gnu)
       google-protobuf (~> 4.28)
     sass-embedded (1.83.0-aarch64-linux-musl)
@@ -330,6 +345,7 @@ GEM
       google-protobuf (~> 4.28)
     sass-embedded (1.83.0-x86_64-linux-musl)
       google-protobuf (~> 4.28)
+    schematist (1.1.0)
     securerandom (0.4.1)
     simple_form (5.3.1)
       actionpack (>= 5.2)
@@ -416,6 +432,7 @@ DEPENDENCIES
   rails (~> 8.1.4)
   rspec-rails
   rubocop-rails-omakase
+  ruby_llm (= 2.1.1)
   simple_form
   solid_cable
   solid_cache

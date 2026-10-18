@@ -75,17 +75,17 @@
 
   <article>
     <h3><span class="tag hard">Hard</span>30. Let followup and quiz jobs fail in the open</h3>
-    <p><span class="path">app/jobs/followup_request_job.rb</span>, <span class="path">app/jobs/application_job.rb</span>, <span class="path">app/jobs/prepare_quiz_job.rb</span>, <span class="path">grade_quiz_job.rb</span>, <span class="path">app/services/x_ai_service.rb</span></p>
-    <p><code>FollowupRequestJob</code> rescues <code>StandardError</code>, logs it, and returns. ActiveJob then marks the job successful, so there is no retry and no Turbo update. The page stays on “processing.” <code>ApplicationJob</code> only retries deadlocks.</p>
-    <p><code>PrepareQuizJob</code> and <code>GradeQuizJob</code> copy the Faraday call, slice token counts by hand, and <code>JSON.parse</code> the body without checking status. A 429 or 500 becomes <code>NoMethodError</code> or <code>JSON::ParserError</code>. <code>XAiService</code> already raises <code>ApiError</code> unless the response succeeded, and it already reads usage. <code>AiRequestJob</code> uses that service, but <code>ApiError</code> is still not in <code>retry_on</code>.</p>
-    <p>Call <code>XAiService</code> from the quiz jobs. Add <code>retry_on</code> for <code>ApiError</code> and Faraday timeouts. On the final failure, broadcast an error into the same frame the success path uses. Delete the <code>rescue StandardError</code> that swallows the job.</p>
+    <p><span class="path">app/jobs/followup_request_job.rb</span>, <span class="path">app/jobs/application_job.rb</span>, <span class="path">app/jobs/ai_request_job.rb</span>, <span class="path">app/jobs/prepare_quiz_job.rb</span>, <span class="path">app/jobs/grade_quiz_job.rb</span></p>
+    <p><code>FollowupRequestJob</code> rescues <code>Faraday::ConnectionFailed</code> and <code>StandardError</code>, logs them, and returns. ActiveJob then marks the job successful, so there is no retry and no Turbo update. The page stays on “processing.” <code>ApplicationJob</code> only retries deadlocks.</p>
+    <p>The chat call itself is <code>XAiChat</code> (ruby_llm chat completions). A rejected request raises <code>RubyLLM::Error</code>, such as <code>RateLimitError</code> or <code>ServerError</code>, and the gem already retries timeouts, 429s, and 5xx inside that request. <code>PrepareQuizJob</code>, <code>GradeQuizJob</code>, and <code>AiRequestJob</code> let the error fail the job. Nothing broadcasts into the frame the success path uses, so the page still sits on “processing.”</p>
+    <p>Add <code>retry_on</code> for <code>RubyLLM::RateLimitError</code>, <code>RubyLLM::ServerError</code>, <code>RubyLLM::ServiceUnavailableError</code>, and <code>Faraday::TimeoutError</code>. On the final failure, broadcast an error into the same frame the success path uses. Delete the rescues in <code>FollowupRequestJob</code> that mark the job successful.</p>
   </article>
 
   <article>
     <h3><span class="tag hard">Hard</span>31. Take the repair job out of the parser</h3>
     <p><span class="path">app/models/ai_query.rb</span> <code>parsed_response</code>, <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
-    <p>A reader calls <code>RescueBadFormatJob.perform_now</code> when JSON is invalid. That is a synchronous xAI call from a parse, including from <code>count_changes</code> before the query has a prompt. The job updates <code>raw_response</code>, rescues <code>JSON::ParserError</code> and a bare <code>rescue</code>, and still returns the string. Callers then see <code>nil</code> or a second parse error, and the job has no failed state.</p>
-    <p><code>change_content</code> returns <code>nil</code> when the line is missing. <code>AiOutput#assemble_ai_output_content</code> then calls <code>.first</code> on that nil.</p>
+    <p>A reader still calls <code>RescueBadFormatJob.perform_now</code> when JSON is invalid. That is a synchronous xAI call from a parse, including from <code>count_changes</code> before the query has a prompt. New chat bodies are stored from ruby_llm’s parsed object, so a successful response no longer needs the fence strip or this job. Old rows, and a model that returns non-JSON, still hit it.</p>
+    <p>The repair job uses <code>XAiChat</code> and JSON mode. It still updates <code>raw_response</code>, rescues <code>JSON::ParserError</code> and a bare <code>rescue</code>, and returns the string. A second parse of that string is rescued, so a bad repair returns <code>nil</code> instead of raising. A blank <code>change_N.content</code> is skipped, so the corrected sentence can still be saved. The reader that starts the job is still the bug.</p>
     <p>Parse in the job that received the HTTP body. If the body is bad, retry or discard there. A model method should return data or raise, not start work.</p>
   </article>
 
@@ -125,14 +125,7 @@
   </article>
 
   <h2>Gems that replace hand-rolled pieces</h2>
-  <p class="lede">These are libraries for work this app already does itself. None of them fix the HTTP or association bugs above. They shrink the code those bugs live in.</p>
-
-  <article>
-    <h3>ruby_llm</h3>
-    <p><span class="path">app/services/x_ai_service.rb</span>, the Faraday copies in the three quiz jobs, and <span class="path">app/jobs/rescue_bad_format_job.rb</span></p>
-    <p><a href="https://github.com/crmne/ruby_llm">ruby_llm</a> speaks xAI along with the other chat providers. It handles the HTTP call, the error status, and token usage, and it can ask for structured output so the response is a Ruby object instead of a string you parse and repair. That covers <code>XAiService</code>, the duplicated quiz-job clients, the fence-stripping in <code>parsed_response</code>, and most of <code>RescueBadFormatJob</code>.</p>
-    <p>If you would rather keep the current request shape, <a href="https://github.com/alexrudall/ruby-openai">ruby-openai</a> pointed at <code>https://api.x.ai/v1</code> is the smaller swap for <code>XAiService</code> alone. Pair it with <a href="https://github.com/lostisland/faraday-retry">faraday-retry</a> so timeouts and 429s retry in Faraday instead of disappearing inside <code>rescue StandardError</code>.</p>
-  </article>
+  <p class="lede">These are libraries for work this app already does itself. None of them fix the bugs in the list above.</p>
 
   <article>
     <h3>local_time</h3>

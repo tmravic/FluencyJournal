@@ -3,53 +3,27 @@ class PrepareQuizJob < ApplicationJob
 
   def perform(journal, prepare_quiz_prompt)
     user = journal.user
-    connection = Faraday.new(url: "https://api.x.ai")
-    response = connection.post do |req|
-      req.url "/v1/chat/completions"
-      req.options.timeout = 120
-      req.options.open_timeout = 30
-      req.headers["Content-Type"] = "application/json"
-      req.headers["Authorization"] = "Bearer #{xai_api_key}"
-      req.body = {
-        model: prepare_quiz_prompt.ai_model,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content: prepare_quiz_prompt.sent_role_prompt
-          },
-          {
-            role: "user",
-            content: prepare_quiz_prompt.raw_prompt
-          },
-          {
-            role: "user",
-            content: prepare_quiz_prompt.response_format(journal)
-          }
-        ]
-      }.to_json
-    end
-
-    # TODO: DRY up this repetitive bit in all the jobs
-    json_response = JSON.parse(response.body)
-    full_token_details = json_response["usage"]
-    token_data = full_token_details.slice("prompt_tokens", "completion_tokens", "total_tokens")
-    # {"prompt_tokens"=>211, "completion_tokens"=>130, "total_tokens"=>341}
-
-    response_from_x_ai = json_response["choices"][0]["message"].dig("content")
+    result = XAiChat.complete(
+      model: prepare_quiz_prompt.ai_model,
+      instructions: prepare_quiz_prompt.sent_role_prompt,
+      user_messages: [
+        prepare_quiz_prompt.raw_prompt,
+        prepare_quiz_prompt.response_format(journal)
+      ]
+    )
 
     ai_query = AiQuery.build(
-      prompt_tokens: token_data["prompt_tokens"],
-      completion_tokens: token_data["completion_tokens"],
-      total_tokens: token_data["total_tokens"],
-      raw_response: response_from_x_ai
+      prompt_tokens: result.prompt_tokens,
+      completion_tokens: result.completion_tokens,
+      total_tokens: result.total_tokens,
+      raw_response: result.raw_response
     )
 
     ai_query.prompt = prepare_quiz_prompt
     ai_query.journal = journal
     ai_query.save!
 
-    translated_response = JSON.parse(response_from_x_ai)
+    translated_response = result.parsed || JSON.parse(result.raw_response)
     # {"line_1"=>
     #    {"translation"=>
     #       "明日、彼女のお母さんに初めて会う予定です。 → Tomorrow, I have plans to meet her mother for the first time."},
