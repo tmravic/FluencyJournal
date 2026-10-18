@@ -73,3 +73,5 @@ gem "local_time", "= 3.0.2"
 gem "view_component", "= 4.16.0"
 
 gem "matholroyd-supermemo", "= 0.1.1", require: "supermemo"
+
+gem "acts_as_list", "= 1.2.6"

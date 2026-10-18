@@ -4,11 +4,14 @@ class Entry < ApplicationRecord
   has_many :origin_followups, class_name: "Followup", as: :origin, dependent: :nullify
   has_many :quiz_hints, dependent: :destroy
 
+  # A new line should not rewrite the timestamps of the other lines.
+  acts_as_list scope: :journal, touch_on_update: false
+
   validates :content, presence: true
 
-  scope :ordered, -> { order(created_at: :asc) }
+  scope :ordered, -> { order(:position) }
 
   def entry_number
-    journal.entries.ordered.index(self) + 1
+    position
   end
 end

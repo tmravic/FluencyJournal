@@ -3,7 +3,7 @@ class Journal < ApplicationRecord
 
   belongs_to :user
   belongs_to :group
-  has_many :entries, dependent: :destroy
+  has_many :entries, -> { order(:position) }, dependent: :destroy
   has_and_belongs_to_many :notes
   has_many :ai_queries, dependent: :destroy
   has_many :quizzes, dependent: :destroy
@@ -43,7 +43,7 @@ class Journal < ApplicationRecord
   # that is the first argument of the broadcasts_to method: [journals.group, "journals"].
 
   def full_journal
-    self.entries.order(:id).pluck(:content)
+    entries.pluck(:content)
     # ["先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。",
     #  "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。",
     #  "東京にいる面白い人との繋がりが多くてうらやましかった。"]

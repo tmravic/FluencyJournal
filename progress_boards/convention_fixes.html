@@ -92,8 +92,8 @@
   <article>
     <h3><span class="tag hard">Hard</span>32. Use one entry order</h3>
     <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, <span class="path">app/models/ai_query.rb</span> hint creation, <span class="path">app/helpers/quiz_answer_helper.rb</span></p>
-    <p><code>full_journal</code> orders entries by <code>id</code>. <code>create_quiz_questions</code> now uses that same order when it writes hint rows. <code>entry_number</code> still orders by <code>created_at</code> and loads every entry once per row. The quiz helper still runs <code>offset</code> per form. <code>Quiz#full_journal</code> is a third meaning: it plucks <code>quiz_answers.user_response</code>, while <code>Journal#full_journal</code> plucks entry text. <code>AiOutput#identifier</code> is also three kinds of value in one string: <code>"1"</code>, <code>"corrected_text"</code>, or <code>"assessment"</code>.</p>
-    <p>Use <code>entries.order(:id)</code> in the helper and <code>entry_number</code> as well. Rename <code>Quiz#full_journal</code> to something like <code>responses</code>. Split identifier into an enum, or at least stop overloading one column for a line number and a role. <code>NotesFollowup</code> expects a table named <code>notes_followups</code>; the HABTM table is <code>followups_notes</code>. Nothing in the app uses that model. Delete it or point it at the real table.</p>
+    <p><code>full_journal</code>, hint rows, and <code>entry_number</code> now share <code>entries.position</code>. <code>entry_number</code> is that position. The quiz helper still runs <code>offset</code> per form. <code>Quiz#full_journal</code> is a third meaning: it plucks <code>quiz_answers.user_response</code>, while <code>Journal#full_journal</code> plucks entry text. <code>AiOutput#identifier</code> is also three kinds of value in one string: <code>"1"</code>, <code>"corrected_text"</code>, or <code>"assessment"</code>.</p>
+    <p>Rename <code>Quiz#full_journal</code> to something like <code>responses</code>. Split identifier into an enum, or at least stop overloading one column for a line number and a role. <code>NotesFollowup</code> expects a table named <code>notes_followups</code>; the HABTM table is <code>followups_notes</code>. Nothing in the app uses that model. Delete it or point it at the real table.</p>
   </article>
 
   <article>
@@ -124,13 +124,5 @@
     <p>Add <code>has_many :graded_quizzes, class_name: "Quiz", foreign_key: :grading_ai_query_id</code>. Delete the <code>push</code>. Teach <code>show</code> to read the question query and the grading query as two associations. This is the hardest item because the show page, destroy callbacks, and the job all assume the overwritten id.</p>
   </article>
 
-  <h2>Gems that replace hand-rolled pieces</h2>
-  <p class="lede">These are libraries for work this app already does itself. None of them fix the bugs in the list above.</p>
-
-  <article>
-    <h3>acts_as_list</h3>
-    <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, hint creation in <span class="path">app/models/ai_query.rb</span></p>
-    <p>Line numbers are still two orders. <code>full_journal</code> and hint rows use <code>id</code>. <code>entry_number</code> uses <code>created_at</code>. <a href="https://github.com/brendon/acts_as_list">acts_as_list</a> puts a <code>position</code> on <code>entries</code> and gives you <code>order(:position)</code> as the only order. Quiz lines, hints, and <code>entry_number</code> then share one sequence. This is worth it only if entries can be reordered. If they are append-only, item 32 (always <code>order(:id)</code>) is enough and you do not need the gem.</p>
-  </article>
 </body>
 </html>

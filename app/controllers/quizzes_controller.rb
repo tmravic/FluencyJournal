@@ -38,7 +38,7 @@ class QuizzesController < ApplicationController
     @quiz_entry_frame = helpers.dom_id(@ai_output)
     @identifier = @ai_output.identifier
     @entry_content = @journal.full_journal.slice(@identifier.to_i - 1)
-    @entry = @journal.entries.order(:id).offset(@identifier.to_i - 1).first
+    @entry = @journal.entries.ordered.offset(@identifier.to_i - 1).first
 
     respond_to do |format|
       format.turbo_stream
@@ -96,7 +96,7 @@ class QuizzesController < ApplicationController
 
   def reset_quiz
     @source_tag = 'ai_assistant'
-    @entries = @journal.entries.order(:id)
+    @entries = @journal.entries.ordered
     destroy_all_unfinished_quizzes!
 
     respond_to do |format|
@@ -106,7 +106,7 @@ class QuizzesController < ApplicationController
 
   def close_quiz
     @source_tag = 'ai_assistant'
-    @entries = @journal.entries.order(:id)
+    @entries = @journal.entries.ordered
 
     respond_to do |format|
       format.turbo_stream
@@ -115,7 +115,7 @@ class QuizzesController < ApplicationController
 
   def destroy
     @source_tag = "ai_assistant"
-    @entries = @journal.entries.order(:id)
+    @entries = @journal.entries.ordered
     queries = [ @quiz.ai_query, @quiz.grading_ai_query ].compact.uniq
     @quiz.destroy!
     queries.each(&:destroy!)
