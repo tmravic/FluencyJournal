@@ -2,7 +2,7 @@ class FollowupTemplatePromptsController < ApplicationController
   include TemplatePromptConcern
 
   def index
-    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user, include_due_notes_template: false)
+    @followup_template_prompts = deletable_template_options(Current.user)
   end
 
   def cancel
@@ -15,8 +15,7 @@ class FollowupTemplatePromptsController < ApplicationController
   end
 
   def destroy_selected
-    selected = params.dig(:prompt_template).to_s.strip
-    prompt = FollowupTemplatePrompt.find_by(base_content: selected)
+    prompt = FollowupTemplatePrompt.by_user(Current.user).find_by(id: params[:prompt_template])
 
     if prompt&.destroy
       notice = t('prompt_templates.deleted')

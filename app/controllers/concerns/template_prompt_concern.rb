@@ -14,6 +14,12 @@ module TemplatePromptConcern
     db_templates
   end
 
+  # Delete form options. The followup picker still uses the text, because that
+  # text is copied into the question field.
+  def deletable_template_options(user)
+    FollowupTemplatePrompt.by_user(user).pluck(:base_content, :id)
+  end
+
   def expand_due_notes_prompt(base_content, user)
     return unless due_notes_prompt_selected?(base_content)
 
