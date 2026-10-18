@@ -41,7 +41,7 @@ class EntriesController < ApplicationController
 
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to journal_path(@journal), notice: t("entry.created") }
+        format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.created") }
         format.json { render :show, status: :created, location: @entry }
         format.turbo_stream { flash.now[:notice] = t("entry.created") }
       else
@@ -56,7 +56,7 @@ class EntriesController < ApplicationController
     @source_tag = "ai_assistant"
     respond_to do |format|
       if @entry.update(entry_params)
-        format.html { redirect_to journal_path(@journal), notice: t("entry.updated") }
+        format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.updated") }
         format.json { render :show, status: :ok, location: @entry }
         format.turbo_stream { flash.now[:notice] = t("entry.updated") }
       else

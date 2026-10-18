@@ -80,7 +80,7 @@ class NotesController < ApplicationController
     respond_to do |format|
       if @note.save
         @ai_output.update(made_note: true) if note_made_automatically?
-        format.html { redirect_to note_path(@note), notice: t("note.note_added") }
+        format.html { redirect_to note_path(@note), status: :see_other, notice: t("note.note_added") }
         format.turbo_stream do
           flash.now[:notice] = t("note.note_added")
           render "notes/create", locals: {
@@ -111,7 +111,7 @@ class NotesController < ApplicationController
     update_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:update_from_todays_notes])
     respond_to do |format|
       if @note.update(note_params)
-        format.html { redirect_to journals_path, notice: t("note.updated") }
+        format.html { redirect_to journals_path, status: :see_other, notice: t("note.updated") }
         format.turbo_stream do
           flash.now[:notice] = t("note.updated")
           if update_from_todays_notes
@@ -154,7 +154,7 @@ class NotesController < ApplicationController
       @due_today = Current.user&.notes.next_to_study.count
       @todays_notes_empty = @due_today.to_i.zero?
       respond_to do |format|
-        format.html { redirect_to note_path(@note), notice: notice }
+        format.html { redirect_to note_path(@note), status: :see_other, notice: notice }
         format.turbo_stream do
           flash.now[:notice] = notice
         end

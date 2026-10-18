@@ -28,7 +28,7 @@ class QuizzesController < ApplicationController
       set_answered_status_in_session
 
       respond_to do |format|
-        format.html { render :prepare_quiz, notice: @ai_query_id }
+        format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("quiz.preparing") }
         format.turbo_stream
       end
     end

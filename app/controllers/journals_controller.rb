@@ -65,7 +65,7 @@ class JournalsController < ApplicationController
     respond_to do |format|
       if @journal.save
         # flash[:notice] = "..."
-        format.html { redirect_to journal_path(@journal), notice: t("journal.created") }
+        format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("journal.created") }
         format.json { render :show, status: :created, location: @journal }
         format.turbo_stream { flash.now[:notice] = t("journal.created") }
       else
@@ -80,7 +80,7 @@ class JournalsController < ApplicationController
     respond_to do |format|
       if @journal.update(journal_params)
         # flash[:notice] = "..."
-        format.html { redirect_to journals_path, notice: t("journal.updated") }
+        format.html { redirect_to journals_path, status: :see_other, notice: t("journal.updated") }
         format.json { render :show, status: :ok, location: @journal }
         format.turbo_stream { flash.now[:notice] = t("journal.updated") }
       else
@@ -132,7 +132,7 @@ class JournalsController < ApplicationController
       # All Journals still lists this journal, so it must not get today's empty state.
       @show_todays_journals_empty_state = @from_all_or_todays != "all" && @due_today.zero?
       respond_to do |format|
-        format.html { redirect_to journal_path(@journal), notice: notice }
+        format.html { redirect_to journal_path(@journal), status: :see_other, notice: notice }
         format.turbo_stream do
           flash.now[:notice] = notice
         end

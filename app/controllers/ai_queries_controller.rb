@@ -37,7 +37,7 @@ class AiQueriesController < ApplicationController
       AiRequestJob.perform_later(@journal, entry_prompt)
 
       respond_to do |format|
-        format.html { redirect_to journals_path, notice: t("ai_query.request_sent") }
+        format.html { redirect_to journals_path, status: :see_other, notice: t("ai_query.request_sent") }
         format.turbo_stream
       end
     end
