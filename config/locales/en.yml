@@ -205,6 +205,7 @@ en:
     back_to_followups: "Back to followups"
     invalid_origin: "Invalid followup origin."
     prepare_error: "Something went wrong preparing the followup. Please try again."
+    delete_failed: "The followup could not be deleted. Please try again."
     form:
       save_as_template: "Save prompt?"
   ai_query:

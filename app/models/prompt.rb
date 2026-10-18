@@ -8,6 +8,21 @@ class Prompt < ApplicationRecord
   has_one :ai_query, dependent: :destroy
   delegate :user, to: :ai_query, allow_nil: true
   has_one :followup, dependent: :destroy
+
+  # The prompt owns the followup and the answer query. A child calls this
+  # after its own row is gone. Skip when this prompt is already destroying
+  # that child, so the two deletes do not call each other.
+  def self.destroy_from(child)
+    return if child.destroyed_by_association&.active_record == self
+
+    prompt = child.prompt
+    return if prompt.nil? || prompt.destroyed?
+
+    prompt.association(:followup).reset
+    prompt.association(:ai_query).reset
+    prompt.destroy!
+  end
+
   belongs_to :followup_template_prompt, optional: true
   accepts_nested_attributes_for :followup
 

@@ -205,6 +205,7 @@ ja:
     back_to_followups: "追加質問に戻る"
     invalid_origin: "追加質問の参照元が無効です。"
     prepare_error: "追加質問の準備中に問題が発生しました。もう一度お試しください。"
+    delete_failed: "追加質問を削除できませんでした。もう一度お試しください。"
     form:
       save_as_template: "プロンプトを保存？"
   ai_query:

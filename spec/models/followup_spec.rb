@@ -74,6 +74,104 @@ RSpec.describe Followup, type: :model do
     expect(entry.reload.followups).to contain_exactly(followup)
   end
 
+  def answer_for(prompt, journal)
+    query = AiQuery.create!(raw_response: "{}", prompt: prompt, journal: journal)
+    query.ai_outputs.create!(identifier: "1", content: "カード", made_note: false, role: :line)
+    query
+  end
+
+  it "destroys the prompt, the answer, and its output with the followup" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    entry = journal.entries.create!(content: "一行")
+    prompt = create_prompt
+    followup = create_followup(entry, prompt)
+    answer = answer_for(prompt, journal)
+
+    expect { followup.destroy! }
+      .to change(described_class, :count).by(-1)
+      .and change(Prompt, :count).by(-1)
+      .and change(AiQuery, :count).by(-1)
+      .and change(AiOutput, :count).by(-1)
+
+    expect(described_class.find_by(id: followup.id)).to be_nil
+    expect(Prompt.find_by(id: prompt.id)).to be_nil
+    expect(AiQuery.find_by(id: answer.id)).to be_nil
+  end
+
+  it "destroys the followup when the prompt is destroyed" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    entry = journal.entries.create!(content: "一行")
+    prompt = create_prompt
+    followup = create_followup(entry, prompt)
+    answer_for(prompt, journal)
+
+    expect { prompt.destroy! }
+      .to change(described_class, :count).by(-1)
+      .and change(AiQuery, :count).by(-1)
+      .and change(AiOutput, :count).by(-1)
+
+    expect(described_class.find_by(id: followup.id)).to be_nil
+  end
+
+  it "destroys the followup when the answer query is destroyed" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    entry = journal.entries.create!(content: "一行")
+    prompt = create_prompt
+    followup = create_followup(entry, prompt)
+    answer = answer_for(prompt, journal)
+
+    expect { answer.destroy! }
+      .to change(described_class, :count).by(-1)
+      .and change(Prompt, :count).by(-1)
+
+    expect(described_class.find_by(id: followup.id)).to be_nil
+  end
+
+  it "destroys the prompt when the journal followup origin is destroyed" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    origin = JournalFollowup.create!(journal: journal)
+    prompt = create_prompt
+    create_followup(origin, prompt)
+    answer_for(prompt, journal)
+
+    expect { origin.destroy! }
+      .to change(described_class, :count).by(-1)
+      .and change(Prompt, :count).by(-1)
+      .and change(AiQuery, :count).by(-1)
+  end
+
+  it "destroys the followup and its prompt when the journal is destroyed" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    entry = journal.entries.create!(content: "一行")
+    prompt = create_prompt
+    create_followup(entry, prompt)
+    answer_for(prompt, journal)
+
+    expect { journal.destroy! }
+      .to change(described_class, :count).by(-1)
+      .and change(Prompt, :count).by(-1)
+      .and change(AiQuery, :count).by(-1)
+  end
+
+  it "keeps the followup when the prompt delete fails" do
+    user = create_user
+    journal = Journal.create!(title: "Journal", user: user, group: user.group, last_interval: 1)
+    entry = journal.entries.create!(content: "一行")
+    prompt = create_prompt
+    followup = create_followup(entry, prompt)
+    answer_for(prompt, journal)
+    allow_any_instance_of(Prompt).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed)
+
+    expect(followup.destroy).to be(false)
+    expect(described_class.find_by(id: followup.id)).to eq(followup)
+    expect(Prompt.find_by(id: prompt.id)).to eq(prompt)
+  end
+
   it "has dropped the join tables" do
     tables = ActiveRecord::Base.connection.tables
 

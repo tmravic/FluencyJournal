@@ -4,13 +4,7 @@ class Followup < ApplicationRecord
 
   validates :source_tag, presence: true # string
 
-  before_destroy -> {
-    query = prompt&.ai_query
-    return unless query
-
-    query.ai_outputs.each { |ai_output| ai_output.destroy! }
-    query.destroy!
-  }
+  after_destroy -> { Prompt.destroy_from(self) }
 
   def user
     if origin.is_a?(Note)

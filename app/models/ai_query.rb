@@ -10,9 +10,7 @@ class AiQuery < ApplicationRecord
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true
   validates :raw_response, presence: true
 
-  after_destroy -> {
-    prompt.destroy!
-  }
+  after_destroy -> { Prompt.destroy_from(self) }
 
   def abbr(user)
     Prompt.abbr(user)

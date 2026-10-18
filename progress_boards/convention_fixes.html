@@ -74,13 +74,6 @@
   <h2>Hard</h2>
 
   <article>
-    <h3><span class="tag hard">Hard</span>35. Break the followup destroy cycle</h3>
-    <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/ai_query.rb</span>, <span class="path">app/models/prompt.rb</span>, <span class="path">app/controllers/followups_controller.rb</span></p>
-    <p><code>Followup</code>’s <code>before_destroy</code> destroys each linked <code>AiQuery</code> and its outputs. <code>AiQuery</code>’s <code>after_destroy</code> calls <code>prompt.destroy!</code>. <code>Prompt</code> has both <code>has_one :ai_query, dependent: :destroy</code> and <code>has_one :followup, dependent: :destroy</code>, so destroying the prompt tries to destroy the followup that is already inside <code>before_destroy</code>. <code>followups.prompt_id</code> is also a foreign key, so the prompt row cannot go first. The controller calls <code>destroy</code> and ignores a false return. The Turbo stream can remove the followup from the page while the database rolls the delete back.</p>
-    <p>Pick one owner. Outputs already use <code>dependent: :destroy</code> on the query. Destroy the followup, then the prompt, in an order the foreign key allows. Delete the <code>before_destroy</code> / <code>after_destroy</code> pair that re-enters the same records. Check the return value before rendering the stream that removes the node.</p>
-  </article>
-
-  <article>
     <h3><span class="tag hard">Hard</span>36. Stop grading from stealing <code>ai_query_id</code></h3>
     <p><span class="path">app/jobs/grade_quiz_job.rb</span>, <span class="path">app/models/ai_query.rb</span>, <span class="path">app/models/quiz.rb</span>, <span class="path">app/controllers/quizzes_controller.rb</span> <code>show</code></p>
     <p><code>quiz.update(grading_ai_query_id: ai_query_id)</code> is the right write. The next line, <code>quiz.grading_ai_query.quizzes.push(quiz)</code>, uses <code>has_many :quizzes</code>, and that association always sets <code>ai_query_id</code>. The push saves the quiz again with the grading query as its owner, so the quiz leaves the query that holds the questions. <code>dependent: :destroy</code> on <code>AiQuery#quizzes</code> then ties the quiz’s lifetime to the grading query. <code>QuizzesController#show</code> reads <code>@quiz.ai_query</code> for the per-entry feedback, so the show page currently depends on this overwrite.</p>

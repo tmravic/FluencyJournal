@@ -201,11 +201,17 @@ class FollowupsController < ApplicationController
     else
       root_path
     end
-    @followup.destroy
 
-    respond_to do |format|
-      format.html { redirect_to return_to, status: :see_other }
-      format.turbo_stream
+    if @followup.destroy
+      respond_to do |format|
+        format.html { redirect_to return_to, status: :see_other }
+        format.turbo_stream
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to return_to, alert: t("followup.delete_failed") }
+        format.turbo_stream { head :unprocessable_entity }
+      end
     end
   end
 
