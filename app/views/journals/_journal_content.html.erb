@@ -49,7 +49,7 @@
 
   <%= turbo_frame_tag "compare" %>
 
-  <div style="display:flex;justify-content:space-between;align-items:center;">
+  <div class="journal__date journal__date--split">
 
     <span class="journal__date">
       <%= t("journal.first_written") %>: <%= l(@journal.created_at.to_date) %>
@@ -68,19 +68,21 @@
     </span>
 
   </div>
-  <%= render 'entries/entries_frame' %>
+  <div class="stack">
+    <%= render 'entries/entries_frame' %>
 
-  <%= turbo_frame_tag Entry.new do %>
-    <%= render 'entries/empty_state' unless @entries.present? %>
-  <% end %>
-  <hr style="margin: 10px 0;">
-  <%= turbo_frame_tag "previous_queries" do %>
-    <% if @journal.ai_queries.any? %>
-      <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
+    <%= turbo_frame_tag Entry.new do %>
+      <%= render 'entries/empty_state' unless @entries.present? %>
     <% end %>
-  <% end %>
-  <hr style="margin: 10px 0;">
-  <%= turbo_frame_tag "ai_assistant" %>
-  <%= turbo_frame_tag "followup_output_ai_assistant" %>
+    <hr>
+    <%= turbo_frame_tag "previous_queries" do %>
+      <% if @journal.ai_queries.any? %>
+        <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
+      <% end %>
+    <% end %>
+    <hr>
+    <%= turbo_frame_tag "ai_assistant" %>
+    <%= turbo_frame_tag "followup_output_ai_assistant" %>
+  </div>
   <br>
 <% end %>

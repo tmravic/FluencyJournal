@@ -1,10 +1,10 @@
-<%= turbo_frame_tag "entries" do %>
-  <h2 style="margin: 10px 0px;">
+<%= turbo_frame_tag "entries", class: "stack" do %>
+  <h2>
     <%= @journal.title %>
   </h2>
 
   <% @entries.each do |entry| %>
-    <p style="margin: 10px 0px;">
+    <p>
       <%= simple_format(entry.content) %>
     </p>
   <% end %>

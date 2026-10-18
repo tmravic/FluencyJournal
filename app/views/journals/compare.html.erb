@@ -41,13 +41,13 @@
   <% if @compared_journals.present? %>
     <div class="compare-results">
       <% @compared_journals.each do |journal| %>
-        <div class="compare-results__journal">
-          <h2 style="margin: 10px 0;">
+        <div class="compare-results__journal stack">
+          <h2>
             <%= journal.title %>
           </h2>
 
           <% journal.entries.ordered.each do |entry| %>
-            <p style="margin: 10px 0;">
+            <p>
               <%= simple_format(entry.content) %>
             </p>
           <% end %>

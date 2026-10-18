@@ -71,15 +71,6 @@
   <h1>Convention fixes</h1>
   <p class="lede">Ordered from the smallest edit to the change that touches the most behavior. Each item says where it lives, what convention it breaks, and the shape of the fix. Sass and BEM sit in this same list. Gem replacements are at the end.</p>
 
-  <h2>Medium</h2>
-
-  <article>
-    <h3><span class="tag medium">Medium</span>29. Replace the one-off inline styles</h3>
-    <p><span class="path">app/views/journals/_journal_content.html.erb</span>, <span class="path">reading_mode.html.erb</span>, <span class="path">compare.html.erb</span>, <span class="path">app/views/pages/home.html.erb</span>, scaffold <code>style="color: green"</code> notices on entry and note show pages</p>
-    <p>These repeat the same margin and flex rules the spacing tokens and <code>.flash</code> already express. Inline style skips the dark theme and the type scale.</p>
-    <p>Use <code>.journal__date--split</code> (it already exists), a small <code>.stack</code> utility or a block modifier for the vertical rhythm, and the flash partial for notices.</p>
-  </article>
-
   <h2>Hard</h2>
 
   <article>
