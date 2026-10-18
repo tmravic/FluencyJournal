@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>39. Do not nest workspace or the template picker</h3>
-    <p><span class="path">app/views/journals/create.turbo_stream.erb</span>, <span class="path">app/views/journals/_journal_content.html.erb</span>, <span class="path">app/views/followup_template_prompts/destroy_selected.turbo_stream.erb</span>, <span class="path">app/views/followup_template_prompts/_template_select.html.erb</span></p>
-    <p><code>turbo_stream.update "workspace"</code> fills the empty index frame with a partial that opens <code>turbo_frame_tag "workspace"</code> again. The template-picker destroy stream does the same to <code>template_select</code>. Cancel already uses <code>turbo_stream.replace</code> for that id. Item 19 fixed entries, the quiz-entry frame, and the note due-date frame. These two streams were left as updates.</p>
-    <p>Replace the frame, or update it with the inner markup only. The id stays <code>workspace</code> and <code>template_select</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>40. Allow a followup with no origin</h3>
     <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/entry.rb</span>, <span class="path">app/models/note.rb</span>, <span class="path">app/models/ai_output.rb</span>, <span class="path">app/models/ai_query.rb</span></p>
     <p><code>belongs_to :origin</code> is required. Entry, note, output, and query followups use <code>dependent: :nullify</code>. Nullify clears <code>origin_type</code> and <code>origin_id</code> with <code>update_all</code>, which skips validations. The columns are already nullable. The next save then fails with “Origin must exist”. <code>Followup#user</code> already has a branch for a missing origin.</p>

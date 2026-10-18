@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "turbo frame ids", type: :view do
-  def stream_template(html, target)
-    html[/action="update" target="#{Regexp.escape(target)}"><template>(.*?)<\/template>/m, 1].to_s
+  def stream_template(html, target, action = "update")
+    html[/action="#{Regexp.escape(action)}" target="#{Regexp.escape(target)}"><template>(.*?)<\/template>/m, 1].to_s
   end
 
   def journal_with_entry
@@ -91,5 +91,34 @@ RSpec.describe "turbo frame ids", type: :view do
     body = stream_template(rendered, frame_id)
     expect(body).to include(change_due_date_note_path(note))
     expect(body).not_to include("turbo-frame")
+  end
+
+  it "replaces #workspace instead of nesting that frame" do
+    journal = journal_with_entry
+    assign(:journal, journal)
+    assign(:from_all_or_todays, "todays")
+    assign(:entries, journal.entries.order(:id))
+    assign(:reading_mode, false)
+    assign(:source_tag, "ai_assistant")
+
+    render template: "journals/create", formats: [:turbo_stream]
+
+    expect(rendered).to include('action="replace" target="workspace"')
+    expect(rendered).not_to include('action="update" target="workspace"')
+    body = stream_template(rendered, "workspace", "replace")
+    expect(body.scan('id="workspace"').size).to eq(1)
+  end
+
+  it "replaces #template_select instead of nesting that frame" do
+    assign(:followup_template_prompts, [ "A saved prompt" ])
+    # The stream names the partial the way the template-prompts controller does.
+    controller.lookup_context.prefixes.unshift("followup_template_prompts")
+
+    render template: "followup_template_prompts/destroy_selected", formats: [:turbo_stream]
+
+    expect(rendered).to include('action="replace" target="template_select"')
+    expect(rendered).not_to include('action="update" target="template_select"')
+    body = stream_template(rendered, "template_select", "replace")
+    expect(body.scan('id="template_select"').size).to eq(1)
   end
 end
