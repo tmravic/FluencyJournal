@@ -11,7 +11,7 @@ class PrepareQuizJob < ApplicationJob
       instructions: prepare_quiz_prompt.sent_role_prompt,
       user_messages: [
         prepare_quiz_prompt.raw_prompt,
-        prepare_quiz_prompt.response_format(journal)
+        prepare_quiz_prompt.response_format(user, journal, nil)
       ]
     )
 

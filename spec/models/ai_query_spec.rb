@@ -213,5 +213,21 @@ RSpec.describe AiQuery, type: :model do
 
       expect(query.change_explanation("entry_", "1", "en")).to eq("Left blank.")
     end
+
+    it "reads a stored explanation_jp when the language code is ja" do
+      query = described_class.new(
+        raw_response: '{"change_1":{"content":"a → b","explanation_jp":"古い説明"}}'
+      )
+
+      expect(query.change_explanation("change_", "1", "ja")).to eq("古い説明")
+    end
+
+    it "prefers explanation_ja over a stored explanation_jp" do
+      query = described_class.new(
+        raw_response: '{"change_1":{"explanation_ja":"新しい説明","explanation_jp":"古い説明"}}'
+      )
+
+      expect(query.change_explanation("change_", "1", "ja")).to eq("新しい説明")
+    end
   end
 end

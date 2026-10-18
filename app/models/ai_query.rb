@@ -1,6 +1,4 @@
 class AiQuery < ApplicationRecord
-  LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
-
   belongs_to :journal, optional: true
   belongs_to :prompt
   delegate :user, to: :journal, allow_nil: true
@@ -18,8 +16,7 @@ class AiQuery < ApplicationRecord
   }
 
   def abbr(user)
-    # This same thing exists on Prompt
-    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, "English")
+    Prompt.abbr(user)
   end
 
   def find_ai_output_by_identifier(identifier)
@@ -148,7 +145,7 @@ class AiQuery < ApplicationRecord
     parsed = parsed_response
     return error_message unless parsed.is_a?(Hash)
 
-    explanation = parsed.dig("#{change_keyword}#{num}", "explanation_#{abbr}")
+    explanation = explanation_value(parsed, "#{change_keyword}#{num}", abbr)
 
     if explanation.nil?
       explanation = parsed.dig("#{change_keyword}#{num}")
@@ -156,7 +153,7 @@ class AiQuery < ApplicationRecord
 
     if explanation.nil?
       backup_key = parsed.keys[num.to_i - 1]
-      explanation = parsed.dig(backup_key, "explanation_#{abbr}")
+      explanation = explanation_value(parsed, backup_key, abbr)
     end
 
     return explanation if explanation.is_a?(String)
@@ -202,6 +199,16 @@ class AiQuery < ApplicationRecord
   end
 
   private
+
+  def explanation_value(parsed, key, abbr)
+    return if key.nil?
+
+    value = parsed.dig(key, "explanation_#{abbr}")
+    return value unless value.nil?
+    return unless abbr == "ja"
+
+    parsed.dig(key, "explanation_jp")
+  end
 
   def parse_into_object
     parsed = parse_raw_response

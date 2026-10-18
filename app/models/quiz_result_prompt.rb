@@ -1,5 +1,5 @@
 class QuizResultPrompt < Prompt
-  def role_prompt(user)
+  def role_prompt(user, _journal)
     "You are a helpful translator and #{user.learning_language} teacher who will check the answers of my quiz. " +
       "The quiz was based on a journal entry originally written in #{user.learning_language}, where each part " +
       "was translated into #{user.original_language} to create quiz questions, then I tried to rewrite each part " +
@@ -17,7 +17,7 @@ class QuizResultPrompt < Prompt
     "entry_"
   end
 
-  def response_format(journal, quiz, user)
+  def response_format(user, journal, quiz)
     "Include json marker and return json in this exact format, " +
       "where each line in #{journal.full_journal}: corresponds to a line in #{quiz.responses}: " +
       "{ { #{self.change_keyword}1: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +

@@ -1,5 +1,6 @@
 class XAiTtsService
-  LANGUAGE_CODES = { "English" => "en", "Japanese" => "ja" }.freeze
+  # Language codes live on Prompt::LANGUAGE_ABBREVIATIONS. Callers pass
+  # "auto" when the learning language is not in that map.
   DEFAULT_VOICE = "ara"
 
   class TtsError < StandardError; end

@@ -12,7 +12,7 @@ class XAiService
     result = XAiChat.complete(
       model: @prompt.ai_model,
       instructions: @prompt.role_prompt(@user, @journal),
-      user_messages: [@prompt.raw_prompt, @prompt.response_format(@user)]
+      user_messages: [@prompt.raw_prompt, @prompt.response_format(@user, @journal, nil)]
     )
     result.parsed_object
     ai_query = build_ai_query(result.raw_response, result.token_data, @prompt, @journal)

@@ -74,13 +74,6 @@
   <h2>Hard</h2>
 
   <article>
-    <h3><span class="tag hard">Hard</span>33. Make Prompt subclasses substitutable</h3>
-    <p><span class="path">app/models/prompt.rb</span> and the subclasses under <span class="path">app/models/</span>, <span class="path">app/services/x_ai_service.rb</span></p>
-    <p>Single-table inheritance only pays off when every subclass answers the same messages. Here <code>role_prompt</code> and <code>response_format</code> take <code>(user)</code>, <code>(user, journal)</code>, <code>(journal)</code>, or <code>(journal, quiz, user)</code> depending on the class. <code>XAiService</code> always calls <code>role_prompt(user, journal)</code> and <code>response_format(user)</code>. <code>base_content</code> means journal text, a followup question, or reference text. <code>Prompt#original_language</code> returns that column, not a language name, and it collides with the same method on <code>User</code>. <code>abbr</code> is copied on <code>Prompt</code> and <code>AiQuery</code>, and an unknown language falls back to the word <code>"English"</code> rather than <code>"en"</code>. TTS uses <code>"ja"</code>; the models use <code>"jp"</code>.</p>
-    <p>Give every prompt the same two methods with the same arguments. Keep language names on <code>User</code>. One abbreviation map should feed both the chat client and TTS.</p>
-  </article>
-
-  <article>
     <h3><span class="tag hard">Hard</span>34. Store a followup link once</h3>
     <p><span class="path">app/models/followup.rb</span>, <span class="path">app/models/entry.rb</span>, <span class="path">note.rb</span>, <span class="path">ai_output.rb</span>, <span class="path">ai_query.rb</span></p>
     <p><code>Followup</code> already <code>belongs_to :origin, polymorphic: true</code>. Entry, Note, AiOutput, and AiQuery also keep a HABTM to followups, and the service pushes the followup onto both. <code>origin_followups</code> is a third name for the polymorphic side. HABTM cannot <code>dependent: :destroy</code> the other side, which is why <code>before_destroy</code> walks the joins by hand. <code>dependent: :nullify</code> clears <code>origin_id</code> and leaves the join rows.</p>

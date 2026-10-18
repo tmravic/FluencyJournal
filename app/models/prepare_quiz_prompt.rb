@@ -1,5 +1,5 @@
 class PrepareQuizPrompt < Prompt
-  def role_prompt(user)
+  def role_prompt(user, _journal)
     "You are a helpful translator whose job it is to read my journal and translate EACH ENTRY into " +
       "#{user.original_language}, keeping in mind the full content of the journal. " +
       "The entries will be provided to you as a JSON array (and also shown below with explicit labels). " +
@@ -9,7 +9,7 @@ class PrepareQuizPrompt < Prompt
       native_japanese_phrasing(user)
   end
 
-  def response_format(journal)
+  def response_format(_user, journal, _quiz)
     n = journal.full_journal.count
     learning_language = journal.user.learning_language
     entries_block = journal.full_journal.each_with_index.map do |entry, i|

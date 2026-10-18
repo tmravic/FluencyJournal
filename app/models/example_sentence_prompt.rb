@@ -1,7 +1,7 @@
 class ExampleSentencePrompt < Prompt
   # Save whatever context the user asked for in their example sentence
   # Use this to quickly make followups
-  def role_prompt(user, journal)
+  def role_prompt(user, _journal)
     "You are a helpful #{user.learning_language} teacher whose job it is to help students who are writing " +
       "journal entries in #{user.learning_language} as language learning practice. The student will submit " +
       "to you parts of their journal, notes, or corrections which may contain both #{user.learning_language} " +
@@ -15,7 +15,7 @@ class ExampleSentencePrompt < Prompt
     "example_"
   end
 
-  def response_format(user)
+  def response_format(user, _journal, _quiz)
     "Include json marker and return json in this exact format, except omit reading if " +
     "the language being learned doesn't use kanji or anything similar: " +
     "{ { #{self.change_keyword}1: { content: { reading: '( xx.xx )', " +

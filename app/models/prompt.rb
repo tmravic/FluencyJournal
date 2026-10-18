@@ -1,7 +1,9 @@
 class Prompt < ApplicationRecord
   include NativeJapaneseGuidance
 
-  LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "jp" }
+  # Chat explanation keys and xAI text-to-speech share these codes.
+  # Older cards stored explanation_jp; AiQuery still reads that key.
+  LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "ja" }.freeze
 
   has_one :ai_query, dependent: :destroy
   delegate :user, to: :ai_query, allow_nil: true
@@ -19,15 +21,23 @@ class Prompt < ApplicationRecord
   # only their parent class is declared a resource.
   # You will have to specify :url, and :scope (the model name) explicitly.
 
+  def self.language_code(language, default: "en")
+    LANGUAGE_ABBREVIATIONS.fetch(language.to_s, default)
+  end
+
+  def self.abbr(user)
+    language_code(user&.original_language)
+  end
+
   def abbr(user)
-    LANGUAGE_ABBREVIATIONS.fetch(user.original_language, "English")
+    self.class.abbr(user)
   end
 
-  def original_language
-    base_content
+  def role_prompt(_user, _journal)
+    raise NotImplementedError, "#{self.class}#role_prompt"
   end
 
-  def learning_language
-    user_generated_content
+  def response_format(_user, _journal, _quiz)
+    raise NotImplementedError, "#{self.class}#response_format"
   end
 end

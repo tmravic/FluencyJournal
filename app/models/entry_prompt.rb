@@ -21,7 +21,7 @@ class EntryPrompt < Prompt
     "change_"
   end
 
-  def response_format(user)
+  def response_format(user, _journal, _quiz)
     "Include json marker and return json in this exact format (matching the number of changes/corrections and including the full corrected_text in #{user.learning_language}): " +
       "{ { #{self.change_keyword}1: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
       "#{self.change_keyword}2: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
@@ -39,11 +39,4 @@ class EntryPrompt < Prompt
     # }
   end
 
-  def original_language
-    base_content
-  end
-
-  def learning_language
-    user_generated_content
-  end
 end

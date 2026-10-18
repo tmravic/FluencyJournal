@@ -3,7 +3,7 @@ class AiOutputsController < ApplicationController
 
   # GET /ai_outputs/:id/speak
   def speak
-    language = XAiTtsService::LANGUAGE_CODES.fetch(Current.user.learning_language, "auto")
+    language = Prompt.language_code(Current.user.learning_language, default: "auto")
 
     audio = XAiTtsService.new(
       api_key: @api_key,

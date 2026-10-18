@@ -32,7 +32,7 @@ class AiOutput < ApplicationRecord
     corrected_sentence = ai_query.corrected_text if parsed.key?("corrected_text")
     assessment = ai_query.assessment if parsed.key?("assessment")
     abbr = ai_query.abbr(user) if user
-    learning_language = ai_query.prompt&.learning_language
+    learning_language = ai_query.prompt&.user_generated_content
 
     if corrected_text?
       assemble_corrected_text(corrected_sentence, learning_language)

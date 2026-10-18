@@ -71,7 +71,7 @@ module ApplicationHelper
   end
 
   def get_ai_output_correction_variables(ai_query)
-    learning_language = ai_query.prompt.learning_language
+    learning_language = ai_query.prompt.user_generated_content
     corrected_sentence = ai_query.corrected_text
 
     [ learning_language, corrected_sentence ]

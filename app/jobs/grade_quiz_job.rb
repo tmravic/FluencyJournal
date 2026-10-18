@@ -11,7 +11,7 @@ class GradeQuizJob < ApplicationJob
       instructions: quiz_result_prompt.sent_role_prompt,
       user_messages: [
         quiz_result_prompt.raw_prompt,
-        quiz_result_prompt.response_format(journal, quiz, user)
+        quiz_result_prompt.response_format(user, journal, quiz)
       ]
     )
 

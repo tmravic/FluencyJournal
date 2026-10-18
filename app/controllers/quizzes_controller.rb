@@ -18,7 +18,7 @@ class QuizzesController < ApplicationController
       user_generated_content: @journal.full_journal.join
     )
 
-    prepare_quiz_prompt.sent_role_prompt = prepare_quiz_prompt.role_prompt(@journal.user)
+    prepare_quiz_prompt.sent_role_prompt = prepare_quiz_prompt.role_prompt(@journal.user, @journal)
 
     if prepare_quiz_prompt.save!
       PrepareQuizJob.perform_later(@journal, prepare_quiz_prompt)
@@ -72,7 +72,7 @@ class QuizzesController < ApplicationController
       base_content: combine_original_and_translation(original_journal, quiz_entries),
       user_generated_content: user_translation.join
     )
-    quiz_result_prompt.sent_role_prompt = quiz_result_prompt.role_prompt(@journal.user)
+    quiz_result_prompt.sent_role_prompt = quiz_result_prompt.role_prompt(@journal.user, @journal)
 
     if quiz_result_prompt.save
       @uuid = quiz_result_prompt.uuid
