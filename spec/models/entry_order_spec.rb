@@ -42,9 +42,66 @@ RSpec.describe "entry position" do
     journal = journal_with_user
     journal.entries.create!(content: "one")
     second = journal.entries.create!(content: "two")
-    output = instance_double(AiOutput, identifier: "2")
+    output = instance_double(AiOutput, line_number: 2)
     helper = Object.new.extend(QuizAnswerHelper)
 
     expect(helper.quiz_answer_entry(journal, output)).to eq(second)
+    expect(journal.entry_at(2)).to eq(second)
+  end
+
+  it "lists quiz responses in entry position order" do
+    journal = journal_with_user
+    journal.entries.create!(content: "one")
+    journal.entries.create!(content: "two")
+    prompt = Prompt.create!(
+      raw_prompt: "grade",
+      sent_role_prompt: "role",
+      ai_model: "grok-4-fast-non-reasoning",
+      uuid: SecureRandom.uuid
+    )
+    query = AiQuery.create!(
+      raw_response: "{}",
+      prompt: prompt,
+      journal: journal,
+      prompt_tokens: 1,
+      completion_tokens: 1,
+      total_tokens: 2
+    )
+    second = query.ai_outputs.create!(identifier: "2", content: "second question", made_note: false)
+    first = query.ai_outputs.create!(identifier: "1", content: "first question", made_note: false)
+    quiz = Quiz.create!(ai_query: query, journal: journal)
+    quiz.quiz_answers.create!(ai_output: second, user_response: "answer two")
+    quiz.quiz_answers.create!(ai_output: first, user_response: "answer one")
+
+    expect(quiz.responses).to eq([ "answer one", "answer two" ])
+    expect(second.reload).to be_line
+    expect(second.line_number).to eq(2)
+  end
+
+  it "treats corrected text and assessment as roles, not line numbers" do
+    journal = journal_with_user
+    prompt = Prompt.create!(
+      raw_prompt: "grade",
+      sent_role_prompt: "role",
+      ai_model: "grok-4-fast-non-reasoning",
+      uuid: SecureRandom.uuid
+    )
+    query = AiQuery.create!(
+      raw_response: "{}",
+      prompt: prompt,
+      journal: journal,
+      prompt_tokens: 1,
+      completion_tokens: 1,
+      total_tokens: 2
+    )
+    corrected = query.ai_outputs.create!(identifier: "corrected_text", content: "fixed", made_note: false)
+    assessment = query.ai_outputs.create!(identifier: "assessment", content: "overall", made_note: false)
+
+    expect(corrected).to be_corrected_text
+    expect(assessment).to be_assessment
+    expect(corrected.line_number).to be_nil
+    expect(assessment.line_number).to be_nil
+    expect(query.ai_outputs.corrected_text).to contain_exactly(corrected)
+    expect(query.ai_outputs.assessment).to contain_exactly(assessment)
   end
 end

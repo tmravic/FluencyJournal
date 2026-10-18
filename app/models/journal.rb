@@ -42,6 +42,10 @@ class Journal < ApplicationRecord
   # The signed stream name is generated from the array returned by the lambda
   # that is the first argument of the broadcasts_to method: [journals.group, "journals"].
 
+  def entry_at(number)
+    entries.find_by(position: number.to_i)
+  end
+
   def full_journal
     entries.pluck(:content)
     # ["先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。",

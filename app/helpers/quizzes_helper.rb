@@ -4,7 +4,7 @@ module QuizzesHelper
   end
 
   def set_assessment_output(ai_query)
-    ai_query.find_ai_output_by_identifier("assessment") if ai_query
+    ai_query.ai_outputs.assessment.first if ai_query
   end
 
   def render_ai_query_entry_content(ai_query, identifier, entry_keyword, user, quiz, html: false)
@@ -25,7 +25,7 @@ module QuizzesHelper
 
     ai_query.ai_outputs
       .reject { |output| output == assessment_output }
-      .sort_by { |output| output.identifier.to_i }
+      .sort_by { |output| output.line_number.to_i }
       .map do |output|
         [
           "#{I18n.t("entry.entry", number: output.identifier)}:",

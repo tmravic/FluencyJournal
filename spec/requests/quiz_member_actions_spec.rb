@@ -95,6 +95,24 @@ RSpec.describe "Quiz member UI actions", type: :request do
     expect(response).to have_http_status(:not_found)
   end
 
+  it "shows the hint stored on the entry at that position" do
+    user, journal, quiz, output, = create_quiz
+    second = journal.entries.create!(content: "二行目")
+    second_output = quiz.ai_query.ai_outputs.create!(identifier: "2", content: "second", made_note: false)
+    quiz.quiz_hints.destroy_all
+    QuizHint.create!(quiz: quiz, entry: second, ai_query: quiz.ai_query, hint_content: "hint for line 2")
+    sign_in(user)
+
+    turbo_get show_hint_journal_quiz_path(journal, quiz, ai_output_id: second_output.id)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("hint for line 2")
+
+    turbo_get show_hint_journal_quiz_path(journal, quiz, ai_output_id: output.id)
+
+    expect(response).to have_http_status(:unprocessable_entity)
+  end
+
   it "returns 422 when this quiz has no hint for the entry" do
     user, journal, quiz, output, = create_quiz
     quiz.quiz_hints.destroy_all

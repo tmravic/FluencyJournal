@@ -74,13 +74,6 @@
   <h2>Hard</h2>
 
   <article>
-    <h3><span class="tag hard">Hard</span>32. Use one entry order</h3>
-    <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, <span class="path">app/models/ai_query.rb</span> hint creation, <span class="path">app/helpers/quiz_answer_helper.rb</span></p>
-    <p><code>full_journal</code>, hint rows, and <code>entry_number</code> now share <code>entries.position</code>. <code>entry_number</code> is that position. The quiz helper still runs <code>offset</code> per form. <code>Quiz#full_journal</code> is a third meaning: it plucks <code>quiz_answers.user_response</code>, while <code>Journal#full_journal</code> plucks entry text. <code>AiOutput#identifier</code> is also three kinds of value in one string: <code>"1"</code>, <code>"corrected_text"</code>, or <code>"assessment"</code>.</p>
-    <p>Rename <code>Quiz#full_journal</code> to something like <code>responses</code>. Split identifier into an enum, or at least stop overloading one column for a line number and a role. <code>NotesFollowup</code> expects a table named <code>notes_followups</code>; the HABTM table is <code>followups_notes</code>. Nothing in the app uses that model. Delete it or point it at the real table.</p>
-  </article>
-
-  <article>
     <h3><span class="tag hard">Hard</span>33. Make Prompt subclasses substitutable</h3>
     <p><span class="path">app/models/prompt.rb</span> and the subclasses under <span class="path">app/models/</span>, <span class="path">app/services/x_ai_service.rb</span></p>
     <p>Single-table inheritance only pays off when every subclass answers the same messages. Here <code>role_prompt</code> and <code>response_format</code> take <code>(user)</code>, <code>(user, journal)</code>, <code>(journal)</code>, or <code>(journal, quiz, user)</code> depending on the class. <code>XAiService</code> always calls <code>role_prompt(user, journal)</code> and <code>response_format(user)</code>. <code>base_content</code> means journal text, a followup question, or reference text. <code>Prompt#original_language</code> returns that column, not a language name, and it collides with the same method on <code>User</code>. <code>abbr</code> is copied on <code>Prompt</code> and <code>AiQuery</code>, and an unknown language falls back to the word <code>"English"</code> rather than <code>"en"</code>. TTS uses <code>"ja"</code>; the models use <code>"jp"</code>.</p>

@@ -10,7 +10,23 @@ class AiOutput < ApplicationRecord
   validates :content, presence: true # text
   validates :made_note, inclusion: { in: [ true, false ] }
 
+  # A line stores its entry position in identifier. corrected_text and
+  # assessment keep those identifier strings so existing frame ids stay put.
+  enum :role, {
+    line: "line",
+    corrected_text: "corrected_text",
+    assessment: "assessment"
+  }, default: "line", validate: true
+
+  before_validation :assign_role_from_identifier
+
+  def line_number
+    assign_role_from_identifier
+    identifier.to_i if line?
+  end
+
   def assemble_content(change_keyword, user)
+    assign_role_from_identifier
     parsed = ai_query.parsed_response
     parsed = {} unless parsed.is_a?(Hash)
     corrected_sentence = ai_query.corrected_text if parsed.key?("corrected_text")
@@ -18,10 +34,10 @@ class AiOutput < ApplicationRecord
     abbr = ai_query.abbr(user) if user
     learning_language = ai_query.prompt&.learning_language
 
-    if used_for_journal_corrected_text?
+    if corrected_text?
       assemble_corrected_text(corrected_sentence, learning_language)
 
-    elsif used_to_grade_a_quiz?
+    elsif assessment?
       assemble_graded_quiz_assessment(assessment)
 
     elsif used_on_a_followup?(change_keyword)
@@ -49,12 +65,10 @@ class AiOutput < ApplicationRecord
 
   private
 
-  def used_for_journal_corrected_text?
-    self.identifier == "corrected_text"
-  end
+  def assign_role_from_identifier
+    return unless line?
 
-  def used_to_grade_a_quiz?
-    self.identifier == "assessment"
+    self.role = identifier if identifier.in?(%w[corrected_text assessment])
   end
 
   def assemble_ai_output_content(abbr, change_keyword, corrected_sentence)

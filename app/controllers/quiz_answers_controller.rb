@@ -48,9 +48,7 @@ class QuizAnswersController < ApplicationController
   end
 
   def get_original_language_from_journal(identifier)
-    # @journal.full_journal
-    # ["彼女のお母さんに会いました。", "３人で中目黒にピザを食べました。"]
-    @journal.full_journal.slice(identifier.to_i - 1)
+    @journal.entry_at(identifier)&.content
   end
 
   def find_identifier

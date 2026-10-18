@@ -36,7 +36,8 @@ module SharedServiceMethods
     (1..count).each do |number|
       ai_query.ai_outputs.build(
         made_note: false,
-        identifier: number.to_s
+        identifier: number.to_s,
+        role: :line
       ).save_assembled_content(prompt.change_keyword, user)
     end
   end
@@ -44,7 +45,8 @@ module SharedServiceMethods
   def create_ai_output_for_corrected_text(ai_query, prompt, user)
     ai_query.ai_outputs.build(
       made_note: false,
-      identifier: "corrected_text"
+      identifier: "corrected_text",
+      role: :corrected_text
     ).save_assembled_content(prompt.change_keyword, user)
   end
 end

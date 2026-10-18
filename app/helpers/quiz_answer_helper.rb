@@ -6,7 +6,7 @@ module QuizAnswerHelper
   end
 
   def quiz_answer_entry(journal, quiz_entry)
-    journal.entries.ordered.offset(quiz_entry.identifier.to_i - 1).first
+    journal.entry_at(quiz_entry.line_number)
   end
 
   def quiz_answer_match_segments(original, user_response)

@@ -44,15 +44,11 @@ RSpec.describe QuizAnswerHelper, type: :helper do
   end
 
   describe "#quiz_answer_entry" do
-    it "returns the journal entry at the quiz entry identifier index" do
+    it "returns the journal entry at that position" do
       second_entry = instance_double(Entry)
-      ordered_entries = double("ordered_entries")
-      journal = instance_double(Journal, entries: ordered_entries)
-      quiz_entry = instance_double(AiOutput, identifier: "2")
-
-      allow(ordered_entries).to receive(:order).with(:id).and_return(ordered_entries)
-      allow(ordered_entries).to receive(:offset).with(1).and_return(ordered_entries)
-      allow(ordered_entries).to receive(:first).and_return(second_entry)
+      journal = instance_double(Journal)
+      quiz_entry = instance_double(AiOutput, line_number: 2)
+      allow(journal).to receive(:entry_at).with(2).and_return(second_entry)
 
       expect(helper.quiz_answer_entry(journal, quiz_entry)).to eq(second_entry)
     end

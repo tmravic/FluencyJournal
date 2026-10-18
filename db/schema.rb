@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_18_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_18_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_150000) do
     t.bigint "ai_query_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role", default: "line", null: false
     t.index ["ai_query_id"], name: "index_ai_outputs_on_ai_query_id"
   end
 

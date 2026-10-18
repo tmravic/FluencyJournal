@@ -86,7 +86,6 @@ class AiQuery < ApplicationRecord
     # Always create *exactly* the expected number of quiz questions.
     # Use whatever the model gave us for the first min(actual, expected) items.
     # Hints are stored on quiz_hints, not as extra ai_outputs.
-    entries = journal&.entries&.ordered&.to_a || []
     (1..expected).each do |count|
       key = line_keys[count - 1] # may be nil if model gave fewer
       line = key ? translated_response[key] : nil
@@ -99,14 +98,15 @@ class AiQuery < ApplicationRecord
 
       ai_outputs.create(
         made_note: false,
-        identifier: count.to_s
+        identifier: count.to_s,
+        role: :line
       ).tap do |ai_output|
         content = translation.to_s.split('→ ').last.presence || translation.to_s
         ai_output.content = content
         ai_output.save!
       end
 
-      next unless quiz && (entry = entries[count - 1])
+      next unless quiz && (entry = journal&.entry_at(count))
 
       quiz.quiz_hints.create!(
         hint_content: hint_from_quiz_line(line) || "Hint missing",

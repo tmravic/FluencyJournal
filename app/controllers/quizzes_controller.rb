@@ -37,8 +37,8 @@ class QuizzesController < ApplicationController
   def peek
     @quiz_entry_frame = helpers.dom_id(@ai_output)
     @identifier = @ai_output.identifier
-    @entry_content = @journal.full_journal.slice(@identifier.to_i - 1)
-    @entry = @journal.entries.ordered.offset(@identifier.to_i - 1).first
+    @entry = @journal.entry_at(@ai_output.line_number)
+    @entry_content = @entry&.content
 
     respond_to do |format|
       format.turbo_stream
@@ -59,7 +59,7 @@ class QuizzesController < ApplicationController
     # ["彼女のお母さんに会いました。", "３人で中目黒にピザを食べました。"]
     quiz_entries = get_translated_journal_entries
     # ["I met her mother.", "The three of us ate pizza in Nakameguro."]
-    user_translation = @quiz.full_journal
+    user_translation = @quiz.responses
     # ["Test", "Test"]
 
     prompt_content = "Original journal entries: #{original_journal}, " +
@@ -90,7 +90,7 @@ class QuizzesController < ApplicationController
     @ai_outputs = @ai_query.ai_outputs
     @user = @journal.user
     @grading_ai_query = @quiz.grading_ai_query
-    @assessment_output = @grading_ai_query.find_ai_output_by_identifier("assessment")
+    @assessment_output = @grading_ai_query.ai_outputs.assessment.first
     @prompt = @grading_ai_query.prompt
   end
 
@@ -139,7 +139,7 @@ class QuizzesController < ApplicationController
   end
 
   def show_hint
-    quiz_hint = @quiz.quiz_hints.offset(@quiz_entry.identifier.to_i - 1).first
+    quiz_hint = @quiz.quiz_hints.find_by(entry: @journal.entry_at(@quiz_entry.line_number))
 
     unless quiz_hint
       head :unprocessable_entity
@@ -192,9 +192,8 @@ class QuizzesController < ApplicationController
 
   def set_answered_status_in_session
     session[:answered_quiz_questions] = {}
-    @journal.full_journal.each_with_index do |_, index|
-      index += 1
-      session[:answered_quiz_questions]["question_#{index}"] = false
+    @journal.entries.ordered.pluck(:position).each do |position|
+      session[:answered_quiz_questions]["question_#{position}"] = false
     end
     # session.to_h
     # ...

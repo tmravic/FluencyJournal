@@ -44,7 +44,8 @@ class GradeQuizJob < ApplicationJob
       (1..count).each do |number|
         ai_query.ai_outputs.build(
           made_note: false,
-          identifier: number.to_s
+          identifier: number.to_s,
+          role: :line
         ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
       end
     end
@@ -52,7 +53,8 @@ class GradeQuizJob < ApplicationJob
     # Make one more AiOutput for the Assessment
     ai_query.ai_outputs.build(
       made_note: false,
-      identifier: "assessment"
+      identifier: "assessment",
+      role: :assessment
     ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
 
     source_tag = "ai_assistant"

@@ -213,7 +213,7 @@ class FollowupsController < ApplicationController
 
   def quiz_assessment_followup?(followup_origin)
     followup_origin.is_a?(AiOutput) &&
-      followup_origin.identifier == "assessment" &&
+      followup_origin.assessment? &&
       followup_origin.ai_query.prompt.is_a?(QuizResultPrompt)
   end
 
