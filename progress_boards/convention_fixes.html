@@ -74,13 +74,6 @@
   <h2>Easy</h2>
 
   <article>
-    <h3><span class="tag easy">Easy</span>37. Drop the retry link UJS method</h3>
-    <p><span class="path">app/views/quizzes/_graded_output.html.erb</span></p>
-    <p>The retry control is a <code>link_to</code> with <code>method: :get</code> and <code>data-turbo-method="get"</code>. Rails still turns <code>method:</code> on a link into <code>data-method</code>, which is the old UJS attribute. Turbo does not use it. The route is already GET.</p>
-    <p>Remove <code>method: :get</code> and <code>turbo_method: :get</code>. Leave the path and the frame target.</p>
-  </article>
-
-  <article>
     <h3><span class="tag easy">Easy</span>38. Redirect a successful write with 303</h3>
     <p><span class="path">app/controllers/journals_controller.rb</span> <code>create</code>, <code>update</code>, <code>mark_journal_as_studied</code>. <span class="path">app/controllers/entries_controller.rb</span> <code>create</code>, <code>update</code>. <span class="path">app/controllers/notes_controller.rb</span> <code>create</code>, <code>update</code>, <code>mark_note_as_studied</code>. <span class="path">app/controllers/ai_queries_controller.rb</span> <code>ai_request</code>. <span class="path">app/controllers/sessions_controller.rb</span> <code>create</code> success branch. <span class="path">app/controllers/quizzes_controller.rb</span> <code>prepare_quiz</code> HTML branch.</p>
     <p>Those HTML successes redirect with the default 302, or, for prepare, render the template at 200 after the prompt is saved. Fetch rewrites a 302 after POST into GET. It does not rewrite PATCH, so a refresh of a journal, entry, or note update can send PATCH again. A 200 after prepare repeats the POST. Deletes, logout, and the password-reset update already use 303. Login failure stays a 302.</p>

@@ -68,14 +68,12 @@
               <% quiz_answer = quiz.quiz_answers.slice(quiz_number) %>
               <%= link_to t("quiz.retry"),
                             retry_journal_quiz_quiz_answer_path(ai_query.journal, quiz, quiz_answer),
-                            method: :get,
                             data: {
                               turbo_frame: "quiz_answer_#{output.identifier}",
                               controller: "scroll",
                               action: "click->scroll#scrollToTarget",
                               scroll_target_value: "quiz_answer_#{output.identifier}",
-                              turbo_confirm: t("quiz_answer.retry"),
-                              turbo_method: :get
+                              turbo_confirm: t("quiz_answer.retry")
                             },
                             class: "btn btn--dark" %>
               <%= button_to t("delete"),
