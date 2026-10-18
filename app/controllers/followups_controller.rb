@@ -159,7 +159,7 @@ class FollowupsController < ApplicationController
 
       notice = t("followup.request_sent")
       respond_to do |format|
-        format.html { redirect_to followup_path(@followup), notice: notice }
+        format.html { redirect_to followup_path(@followup_prompt.followup), status: :see_other, notice: notice }
         format.turbo_stream { flash.now[:notice] = notice }
       end
     end

@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>23. Followup create should redirect to the row it saved</h3>
-    <p><span class="path">app/controllers/followups_controller.rb</span> <code>create</code></p>
-    <p>The saved record is <code>@followup_prompt.followup</code>. The HTML branch redirects to <code>followup_path(@followup)</code>, and <code>create</code> never assigns <code>@followup</code>. Turbo hides this because it does not use that redirect.</p>
-    <p>Redirect to the followup that was just saved, with status 303.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>24. Put <code>previous_journal</code> on the list the page is showing</h3>
     <p><span class="path">app/models/journal.rb</span>, <span class="path">app/models/note.rb</span></p>
     <p>Both methods call <code>Current.user&.journals.order</code> (notes do the same). If <code>Current.user</code> is nil, <code>&amp;.</code> does not cover <code>.order</code>, so this raises. The journal page lists <code>current_group.journals</code>, not <code>Current.user.journals</code>, so the Turbo insert can land after a row that is not on the page. The Arel <code>lt</code> is a range query written by hand.</p>
