@@ -46,5 +46,8 @@ RSpec.describe "POST /notes draft create", type: :request do
     expect(response.body).to include(%(target="note_#{draft.id}"))
     expect(response.body).not_to include(%(target="note_#{vocab.id}"))
     expect(response.body).not_to include(%(action="prepend" target="notes"))
+    expect(response.body).to include(%(target="note_header"))
+    expect(response.body).to include(I18n.t("note.draft_journals"))
+    expect(response.body).to include("view_context=draft_notes")
   end
 end

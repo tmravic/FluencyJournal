@@ -1,9 +1,19 @@
 <%= turbo_stream.update Entry.new, "" %>
-<%= turbo_stream.update "start_entry_button", partial: 'entries/start_entry_button' %>
-<%= turbo_stream.update "mark_studied_button", partial: 'journals/mark_studied_button', locals: { journal: @journal } %>
-<%= turbo_stream.update "quiz_buttons", partial: 'quizzes/quiz_buttons' %>
+<%= turbo_stream.update "start_entry_button" do %>
+  <%= render StartEntryButtonComponent.new(journal: @journal) %>
+<% end %>
+<%= turbo_stream.update "mark_studied_button" do %>
+  <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>
+<% end %>
+<%= turbo_stream.update "quiz_buttons" do %>
+  <%= render QuizButtonsComponent.new(journal: @journal) %>
+<% end %>
 <%= turbo_stream.update "character_count", partial: 'journals/character_count', locals: { journal: @journal } %>
-<%= turbo_stream.update "reading_mode_button", partial: 'journals/reading_mode_button', locals: { journal: @journal } %>
-<%= turbo_stream.update "double_check_button", partial: 'journals/double_check_button', locals: { journal: @journal } %>
+<%= turbo_stream.update "reading_mode_button" do %>
+  <%= render ReadingModeButtonComponent.new(journal: @journal, reading_mode: @reading_mode) %>
+<% end %>
+<%= turbo_stream.update "double_check_button" do %>
+  <%= render DoubleCheckButtonComponent.new(journal: @journal) %>
+<% end %>
 <%= turbo_stream.append "entries", partial: "entries/entry", locals: { entry: @entry, journal: @journal, source_tag: @source_tag } %>
 <%= render_turbo_stream_flash_messages %>

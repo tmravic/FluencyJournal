@@ -69,7 +69,7 @@ class NotesController < ApplicationController
 
     # Need to be able to create a note from All Notes or Today's notes
     # and stay on the same page with the same view context and header
-    header_partial = get_header_from_view_context(params[:view_context])
+    notes_list = notes_list_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
     @source_tag = "notes_box"
     # The anchor is chosen before save, while this row is still off the list.
@@ -84,7 +84,7 @@ class NotesController < ApplicationController
         format.turbo_stream do
           flash.now[:notice] = t("note.note_added")
           render "notes/create", locals: {
-            header_partial: header_partial,
+            notes_list: notes_list,
             collection: collection,
             previous_note: previous_note
           }
@@ -211,12 +211,8 @@ class NotesController < ApplicationController
     @ai_query && @ai_output.present?
   end
 
-  def get_header_from_view_context(view_context)
-    case view_context
-    when "todays_notes" then "notes/notes_header_todays"
-    when "all_notes" then "notes/notes_header_all"
-    when "draft_notes" then "notes/notes_header_drafts"
-    end
+  def notes_list_from_view_context(view_context)
+    view_context if NotesHeaderComponent::LISTS.include?(view_context) && view_context != "journal"
   end
 
   def get_collection_from_view_context(view_context)

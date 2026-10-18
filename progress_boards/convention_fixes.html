@@ -138,11 +138,5 @@
     <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, hint creation in <span class="path">app/models/ai_query.rb</span></p>
     <p>Line numbers are still two orders. <code>full_journal</code> and hint rows use <code>id</code>. <code>entry_number</code> uses <code>created_at</code>. <a href="https://github.com/brendon/acts_as_list">acts_as_list</a> puts a <code>position</code> on <code>entries</code> and gives you <code>order(:position)</code> as the only order. Quiz lines, hints, and <code>entry_number</code> then share one sequence. This is worth it only if entries can be reordered. If they are append-only, item 32 (always <code>order(:id)</code>) is enough and you do not need the gem.</p>
   </article>
-
-  <article>
-    <h3>view_component</h3>
-    <p>The journal action row, quiz buttons, and note header are large partials that take a shifting set of locals (<code>journal</code>, <code>from_all_or_todays</code>, <code>source_tag</code>). Several of the Turbo bugs above are a partial rendered into the wrong frame, or <code>locals:</code> passed to the wrong helper.</p>
-    <p><a href="https://viewcomponent.org/">ViewComponent</a> turns one partial into an object with an explicit initializer and a test. It does not pick HTTP verbs for you. It does stop the “which local did this partial expect?” class of bug, which this app hits often. Adopt it for new buttons and frames first. A wholesale rewrite of <span class="path">app/views</span> is a separate project.</p>
-  </article>
 </body>
 </html>

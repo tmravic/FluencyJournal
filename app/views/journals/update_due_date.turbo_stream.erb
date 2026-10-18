@@ -3,7 +3,7 @@
                         locals: { journal: @journal } %>
 
 <% if @journal.entries.present? %>
-  <%= turbo_stream.update "change_journal_due_date_button",
-                          partial: 'journals/change_journal_due_date_button',
-                          locals: { journal: @journal }  %>
+  <%= turbo_stream.update "change_journal_due_date_button" do %>
+    <%= render ChangeDueDateButtonComponent.new(journal: @journal) %>
+  <% end %>
 <% end %>

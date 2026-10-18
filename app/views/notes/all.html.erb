@@ -7,7 +7,7 @@
       <% end %>
 
       <%= turbo_frame_tag "note_header" do %>
-        <%= render "notes/notes_header_all" if @all_notes.present? %>
+        <%= render NotesHeaderComponent.new(list: "all_notes") if @all_notes.present? %>
       <% end %>
 
       <%= turbo_frame_tag "notes" do %>

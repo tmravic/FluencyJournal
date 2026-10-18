@@ -3,8 +3,7 @@
       partial: "quiz_answers/compared_quiz_answer"
       ) %>
 <% if @show_grade_quiz_button %>
-  <%= turbo_stream.update("grade_quiz_button",
-      partial: "quizzes/grade_quiz_button",
-      locals: { journal: @journal, quiz: @quiz }
-      ) %>
+  <%= turbo_stream.update "grade_quiz_button" do %>
+    <%= render GradeQuizButtonComponent.new(journal: @journal, quiz: @quiz) %>
+  <% end %>
 <% end %>

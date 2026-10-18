@@ -6,43 +6,50 @@
     <h2><%= @journal.title %></h2>
 
     <%= turbo_frame_tag "open_ai_assistant_button" do %>
-      <%= render "entries/open_ai_assistant_button" %>
+      <%= render OpenAiAssistantButtonComponent.new(journal: @journal) %>
     <% end %>
     <%= turbo_frame_tag "close_ai_assistant_button" %>
 
     <%= turbo_frame_tag "start_entry_button" do %>
-      <%= render 'entries/start_entry_button' %>
+      <%= render StartEntryButtonComponent.new(journal: @journal) %>
     <% end %>
 
     <%= turbo_frame_tag "compare_button" do %>
-      <%= render 'journals/compare_button' %>
+      <%= render CompareButtonComponent.new(journal: @journal) %>
     <% end %>
 
     <%= turbo_frame_tag "double_check_button" do %>
-      <!-- changed this to just say "Followup" -->
-      <%= render 'journals/double_check_button', journal: @journal if @entries.present? %>
+      <% if @entries.present? %>
+        <%= render DoubleCheckButtonComponent.new(journal: @journal) %>
+      <% end %>
     <% end %>
 
     <%= turbo_frame_tag "linked_notes_button" do %>
-      <%= render "journals/linked_notes_button", journal: @journal %>
+      <%= render LinkedNotesButtonComponent.new(journal: @journal) %>
     <% end %>
 
     <%= turbo_frame_tag "reading_mode_button" do %>
-      <%= render 'journals/reading_mode_button', locals: { journal: @journal } if @entries.present? %>
+      <% if @entries.present? %>
+        <%= render ReadingModeButtonComponent.new(journal: @journal, reading_mode: @reading_mode) %>
+      <% end %>
     <% end %>
 
     <%= turbo_frame_tag "quiz_buttons" do %>
-      <%= render 'quizzes/quiz_buttons' if @entries.present? %>
+      <% if @entries.present? %>
+        <%= render QuizButtonsComponent.new(journal: @journal) %>
+      <% end %>
     <% end %>
 
     <%= turbo_frame_tag "mark_studied_button" do %>
       <% if @entries.present? %>
-        <%= render partial: 'journals/mark_studied_button', locals: { journal: @journal } %>
+        <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>
       <% end %>
     <% end %>
 
     <%= turbo_frame_tag "change_journal_due_date_button" do %>
-      <%= render 'journals/change_journal_due_date_button', locals: { journal: @journal } if @entries.present? %>
+      <% if @entries.present? %>
+        <%= render ChangeDueDateButtonComponent.new(journal: @journal) %>
+      <% end %>
     <% end %>
   </div>
   <br>

@@ -1,28 +1,34 @@
-<%= turbo_stream.update("quiz_buttons", partial: 'quizzes/quiz_buttons') %>
-<%= turbo_stream.update "start_entry_button", partial: 'entries/start_entry_button' %>
-<%= turbo_stream.update "open_ai_assistant_button", partial: "entries/open_ai_assistant_button" %>
-
-<% if @entries.present? %>
-  <%= turbo_stream.update "mark_studied_button",
-                          partial: "journals/mark_studied_button",
-                          locals: { journal: @journal } %>
-  <%= turbo_stream.update "reading_mode_button",
-                          partial: 'journals/reading_mode_button',
-                          locals: { journal: @journal } %>
-  <%= turbo_stream.update "change_journal_due_date_button",
-                          partial: 'journals/change_journal_due_date_button',
-                          locals: { journal: @journal }  %>
-  <%= turbo_stream.update "double_check_button",
-                          partial: 'journals/double_check_button',
-                          locals: { journal: @journal } %>
-  <%= turbo_stream.update "compare_button",
-                          partial: 'journals/compare_button',
-                          locals: { journal: @journal } %>
+<%= turbo_stream.update "quiz_buttons" do %>
+  <%= render QuizButtonsComponent.new(journal: @journal) %>
+<% end %>
+<%= turbo_stream.update "start_entry_button" do %>
+  <%= render StartEntryButtonComponent.new(journal: @journal) %>
+<% end %>
+<%= turbo_stream.update "open_ai_assistant_button" do %>
+  <%= render OpenAiAssistantButtonComponent.new(journal: @journal) %>
 <% end %>
 
-<%= turbo_stream.update "linked_notes_button",
-                        partial: "journals/linked_notes_button",
-                        locals: { journal: @journal } %>
+<% if @entries.present? %>
+  <%= turbo_stream.update "mark_studied_button" do %>
+    <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>
+  <% end %>
+  <%= turbo_stream.update "reading_mode_button" do %>
+    <%= render ReadingModeButtonComponent.new(journal: @journal, reading_mode: @reading_mode) %>
+  <% end %>
+  <%= turbo_stream.update "change_journal_due_date_button" do %>
+    <%= render ChangeDueDateButtonComponent.new(journal: @journal) %>
+  <% end %>
+  <%= turbo_stream.update "double_check_button" do %>
+    <%= render DoubleCheckButtonComponent.new(journal: @journal) %>
+  <% end %>
+  <%= turbo_stream.update "compare_button" do %>
+    <%= render CompareButtonComponent.new(journal: @journal) %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.update "linked_notes_button" do %>
+  <%= render LinkedNotesButtonComponent.new(journal: @journal) %>
+<% end %>
 
 <%= turbo_stream.replace(
       "quizzes",

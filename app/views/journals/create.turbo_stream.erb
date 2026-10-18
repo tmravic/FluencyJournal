@@ -5,6 +5,8 @@
 <% else %>
   <%= turbo_stream.update "close_journal_button", partial: "journals/close_journal_button_all" %>
 <% end %>
-<%= turbo_stream.update "open_ai_assistant_button", partial: "entries/open_ai_assistant_button" %>
+<%= turbo_stream.update "open_ai_assistant_button" do %>
+  <%= render OpenAiAssistantButtonComponent.new(journal: @journal) %>
+<% end %>
 <%= turbo_stream.update "start_journal_button", "" %>
 <%= render_turbo_stream_flash_messages %>

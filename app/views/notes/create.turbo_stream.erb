@@ -1,5 +1,5 @@
 <%= turbo_stream.update Note.new, "" %>
-<% if header_partial == "notes/notes_header_all" || header_partial == "notes/notes_header_drafts" %>
+<% if notes_list == "all_notes" || notes_list == "draft_notes" %>
   <% if previous_note %>
     <%= turbo_stream.after dom_id(previous_note) do %>
       <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
@@ -9,11 +9,15 @@
       <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
     <% end %>
   <% end %>
-<% elsif header_partial == 'notes/notes_header_todays' %>
+<% elsif notes_list == "todays_notes" %>
   <%= turbo_stream.append "notes" do %>
     <%= render partial: "notes/note", locals: { note: @note, source_tag: @source_tag } %>
   <% end %>
 <% end %>
-<%= turbo_stream.update "note_header", partial: header_partial %>
+<% if notes_list.present? %>
+  <%= turbo_stream.update "note_header" do %>
+    <%= render NotesHeaderComponent.new(list: notes_list) %>
+  <% end %>
+<% end %>
 <%= turbo_stream.update "make_note_button_#{@ai_output.identifier}", ""  if @ai_output && @ai_output.made_note %>
 <%= render_turbo_stream_flash_messages %>

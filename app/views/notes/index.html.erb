@@ -7,7 +7,7 @@
       <% end %>
 
       <%= turbo_frame_tag "note_header" do %>
-        <%= render "notes/notes_header_todays" if @todays_notes.present? %>
+        <%= render NotesHeaderComponent.new(list: "todays_notes") if @todays_notes.present? %>
 
         <%= turbo_frame_tag "due_today_notes_count" do %>
           <%= render partial: "notes/todays_notes_count" %>

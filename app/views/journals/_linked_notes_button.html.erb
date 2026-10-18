@@ -1,5 +1,0 @@
-<% journal = local_assigns[:journal] || @journal %>
-<%= link_to t("journal.actions.linked_notes"),
-            for_journal_notes_path(journal_id: journal.id),
-            class: "btn btn--light",
-            data: { turbo_frame: "notes_box" } %>

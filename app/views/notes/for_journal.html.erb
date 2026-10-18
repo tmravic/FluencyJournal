@@ -6,7 +6,7 @@
       <% end %>
 
       <%= turbo_frame_tag "note_header" do %>
-        <%= render "notes/notes_header_journal" if @journal_notes.present? %>
+        <%= render NotesHeaderComponent.new(list: "journal", journal: @journal) if @journal_notes.present? %>
       <% end %>
 
       <%= turbo_frame_tag "notes" do %>

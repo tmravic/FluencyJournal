@@ -1,0 +1,37 @@
+<div class="note__header">
+  <% if journal_list? %>
+    <h2><%= t("note.linked_to_journal", title: @journal.title) %></h2>
+    <div class="note__toolbar">
+      <%= render "notes/close_notes_button" %>
+    </div>
+  <% else %>
+    <h2>
+      <% if todays? %>
+        <%= t("note.todays_notes") %>
+      <% elsif all? %>
+        <%= t("note.all_notes") %>
+      <% else %>
+        <%= t("note.draft_journals") %>
+      <% end %>
+    </h2>
+    <div class="note__toolbar">
+      <% if todays? %>
+        <%= render "notes/drafts_notes_button" %>
+        <%= render "notes/all_notes_button" %>
+      <% elsif all? %>
+        <%= render "notes/drafts_notes_button" %>
+        <%= render "notes/todays_notes_button" %>
+      <% else %>
+        <%= render "notes/todays_notes_button" %>
+        <%= render "notes/all_notes_button" %>
+      <% end %>
+
+      <%= link_to t("note.new"),
+                  new_note_path(view_context: @list),
+                  class: "btn btn--primary",
+                  data: { turbo_frame: dom_id(Note.new) } %>
+
+      <%= render "notes/close_notes_button" %>
+    </div>
+  <% end %>
+</div>

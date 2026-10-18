@@ -1,4 +1,6 @@
-<%= turbo_stream.update("quiz_buttons", partial: 'quizzes/reset_quiz_button') %>
+<%= turbo_stream.update "quiz_buttons" do %>
+  <%= render ResetQuizButtonComponent.new(journal: @journal) %>
+<% end %>
 <%= turbo_stream.replace "entries" do %>
   <%= turbo_frame_tag "quizzes" do %>
     <%= turbo_stream_from "channel_#{@uuid}" %>
