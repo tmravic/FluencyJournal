@@ -1,4 +1,6 @@
 class NotesController < ApplicationController
+  include AccessibleOwner
+
   before_action :set_note, only: %i[
     show edit update destroy mark_note_as_studied change_due_date update_due_date
     link_journals update_journals cancel_link_journals
@@ -47,10 +49,12 @@ class NotesController < ApplicationController
   end
 
   def new_automatic
-    @ai_output = AiOutput.find(params[:ai_output_id].to_i)
+    @ai_output = find_accessible_ai_output(params[:ai_output_id].to_i)
     @note = Note.new
     @view_context = params[:view_context]
-    @ai_query = AiQuery.find(params[:ai_query_id])
+    @ai_query = find_accessible_ai_query(params[:ai_query_id])
+    raise ActiveRecord::RecordNotFound unless @ai_output.ai_query_id == @ai_query.id
+
     @user = Current.user
 
     respond_to do |format|
@@ -63,7 +67,7 @@ class NotesController < ApplicationController
     @note = Current.user.notes.build(note_params)
 
     if params[:ai_query_id].present?
-      @ai_query = AiQuery.find(params[:ai_query_id])
+      @ai_query = find_accessible_ai_query(params[:ai_query_id])
       @ai_output = @ai_query.find_ai_output_by_identifier(params[:ai_output_identifier])
     end
 

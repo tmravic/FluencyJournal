@@ -1,5 +1,6 @@
 class FollowupsController < ApplicationController
   include TemplatePromptConcern
+  include AccessibleOwner
 
   before_action :set_followup, only: %i[show destroy]
   ALLOWED_CLASSES = %w[Entry AiOutput Note Followup JournalFollowup].freeze
@@ -30,7 +31,7 @@ class FollowupsController < ApplicationController
         redirect_to(@journal ? journal_path(@journal) : root_path) && return
       end
       followup_origin_id = params[:id].to_i
-      @followup_origin = klass.find(followup_origin_id)
+      @followup_origin = find_accessible_origin(klass, followup_origin_id)
       @reference_text = @followup_origin.content
 
       if klass == AiOutput
@@ -94,13 +95,13 @@ class FollowupsController < ApplicationController
       end
       return
     end
-    followup_origin_class = origin_class_str.constantize
+    followup_origin_class = check_allowed_classes_for_followup(origin_class_str)
     if followup_origin_class == JournalFollowup
       journal = current_group.journals.find(followup_params[:journal_id])
       @followup_origin = JournalFollowup.find_or_create_by!(journal: journal)
     else
       followup_origin_id = followup_params[:followup_origin_id].to_i
-      @followup_origin = followup_origin_class.find(followup_origin_id)
+      @followup_origin = find_accessible_origin(followup_origin_class, followup_origin_id)
     end
     set_user_and_journal_based_on_origin_class(followup_origin_class)
 
@@ -183,7 +184,7 @@ class FollowupsController < ApplicationController
   end
 
   def destroy
-    @journal = Journal.find(params.dig(:journal)) if params.dig(:journal)
+    @journal = current_group.journals.find(params.dig(:journal)) if params.dig(:journal)
     @source_tag = params.dig(:source_tag)
     @display_frames = if params[:display_frame].present?
                         [ params[:display_frame] ]
@@ -264,15 +265,26 @@ class FollowupsController < ApplicationController
   end
 
   def check_allowed_classes_for_followup(class_name)
-    if ALLOWED_CLASSES.include?(class_name)
-      class_name.constantize
+    raise ActiveRecord::RecordNotFound unless ALLOWED_CLASSES.include?(class_name)
+
+    case class_name
+    when "Entry"
+      Entry
+    when "AiOutput"
+      AiOutput
+    when "Note"
+      Note
+    when "Followup"
+      Followup
+    when "JournalFollowup"
+      JournalFollowup
     else
-      raise(ArgumentError, "Invalid class: #{class_name}")
+      raise ActiveRecord::RecordNotFound
     end
   end
 
   def set_followup
-    @followup = Followup.find(params.expect(:id))
+    @followup = find_accessible_followup(params.expect(:id))
   end
 
   def followup_params

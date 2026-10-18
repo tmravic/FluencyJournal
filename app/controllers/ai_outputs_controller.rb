@@ -1,4 +1,6 @@
 class AiOutputsController < ApplicationController
+  include AccessibleOwner
+
   before_action :set_ai_output
 
   # GET /ai_outputs/:id/speak
@@ -31,6 +33,6 @@ class AiOutputsController < ApplicationController
   private
 
   def set_ai_output
-    @ai_output = AiOutput.find(params.expect(:id))
+    @ai_output = find_accessible_ai_output(params.expect(:id))
   end
 end
