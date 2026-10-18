@@ -147,7 +147,7 @@ en:
     short: "T"
     assessment: "Assessment"
     grade: "Grade quiz"
-    reset: "Reset all unfinished quizzes"
+    reset: "Reset"
     delete: "Delete Quiz"
     retry: "Retry"
     preparing: "Quiz being prepared..."
