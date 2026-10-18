@@ -52,6 +52,7 @@ RSpec.describe "turbo frame ids", type: :view do
     assign(:quiz_entry_frame, frame_id)
     assign(:journal, journal)
     assign(:quiz, quiz)
+    assign(:ai_output, output)
     assign(:identifier, output.identifier)
     assign(:entry_content, "一行目")
     assign(:entry, journal.entries.order(:id).first)

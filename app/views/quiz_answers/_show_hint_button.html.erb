@@ -1,4 +1,4 @@
 <%= link_to t("quiz_answer.show_hint"),
-            show_hint_journal_quizzes_path(journal, quiz_entry: quiz_entry, quiz: quiz),
+            show_hint_journal_quiz_path(journal, quiz, ai_output_id: quiz_entry.id),
             data: { turbo_stream: true },
             class: "btn btn--light" %>

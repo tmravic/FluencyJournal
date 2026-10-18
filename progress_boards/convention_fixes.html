@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>22. Give each quiz UI action one member id</h3>
-    <p><span class="path">config/routes.rb</span> <code>peek</code>, <code>unpeek</code>, hint, and original-language routes; <span class="path">app/controllers/quizzes_controller.rb</span></p>
-    <p>These GETs do not write, so the verb is fine. They are collection routes that load one quiz from the query string, and each action uses a different parameter name: <code>quiz_id</code>, <code>ai_output</code>, <code>quiz</code>, <code>quiz_entry</code>. <code>unpeek</code> does <code>AiOutput.find(params[:frame].split("_").last)</code> on a DOM id. The path never contains the quiz id.</p>
-    <p>Make them member routes. Pass the output id as a parameter, not as a piece of a frame id.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>23. Followup create should redirect to the row it saved</h3>
     <p><span class="path">app/controllers/followups_controller.rb</span> <code>create</code></p>
     <p>The saved record is <code>@followup_prompt.followup</code>. The HTML branch redirects to <code>followup_path(@followup)</code>, and <code>create</code> never assigns <code>@followup</code>. Turbo hides this because it does not use that redirect.</p>

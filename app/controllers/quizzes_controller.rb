@@ -1,6 +1,12 @@
 class QuizzesController < ApplicationController
   before_action :set_journal
-  before_action :set_quiz, only: [:grade_quiz, :show, :destroy]
+  before_action :set_quiz, only: %i[
+    grade_quiz show destroy peek unpeek
+    show_original_language hide_original_language show_hint hide_hint
+  ]
+  before_action :set_quiz_output, only: %i[
+    peek unpeek show_original_language hide_original_language show_hint hide_hint
+  ]
 
   def prepare_quiz
     uuid = SecureRandom.uuid
@@ -29,10 +35,7 @@ class QuizzesController < ApplicationController
   end
 
   def peek
-    @quiz_entry_frame = "ai_output_#{params.dig(:ai_output)}"
-    @journal = Journal.find(params.dig(:journal_id))
-    @quiz = Quiz.find(params.dig(:quiz_id))
-    @ai_output = AiOutput.find(params.dig(:ai_output))
+    @quiz_entry_frame = helpers.dom_id(@ai_output)
     @identifier = @ai_output.identifier
     @entry_content = @journal.full_journal.slice(@identifier.to_i - 1)
     @entry = @journal.entries.order(:id).offset(@identifier.to_i - 1).first
@@ -43,10 +46,7 @@ class QuizzesController < ApplicationController
   end
 
   def unpeek
-    @frame = params.dig(:frame) # "ai_output_1119"
-    @ai_output = AiOutput.find(@frame.split("_").last)
-    @journal = @ai_output.journal
-    @quiz = Quiz.find(params.dig(:quiz_id))
+    @frame = helpers.dom_id(@ai_output)
 
     respond_to do |format|
       format.turbo_stream
@@ -127,25 +127,18 @@ class QuizzesController < ApplicationController
   end
 
   def show_original_language
-    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
-    @quiz = Quiz.find(params.dig(:quiz))
-
     respond_to do |format|
       format.turbo_stream
     end
   end
 
   def hide_original_language
-    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
-    @quiz = Quiz.find(params.dig(:quiz))
     respond_to do |format|
       format.turbo_stream
     end
   end
 
   def show_hint
-    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
-    @quiz = Quiz.find(params.dig(:quiz))
     quiz_hint = @quiz.quiz_hints.offset(@quiz_entry.identifier.to_i - 1).first
 
     unless quiz_hint
@@ -161,9 +154,6 @@ class QuizzesController < ApplicationController
   end
 
   def hide_hint
-    @quiz_entry = AiOutput.find(params.dig(:quiz_entry))
-    @quiz = Quiz.find(params.dig(:quiz))
-
     respond_to do |format|
       format.turbo_stream
     end
@@ -181,6 +171,11 @@ class QuizzesController < ApplicationController
 
   def set_quiz
     @quiz = @journal.quizzes.find(params[:id])
+  end
+
+  def set_quiz_output
+    @ai_output = @quiz.ai_query.ai_outputs.find(params[:ai_output_id])
+    @quiz_entry = @ai_output
   end
 
   def combine_original_and_translation(original_journal, quiz_entries)

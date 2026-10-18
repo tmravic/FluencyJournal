@@ -29,15 +29,15 @@ Rails.application.routes.draw do
         post :prepare_quiz
         delete :reset_quiz
         get :close_quiz
+      end
+      member do
+        post :grade_quiz
         get :peek
         get :unpeek
         get :show_original_language
         get :hide_original_language
         get :show_hint
         get :hide_hint
-      end
-      member do
-        post :grade_quiz
       end
       resources :quiz_answers, except: [:index, :destroy, :update] do
         member do

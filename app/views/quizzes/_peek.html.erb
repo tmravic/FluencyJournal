@@ -19,7 +19,7 @@
     </button>
   <% end %>
   <%= link_to t("go_back"),
-              unpeek_journal_quizzes_path(journal, frame: @quiz_entry_frame, quiz_id: @quiz),
+              unpeek_journal_quiz_path(journal, @quiz, ai_output_id: @ai_output.id),
               class: "btn btn--secondary",
               data: { turbo_stream: true } %>
 </div>
