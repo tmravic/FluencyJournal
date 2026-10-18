@@ -74,13 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>19. Do not nest a frame inside the same id</h3>
-    <p><span class="path">app/views/journals/reading_mode.turbo_stream.erb</span>, <span class="path">app/views/entries/_entries_frame.html.erb</span>, <span class="path">app/views/quizzes/peek.turbo_stream.erb</span>, <span class="path">app/views/notes/_note_display.html.erb</span> with <span class="path">_change_note_due_date_button.html.erb</span></p>
-    <p>A turbo-stream <code>update</code> replaces the inside of a frame. These templates put a partial back in that is itself <code>turbo_frame_tag</code> with the same id. Reading mode does it to <code>#entries</code>. Peek and unpeek do it to the quiz-entry frame. The note due-date button is wrapped in <code>change_note_due_date_#{id}</code>, and the partial renders that id again. <code>getElementById</code> then hits whichever copy comes first.</p>
-    <p>The partial that fills a frame should be the inner HTML only. One owner renders the <code>turbo_frame_tag</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>20. Delete the quiz, and restore the journal around it</h3>
     <p><span class="path">app/views/quizzes/show.html.erb</span>, <span class="path">app/views/quizzes/_graded_output.html.erb</span>, <span class="path">app/views/ai_queries/destroy.turbo_stream.erb</span></p>
     <p>The button says delete the quiz. The path is <code>journal_ai_query_path</code>. <code>AiQuery</code> has <code>has_many :quizzes, dependent: :destroy</code>, so the quiz, its outputs, and its hints go with the query. The destroy stream clears the assistant and does not put entries and journal buttons back. <code>close_quiz.turbo_stream.erb</code> already knows how to do that. <code>AiQueriesController#destroy</code> also has an empty <code>format.html</code> and no template, so a non-Turbo DELETE has nowhere to go. Followup destroy and <code>destroy_selected</code> have the same missing 303.</p>

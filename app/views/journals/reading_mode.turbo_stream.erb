@@ -27,7 +27,7 @@
 <% else %>
 
   <%= turbo_stream.update "entries" do %>
-    <%= render 'entries/entries_frame' %>
+    <%= render "entries/entries_list" %>
   <% end %>
 
   <%= turbo_stream.update "open_ai_assistant_button", partial: 'entries/open_ai_assistant_button' %>

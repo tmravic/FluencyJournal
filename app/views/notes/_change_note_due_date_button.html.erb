@@ -1,6 +1,4 @@
-<%= turbo_frame_tag "change_note_due_date_#{note.id}" do %>
-  <%= link_to t("note.change_date"),
-              change_due_date_note_path(note),
-              data: { turbo_stream: true },
-              class: "btn btn--light" %>
-<% end %>
+<%= link_to t("note.change_date"),
+            change_due_date_note_path(note),
+            data: { turbo_stream: true },
+            class: "btn btn--light" %>
