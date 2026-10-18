@@ -172,6 +172,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
+    matholroyd-supermemo (0.1.1)
     mini_mime (1.1.5)
     minitest (6.0.6)
       drb (~> 2.0)
@@ -432,6 +433,7 @@ DEPENDENCIES
   jbuilder
   kamal
   local_time (= 3.0.2)
+  matholroyd-supermemo (= 0.1.1)
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)

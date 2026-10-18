@@ -1,4 +1,6 @@
 class Note < ApplicationRecord
+  include SchedulesStudy
+
   belongs_to :user
   has_and_belongs_to_many :journals
   has_and_belongs_to_many :followups
@@ -7,6 +9,8 @@ class Note < ApplicationRecord
   validates :content, presence: true
   validates :next_study_date, presence: true
   validates :last_interval, numericality: true
+  validates :easiness_factor, numericality: true
+  validates :repetitions, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   before_validation :set_initial_next_study_date, on: :create
 

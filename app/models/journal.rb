@@ -1,4 +1,6 @@
 class Journal < ApplicationRecord
+  include SchedulesStudy
+
   belongs_to :user
   belongs_to :group
   has_many :entries, dependent: :destroy
@@ -10,6 +12,8 @@ class Journal < ApplicationRecord
   validates :title, presence: true
   validates :next_study_date, presence: true
   validates :last_interval, numericality: true
+  validates :easiness_factor, numericality: true
+  validates :repetitions, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   before_validation :set_initial_next_study_date, on: :create
 

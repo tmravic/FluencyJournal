@@ -144,14 +144,13 @@ class NotesController < ApplicationController
 
   def mark_note_as_studied
     @source_tag = "notes_box"
-    new_interval = @note.last_interval * 2.5
-    next_study_date = (new_interval).days.from_now
+    @note.schedule_after_study
     notice = t(
       "note.actions.will_return_html",
-      date: helpers.local_date(next_study_date, format: "%Y-%m-%d")
+      date: helpers.local_date(@note.next_study_date, format: "%Y-%m-%d")
     ).html_safe
 
-    if @note.update(next_study_date: next_study_date, last_interval: new_interval)
+    if @note.save
       @due_today = Current.user&.notes.next_to_study.count
       @todays_notes_empty = @due_today.to_i.zero?
       respond_to do |format|

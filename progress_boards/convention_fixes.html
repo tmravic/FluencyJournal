@@ -128,12 +128,6 @@
   <p class="lede">These are libraries for work this app already does itself. None of them fix the bugs in the list above.</p>
 
   <article>
-    <h3>supermemo</h3>
-    <p><span class="path">app/controllers/journals_controller.rb</span> <code>mark_journal_as_studied</code>, and the same interval step on notes</p>
-    <p>Studied items schedule themselves with <code>last_interval * 2.5</code>. That is a short version of SM-2, with the ease factor and the lapse rules left out. <a href="https://github.com/phillbaker/supermemo">supermemo</a> is that algorithm. The model would store the interval and the ease the gem returns, instead of the controller inventing the next date.</p>
-  </article>
-
-  <article>
     <h3>acts_as_list</h3>
     <p><span class="path">app/models/journal.rb</span> <code>full_journal</code>, <span class="path">app/models/entry.rb</span> <code>entry_number</code>, hint creation in <span class="path">app/models/ai_query.rb</span></p>
     <p>Line numbers are still two orders. <code>full_journal</code> and hint rows use <code>id</code>. <code>entry_number</code> uses <code>created_at</code>. <a href="https://github.com/brendon/acts_as_list">acts_as_list</a> puts a <code>position</code> on <code>entries</code> and gives you <code>order(:position)</code> as the only order. Quiz lines, hints, and <code>entry_number</code> then share one sequence. This is worth it only if entries can be reordered. If they are append-only, item 32 (always <code>order(:id)</code>) is enough and you do not need the gem.</p>

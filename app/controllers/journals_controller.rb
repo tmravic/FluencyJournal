@@ -119,18 +119,14 @@ class JournalsController < ApplicationController
   end
 
   def mark_journal_as_studied
-    new_interval = @journal.last_interval * 2.5
-    next_study_date = (new_interval).days.from_now
+    @journal.schedule_after_study
+    @journal.last_studied_at = Time.current
     notice = t(
       "journal.actions.will_return_html",
-      date: helpers.local_date(next_study_date, format: "%Y-%m-%d")
+      date: helpers.local_date(@journal.next_study_date, format: "%Y-%m-%d")
     ).html_safe
 
-    if @journal.update(
-      next_study_date: next_study_date,
-      last_interval: new_interval,
-      last_studied_at: Time.current
-    )
+    if @journal.save
       @due_today = current_group.journals.next_to_study.count
       @journals_finished_today = finished_today_titles
       # All Journals still lists this journal, so it must not get today's empty state.
