@@ -112,18 +112,16 @@ class AiQuery < ApplicationRecord
 
   def change_content(num, change_keyword)
     parsed = parsed_response
+    return unless parsed.is_a?(Hash)
+
     result = parsed.dig("#{change_keyword}#{num}", "content")
-    if result.is_a?(String)
-      return split_change_content(result)
-    end
+    return present_change(result) if result
 
-    if result.nil?
-      backup_key = parsed.keys[num.to_i - 1]
-      result = parsed.dig(backup_key, "content")
-      return result
-    end
+    backup_key = parsed.keys[num.to_i - 1]
+    result = backup_key && parsed.dig(backup_key, "content")
+    return result if result.is_a?(String) || result.nil?
 
-    result
+    present_change(result)
   end
 
   def split_change_content(result)
@@ -135,6 +133,8 @@ class AiQuery < ApplicationRecord
 
   def change_explanation(change_keyword, num, abbr)
     parsed = parsed_response
+    return error_message unless parsed.is_a?(Hash)
+
     explanation = parsed.dig("#{change_keyword}#{num}", "explanation_#{abbr}")
 
     if explanation.nil?
@@ -144,144 +144,32 @@ class AiQuery < ApplicationRecord
     if explanation.nil?
       backup_key = parsed.keys[num.to_i - 1]
       explanation = parsed.dig(backup_key, "explanation_#{abbr}")
-      # {
-      #   "answer_例文" => {
-      #     "content" => "ほとんど一夜にして、東京は雪景色になった。",
-      #     "explanation_en" => "This sentence uses the phrase 'ほとんど一夜にして' to indicate that the change happened almost overnight. The sentence translates to 'Almost overnight, Tokyo became a winter wonderland.'"
-      #   },
-      #   "answer_例文2" => {
-      #     "content" => "彼は一瞬のうちに決断を下した。",
-      #     "explanation_en" => "This sentence uses the phrase '一瞬のうちに' to indicate that the decision was made in an instant. The sentence translates to 'He made the decision in an instant.'"
-      #   }
-      # }
     end
 
-    if explanation.nil?
-      explanation = error_message
-    end
+    return explanation if explanation.is_a?(String)
 
-    explanation
+    text_from_explanation(explanation) || error_message
   end
 
+  # Reads whatever object the model returned and returns the prose inside it.
+  # A new key name does not need a new branch.
   def assessment
-    content = self.parsed_response
-    return content unless is_hash?(content)
-
-    # {"overall"=> "Overall, the quiz answers are..."}
-    return content["overall"] if content["overall"]
-
-    # {"overall_accuracy"=> "The translations are mostly accurate..."}
-    return content["overall_accuracy"] if content["overall_accuracy"]
-    if is_hash?(content.dig("assessment"))
-      return content.dig("assessment", "overall_accuracy") if content.dig("assessment", "overall_accuracy")
-    end
-
-    return content["summary"] if content["summary"]
-
-    return content["main_points"] if content["main_points"]
-    if is_hash?(content.dig("assessment"))
-      return content.dig("assessment", "main_points") if content.dig("assessment", "main_points")
-    end
-
-    # {"grammar_points"=>"Particle usage (へ vs せずに) and noun phrase ..."}
-    return content["grammar_points"] if content["grammar_points"]
-    return content["grammar_points_to_review"] if content["grammar_points_to_review"]
-    return content["grammar_points_to_improve"] if content["grammar_points_to_improve"]
-    return content["particle usage"] if content["particle usage"]
-    return content["overall_comment"] if content["overall_comment"]
-    return content["content"] if content["content"]
-
-    if is_hash?(content.dig("assessment"))
-      return content.dig("assessment", "grammar_points") if content.dig("assessment", "grammar_points")
-    end
-
-    # content.keys
-    # ["entry_1", "entry_2", "entry_3", "entry_4", "assessment"]
-    # content.dig("assessment")
-    # {"overall_accuracy"=> "..."
-    if is_hash?(content.dig("assessment")) && content.dig("assessment", "overall_accuracy")
-      return content.dig("assessment", "overall_accuracy")
-    end
-
-    if is_hash?(content.dig("assessment")) && content.dig("assessment", "overall")
-      return content.dig("assessment", "overall")
-    end
-
-    return content["assessment"] if content["assessment"]
-
-    if content.keys.any? { |key| key.to_s.match?(entry_regex) }
-      return nil
-    end
-
-    content
+    prose_from("assessment")
   end
 
   def corrected_text
-    # Sometimes a string is returned and sometimes it's a Hash
     content = parsed_response
-    return content unless is_hash?(content)
-    # {
-    #   "change_1"=>
-    #    { "content" => "ryokan → 旅館", "explanation_en"=>"「ryokan」は日 本語で「旅館」を意味するため、正しい表現に修正しました。" },
-    #   "change_2"=>
-    #     { "content" => "私立の外の露天風呂", "explanation_en"=>"「私立」は「個人的な」や「私有の」を意味するため、正しい表現に修正しました。" },
-    #   "change_3"=>
-    #     { "content" => "良寛のようやく", "explanation_en"=>"「 ようやく」は「ようやく」で正しい表現です。" },
-    #   "corrected_text" => "外の露天風呂がある旅館を作る"
-    # }
+    return textual(content) unless content.is_a?(Hash)
 
-    # When the user input nothing
-    # {"..."=>0}
-    return "No content" if content["..."]
-
-    return content[""] if content[""]
-
-    # {"お時間がかかってしまい申し訳ございません。"=>"お時間がかかってしまい申し訳ございません。"}
-    return content.keys.first if content.keys.first == content.values.first
-
-    #  {"text"=>"昨年のクリスマスに心をあげた"},
-    #  {"text"=>"昨年のクリスマスに私はあなたに心を捧げました"}]
-    return content["text"] if content["text"]
-
-    # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content["内容"] if content["内容"]
-
-    # {"内容"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content["content"] if content["content"]
-
-    # {"corrected_japanese"=>"昨日は病院でバリウムを飲んだ後遺症に苦しんだ。"}
-    return content["corrected_japanese"] if content["corrected_japanese"]
-
-    # { "corrected_text"=>
-    #   {"リフレッシュする自然の景色のおかげで、私たちの態度と心境はほとんど一夜にして変わりました。"=>"This is the full corrected sentence in natural Japanese."} }
-    # TODO: handle this case with a regex pattern which returns either key or value if either one has no alphabet characters.
-
-    # "corrected_text"=>{"full_text"=>"日本語で即答はたまにできません。理由は、その時に言おうとしていることが 頭の奥から出てこないからです。"}}
-    if is_hash?(content["corrected_text"]) && content["corrected_text"]["full_text"]
-      return content.dig("corrected_text", "full_text")
+    %w[corrected_text corrected_japanese].each do |key|
+      text = textual(content[key])
+      return text if content.key?(key) && text
     end
 
-    if is_hash?(content["corrected_text"]) && content.dig("corrected_text", "text")
-      return content.dig("corrected_text", "text")
-    end
+    mirrored = content.find { |key, value| sentence_key?(key) && key == value.to_s }
+    return mirrored.first if mirrored
 
-    # {"corrected_text"=>"今になって、その仕事の教師たちと今はもう会わない"}
-    return content["corrected_text"] if content["corrected_text"]
-
-    # {"text"=>"仕事で上司に「ITパスポート」という資格を取るように頼まれました"}
-    return content["text"] if content["text"]
-
-    #  {"Today was such a hot day."=>""}
-    if content.values.first.empty?
-      return content.keys.first
-    end
-
-    #  "昨年のクリスマスに私はあなたに心を捧げました"
-    if content["corrected_text"].keys.first == content["corrected_text"].values.first
-      return content["corrected_text"].values.first
-    end
-
-    content
+    prose_from
   end
 
   def is_hash?(content)
@@ -316,8 +204,63 @@ class AiQuery < ApplicationRecord
     raw_response.to_s.sub(/\A\s*```(?:json)?\s*/i, "").sub(/\s*```\s*\z/, "").strip
   end
 
-  def entry_regex
-    /\Aentry_\d+\z/
+  def present_change(result)
+    text = result.is_a?(String) ? result : textual(result)
+    return if text.blank?
+
+    split_change_content(text)
+  end
+
+  def prose_from(wrapper_key = nil)
+    content = parsed_response
+    return textual(content) unless content.is_a?(Hash)
+
+    if wrapper_key && content.key?(wrapper_key)
+      return textual(content[wrapper_key])
+    end
+
+    textual(content.except(*item_keys(content)))
+  end
+
+  def text_from_explanation(value)
+    return value if value.is_a?(String)
+    return unless value.is_a?(Hash)
+
+    picked = value.select { |key, _| key.to_s.match?(/explanation|reason|comment/i) }
+    textual(picked.presence || value.except("content", "reading"))
+  end
+
+  def textual(value)
+    case value
+    when String
+      value.strip.presence
+    when Array
+      value.filter_map { |item| textual(item) }.uniq.join("\n").presence
+    when Hash
+      value.flat_map { |key, item|
+        text = textual(item)
+        if text
+          [ text ]
+        elsif sentence_key?(key)
+          [ key.strip ]
+        else
+          []
+        end
+      }.uniq.join("\n").presence
+    end
+  end
+
+  def item_keys(content)
+    content.keys.grep(/\A(?:entry|change|line|hint|answer)_\d+\z/)
+  end
+
+  def sentence_key?(key)
+    return false unless key.is_a?(String)
+
+    text = key.strip
+    return false if text.blank? || text.match?(/\A\w+\z/)
+
+    text.match?(/\p{Hiragana}|\p{Katakana}|\p{Han}/) || text.include?(" ")
   end
 
   def translation_from_quiz_line(line)

@@ -11,5 +11,24 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe JournalsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  def query_for(prompt, quizzes: [])
+    instance_double(AiQuery, prompt: prompt, quizzes: quizzes)
+  end
+
+  it "links a normal question" do
+    query = query_for(FreeQuestionPrompt.new)
+
+    expect(helper.query_unrelated_to_quizzes?(query)).to be true
+  end
+
+  it "hides a retired hint prompt that has no show page" do
+    query = query_for(Prompt.new)
+
+    expect(helper.query_unrelated_to_quizzes?(query)).to be false
+  end
+
+  it "hides quiz preparation and graded quizzes" do
+    expect(helper.query_unrelated_to_quizzes?(query_for(PrepareQuizPrompt.new))).to be false
+    expect(helper.query_unrelated_to_quizzes?(query_for(QuizResultPrompt.new, quizzes: [ instance_double(Quiz) ]))).to be false
+  end
 end

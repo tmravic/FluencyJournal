@@ -1,7 +1,11 @@
 module JournalsHelper
   def query_unrelated_to_quizzes?(query)
-    quiz_prompts = ["PrepareQuizPrompt", "QuizResultPrompt"]
-    query.quizzes.empty? && !quiz_prompts.include?(query.prompt.class.name)
+    prompt = query.prompt
+    return false if query.quizzes.any?
+    return false if prompt.is_a?(PrepareQuizPrompt) || prompt.is_a?(QuizResultPrompt)
+
+    # Retired hint prompts are the base Prompt class. They have no show page.
+    prompt.respond_to?(:change_keyword)
   end
 
   def all_or_todays

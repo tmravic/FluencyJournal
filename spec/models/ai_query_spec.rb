@@ -133,4 +133,56 @@ RSpec.describe AiQuery, type: :model do
     end
   end
 
+  describe "#assessment" do
+    it "reads the sentence out of whatever object the model nested it in" do
+      query = described_class.new(
+        raw_response: {
+          entry_1: { content: "line" },
+          assessment: { summary: "All four answers were left empty." }
+        }.to_json
+      )
+
+      expect(query.assessment).to eq("All four answers were left empty.")
+    end
+
+    it "keeps an assessment that is already a sentence" do
+      query = described_class.new(raw_response: '{"assessment":"The answers match."}')
+
+      expect(query.assessment).to eq("The answers match.")
+    end
+
+    it "joins every prose field without printing the hash" do
+      query = described_class.new(
+        raw_response: '{"assessment":{"summary":"One point.","grammar_points":"Watch は."}}'
+      )
+
+      expect(query.assessment).to eq("One point.\nWatch は.")
+      expect(query.assessment).not_to include("=>")
+    end
+  end
+
+  describe "#corrected_text" do
+    it "reads a corrected sentence stored under an unexpected key" do
+      query = described_class.new(raw_response: '{"corrected_text":{"value":"今日は雨だった"}}')
+
+      expect(query.corrected_text).to eq("今日は雨だった")
+    end
+
+    it "uses the sentence when the model makes it both the key and the value" do
+      sentence = "お時間がかかってしまい申し訳ございません。"
+      query = described_class.new(raw_response: { sentence => sentence }.to_json)
+
+      expect(query.corrected_text).to eq(sentence)
+    end
+  end
+
+  describe "#change_explanation" do
+    it "reads an explanation nested under a key other than explanation_en" do
+      query = described_class.new(
+        raw_response: '{"entry_1":{"content":"line","note":{"comment":"Left blank."}}}'
+      )
+
+      expect(query.change_explanation("entry_", "1", "en")).to eq("Left blank.")
+    end
+  end
 end
