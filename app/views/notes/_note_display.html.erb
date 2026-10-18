@@ -13,7 +13,7 @@
                         form: { data: { turbo_confirm: t("note.actions.studied_warning") } },
                         class: "btn btn--light" %>
         <% else %>
-          <span class="note__next_review">
+          <span class="note__next-review">
             <%= turbo_frame_tag "next_review_timestamp_#{note.id}" do %>
               <%= render partial: "notes/next_review_timestamp", locals: { note: note } %>
             <% end %>

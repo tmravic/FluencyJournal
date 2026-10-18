@@ -74,14 +74,6 @@
   <h2>Medium</h2>
 
   <article>
-    <h3><span class="tag medium">Medium</span>27. One naming scheme, and no id selectors</h3>
-    <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">_quiz.scss</span>, <span class="path">_quiz_answer.scss</span>, <span class="path">_request_form.scss</span>, <span class="path">_navbar.scss</span>, <span class="path">_followup.scss</span></p>
-    <p>Blocks and elements are mixed three ways. <code>.empty-state</code> and <code>.visually-hidden</code> use hyphens. <code>.note__change_due_date</code>, <code>.notes_box_scroll</code>, <code>.quiz_delete_buttons</code>, <code>.quiz_answer</code>, <code>.request_form</code>, and <code>.send_button_box</code> use underscores as if they were elements of a block that was never named. <code>.note__link-journals-label</code> then switches back to hyphens. <code>#send_button</code> styles an id. BEM does not style ids, because an id cannot be reused and it overrides every class.</p>
-    <p><code>.header</code> is also a layout block in <span class="path">layouts/_header.scss</span> and a nested class inside <code>.note__header</code>. Those are two components sharing a name, so a header rule in one file changes the other.</p>
-    <p>Pick hyphens for multi-word blocks and elements (<code>.notes-box</code>, <code>.note__due-date</code>, <code>.quiz__delete</code>). Rename <code>.header</code> inside a note to <code>.note__toolbar</code>. Replace <code>#send_button</code> with <code>.request-form__submit</code>.</p>
-  </article>
-
-  <article>
     <h3><span class="tag medium">Medium</span>28. Keep each block’s rules in its own file</h3>
     <p><span class="path">app/assets/stylesheets/components/_note.scss</span>, <span class="path">_entry.scss</span>, <span class="path">_followup.scss</span></p>
     <p>Dark-theme <code>.btn--journal-short</code> lives in the note file. <code>.note .form__group</code>, <code>.note .form__input__button_block</code>, and <code>.form.entry textarea.form__input</code> reach into the form block from outside it. <code>.followup .form__checkbox-label</code> does the same. A block owns its elements. Another block may sit next to it; it should not retune its insides.</p>

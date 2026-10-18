@@ -1,5 +1,5 @@
 <%= simple_form_for EntryPrompt.new, url: ai_request_journal_ai_queries_path(@journal),
-             method: :post, html: { class: "request_form" } do |f| %>
+             method: :post, html: { class: "request-form" } do |f| %>
   <%= f.hidden_field :uuid, value: @uuid %>
   <%= f.hidden_field :journal_id, value: @journal.id %>
 
@@ -14,7 +14,7 @@
   </div>
 
   <%= turbo_frame_tag "ai_request_form_delete_buttons" do %>
-    <div class="send_button_box">
+    <div class="request-form__submit-box">
       <% model_options = [
         [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
         [t("ai_query.model.higher_quality"), "grok-4.6"]
@@ -22,7 +22,7 @@
         <%= f.select :ai_model, options_for_select(model_options, "grok-4-fast-non-reasoning") %>
         <%#= f.select :ai_model, options_for_select(@ai_models, "grok-4-fast-non-reasoning") %>
 
-      <%= f.submit t('ai_query.send'), class: "btn btn--primary", id: "send_button",
+      <%= f.submit t('ai_query.send'), class: "btn btn--primary request-form__submit",
                    data: {
                      turbo_stream: true,
                      controller: "scroll",

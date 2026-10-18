@@ -1,4 +1,4 @@
-<div class="request_form">
+<div class="request-form">
   <div>
     <label for="base_content">
       <%= t("followup.followup_question") %>
@@ -12,7 +12,7 @@
     </label>
     <textarea id="user_generated_content" readonly><%= followup.prompt.user_generated_content %></textarea>
   </div>
-  <div class="followup__request_form">
+  <div class="followup__request-form">
     <% if followup.origin.is_a?(Note) %>
       <%= button_to t("followup.delete_followup"),
                     followup_path(followup, source_tag: source_tag),
@@ -33,7 +33,7 @@
                     ),
                     method: :delete,
                     data: { turbo_stream: true },
-                    class: "btn btn--light", id: "send_button" %>
+                    class: "btn btn--light request-form__submit" %>
       <%= close_followup_button(source_tag: source_tag) %>
     <% end %>
   </div>

@@ -37,9 +37,9 @@ RSpec.describe QuizAnswerHelper, type: :helper do
 
       result = helper.highlighted_quiz_answer(original, user_response)
 
-      expect(result).to include('class="quiz_answer__match">小さい頃からコーヒーと</span>')
+      expect(result).to include('class="quiz-answer__match">小さい頃からコーヒーと</span>')
       expect(result).to include("<span>か</span>")
-      expect(result).to include('class="quiz_answer__match">カフェイン入りの飲み物を飲んできました。</span>')
+      expect(result).to include('class="quiz-answer__match">カフェイン入りの飲み物を飲んできました。</span>')
     end
   end
 

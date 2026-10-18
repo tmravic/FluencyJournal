@@ -1,6 +1,6 @@
 <div class="container">
   <%= turbo_frame_tag "notes_box" do %>
-    <div class="notes_box_scroll">
+    <div class="notes-box">
       <%= turbo_frame_tag Note.new do %>
         <%= render "notes/empty_state_drafts" unless @draft_notes.present? %>
       <% end %>

@@ -1,9 +1,9 @@
-<div class="delete_buttons">
+<div class="request-form__delete">
   <%= button_to t('ai_query.delete'),
                 journal_ai_query_path(journal, ai_query),
                 method: :delete,
                 data: { turbo_stream: true },
-                class: "btn btn--light", id: "send_button" %>
+                class: "btn btn--light request-form__submit" %>
 
   <%= link_to t("close"),
               journal_path(journal),

@@ -4,7 +4,7 @@
     <%= select_tag "prompt_template",
                    options_for_select([[t('prompt_templates.choose_a_template'), ""]] + templates),
                    id: "prompt_template_select",
-                   class: "form__input",
+                   class: "form__input followup__template-select",
                    data: { action: "change->template-prompt-select#fill" } %>
   <div class="followup__prompt_template_buttons">
     <%= label_tag :save_as_template, class: "form__checkbox-label" do %>

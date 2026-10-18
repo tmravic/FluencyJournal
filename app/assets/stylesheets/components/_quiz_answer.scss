@@ -1,6 +1,6 @@
 @use '../components';
 
-.quiz_answer {
+.quiz-answer {
   font-size: var(--font-size-l);
 
   @include components.media(tabletAndUp) {

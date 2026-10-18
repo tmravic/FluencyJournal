@@ -9,7 +9,7 @@
     <%= label_tag "prompt_template", t("prompt_templates.label"), class: "form__label" %>
     <%= select_tag "prompt_template",
                    options_for_select([[t("prompt_templates.choose_a_template"), ""]] + @followup_template_prompts),
-                   class: "form__input" %>
+                   class: "form__input followup__template-select" %>
     <div class="followup__prompt_template_buttons">
       <%= submit_tag t('prompt_templates.delete_selected_prompt'), class: "btn btn--primary btn--short" %>
       <%= link_to t('cancel'),

@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "quiz_answer_#{@ai_output.identifier}" do %>
   <hr>
-  <div class="quiz_answer">
+  <div class="quiz-answer">
     <p><%= @original_entry_text %></p>
     <p><%= @ai_output.content %></p>
     <p><%= highlighted_quiz_answer(@original_entry_text, @quiz_answer.user_response) %></p>

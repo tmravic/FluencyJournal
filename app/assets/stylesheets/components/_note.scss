@@ -36,7 +36,7 @@
       font-size: var(--font-size-xs);
     }
 
-    .header {
+    .note__toolbar {
       display: flex;
       flex: 0 0 auto;
       flex-wrap: nowrap;
@@ -60,7 +60,7 @@
       align-items: center;
       gap: var(--space-xxs);
 
-      .header {
+      .note__toolbar {
         gap: var(--space-xxxs);
 
         .btn {
@@ -71,7 +71,7 @@
     }
   }
 
-  &__change_due_date {
+  &__due-date {
     font-size: var(--font-size-xs);
   }
 
@@ -83,7 +83,7 @@
     }
   }
 
-  &__todays_notes_count {
+  &__todays-notes-count {
     font-size: var(--font-size-xs);
   }
 
@@ -93,13 +93,13 @@
     gap: var(--space-xs);
   }
 
-  &__next_review {
+  &__next-review {
     display:flex;
     align-items:center;
   }
 }
 
-.notes_box_scroll {
+.notes-box {
   max-height: 80vh;
   min-height: 10vh;
   height: 45vh;

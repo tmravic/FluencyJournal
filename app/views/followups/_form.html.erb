@@ -7,6 +7,7 @@
       <%= followup_prompt.label t('followup.followup_question') %>
       <div data-controller="template-prompt-select">
         <%= followup_prompt.text_area :base_content,
+                                      class: "followup__question",
                                       data: { template_prompt_select_target: "textarea" },
                                       html5: true,
                                       placeholder: t('followup.placeholder') %>

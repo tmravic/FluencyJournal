@@ -41,7 +41,7 @@
     gap: var(--space-xs);
   }
 
-  &__request_form {
+  &__request-form {
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 5px;
@@ -56,11 +56,11 @@
   }
 }
 
-#prompt_template_select,
-#prompt_template {
+.followup__template-select {
   font-size: var(--font-size-s);
 }
-#followup_followup_prompt_base_content {
+
+.followup__question {
   width: 100%;
 }
 .followup .form__checkbox-label {

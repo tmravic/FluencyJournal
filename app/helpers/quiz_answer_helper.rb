@@ -24,7 +24,7 @@ module QuizAnswerHelper
   private
 
   def render_quiz_answer_segment(segment)
-    css_class = segment[:match] ? "quiz_answer__match" : nil
+    css_class = segment[:match] ? "quiz-answer__match" : nil
     content_tag(:span, h(segment[:text]), class: css_class)
   end
 

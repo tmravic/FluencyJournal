@@ -88,12 +88,12 @@
       <% end %>
     <% end %>
   </div>
-  <div class="quiz_delete_buttons">
+  <div class="quiz__delete">
     <%= button_to t("quiz.delete"),
                   journal_quiz_path(@journal, @quiz),
                   method: :delete,
                   data: { turbo_stream: true },
-                  class: "btn btn--light", id: "send_button" %>
+                  class: "btn btn--light request-form__submit" %>
 
     <%= link_to t("close"),
                 close_quiz_journal_quizzes_path(@ai_query.journal),
