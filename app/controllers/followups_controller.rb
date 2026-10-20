@@ -4,6 +4,9 @@ class FollowupsController < ApplicationController
 
   before_action :set_followup, only: %i[show destroy]
   ALLOWED_CLASSES = %w[Entry AiOutput Note Followup JournalFollowup].freeze
+  # What followups/_form posts as the origin class when it was rendered
+  # without an origin ("Unknown", id 0), besides a blank value.
+  FORM_PLACEHOLDER_ORIGIN_CLASSES = %w[Unknown 0].freeze
 
   def new
     @source_tag = params[:source_tag]
@@ -61,14 +64,8 @@ class FollowupsController < ApplicationController
 
     # define what object this followup references
     origin_class_str = followup_params[:followup_origin_class].to_s
-    if origin_class_str.blank? || origin_class_str == "Unknown" || origin_class_str == "0"
-      Rails.logger.error "FOLLOWUPS#CREATE: Received invalid followup_origin_class=#{origin_class_str.inspect} (id=#{followup_params[:followup_origin_id]}). This usually means the form was rendered before @followup_origin was set."
-      respond_to do |format|
-        format.turbo_stream { head :unprocessable_entity }
-        format.html { redirect_to root_path, status: :see_other, alert: t("followup.invalid_origin") }
-      end
-      return
-    end
+    return respond_missing_origin(origin_class_str) if missing_origin_class?(origin_class_str)
+
     followup_origin_class = origin_class_for(origin_class_str)
     if followup_origin_class == JournalFollowup
       journal = current_group.journals.find(followup_params[:journal_id])
@@ -173,6 +170,21 @@ class FollowupsController < ApplicationController
   end
 
   private
+
+  # A blank or placeholder origin class means the form never had an origin.
+  # That is answered with 422 / a redirect, unlike an unknown class name,
+  # which origin_class_for turns into a 404.
+  def missing_origin_class?(class_name)
+    class_name.blank? || class_name.in?(FORM_PLACEHOLDER_ORIGIN_CLASSES)
+  end
+
+  def respond_missing_origin(class_name)
+    Rails.logger.error "FOLLOWUPS#CREATE: Received invalid followup_origin_class=#{class_name.inspect} (id=#{followup_params[:followup_origin_id]}). This usually means the form was rendered before @followup_origin was set."
+    respond_to do |format|
+      format.turbo_stream { head :unprocessable_entity }
+      format.html { redirect_to root_path, status: :see_other, alert: t("followup.invalid_origin") }
+    end
+  end
 
   # The turbo frames destroy.turbo_stream.erb clears: the one the request
   # names, or the followup frame plus the source frame (e.g.
