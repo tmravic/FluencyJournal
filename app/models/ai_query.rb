@@ -193,23 +193,14 @@ class AiQuery < ApplicationRecord
     prose_from
   end
 
-  def is_hash?(content)
-    content.class == Hash
-  end
-
-  def transform_keys(hash, prefix = "answer_")
-    return hash unless hash.is_a?(Hash) && hash["answers"]
-    new_answers = {}
-    hash["answers"].each do |old_key, value|
-      new_key = "#{prefix}#{old_key}"
-      new_answers[new_key] = value
-    end
-    # hash["answers"] = new_answers
-    # hash
-    new_answers
-  end
-
   private
+
+  # {"answers" => {"1" => ...}} becomes {"answer_1" => ...}.
+  def prefixed_answers(hash, prefix = "answer_")
+    return hash unless hash.is_a?(Hash) && hash["answers"]
+
+    hash["answers"].to_h { |old_key, value| [ "#{prefix}#{old_key}", value ] }
+  end
 
   def explanation_value(parsed, key, abbr)
     return if key.nil?
@@ -224,7 +215,7 @@ class AiQuery < ApplicationRecord
   def parse_into_object
     parsed = parse_raw_response
     parsed = JSON.parse(parsed) if parsed.is_a?(String)
-    parsed = transform_keys(parsed, "answer_") if parsed.is_a?(Hash) && parsed["answers"]
+    parsed = prefixed_answers(parsed, "answer_") if parsed.is_a?(Hash) && parsed["answers"]
     parsed
   rescue JSON::ParserError
     nil
