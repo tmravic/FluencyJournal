@@ -11,7 +11,7 @@ class QuizzesController < ApplicationController
   def prepare_quiz
     uuid = SecureRandom.uuid
     prepare_quiz_prompt = PrepareQuizPrompt.build(
-      raw_prompt: @journal.full_journal,
+      raw_prompt: JSON.generate(@journal.full_journal),
       ai_model: "grok-4-fast-non-reasoning",
       uuid: uuid,
       base_content: @journal.full_journal.join,
@@ -64,8 +64,11 @@ class QuizzesController < ApplicationController
     user_translation = @quiz.responses
     # ["Test", "Test"]
 
-    prompt_content = "Original journal entries: #{original_journal}, " +
-                     "Quiz questions: #{quiz_entries}," + "Quiz Answers: #{user_translation}"
+    prompt_content = [
+      "Original journal entries: #{JSON.generate(original_journal)}",
+      "Quiz questions: #{JSON.generate(quiz_entries)}",
+      "Quiz Answers: #{JSON.generate(user_translation)}"
+    ].join("\n")
 
     quiz_result_prompt = QuizResultPrompt.build(
       raw_prompt: prompt_content,
