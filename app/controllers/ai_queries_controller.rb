@@ -9,9 +9,8 @@ class AiQueriesController < ApplicationController
   end
 
   def destroy
-    @deleting_a_quiz = @ai_query.quizzes.any? || @ai_query.graded_quizzes.any?
+    @deleting_a_quiz = @ai_query.quiz_related?
     @ai_query.destroy!
-    @uuid = SecureRandom.uuid
 
     respond_to do |format|
       format.html { redirect_to journal_path(@journal), status: :see_other }
@@ -45,6 +44,8 @@ class AiQueriesController < ApplicationController
     end
   end
 
+  private
+
   def set_ai_query
     @ai_query = @journal.ai_queries.find(params.expect(:id))
   end
@@ -58,8 +59,6 @@ class AiQueriesController < ApplicationController
       entry_prompt: [ :base_content, :user_generated_content, :ai_model, :uuid, :journal_id ]
     )
   end
-
-  private
 
   def create_raw_prompt
     original_language ="Original Language: #{entry_prompt_params[:base_content]}"

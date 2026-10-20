@@ -60,6 +60,11 @@ class AiQuery < ApplicationRecord
     prompt.ai_model
   end
 
+  # Prepared or graded a quiz (deleting it changes the quiz UI).
+  def quiz_related?
+    quizzes.exists? || graded_quizzes.exists?
+  end
+
   def create_quiz_questions(translated_response, expected_count: nil, quiz: nil)
     # Filter and sort only the real line_N keys the model actually returned
     line_keys = translated_response.keys
