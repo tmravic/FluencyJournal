@@ -39,6 +39,12 @@ class Journal < ApplicationRecord
     entries.pluck(:content)
   end
 
+  # The journal followup that whole-journal followups hang off, created on
+  # first use.
+  def journal_followup_for_followups!
+    JournalFollowup.find_or_create_by!(journal: self)
+  end
+
   # All entries as one text, in entry order.
   def full_text(separator = "\n\n")
     full_journal.join(separator)

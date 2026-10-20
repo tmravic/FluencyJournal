@@ -41,14 +41,7 @@ class FollowupsController < ApplicationController
     origin_class_str = followup_params[:followup_origin_class].to_s
     return respond_missing_origin(origin_class_str) if missing_origin_class?(origin_class_str)
 
-    followup_origin_class = origin_class_for(origin_class_str)
-    if followup_origin_class == JournalFollowup
-      journal = current_group.journals.find(followup_params[:journal_id])
-      @followup_origin = JournalFollowup.find_or_create_by!(journal: journal)
-    else
-      followup_origin_id = followup_params[:followup_origin_id].to_i
-      @followup_origin = find_accessible_origin(followup_origin_class, followup_origin_id)
-    end
+    @followup_origin = saved_followup_origin(origin_class_for(origin_class_str))
     set_user_and_journal
 
     if saving_new_template_prompt?
@@ -151,10 +144,25 @@ class FollowupsController < ApplicationController
   # (or id); create saves it.
   def new_followup_origin(klass)
     if klass == JournalFollowup
-      current_group.journals.find(params[:journal_id].presence || params[:id]).journal_followups.build
+      followup_journal(params[:journal_id].presence || params[:id]).journal_followups.build
     elsif params[:id].present?
       find_accessible_origin(klass, params[:id].to_i)
     end
+  end
+
+  # The origin create attaches the followup to. A journal has one journal
+  # followup, created on first use.
+  def saved_followup_origin(klass)
+    if klass == JournalFollowup
+      followup_journal(followup_params[:journal_id]).journal_followup_for_followups!
+    else
+      find_accessible_origin(klass, followup_params[:followup_origin_id].to_i)
+    end
+  end
+
+  # Journal followups may be asked on any journal in the group.
+  def followup_journal(journal_id)
+    current_group.journals.find(journal_id)
   end
 
   # What the form pre-fills as the reference text: the origin's content,
