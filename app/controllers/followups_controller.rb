@@ -16,7 +16,7 @@ class FollowupsController < ApplicationController
     @followup_prompt = FreeQuestionPrompt.new
     @followup = @followup_prompt.build_followup
 
-    klass = check_allowed_classes_for_followup(class_name)
+    klass = origin_class_for(class_name)
 
     if class_name == "JournalFollowup"
       journal_id = params[:journal_id].presence || params[:id]
@@ -73,7 +73,7 @@ class FollowupsController < ApplicationController
       end
       return
     end
-    followup_origin_class = check_allowed_classes_for_followup(origin_class_str)
+    followup_origin_class = origin_class_for(origin_class_str)
     if followup_origin_class == JournalFollowup
       journal = current_group.journals.find(followup_params[:journal_id])
       @followup_origin = JournalFollowup.find_or_create_by!(journal: journal)
@@ -232,23 +232,11 @@ class FollowupsController < ApplicationController
     end
   end
 
-  def check_allowed_classes_for_followup(class_name)
+  # Turns a whitelisted class name from params into the origin model class.
+  def origin_class_for(class_name)
     raise ActiveRecord::RecordNotFound unless ALLOWED_CLASSES.include?(class_name)
 
-    case class_name
-    when "Entry"
-      Entry
-    when "AiOutput"
-      AiOutput
-    when "Note"
-      Note
-    when "Followup"
-      Followup
-    when "JournalFollowup"
-      JournalFollowup
-    else
-      raise ActiveRecord::RecordNotFound
-    end
+    class_name.constantize
   end
 
   def set_followup
