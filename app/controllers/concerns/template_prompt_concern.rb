@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module TemplatePromptConcern
+  # Everything here is a controller helper, not an action, so it is all
+  # private: public methods in a controller module become routable actions.
+  private
+
   def get_template_prompts_scoped_by_user(user, due_notes_dropdown: :full, include_due_notes_template: true)
     db_templates = FollowupTemplatePrompt.by_user(user).pluck(:base_content)
 
@@ -25,8 +29,6 @@ module TemplatePromptConcern
 
     build_due_notes_template(user, format: :full)
   end
-
-  private
 
   def due_notes_prompt_selected?(base_content)
     return false if base_content.blank?
