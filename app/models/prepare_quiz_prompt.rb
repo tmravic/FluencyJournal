@@ -39,7 +39,8 @@ class PrepareQuizPrompt < Prompt
     PROMPT
   end
 
+  # Must match the line_N keys that response_format asks for.
   def change_keyword
-    "translation_"
+    "line_"
   end
 end
