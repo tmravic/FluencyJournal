@@ -44,4 +44,9 @@ class ApplicationController < ActionController::Base
   def set_api_key
     @api_key = Rails.application.credentials.xai[:api_key]
   end
+
+  # "1", "true", "on" etc. become true; anything else (including a missing key) is false.
+  def boolean_param(key)
+    ActiveModel::Type::Boolean.new.cast(params[key]) || false
+  end
 end

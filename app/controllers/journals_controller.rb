@@ -30,7 +30,7 @@ class JournalsController < ApplicationController
 
   # GET /journals/1 or /journals/1.json
   def show
-    @cancel = ActiveModel::Type::Boolean.new.cast(params["cancel"])
+    @cancel = boolean_param(:cancel)
     @entries = @journal.entries.ordered
     @source_tag = SourceTag::AI_ASSISTANT
 
@@ -159,7 +159,7 @@ class JournalsController < ApplicationController
 
   # GET /journals/:id/reading_mode
   def reading_mode
-    @reading_mode = ActiveModel::Type::Boolean.new.cast(params[:reading_mode]) || false
+    @reading_mode = boolean_param(:reading_mode)
     @entries = @journal.entries.ordered
     @source_tag = SourceTag::AI_ASSISTANT
 
@@ -184,7 +184,7 @@ class JournalsController < ApplicationController
 
   def compare
     @journal = current_group.journals.find(params[:id])
-    @todays_filter = ActiveModel::Type::Boolean.new.cast(params[:todays])
+    @todays_filter = boolean_param(:todays)
 
     @journals =
       if @todays_filter
@@ -193,7 +193,7 @@ class JournalsController < ApplicationController
         current_group.journals.order(:title)
       end
 
-    if ActiveModel::Type::Boolean.new.cast(params[:cancel])
+    if boolean_param(:cancel)
       render html: helpers.turbo_frame_tag("compare"), layout: false
       return
     end

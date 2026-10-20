@@ -51,7 +51,7 @@ class FollowupsController < ApplicationController
 
     if @journal.nil?
       # Cancel chooses today's notes or all notes from this flag.
-      @followup_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
+      @followup_from_todays_notes = boolean_param(:followup_from_todays_notes)
     end
     render layout: false if @source_tag == SourceTag::AI_ASSISTANT
   end

@@ -112,7 +112,7 @@ class NotesController < ApplicationController
 
   def update
     @source_tag = SourceTag::NOTES_BOX
-    update_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:update_from_todays_notes])
+    update_from_todays_notes = boolean_param(:update_from_todays_notes)
     respond_to do |format|
       if @note.update(note_params)
         format.html { redirect_to journals_path, status: :see_other, notice: t("note.updated") }
@@ -212,7 +212,7 @@ class NotesController < ApplicationController
   private
 
   def delete_came_from_todays_notes?
-    ActiveModel::Type::Boolean.new.cast(params[:delete_from_todays_notes])
+    boolean_param(:delete_from_todays_notes)
   end
 
   def note_made_automatically?
@@ -246,7 +246,7 @@ class NotesController < ApplicationController
   end
 
   def set_notes_view_context
-    @from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:from_todays_notes])
+    @from_todays_notes = boolean_param(:from_todays_notes)
     @source_tag = SourceTag::NOTES_BOX
     @todays_notes = @from_todays_notes ? Current.user&.notes.next_to_study : nil
   end
