@@ -36,7 +36,7 @@ class NotesController < ApplicationController
 
   def for_journal
     @source_tag = "notes_box"
-    @journal = Current.user.journals.find(params[:journal_id])
+    @journal = linkable_journals.find(params[:journal_id])
     @journal_notes = @journal.notes.order(:next_study_date).includes(:followups, :journals)
     respond_to do |format|
       format.html
@@ -187,7 +187,7 @@ class NotesController < ApplicationController
   def link_journals
     set_notes_view_context
     @note = Current.user.notes.includes(:journals).find(params[:id])
-    @journals = Current.user.journals.order(:title)
+    @journals = linkable_journals.order(:title)
   end
 
   def cancel_link_journals
@@ -199,12 +199,12 @@ class NotesController < ApplicationController
     set_notes_view_context
     @note = Current.user.notes.includes(:journals, :followups).find(params[:id])
     submitted = Array(journal_link_params[:journal_ids]).compact_blank
-    @note.journal_ids = current_group.journals.where(id: submitted).ids
+    @note.journal_ids = linkable_journals.where(id: submitted).ids
 
     if @note.save
       render :update_journals
     else
-      @journals = Current.user.journals.order(:title)
+      @journals = linkable_journals.order(:title)
       render :link_journals, status: :unprocessable_entity
     end
   end
@@ -236,6 +236,13 @@ class NotesController < ApplicationController
 
   def set_note
     @note = Current.user.notes.find(params.expect(:id))
+  end
+
+  # The journals a note can be linked to and listed under: the user's own.
+  # Groups share journals for viewing only; nobody links notes to a
+  # group-mate's journal.
+  def linkable_journals
+    Current.user.journals
   end
 
   def set_notes_view_context
