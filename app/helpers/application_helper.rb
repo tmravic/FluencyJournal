@@ -105,12 +105,6 @@ module ApplicationHelper
     { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
   end
 
-  LANGUAGE_CODES = {
-    "English" => "En",
-    "Japanese" => "Ja",
-    "Thai" => "Th"
-  }.freeze
-
   def generate_original_and_learning_language
     # e.g. En → Ja
     original = language_code(Current.user.original_language)
@@ -118,7 +112,9 @@ module ApplicationHelper
     "#{original} → #{learning}"
   end
 
+  # Display form ("En", "Ja") of Prompt::LANGUAGE_ABBREVIATIONS. Languages
+  # without an entry fall back to their first two letters ("Thai" => "Th").
   def language_code(language)
-    LANGUAGE_CODES.fetch(language.to_s) { language.to_s[0, 2].capitalize }
+    Prompt.language_code(language, default: language.to_s[0, 2]).capitalize
   end
 end
