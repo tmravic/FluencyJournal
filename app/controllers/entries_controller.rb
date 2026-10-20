@@ -1,6 +1,5 @@
 class EntriesController < ApplicationController
   include JournalScoped
-  require "securerandom"
   before_action :set_entry, only: %i[ show edit update destroy speak cancel ]
 
   # GET /entries/1 or /entries/1.json

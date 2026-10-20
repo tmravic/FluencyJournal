@@ -188,8 +188,4 @@ class QuizzesController < ApplicationController
   def get_translated_journal_entries
     @quiz.ai_query.ai_outputs.pluck(:content)
   end
-
-  def set_quiz_id_in_session
-    session[:quiz_id] = @quiz.id
-  end
 end
