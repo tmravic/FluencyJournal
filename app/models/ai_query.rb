@@ -165,11 +165,19 @@ class AiQuery < ApplicationRecord
     prose_from("assessment")
   end
 
+  # Keys the model may use for the full corrected sentence.
+  CORRECTED_TEXT_KEYS = %w[corrected_text corrected_japanese].freeze
+
+  def corrected_text_key?
+    parsed = parsed_response
+    parsed.is_a?(Hash) && CORRECTED_TEXT_KEYS.any? { |key| parsed.key?(key) }
+  end
+
   def corrected_text
     content = parsed_response
     return textual(content) unless content.is_a?(Hash)
 
-    %w[corrected_text corrected_japanese].each do |key|
+    CORRECTED_TEXT_KEYS.each do |key|
       text = textual(content[key])
       return text if content.key?(key) && text
     end

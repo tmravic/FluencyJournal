@@ -133,4 +133,26 @@ RSpec.describe AiOutput, type: :model do
       expect(assessment.content).to eq("One line was blank.")
     end
   end
+
+  describe "a corrected_japanese body" do
+    let(:corrected_japanese_body) do
+      {
+        "change_1" => { "content" => "小さい針 → マイクロニードル", "explanation_en" => "Use the usual word." },
+        "corrected_japanese" => "マイクロニードルの施術を受けました。"
+      }.to_json
+    end
+
+    it "stores the corrected sentence card and puts the sentence on each change card" do
+      user, prompt, query = assistant_records(corrected_japanese_body)
+      service = XAiService.new
+      service.create_ai_outputs_for_each_change(query, prompt, user)
+      service.create_ai_output_for_corrected_text(query, prompt, user)
+
+      expect(query.ai_outputs.pluck(:identifier)).to contain_exactly("1", "corrected_text")
+      expect(query.ai_outputs.find_by(identifier: "corrected_text").content)
+        .to include("マイクロニードルの施術を受けました。")
+      expect(query.ai_outputs.find_by(identifier: "1").content)
+        .to start_with("マイクロニードルの施術を受けました。")
+    end
+  end
 end
