@@ -36,6 +36,16 @@ class AiQuery < ApplicationRecord
     @parsed_response = parse_into_object
   end
 
+  def raw_response=(value)
+    forget_parsed_response
+    super
+  end
+
+  def reload(*)
+    forget_parsed_response
+    super
+  end
+
   # Counts the numbered items for a prompt's change keyword, e.g. "change_"
   # matches "change_1" and "change_2" but not "corrected_text" or "exchange_1".
   def count_changes(prefix)
@@ -196,6 +206,10 @@ class AiQuery < ApplicationRecord
   end
 
   private
+
+  def forget_parsed_response
+    remove_instance_variable(:@parsed_response) if instance_variable_defined?(:@parsed_response)
+  end
 
   # {"answers" => {"1" => ...}} becomes {"answer_1" => ...}.
   def prefixed_answers(hash, prefix = "answer_")

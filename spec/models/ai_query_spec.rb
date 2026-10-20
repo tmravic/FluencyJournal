@@ -86,6 +86,17 @@ RSpec.describe AiQuery, type: :model do
     end
   end
 
+  describe "#parsed_response memo" do
+    it "re-parses after raw_response is reassigned" do
+      query = described_class.new(raw_response: { "change_1" => { "content" => "a" } }.to_json)
+      expect(query.parsed_response.keys).to eq([ "change_1" ])
+
+      query.raw_response = { "line_1" => "b" }.to_json
+
+      expect(query.parsed_response).to eq("line_1" => "b")
+    end
+  end
+
   describe "#count_changes" do
     it "returns 0 when the body is not an object" do
       query = described_class.new(raw_response: "not json")
