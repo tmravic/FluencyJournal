@@ -1,0 +1,61 @@
+{
+  "reachable": {
+    "find_accessible_entry": [
+      "mate_entry",
+      "mine_entry"
+    ],
+    "find_accessible_origin(Entry)": [
+      "mate_entry",
+      "mine_entry"
+    ],
+    "find_accessible_note": [
+      "mine_note"
+    ],
+    "find_accessible_origin(Note)": [
+      "mine_note"
+    ],
+    "find_accessible_journal_followup": [
+      "mate_journal_followup",
+      "mine_journal_followup"
+    ],
+    "find_accessible_origin(JournalFollowup)": [
+      "mate_journal_followup",
+      "mine_journal_followup"
+    ],
+    "find_accessible_ai_query": [
+      "mate_query",
+      "mine_note_query",
+      "mine_query"
+    ],
+    "find_accessible_origin(AiQuery)": [],
+    "find_accessible_ai_output": [
+      "mate_output",
+      "mine_note_output",
+      "mine_output"
+    ],
+    "find_accessible_origin(AiOutput)": [
+      "mate_output",
+      "mine_note_output",
+      "mine_output"
+    ],
+    "find_accessible_followup": [
+      "mate_entry_followup",
+      "mate_journal_followup_followup",
+      "mate_output_followup",
+      "mine_entry_followup",
+      "mine_journal_followup_followup",
+      "mine_note_followup",
+      "mine_output_followup"
+    ],
+    "find_accessible_origin(Followup)": [
+      "mate_entry_followup",
+      "mate_journal_followup_followup",
+      "mate_output_followup",
+      "mine_entry_followup",
+      "mine_journal_followup_followup",
+      "mine_note_followup",
+      "mine_output_followup"
+    ],
+    "find_accessible_origin(User)": false
+  }
+}

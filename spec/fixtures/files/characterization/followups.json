@@ -1,0 +1,1168 @@
+{
+  "create/ai_output/change/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": "journal",
+      "followup_origin": "change_output"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "change_output",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "change_output",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/ai_output/change/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "journal",
+      "followup_origin": "change_output"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "change_output",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "change_output",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/ai_output/quiz_assessment_due_notes/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": "journal",
+      "followup_origin": "assessment"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella\nReference text: 参考",
+      "base_content": "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "assessment",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "assessment",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/ai_output/quiz_assessment_due_notes/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "journal",
+      "followup_origin": "assessment"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella\nReference text: 参考",
+      "base_content": "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "assessment",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "assessment",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/blank_class/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/",
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/blank_class/turbo": {
+    "page": {
+      "status": 422,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/entry/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": "journal",
+      "followup_origin": "entry"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "entry",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "entry",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/entry/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "journal",
+      "followup_origin": "entry"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "entry",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "entry",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/followup/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": null,
+      "followup_origin": "parent_followup"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "parent_followup",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        null,
+        "FreeQuestionPrompt(unlabelled)",
+        "parent_followup",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/followup/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": null,
+      "followup_origin": "parent_followup"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "parent_followup",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        null,
+        "FreeQuestionPrompt(unlabelled)",
+        "parent_followup",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/journal_followup/due_notes/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": "journal",
+      "followup_origin": "journal_followup"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella\nReference text: 参考",
+      "base_content": "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "journal_followup",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "journal_followup",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/journal_followup/due_notes/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "journal",
+      "followup_origin": "journal_followup"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella\nReference text: 参考",
+      "base_content": "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "journal_followup",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "journal_followup",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/journal_followup/existing/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": "journal",
+      "followup_origin": "journal_followup"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "journal_followup",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "journal_followup",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/journal_followup/existing/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "journal",
+      "followup_origin": "journal_followup"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "journal_followup",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "journal_followup",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/journal_followup/new/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": "mate_journal",
+      "followup_origin": "JournalFollowup(unlabelled)"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 1,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"友達の文。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "JournalFollowup(unlabelled)",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "mate_journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "JournalFollowup(unlabelled)",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/journal_followup/new/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "mate_journal",
+      "followup_origin": "JournalFollowup(unlabelled)"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 1,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"友達の文。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "JournalFollowup(unlabelled)",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "mate_journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "JournalFollowup(unlabelled)",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/not_allowed_class/html": {
+    "page": {
+      "status": 404,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/not_allowed_class/turbo": {
+    "page": {
+      "status": 404,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/note/due_notes_label_not_expanded/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": null,
+      "followup_origin": "note"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: Use my due notes in this journal\nReference text: 参考",
+      "base_content": "Use my due notes in this journal",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "note",
+      "source_tag": "notes_box"
+    },
+    "jobs": [
+      [
+        "me",
+        null,
+        "FreeQuestionPrompt(unlabelled)",
+        "note",
+        "notes_box"
+      ]
+    ]
+  },
+  "create/note/due_notes_label_not_expanded/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": null,
+      "followup_origin": "note"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: Use my due notes in this journal\nReference text: 参考",
+      "base_content": "Use my due notes in this journal",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "note",
+      "source_tag": "notes_box"
+    },
+    "jobs": [
+      [
+        "me",
+        null,
+        "FreeQuestionPrompt(unlabelled)",
+        "note",
+        "notes_box"
+      ]
+    ]
+  },
+  "create/note/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/followups/<id>",
+      "journal": null,
+      "followup_origin": "note"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "note",
+      "source_tag": "notes_box"
+    },
+    "jobs": [
+      [
+        "me",
+        null,
+        "FreeQuestionPrompt(unlabelled)",
+        "note",
+        "notes_box"
+      ]
+    ]
+  },
+  "create/note/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": null,
+      "followup_origin": "note"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question: What does this mean?\nReference text: 参考",
+      "base_content": "What does this mean?",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": null
+    },
+    "followup": {
+      "origin": "note",
+      "source_tag": "notes_box"
+    },
+    "jobs": [
+      [
+        "me",
+        null,
+        "FreeQuestionPrompt(unlabelled)",
+        "note",
+        "notes_box"
+      ]
+    ]
+  },
+  "create/other_group_entry/html": {
+    "page": {
+      "status": 404,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/other_group_entry/turbo": {
+    "page": {
+      "status": 404,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/save_as_template/turbo": {
+    "page": {
+      "status": 200,
+      "location": null,
+      "journal": "journal",
+      "followup_origin": "entry"
+    },
+    "prompts_created": 1,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar.",
+      "Give me a mnemonic."
+    ],
+    "prompt": {
+      "raw_prompt": "Followup Question:   Give me a mnemonic.  \nReference text: 参考",
+      "base_content": "  Give me a mnemonic.  ",
+      "user_generated_content": "参考",
+      "ai_model": "grok-4-fast-non-reasoning",
+      "uuid": "uuid-1",
+      "sent_role_prompt": "You are a helpful Japanese teacher whose job it is to answer questions for students who are writing journal entries in Japanese as language learning practice. Each item in this array is part of a previous entry in this journal, which you should not correct or comment on but refer to as context to understand the current entry: [\"今日は雨だった。\",\"傘を忘れた。\"]. The student will submit to you parts of their journal, notes, or corrections which may contain both Japanese and English. Look at both their 'Reference text' and 'Followup Question' to give them answers and explanations in English. If the student asks for a reading for languages that contain kanji or something similar, provide the reading like these: (かく.ご) 覚悟、 お(てら) お寺、 (ごう.かく.りつ) 合格率. \nWhen writing Japanese, prefer how a native would actually say or write it in that situation, not textbook Japanese or a direct translation from English. Match the politeness and casualness of the student's text. Drop pronouns and other obvious context when a native would.\n",
+      "template": "Give me a mnemonic."
+    },
+    "followup": {
+      "origin": "entry",
+      "source_tag": "ai_assistant"
+    },
+    "jobs": [
+      [
+        "me",
+        "journal",
+        "FreeQuestionPrompt(unlabelled)",
+        "entry",
+        "ai_assistant"
+      ]
+    ]
+  },
+  "create/unknown_sentinel/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/",
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/unknown_sentinel/turbo": {
+    "page": {
+      "status": 422,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/zero_sentinel/html": {
+    "page": {
+      "status": 303,
+      "location": "http://www.example.com/",
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "create/zero_sentinel/turbo": {
+    "page": {
+      "status": 422,
+      "location": null,
+      "journal": null,
+      "followup_origin": null
+    },
+    "prompts_created": 0,
+    "journal_followups_created": 0,
+    "templates": [
+      "Explain the grammar."
+    ],
+    "prompt": null,
+    "followup": null,
+    "jobs": []
+  },
+  "destroy/assessment/html": {
+    "status": 303,
+    "location": "http://www.example.com/",
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/assessment/turbo": {
+    "status": 200,
+    "location": null,
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/change_output/html": {
+    "status": 303,
+    "location": "http://www.example.com/",
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/change_output/turbo": {
+    "status": 200,
+    "location": null,
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/entry/html": {
+    "status": 303,
+    "location": "http://www.example.com/",
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/entry/turbo": {
+    "status": 200,
+    "location": null,
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/journal_followup/html": {
+    "status": 303,
+    "location": "http://www.example.com/",
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/journal_followup/turbo": {
+    "status": 200,
+    "location": null,
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/journal_param": {
+    "status": 303,
+    "location": "http://www.example.com/journals/<journal>",
+    "display_frames": [
+      "custom_frame"
+    ]
+  },
+  "destroy/note/html": {
+    "status": 303,
+    "location": "http://www.example.com/notes",
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "destroy/note/turbo": {
+    "status": 200,
+    "location": null,
+    "display_frames": [
+      "followup_output_notes_box",
+      "notes_box"
+    ],
+    "followup_gone": true
+  },
+  "new/ai_output/change": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "雨だ\n↓\n雨だった",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "journal",
+    "followup_origin": "change_output"
+  },
+  "new/ai_output/quiz_assessment": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "Entry 1:\nIt rain \n↓\n It rained\n(Tense.)\n\nEntry 2:\numbrella\n(Fine.)",
+    "followup_template_prompts": [
+      "Use my due notes in this journal",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "journal",
+    "followup_origin": "assessment"
+  },
+  "new/blank_class": {
+    "status": 302,
+    "location": "http://www.example.com/",
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": null,
+    "followup_template_prompts": null,
+    "followup_from_todays_notes": null,
+    "journal": null,
+    "followup_origin": null
+  },
+  "new/blank_id": {
+    "status": 302,
+    "location": "http://www.example.com/",
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": null,
+    "followup_template_prompts": null,
+    "followup_from_todays_notes": null,
+    "journal": null,
+    "followup_origin": null
+  },
+  "new/entry/ai_assistant": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "今日は雨だった。",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "journal",
+    "followup_origin": "entry"
+  },
+  "new/entry/notes_box": {
+    "status": 200,
+    "location": null,
+    "layout": true,
+    "source_tag": "notes_box",
+    "reference_text": "今日は雨だった。",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "journal",
+    "followup_origin": "entry"
+  },
+  "new/followup": {
+    "error": "NoMethodError",
+    "message": "undefined method 'content'"
+  },
+  "new/group_mate_entry": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "友達の文。",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "mate_journal",
+    "followup_origin": "mate_entry"
+  },
+  "new/journal_followup/group_mate_journal": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "友達の文。",
+    "followup_template_prompts": [
+      "Use my due notes in this journal",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "mate_journal",
+    "followup_origin": "JournalFollowup(new, journal: mate_journal)"
+  },
+  "new/journal_followup/id": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "今日は雨だった。\n\n傘を忘れた。",
+    "followup_template_prompts": [
+      "Use my due notes in this journal",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "journal",
+    "followup_origin": "JournalFollowup(new, journal: journal)"
+  },
+  "new/journal_followup/journal_id": {
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "今日は雨だった。\n\n傘を忘れた。",
+    "followup_template_prompts": [
+      "Use my due notes in this journal",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": null,
+    "journal": "journal",
+    "followup_origin": "JournalFollowup(new, journal: journal)"
+  },
+  "new/note/all": {
+    "status": 200,
+    "location": null,
+    "layout": true,
+    "source_tag": "notes_box",
+    "reference_text": "雨 (あめ) rain",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": false,
+    "journal": null,
+    "followup_origin": "note"
+  },
+  "new/note/todays": {
+    "status": 200,
+    "location": null,
+    "layout": true,
+    "source_tag": "notes_box",
+    "reference_text": "雨 (あめ) rain",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": true,
+    "journal": null,
+    "followup_origin": "note"
+  },
+  "new/other_group_entry": {
+    "status": 404,
+    "location": null,
+    "layout": true,
+    "source_tag": null,
+    "reference_text": null,
+    "followup_template_prompts": null,
+    "followup_from_todays_notes": null,
+    "journal": null,
+    "followup_origin": null
+  },
+  "new/unknown_class": {
+    "status": 404,
+    "location": null,
+    "layout": true,
+    "source_tag": null,
+    "reference_text": null,
+    "followup_template_prompts": null,
+    "followup_from_todays_notes": null,
+    "journal": null,
+    "followup_origin": null
+  },
+  "show/assessment": {
+    "error": {
+      "error": "NoMethodError",
+      "message": "undefined method 'ai_queries'"
+    },
+    "journal": "journal",
+    "followup_origin": "assessment",
+    "user": "me",
+    "source_tag": "ai_assistant",
+    "followup_user": "me"
+  },
+  "show/change_output": {
+    "error": {
+      "error": "NoMethodError",
+      "message": "undefined method 'ai_queries'"
+    },
+    "journal": "journal",
+    "followup_origin": "change_output",
+    "user": "me",
+    "source_tag": "ai_assistant",
+    "followup_user": "me"
+  },
+  "show/entry": {
+    "error": {
+      "error": "NoMethodError",
+      "message": "undefined method 'ai_queries'"
+    },
+    "journal": "journal",
+    "followup_origin": "entry",
+    "user": "me",
+    "source_tag": "ai_assistant",
+    "followup_user": "me"
+  },
+  "show/journal_followup": {
+    "error": {
+      "error": "NoMethodError",
+      "message": "undefined method 'ai_queries'"
+    },
+    "journal": "journal",
+    "followup_origin": "journal_followup",
+    "user": "me",
+    "source_tag": "ai_assistant",
+    "followup_user": "me"
+  },
+  "show/note": {
+    "error": {
+      "error": "NoMethodError",
+      "message": "undefined method 'ai_queries'"
+    },
+    "journal": null,
+    "followup_origin": null,
+    "user": "me",
+    "source_tag": "ai_assistant",
+    "followup_user": "me"
+  }
+}
