@@ -25,6 +25,16 @@ RSpec.describe "entry position" do
     expect(journal.full_journal).to eq([ "one", "two" ])
   end
 
+  it "joins entries in position order for full_text and the journal followup" do
+    journal = journal_with_user
+    journal.entries.create!(content: "one")
+    journal.entries.create!(content: "two")
+
+    expect(journal.full_text).to eq("one\n\ntwo")
+    expect(journal.full_text(" ")).to eq("one two")
+    expect(JournalFollowup.create!(journal: journal).content).to eq("one\n\ntwo")
+  end
+
   it "closes the gap when a line is deleted" do
     journal = journal_with_user
     first = journal.entries.create!(content: "one")

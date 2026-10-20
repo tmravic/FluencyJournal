@@ -3,6 +3,6 @@ class JournalFollowup < ApplicationRecord
   has_many :followups, as: :origin, dependent: :destroy
 
   def content
-    journal&.full_journal&.join("\n\n")
+    journal.full_text
   end
 end

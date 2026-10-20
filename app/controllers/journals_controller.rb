@@ -144,11 +144,9 @@ class JournalsController < ApplicationController
   # GET /journals/:id/speak
   def speak
     language = Prompt.language_code(Current.user.learning_language, default: "auto")
-    text = @journal.entries.ordered.map(&:content).join("\n\n")
-
     audio = XAiTtsService.new(
       api_key: @api_key,
-      text: text,
+      text: @journal.full_text,
       language: language
     ).call
 

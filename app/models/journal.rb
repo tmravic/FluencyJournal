@@ -39,6 +39,11 @@ class Journal < ApplicationRecord
     #  "東京にいる面白い人との繋がりが多くてうらやましかった。"]
   end
 
+  # All entries as one text, in entry order.
+  def full_text(separator = "\n\n")
+    full_journal.join(separator)
+  end
+
   def char_count
     self.full_journal.join.length
   end

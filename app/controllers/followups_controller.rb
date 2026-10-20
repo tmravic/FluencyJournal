@@ -22,7 +22,7 @@ class FollowupsController < ApplicationController
       journal_id = params[:journal_id].presence || params[:id]
       journal = current_group.journals.find(journal_id)
       @followup_origin = journal.journal_followups.build
-      @reference_text = journal.full_journal.join("\n\n")
+      @reference_text = journal.full_text
       @journal = journal
     else
       if params[:id].blank?
