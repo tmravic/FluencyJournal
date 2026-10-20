@@ -67,6 +67,14 @@ RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
   config.include Rails.application.routes.url_helpers, type: :component
 
+  config.before(:each, type: :system) do
+    if ENV["HEADED"]
+      driven_by :selenium, using: :chrome, screen_size: [1400, 900]
+    else
+      driven_by :rack_test
+    end
+  end
+
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:

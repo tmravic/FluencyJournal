@@ -62,6 +62,11 @@ group :staging, :development do
   gem "web-console"
 end
 
+group :test do
+  # System specs (rack_test driver; no browser required)
+  gem "capybara"
+end
+gem "selenium-webdriver"
 
 gem "faraday", "~> 2.12"
 gem "simple_form"
