@@ -96,6 +96,17 @@ RSpec.describe AiQuery, type: :model do
       expect(query.count_changes("change_")).to eq(0)
       expect(XAiChat).not_to have_received(:complete)
     end
+
+    it "counts only keys that start with the numbered prefix" do
+      body = {
+        "change_1" => { "content" => "a → b" },
+        "change_2" => { "content" => "c → d" },
+        "exchange_1" => { "content" => "not a change" },
+        "corrected_text" => { "text" => "b d" }
+      }.to_json
+
+      expect(described_class.new(raw_response: body).count_changes("change_")).to eq(2)
+    end
   end
 
   describe "#create_quiz_questions" do

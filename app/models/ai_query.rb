@@ -36,13 +36,14 @@ class AiQuery < ApplicationRecord
     @parsed_response = parse_into_object
   end
 
-  def count_changes(string)
-    # ["change_1", "change_2", "corrected_text"]
+  # Counts the numbered items for a prompt's change keyword, e.g. "change_"
+  # matches "change_1" and "change_2" but not "corrected_text" or "exchange_1".
+  def count_changes(prefix)
     parsed = parsed_response
-    return 0 unless parsed.is_a?(Hash) && string.present?
+    return 0 unless parsed.is_a?(Hash) && prefix.present?
 
-    parsed.keys.count { |key| key.include?(string) }
-    # => 2
+    pattern = /\A#{Regexp.escape(prefix)}\d/
+    parsed.keys.count { |key| key.to_s.match?(pattern) }
   end
 
   # [before, after] for a change line, or nil when the model left it blank.
