@@ -3,8 +3,9 @@ class NotesController < ApplicationController
 
   before_action :set_note, only: %i[
     show edit update destroy mark_note_as_studied change_due_date update_due_date
-    link_journals update_journals cancel_link_journals
   ]
+  before_action :set_notes_view_context, :set_note_with_links,
+                only: %i[ link_journals update_journals cancel_link_journals ]
 
   def index
     @source_tag = SourceTag::NOTES_BOX
@@ -179,19 +180,13 @@ class NotesController < ApplicationController
   end
 
   def link_journals
-    set_notes_view_context
-    @note = Current.user.notes.includes(:journals).find(params[:id])
     @journals = linkable_journals.order(:title)
   end
 
   def cancel_link_journals
-    set_notes_view_context
-    @note = Current.user.notes.includes(:followups, :journals).find(params[:id])
   end
 
   def update_journals
-    set_notes_view_context
-    @note = Current.user.notes.includes(:journals, :followups).find(params[:id])
     submitted = Array(journal_link_params[:journal_ids]).compact_blank
     @note.journal_ids = linkable_journals.where(id: submitted).ids
 
@@ -230,6 +225,11 @@ class NotesController < ApplicationController
 
   def set_note
     @note = Current.user.notes.find(params.expect(:id))
+  end
+
+  # The journal-link actions re-render the note with its journals and followups.
+  def set_note_with_links
+    @note = Current.user.notes.includes(:journals, :followups).find(params.expect(:id))
   end
 
   # The journals a note can be linked to and listed under: the user's own.

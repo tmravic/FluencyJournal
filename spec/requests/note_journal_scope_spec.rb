@@ -73,4 +73,18 @@ RSpec.describe "Note journal scope", type: :request do
 
     expect(response).to have_http_status(:not_found)
   end
+
+  it "re-renders the note when linking is cancelled, and keeps it private" do
+    note = user.notes.create!(content: "Cancel me")
+    sign_in(user)
+
+    get cancel_link_journals_note_path(note, from_todays_notes: true)
+
+    expect(response).to be_successful
+    expect(response.body).to include("Cancel me", mark_note_as_studied_note_path(note))
+
+    get cancel_link_journals_note_path(mate.notes.create!(content: "Not yours"))
+
+    expect(response).to have_http_status(:not_found)
+  end
 end
