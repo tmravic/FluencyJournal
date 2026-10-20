@@ -21,6 +21,6 @@ class FreeQuestionPrompt < Prompt
 
   def response_format(user, _journal, _quiz)
     "Include json marker and return json in this exact format (matching the number of feedbacks/readings): " +
-      example_answer(3, "content: '...', explanation_#{abbr(user)}: '...'")
+      example_answer(3, "content: '...', explanation_#{explanation_language_code(user)}: '...'")
   end
 end

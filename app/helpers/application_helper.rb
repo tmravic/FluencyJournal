@@ -80,7 +80,7 @@ module ApplicationHelper
   def get_ai_output_change_variables(ai_query, identifier, change_keyword)
     user = ai_query.user || Current.user || @user
     content_first, content_last = ai_query.change_sides(identifier, change_keyword)
-    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(user)) if user
+    explanation = ai_query.change_explanation(change_keyword, identifier, Prompt.explanation_language_code(user)) if user
 
     [ content_first, content_last, explanation ]
   end
@@ -88,7 +88,7 @@ module ApplicationHelper
   def get_followup_variables(ai_query, identifier, change_keyword, user = nil)
     content = ai_query.change_content(identifier, change_keyword)
     reader = user || ai_query.user
-    explanation = ai_query.change_explanation(change_keyword, identifier, ai_query.abbr(reader)) if reader
+    explanation = ai_query.change_explanation(change_keyword, identifier, Prompt.explanation_language_code(reader)) if reader
 
     [ content, explanation ]
   end

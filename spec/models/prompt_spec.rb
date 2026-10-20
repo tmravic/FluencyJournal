@@ -68,11 +68,11 @@ RSpec.describe Prompt, type: :model do
     end
   end
 
-  describe ".abbr" do
+  describe ".explanation_language_code" do
     it "uses ja for Japanese, the same code text-to-speech sends" do
       user = learner(original_language: "Japanese")
 
-      expect(described_class.abbr(user)).to eq("ja")
+      expect(described_class.explanation_language_code(user)).to eq("ja")
       expect(described_class.language_code("Japanese")).to eq("ja")
       expect(EntryPrompt.new.response_format(user, nil, nil)).to include("explanation_ja")
     end
@@ -80,15 +80,13 @@ RSpec.describe Prompt, type: :model do
     it "falls back to en for an unknown language" do
       user = learner(original_language: "Thai")
 
-      expect(described_class.abbr(user)).to eq("en")
+      expect(described_class.explanation_language_code(user)).to eq("en")
       expect(described_class.language_code("Thai", default: "auto")).to eq("auto")
       expect(EntryPrompt.new.response_format(user, nil, nil)).to include("explanation_en")
     end
 
-    it "is the map AiQuery uses" do
-      user = learner(original_language: "Japanese")
-
-      expect(AiQuery.new.abbr(user)).to eq(described_class.abbr(user))
+    it "is the one language-code map (no copies elsewhere)" do
+      expect(AiQuery.new).not_to respond_to(:abbr)
       expect(XAiTtsService.const_defined?(:LANGUAGE_CODES)).to be(false)
     end
   end

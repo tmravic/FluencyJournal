@@ -19,10 +19,6 @@ class AiQuery < ApplicationRecord
   MISSING_HINT = "Hint missing".freeze
   LOG_SNIPPET_LENGTH = 800
 
-  def abbr(user)
-    Prompt.abbr(user)
-  end
-
   def find_ai_output_by_identifier(identifier)
     ai_outputs.find_by(identifier: identifier)
   end

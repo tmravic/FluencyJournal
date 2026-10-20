@@ -40,12 +40,14 @@ class Prompt < ApplicationRecord
     LANGUAGE_ABBREVIATIONS.fetch(language.to_s, default)
   end
 
-  def self.abbr(user)
+  # The code of the language explanations are written in: the reader's
+  # original language ("en", "ja"), used in explanation_<code> keys.
+  def self.explanation_language_code(user)
     language_code(user&.original_language)
   end
 
-  def abbr(user)
-    self.class.abbr(user)
+  def explanation_language_code(user)
+    self.class.explanation_language_code(user)
   end
 
   # The contract every prompt type fulfils:
@@ -88,7 +90,7 @@ class Prompt < ApplicationRecord
 
   # A "before → after" item with an explanation in the reader's language.
   def correction_item(user)
-    "content: '... → ...', explanation_#{abbr(user)}: '...'"
+    "content: '... → ...', explanation_#{explanation_language_code(user)}: '...'"
   end
 
   # Role prompts keep their static wording in a heredoc template. The

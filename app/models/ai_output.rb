@@ -29,7 +29,7 @@ class AiOutput < ApplicationRecord
     parsed = {} unless parsed.is_a?(Hash)
     corrected_sentence = ai_query.corrected_text if ai_query.corrected_text_key?
     assessment = ai_query.assessment if parsed.key?("assessment")
-    abbr = ai_query.abbr(user) if user
+    abbr = Prompt.explanation_language_code(user) if user
     learning_language = ai_query.prompt&.user_generated_content
 
     if corrected_text?
