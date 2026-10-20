@@ -1,5 +1,4 @@
 class AiOutput < ApplicationRecord
-  include SharedMethods
   belongs_to :ai_query
   has_many :followups, as: :origin, dependent: :nullify
   delegate :journal, to: :ai_query, allow_nil: true
