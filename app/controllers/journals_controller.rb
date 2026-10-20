@@ -1,5 +1,5 @@
 class JournalsController < ApplicationController
-  before_action :set_journal, only: %i[ show edit update destroy open_ai_assistant mark_journal_as_studied reading_mode speak change_due_date update_due_date]
+  before_action :set_journal, only: %i[ edit update destroy open_ai_assistant mark_journal_as_studied reading_mode speak change_due_date update_due_date]
   before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
   # GET /journals or /journals.json
@@ -30,15 +30,11 @@ class JournalsController < ApplicationController
 
   # GET /journals/1 or /journals/1.json
   def show
+    # One query, with what _previous_queries.html.erb needs preloaded.
+    @journal = current_group.journals.with_query_history.find(params.expect(:id))
     @cancel = boolean_param(:cancel)
     @entries = @journal.entries.ordered
     @source_tag = SourceTag::AI_ASSISTANT
-
-    # Eager load associations used by _previous_queries.html.erb to avoid N+1 queries
-    # (the followup on the prompt, quizzes, prompt.class checks)
-    @journal = current_group.journals
-                            .includes(ai_queries: [ :quizzes, :graded_quizzes, { prompt: :followup } ])
-                            .find(@journal.id)
 
     respond_to do |format|
       format.html

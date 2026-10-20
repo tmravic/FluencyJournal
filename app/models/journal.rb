@@ -17,6 +17,11 @@ class Journal < ApplicationRecord
   # scope :public, -> {  }
   # scope :shared (either private or publish, not personal), -> {  }
 
+  # Preloads the query history shown on the journal page (quizzes, followups).
+  scope :with_query_history, -> {
+    includes(ai_queries: [ :quizzes, :graded_quizzes, { prompt: :followup } ])
+  }
+
   scope :finished_today, -> {
     where(last_studied_at: 24.hours.ago..).order(:last_studied_at)
   }
