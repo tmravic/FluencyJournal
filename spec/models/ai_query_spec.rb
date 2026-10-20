@@ -86,6 +86,15 @@ RSpec.describe AiQuery, type: :model do
     end
   end
 
+  describe "#error_message" do
+    it "is localized" do
+      query = described_class.new(raw_response: "{}")
+
+      expect(query.error_message).to eq("something went wrong")
+      expect(I18n.with_locale(:ja) { query.error_message }).to eq("問題が発生しました。")
+    end
+  end
+
   describe "#parsed_response memo" do
     it "re-parses after raw_response is reassigned" do
       query = described_class.new(raw_response: { "change_1" => { "content" => "a" } }.to_json)

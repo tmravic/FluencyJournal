@@ -215,6 +215,7 @@ en:
     ai_output: "AI Output"
     processing: "Processing..."
     job_failed: "The request failed. Please try again."
+    error: "something went wrong"
     original_language: "Original Language:"
     learning_language: "Learning Language:"
     placeholder:

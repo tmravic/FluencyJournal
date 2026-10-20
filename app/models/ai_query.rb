@@ -14,6 +14,11 @@ class AiQuery < ApplicationRecord
 
   after_destroy -> { Prompt.destroy_from(self) }
 
+  # Stored on quiz rows when the model returns fewer lines than expected.
+  MISSING_TRANSLATION = "Translation missing".freeze
+  MISSING_HINT = "Hint missing".freeze
+  LOG_SNIPPET_LENGTH = 800
+
   def abbr(user)
     Prompt.abbr(user)
   end
@@ -91,7 +96,7 @@ class AiQuery < ApplicationRecord
         "PrepareQuiz line-count mismatch: " \
         "journal_id=#{journal&.id} ai_query_id=#{id} prompt_id=#{prompt_id} " \
         "expected=#{expected} actual=#{actual} keys=#{line_keys.inspect} " \
-        "raw_snippet=#{translated_response.to_json[0..800]}"
+        "raw_snippet=#{translated_response.to_json[0, LOG_SNIPPET_LENGTH]}"
       )
     end
 
@@ -105,7 +110,7 @@ class AiQuery < ApplicationRecord
                       translation_from_quiz_line(line)
                     else
                       fallback = line_keys.last && translated_response[line_keys.last]
-                      translation_from_quiz_line(fallback) || "Translation missing"
+                      translation_from_quiz_line(fallback) || MISSING_TRANSLATION
                     end
 
       ai_outputs.create(
@@ -121,7 +126,7 @@ class AiQuery < ApplicationRecord
       next unless quiz && (entry = journal&.entry_at(count))
 
       quiz.quiz_hints.create!(
-        hint_content: hint_from_quiz_line(line) || "Hint missing",
+        hint_content: hint_from_quiz_line(line) || MISSING_HINT,
         ai_query: self,
         entry: entry
       )
@@ -129,7 +134,7 @@ class AiQuery < ApplicationRecord
   end
 
   def error_message
-    "something went wrong"
+    I18n.t("ai_query.error")
   end
 
   CHANGE_CONTENT_ARROWS = [ "→", "⇒", "->", "↓" ].freeze

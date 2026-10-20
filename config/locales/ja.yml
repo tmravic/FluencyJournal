@@ -215,6 +215,7 @@ ja:
     ai_output: "AI生成はここになります。"
     processing: "処理中..."
     job_failed: "リクエストに失敗しました。もう一度お試しください。"
+    error: "問題が発生しました。"
     original_language: "母語:"
     learning_language: "学習言語:"
     placeholder:
