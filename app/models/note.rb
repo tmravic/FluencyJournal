@@ -16,6 +16,10 @@ class Note < ApplicationRecord
     next_to_study.where.not(category: :draft_journal)
   }
 
+  def followup_owner
+    user
+  end
+
   def previous_note(notes)
     previous_in(notes)
   end

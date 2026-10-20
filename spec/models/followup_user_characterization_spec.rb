@@ -58,6 +58,6 @@ RSpec.describe Followup, "#user (characterization)", type: :model do
   it "raises for a followup whose origin is another followup" do
     parent = Followup.create!(prompt: prompt, origin: entry, source_tag: "ai_assistant")
 
-    expect { followup_on(parent).user }.to raise_error(NoMethodError, /ai_query/)
+    expect { followup_on(parent).user }.to raise_error(NoMethodError)
   end
 end

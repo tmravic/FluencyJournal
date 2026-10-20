@@ -12,6 +12,10 @@ class JournalFollowup < ApplicationRecord
     journal
   end
 
+  def followup_owner
+    journal.user
+  end
+
   def due_notes_shortcut?
     true
   end

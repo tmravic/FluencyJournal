@@ -29,6 +29,11 @@ class AiOutput < ApplicationRecord
     journal
   end
 
+  # The query's journal owner; nil for a note followup's answer (no journal).
+  def followup_owner
+    ai_query.user
+  end
+
   def quiz_assessment?
     assessment? && ai_query.prompt.is_a?(QuizResultPrompt)
   end

@@ -19,4 +19,8 @@ class Entry < ApplicationRecord
   def followup_journal
     journal
   end
+
+  def followup_owner
+    journal.user
+  end
 end
