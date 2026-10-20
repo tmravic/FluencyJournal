@@ -10,48 +10,23 @@ class FollowupsController < ApplicationController
 
   def new
     @source_tag = params[:source_tag]
-    class_name = params[:class_name]
-
-    if class_name.blank?
-      redirect_to(@journal ? journal_path(@journal) : root_path) && return
-    end
+    return redirect_to(root_path) if params[:class_name].blank?
 
     @followup_prompt = FreeQuestionPrompt.new
     @followup = @followup_prompt.build_followup
+    @followup_origin = new_followup_origin(origin_class_for(params[:class_name]))
+    return redirect_to(root_path) unless @followup_origin
 
-    klass = origin_class_for(class_name)
-
-    if class_name == "JournalFollowup"
-      journal_id = params[:journal_id].presence || params[:id]
-      journal = current_group.journals.find(journal_id)
-      @followup_origin = journal.journal_followups.build
-      @reference_text = journal.full_text
-      @journal = journal
-    else
-      if params[:id].blank?
-        redirect_to(@journal ? journal_path(@journal) : root_path) && return
-      end
-      followup_origin_id = params[:id].to_i
-      @followup_origin = find_accessible_origin(klass, followup_origin_id)
-      @journal = @followup_origin.followup_journal
-      @reference_text = if @followup_origin.quiz_assessment?
-                          helpers.quiz_graded_entries_reference_text(@followup_origin.ai_query, Current.user)
-                        else
-                          @followup_origin.content
-                        end
-    end
-
+    @journal = @followup_origin.followup_journal
+    @reference_text = followup_reference_text(@followup_origin)
     @followup_template_prompts = get_template_prompts_scoped_by_user(
       Current.user,
       due_notes_dropdown: @followup_origin.due_notes_dropdown_format
     )
-
     @uuid = SecureRandom.uuid
+    # Cancel chooses today's notes or all notes from this flag.
+    @followup_from_todays_notes = boolean_param(:followup_from_todays_notes) if @journal.nil?
 
-    if @journal.nil?
-      # Cancel chooses today's notes or all notes from this flag.
-      @followup_from_todays_notes = boolean_param(:followup_from_todays_notes)
-    end
     render layout: false if @source_tag == SourceTag::AI_ASSISTANT
   end
 
@@ -170,6 +145,25 @@ class FollowupsController < ApplicationController
   end
 
   private
+
+  # The origin the new-followup form is for, or nil when no id was given.
+  # A journal followup is built (not saved) on the journal from journal_id
+  # (or id); create saves it.
+  def new_followup_origin(klass)
+    if klass == JournalFollowup
+      current_group.journals.find(params[:journal_id].presence || params[:id]).journal_followups.build
+    elsif params[:id].present?
+      find_accessible_origin(klass, params[:id].to_i)
+    end
+  end
+
+  # What the form pre-fills as the reference text: the origin's content,
+  # or for a graded-quiz assessment the whole graded quiz.
+  def followup_reference_text(origin)
+    return origin.content unless origin.quiz_assessment?
+
+    helpers.quiz_graded_entries_reference_text(origin.ai_query, Current.user)
+  end
 
   # A blank or placeholder origin class means the form never had an origin.
   # That is answered with 422 / a redirect, unlike an unknown class name,
