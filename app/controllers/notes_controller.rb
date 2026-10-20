@@ -49,11 +49,10 @@ class NotesController < ApplicationController
   end
 
   def new_automatic
-    @ai_output = find_accessible_ai_output(params[:ai_output_id].to_i)
+    @ai_query = find_accessible_ai_query(params[:ai_query_id])
+    @ai_output = @ai_query.ai_outputs.find(params[:ai_output_id])
     @note = Note.new
     @view_context = params[:view_context]
-    @ai_query = find_accessible_ai_query(params[:ai_query_id])
-    raise ActiveRecord::RecordNotFound unless @ai_output.ai_query_id == @ai_query.id
 
     @user = Current.user
 

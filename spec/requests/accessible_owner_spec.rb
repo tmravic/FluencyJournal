@@ -241,6 +241,17 @@ RSpec.describe "Accessible owner", type: :request do
     expect(response).to have_http_status(:not_found)
   end
 
+  it "returns 404 for a new automatic note when the output belongs to a different query" do
+    user = create_user("owner")
+    _journal, query, _output = create_group_query(user, title: "Mine one")
+    _other_journal, _other_query, other_output = create_group_query(user, title: "Mine two")
+    sign_in(user)
+
+    get new_automatic_notes_path(ai_output_id: other_output.id, ai_query_id: query.id), headers: turbo_headers
+
+    expect(response).to have_http_status(:not_found)
+  end
+
   it "does not return 404 for a new automatic note on this user's note followup query" do
     user = create_user("owner")
     _note, query, output = create_note_followup_query(user)
