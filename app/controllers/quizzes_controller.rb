@@ -20,16 +20,19 @@ class QuizzesController < ApplicationController
 
     prepare_quiz_prompt.sent_role_prompt = prepare_quiz_prompt.role_prompt(@journal.user, @journal)
 
-    if prepare_quiz_prompt.save!
-      PrepareQuizJob.perform_later(@journal, prepare_quiz_prompt)
-      @uuid = prepare_quiz_prompt.uuid
+    unless prepare_quiz_prompt.save
+      head :unprocessable_entity
+      return
+    end
 
-      @ai_query_id = I18n.t("quiz.preparing")
+    PrepareQuizJob.perform_later(@journal, prepare_quiz_prompt)
+    @uuid = prepare_quiz_prompt.uuid
 
-      respond_to do |format|
-        format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("quiz.preparing") }
-        format.turbo_stream
-      end
+    @ai_query_id = I18n.t("quiz.preparing")
+
+    respond_to do |format|
+      format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("quiz.preparing") }
+      format.turbo_stream
     end
   end
 

@@ -32,13 +32,16 @@ class AiQueriesController < ApplicationController
 
     entry_prompt.sent_role_prompt = entry_prompt.role_prompt(@journal.user, @journal)
 
-    if entry_prompt.save!
-      AiRequestJob.perform_later(@journal, entry_prompt)
+    unless entry_prompt.save
+      head :unprocessable_entity
+      return
+    end
 
-      respond_to do |format|
-        format.html { redirect_to journals_path, status: :see_other, notice: t("ai_query.request_sent") }
-        format.turbo_stream
-      end
+    AiRequestJob.perform_later(@journal, entry_prompt)
+
+    respond_to do |format|
+      format.html { redirect_to journals_path, status: :see_other, notice: t("ai_query.request_sent") }
+      format.turbo_stream
     end
   end
 

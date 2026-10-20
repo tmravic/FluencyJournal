@@ -55,4 +55,28 @@ RSpec.describe "Invalid prompt writes", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
     expect(response.body).to be_empty
   end
+
+  it "answers 422 for an entry correction request with no model" do
+    user = create_user
+    journal = create_journal(user)
+    sign_in(user)
+    expect(AiRequestJob).not_to receive(:perform_later)
+
+    expect {
+      post ai_request_journal_ai_queries_path(journal),
+           params: {
+             entry_prompt: {
+               base_content: "Hello",
+               user_generated_content: "こんにちは",
+               ai_model: "",
+               uuid: SecureRandom.uuid,
+               journal_id: journal.id
+             }
+           },
+           headers: turbo_stream_headers
+    }.not_to change(Prompt, :count)
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response.body).to be_empty
+  end
 end
