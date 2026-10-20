@@ -282,7 +282,7 @@ class AiQuery < ApplicationRecord
   end
 
   def item_keys(content)
-    content.keys.grep(/\A(?:entry|change|line|hint|answer)_\d+\z/)
+    content.keys.grep(/\A(?:entry|change|line|hint|answer|example)_\d+\z/)
   end
 
   def sentence_key?(key)

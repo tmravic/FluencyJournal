@@ -230,4 +230,22 @@ RSpec.describe AiQuery, type: :model do
       expect(query.change_explanation("change_", "1", "ja")).to eq("新しい説明")
     end
   end
+
+  describe "example sentence items" do
+    it "are not treated as prose by corrected_text or assessment" do
+      body = {
+        "example_1" => {
+          "content" => {
+            "reading" => "(かく.ご) 覚悟",
+            "English_example_sentence" => "I am ready.",
+            "Japanese_example_sentence" => "覚悟はできている。"
+          }
+        }
+      }.to_json
+      query = described_class.new(raw_response: body)
+
+      expect(query.corrected_text).to be_nil
+      expect(query.assessment).to be_nil
+    end
+  end
 end
