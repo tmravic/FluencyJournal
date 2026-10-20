@@ -18,19 +18,6 @@ class QuizResultPrompt < Prompt
   def response_format(user, journal, quiz)
     "Include json marker and return json in this exact format, " +
       "where each line in #{json_list(journal.full_journal)}: corresponds to a line in #{json_list(quiz.responses)}: " +
-      "{ { #{self.change_keyword}1: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
-      "#{self.change_keyword}2: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
-      "#{self.change_keyword}3: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
-      "...," +
-      "assessment: { '...' } } }"
-    # {
-    #   {
-    #     entry_1: { content: '... → ...', explanation_#{abbr(user)}: '...',
-    #     entry_2: { content: '... → ...', explanation_#{abbr(user)}: '...',
-    #     entry_3: { content: '... → ...', explanation_#{abbr(user)}: '...',
-    #     ...,
-    #     assessment: { '...' },
-    #   }
-    # }
+      example_answer(3, correction_item(user), extra: "assessment: { '...' }")
   end
 end

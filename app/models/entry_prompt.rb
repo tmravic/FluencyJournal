@@ -21,19 +21,6 @@ class EntryPrompt < Prompt
 
   def response_format(user, _journal, _quiz)
     "Include json marker and return json in this exact format (matching the number of changes/corrections and including the full corrected_text in #{user.learning_language}): " +
-      "{ { #{self.change_keyword}1: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
-      "#{self.change_keyword}2: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
-      "#{self.change_keyword}3: { content: '... → ...', explanation_#{abbr(user)}: '...' }, " +
-      "...," +
-      "corrected_text: { '...' } } }"
-    # {
-    #   {
-    #     change_1: { content: '... → ...', explanation_#{abbr(user)}: '...',
-    #     change_2: { content: '... → ...', explanation_#{abbr(user)}: '...',
-    #     change_3: { content: '... → ...', explanation_#{abbr(user)}: '...',
-    #     ...,
-    #     corrected_text: { '...' },
-    #   }
-    # }
+      example_answer(3, correction_item(user), extra: "corrected_text: { '...' }")
   end
 end

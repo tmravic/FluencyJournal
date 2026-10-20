@@ -76,6 +76,21 @@ class Prompt < ApplicationRecord
 
   private
 
+  # The example answer shape shown to the model, e.g. for EntryPrompt:
+  #   { { change_1: { ... }, change_2: { ... }, change_3: { ... }, ...,corrected_text: { '...' } } }
+  # It is not strict JSON; the wording is part of what the model has always
+  # been sent, so keep it byte-for-byte (see prompt_text_characterization_spec).
+  def example_answer(count, item, extra: nil)
+    body = (1..count).map { |n| "#{item_prefix}#{n}: { #{item} }" }.join(", ")
+    body += ", ...,#{extra}" if extra
+    "{ { #{body} } }"
+  end
+
+  # A "before → after" item with an explanation in the reader's language.
+  def correction_item(user)
+    "content: '... → ...', explanation_#{abbr(user)}: '...'"
+  end
+
   # Lists sent to the model are JSON arrays, not Ruby's Array#to_s output.
   def json_list(values)
     JSON.generate(Array(values))

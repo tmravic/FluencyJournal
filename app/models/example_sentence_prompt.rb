@@ -14,31 +14,12 @@ class ExampleSentencePrompt < Prompt
   end
 
   def response_format(user, _journal, _quiz)
+    sentence = "content: { reading: '( xx.xx )', " \
+               "#{user.original_language}_example_sentence: '...', " \
+               "#{user.learning_language}_example_sentence: '...' }"
+
     "Include json marker and return json in this exact format, except omit reading if " +
-    "the language being learned doesn't use kanji or anything similar: " +
-    "{ { #{self.change_keyword}1: { content: { reading: '( xx.xx )', " +
-    "#{user.original_language}_example_sentence: '...', " +
-    "#{user.learning_language}_example_sentence: '...' } }, " +
-    "#{self.change_keyword}2: { content: { reading: '( xx.xx )', " +
-    "#{user.original_language}_example_sentence: '...', " +
-    "#{user.learning_language}_example_sentence: '...' } } } }"
-    # {
-    #   {
-    #     example_1: {
-    #       content: {
-    #         reading: '( xx.xx )',
-    #         #{user.original_language}_example_sentence: '...',
-    #         #{user.learning_language}_example_sentence: '...'
-    #       }
-    #     },
-    #     example_2: {
-    #       content: {
-    #         reading: '( xx.xx )',
-    #         #{user.original_language}_example_sentence: '...',
-    #         #{user.learning_language}_example_sentence: '...'
-    #       }
-    #     }
-    #   }
-    # }
+      "the language being learned doesn't use kanji or anything similar: " +
+      example_answer(2, sentence)
   end
 end
