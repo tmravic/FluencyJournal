@@ -91,6 +91,21 @@ class Prompt < ApplicationRecord
     "content: '... → ...', explanation_#{abbr(user)}: '...'"
   end
 
+  # Role prompts keep their static wording in a heredoc template. The
+  # template is squished first and the user's values are inserted after, so
+  # their text (journal entries, language names) is never re-spaced. The
+  # trailing space separates the text from any guidance appended after it.
+  def fill(template, user, **values)
+    format(template.squish, learning: user.learning_language, original: user.original_language, **values) + " "
+  end
+
+  # Earlier entries of the journal, as context the model must not correct.
+  def journal_context(journal)
+    "Each item in this array is part of a previous entry in this journal, which you " \
+      "should not correct or comment on but refer to as context to understand the current entry: " \
+      "#{json_list(journal.full_journal)}. "
+  end
+
   # Lists sent to the model are JSON arrays, not Ruby's Array#to_s output.
   def json_list(values)
     JSON.generate(Array(values))

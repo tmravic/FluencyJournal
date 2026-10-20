@@ -2,14 +2,17 @@ class PrepareQuizPrompt < Prompt
   # Must match the line_N keys that response_format asks for.
   self.item_prefix = "line_"
 
+  ROLE_TEMPLATE = <<~TEXT
+    You are a helpful translator whose job it is to read my journal and translate EACH ENTRY into
+    %{original}, keeping in mind the full content of the journal.
+    The entries will be provided to you as a JSON array (and also shown below with explicit labels).
+    **Each element of that array is ONE ATOMIC JOURNAL ENTRY and must become exactly one quiz question.**
+    Never split the text inside any single array element / ENTRY into multiple quiz questions, even if it contains multiple sentences or Japanese periods (。).
+    For each entry, also write a short question in %{learning} that would help the student produce that entry as their answer.
+  TEXT
+
   def role_prompt(user, _journal)
-    "You are a helpful translator whose job it is to read my journal and translate EACH ENTRY into " +
-      "#{user.original_language}, keeping in mind the full content of the journal. " +
-      "The entries will be provided to you as a JSON array (and also shown below with explicit labels). " +
-      "**Each element of that array is ONE ATOMIC JOURNAL ENTRY and must become exactly one quiz question.** " +
-      "Never split the text inside any single array element / ENTRY into multiple quiz questions, even if it contains multiple sentences or Japanese periods (。). " +
-      "For each entry, also write a short question in #{user.learning_language} that would help the student produce that entry as their answer. " +
-      native_japanese_phrasing(user)
+    fill(ROLE_TEMPLATE, user) + native_japanese_phrasing(user)
   end
 
   def response_format(user, journal, _quiz)
