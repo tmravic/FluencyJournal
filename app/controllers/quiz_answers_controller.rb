@@ -4,9 +4,8 @@ class QuizAnswersController < ApplicationController
   before_action :set_quiz_answer, only: [:show, :edit, :retry]
 
   def show
-    #<ActionController::Parameters {"controller"=>"quiz_answers", "action"=>"show", "journal_id"=>"3", "quiz_id"=>"58", "id"=>"85"} permitted: false>
     @ai_output = @quiz_answer.ai_output
-    @original_entry_text = get_original_language_from_journal(@ai_output.identifier)
+    @original_entry_text = original_entry_text_for(@ai_output)
   end
 
   def edit
@@ -14,33 +13,34 @@ class QuizAnswersController < ApplicationController
   end
 
   def create
-    @ai_output = @quiz.ai_query.ai_outputs.find(params.dig("quiz_answer", "ai_output_id"))
+    @ai_output = @quiz.ai_query.ai_outputs.find(quiz_answer_params[:ai_output_id])
     @ai_query = @ai_output.ai_query
     @quiz_answer = @quiz.quiz_answers.build(quiz_answer_params)
-    identifier = find_identifier
-    @original_entry_text = get_original_language_from_journal(identifier)
-    if @quiz_answer.save!
-      @show_grade_quiz_button = @quiz.fully_answered?
-      respond_to do |format|
-        format.turbo_stream
-      end
+    @original_entry_text = original_entry_text_for(@ai_output)
+
+    unless @quiz_answer.save
+      head :unprocessable_entity
+      return
+    end
+
+    @show_grade_quiz_button = @quiz.fully_answered?
+    respond_to do |format|
+      format.turbo_stream
     end
   end
 
   def retry
     @quiz_entry = @quiz_answer.ai_output
-    # #<ActionController::Parameters {"controller"=>"quiz_answers", "action"=>"retry", "journal_id"=>"3", "quiz_id"=>"60", "id"=>"604"} permitted: false>
     render :edit
   end
 
   private
 
-  def get_original_language_from_journal(identifier)
-    @journal.entry_at(identifier)&.content
-  end
-
-  def find_identifier
-    params.dig("quiz_answer", "identifier")
+  # The original journal text for a quiz question. A question's identifier
+  # is its entry position, so read it from the saved output rather than
+  # from a client-supplied param.
+  def original_entry_text_for(question)
+    @journal.entry_at(question.identifier)&.content
   end
 
   def set_journal

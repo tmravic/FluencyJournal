@@ -52,6 +52,21 @@ RSpec.describe "QuizAnswers", type: :request do
     end
   end
 
+  describe "POST create original text" do
+    it "shows the entry for the answered question, ignoring any identifier param" do
+      user, journal, quiz, (_first, second) = create_quiz_with_questions
+      sign_in(user)
+
+      post journal_quiz_quiz_answers_path(journal, quiz),
+           params: { quiz_answer: { user_response: "答え", ai_output_id: second.id, identifier: "1" } },
+           as: :turbo_stream
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("文2。")
+      expect(response.body).not_to include("文1。")
+    end
+  end
+
   describe "Quiz#fully_answered?" do
     it "counts each question once, even when answered twice" do
       _user, _journal, quiz, (first, second) = create_quiz_with_questions
