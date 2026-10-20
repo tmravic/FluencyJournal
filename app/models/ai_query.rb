@@ -2,6 +2,7 @@ class AiQuery < ApplicationRecord
   belongs_to :journal, optional: true
   belongs_to :prompt
   delegate :user, to: :journal, allow_nil: true
+  delegate :change_keyword, to: :prompt
   has_many :ai_outputs, dependent: :destroy
   has_many :followups, as: :origin, dependent: :nullify
   has_many :quizzes, dependent: :destroy, inverse_of: :ai_query

@@ -1,7 +1,7 @@
 class AiOutput < ApplicationRecord
   belongs_to :ai_query
   has_many :followups, as: :origin, dependent: :nullify
-  delegate :journal, to: :ai_query, allow_nil: true
+  delegate :journal, :change_keyword, to: :ai_query, allow_nil: true
   has_many :quiz_answers, dependent: :destroy
 
   validates :identifier, presence: true # string

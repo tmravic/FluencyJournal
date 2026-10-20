@@ -20,9 +20,9 @@ class AiOutputsController < ApplicationController
 
   def destroy
     @identifier = @ai_output.identifier
-    @change_keyword = @ai_output.ai_query.prompt.change_keyword
+    @change_keyword = @ai_output.change_keyword
     @ai_output.destroy!
-    @source_tag = params.dig(:source_tag)
+    @source_tag = params[:source_tag]
 
     respond_to do |format|
       format.html { redirect_to journals_path, status: :see_other, notice: t("ai_output.change_deleted") }
