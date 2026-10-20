@@ -111,19 +111,14 @@ class NotesController < ApplicationController
 
   def update
     @source_tag = SourceTag::NOTES_BOX
-    update_from_todays_notes = boolean_param(:update_from_todays_notes)
     respond_to do |format|
       if @note.update(note_params)
         format.html { redirect_to journals_path, status: :see_other, notice: t("note.updated") }
         format.turbo_stream do
           flash.now[:notice] = t("note.updated")
-          if update_from_todays_notes
-            @todays_notes = Current.user&.notes.next_to_study
-            render "notes/update", locals: { collection: @todays_notes }
-          else
-            @all_notes = Current.user&.notes.order(:next_study_date)
-            render "notes/update", locals: { collection: @all_notes }
-          end
+          # notes/_note_display reads @todays_notes to keep the Today's Notes controls.
+          @todays_notes = Current.user.notes.next_to_study if boolean_param(:update_from_todays_notes)
+          render "notes/update"
         end
       else
         format.html { render :edit, status: :unprocessable_entity }
