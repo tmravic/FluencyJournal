@@ -53,7 +53,7 @@ class FollowupsController < ApplicationController
       # Cancel chooses today's notes or all notes from this flag.
       @followup_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
     end
-    render layout: false if @source_tag == "ai_assistant"
+    render layout: false if @source_tag == SourceTag::AI_ASSISTANT
   end
 
   def create
@@ -152,7 +152,7 @@ class FollowupsController < ApplicationController
   end
 
   def cancel
-    @source_tag = params[:source_tag].presence || "ai_assistant"
+    @source_tag = params[:source_tag].presence || SourceTag::AI_ASSISTANT
 
     respond_to do |format|
       format.turbo_stream

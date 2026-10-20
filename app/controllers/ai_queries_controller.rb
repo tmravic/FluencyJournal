@@ -4,7 +4,7 @@ class AiQueriesController < ApplicationController
   before_action :set_prompt, except: [ :ai_request ]
 
   def show
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
     @corrected_text_output = @ai_query.find_ai_output_by_identifier("corrected_text")
   end
 

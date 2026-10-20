@@ -10,7 +10,7 @@ class JournalsController < ApplicationController
     @journals_finished_today = finished_today_titles
 
     # Open today's notes in the notes_box frame
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
 
     respond_to do |format|
@@ -32,7 +32,7 @@ class JournalsController < ApplicationController
   def show
     @cancel = ActiveModel::Type::Boolean.new.cast(params["cancel"])
     @entries = @journal.entries.ordered
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
 
     # Eager load associations used by _previous_queries.html.erb to avoid N+1 queries
     # (the followup on the prompt, quizzes, prompt.class checks)
@@ -161,7 +161,7 @@ class JournalsController < ApplicationController
   def reading_mode
     @reading_mode = ActiveModel::Type::Boolean.new.cast(params[:reading_mode]) || false
     @entries = @journal.entries.ordered
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
 
     respond_to do |format|
       format.html

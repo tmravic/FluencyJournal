@@ -20,12 +20,12 @@ class EntriesController < ApplicationController
 
   # GET /entries/1/edit
   def edit
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
   end
 
   # GET /journals/:journal_id/entries/:id/cancel
   def cancel
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
 
     respond_to do |format|
       format.html { render_entry_display }
@@ -36,7 +36,7 @@ class EntriesController < ApplicationController
   # POST /entries or /entries.json
   def create
     @entry = @journal.entries.build(entry_params)
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
 
     respond_to do |format|
       if @entry.save
@@ -52,7 +52,7 @@ class EntriesController < ApplicationController
 
   # PATCH/PUT /entries/1 or /entries/1.json
   def update
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
     respond_to do |format|
       if @entry.update(entry_params)
         format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.updated") }

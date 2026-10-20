@@ -7,7 +7,7 @@ class NotesController < ApplicationController
   ]
 
   def index
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
     @due_today = @todays_notes.count
     respond_to do |format|
@@ -17,7 +17,7 @@ class NotesController < ApplicationController
   end
 
   def all
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @all_notes = Current.user&.notes.order(:next_study_date).includes(:followups, :journals)
     respond_to do |format|
       format.html
@@ -26,7 +26,7 @@ class NotesController < ApplicationController
   end
 
   def drafts
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @draft_notes = Current.user&.notes.draft_journal.order(:next_study_date).includes(:followups, :journals)
     respond_to do |format|
       format.html
@@ -35,7 +35,7 @@ class NotesController < ApplicationController
   end
 
   def for_journal
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @journal = linkable_journals.find(params[:journal_id])
     @journal_notes = @journal.notes.order(:next_study_date).includes(:followups, :journals)
     respond_to do |format|
@@ -75,7 +75,7 @@ class NotesController < ApplicationController
     # and stay on the same page with the same view context and header
     notes_list = notes_list_from_view_context(params[:view_context])
     collection = get_collection_from_view_context(params[:view_context])
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     # The anchor is chosen before save, while this row is still off the list.
     # next_study_date is otherwise unset until validation.
     @note.set_initial_next_study_date
@@ -111,7 +111,7 @@ class NotesController < ApplicationController
   end
 
   def update
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     update_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:update_from_todays_notes])
     respond_to do |format|
       if @note.update(note_params)
@@ -147,7 +147,7 @@ class NotesController < ApplicationController
   end
 
   def mark_note_as_studied
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @note.schedule_after_study
     notice = t(
       "note.actions.will_return_html",
@@ -247,7 +247,7 @@ class NotesController < ApplicationController
 
   def set_notes_view_context
     @from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:from_todays_notes])
-    @source_tag = "notes_box"
+    @source_tag = SourceTag::NOTES_BOX
     @todays_notes = @from_todays_notes ? Current.user&.notes.next_to_study : nil
   end
 

@@ -91,7 +91,7 @@ class QuizzesController < ApplicationController
   end
 
   def show
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
     # The question query owns the quiz. The grading query holds the feedback.
     @ai_query = @quiz.ai_query
     @grading_ai_query = @quiz.grading_ai_query
@@ -102,7 +102,7 @@ class QuizzesController < ApplicationController
   end
 
   def reset_quiz
-    @source_tag = 'ai_assistant'
+    @source_tag = SourceTag::AI_ASSISTANT
     @entries = @journal.entries.ordered
     destroy_all_unfinished_quizzes!
 
@@ -112,7 +112,7 @@ class QuizzesController < ApplicationController
   end
 
   def close_quiz
-    @source_tag = 'ai_assistant'
+    @source_tag = SourceTag::AI_ASSISTANT
     @entries = @journal.entries.ordered
 
     respond_to do |format|
@@ -121,7 +121,7 @@ class QuizzesController < ApplicationController
   end
 
   def destroy
-    @source_tag = "ai_assistant"
+    @source_tag = SourceTag::AI_ASSISTANT
     @entries = @journal.entries.ordered
     queries = [ @quiz.ai_query, @quiz.grading_ai_query ].compact.uniq
     @quiz.destroy!
