@@ -9,12 +9,11 @@ class PrepareQuizPrompt < Prompt
       native_japanese_phrasing(user)
   end
 
-  def response_format(_user, journal, _quiz)
-    n = journal.full_journal.count
-    learning_language = journal.user.learning_language
-    entries_block = journal.full_journal.each_with_index.map do |entry, i|
-      "ENTRY #{i+1}:\n#{entry}"
-    end.join("\n\n")
+  def response_format(user, journal, _quiz)
+    entries = journal.full_journal
+    n = entries.size
+    learning_language = user.learning_language
+    entries_block = entries.map.with_index(1) { |entry, i| "ENTRY #{i}:\n#{entry}" }.join("\n\n")
 
     <<~PROMPT.strip
       CRITICAL INSTRUCTIONS - FOLLOW THESE EXACTLY:

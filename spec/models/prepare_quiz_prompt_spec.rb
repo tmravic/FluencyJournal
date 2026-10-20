@@ -18,6 +18,10 @@ RSpec.describe PrepareQuizPrompt, type: :model do
     expect(prompt.change_keyword).to eq("line_")
     expect(prompt.response_format(user, journal, nil)).to include(%("line_1"), %("line_2"))
 
+    format = prompt.response_format(user, journal, nil)
+    expect(format).to include("exactly 2** top-level keys", "ENTRY 1:\n一行目\n\nENTRY 2:\n二行目")
+    expect(format).to include("short question in Japanese")
+
     body = { "line_1" => { "translation" => "a" }, "line_2" => { "translation" => "b" } }.to_json
     expect(AiQuery.new(raw_response: body).count_changes(prompt.change_keyword)).to eq(2)
   end
