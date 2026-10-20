@@ -1,5 +1,5 @@
 class QuizAnswersController < ApplicationController
-  before_action :set_journal
+  include JournalScoped
   before_action :set_quiz
   before_action :set_quiz_answer, only: [:show, :edit, :retry]
 
@@ -41,10 +41,6 @@ class QuizAnswersController < ApplicationController
   # from a client-supplied param.
   def original_entry_text_for(question)
     @journal.entry_at(question.identifier)&.content
-  end
-
-  def set_journal
-    @journal = current_group.journals.find(params[:journal_id])
   end
 
   def set_quiz

@@ -1,5 +1,5 @@
 class QuizzesController < ApplicationController
-  before_action :set_journal
+  include JournalScoped
   before_action :set_quiz, only: %i[
     grade_quiz show destroy peek unpeek
     show_original_language hide_original_language show_hint hide_hint
@@ -170,10 +170,6 @@ class QuizzesController < ApplicationController
 
   def destroy_all_unfinished_quizzes!
     @journal.quizzes.where(grading_ai_query_id: nil).destroy_all
-  end
-
-  def set_journal
-    @journal = current_group.journals.find(params[:journal_id])
   end
 
   def set_quiz

@@ -1,5 +1,5 @@
 class AiQueriesController < ApplicationController
-  before_action :set_journal
+  include JournalScoped
   before_action :set_ai_query, except: [ :ai_request ]
   before_action :set_prompt, except: [ :ai_request ]
 
@@ -47,10 +47,6 @@ class AiQueriesController < ApplicationController
 
   def set_ai_query
     @ai_query = @journal.ai_queries.find(params.expect(:id))
-  end
-
-  def set_journal
-    @journal = current_group.journals.find(params.require(:journal_id))
   end
 
   def set_prompt

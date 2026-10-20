@@ -1,6 +1,6 @@
 class EntriesController < ApplicationController
+  include JournalScoped
   require "securerandom"
-  before_action :set_journal, only: %i[ new create show edit update destroy speak cancel ]
   before_action :set_entry, only: %i[ show edit update destroy speak cancel ]
 
   # GET /entries/1 or /entries/1.json
@@ -110,10 +110,6 @@ class EntriesController < ApplicationController
 
   def set_entry
     @entry = @journal.entries.find(params.expect(:id))
-  end
-
-  def set_journal
-    @journal = current_group.journals.find(params[:journal_id])
   end
 
   # Only allow a list of trusted parameters through.
