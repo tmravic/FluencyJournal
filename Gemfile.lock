@@ -78,6 +78,8 @@ GEM
     acts_as_list (1.2.6)
       activerecord (>= 6.1)
       activesupport (>= 6.1)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
     bcrypt (3.1.20)
@@ -89,6 +91,15 @@ GEM
     brakeman (7.1.0)
       racc
     builder (3.3.0)
+    capybara (3.40.0)
+      addressable
+      matrix
+      mini_mime (>= 0.1.3)
+      nokogiri (~> 1.11)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
     crass (1.0.7)
@@ -178,6 +189,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matholroyd-supermemo (0.1.1)
+    matrix (0.4.3)
     mini_mime (1.1.5)
     minitest (6.0.6)
       drb (~> 2.0)
@@ -232,6 +244,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
+    public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
     raabro (1.5.0)
@@ -344,6 +357,7 @@ GEM
       marcel (>= 1.0, < 3)
       schematist (~> 1.1)
       zeitwerk (~> 2)
+    rubyzip (3.7.0)
     sass-embedded (1.83.0-aarch64-linux-gnu)
       google-protobuf (~> 4.28)
     sass-embedded (1.83.0-aarch64-linux-musl)
@@ -362,6 +376,11 @@ GEM
       google-protobuf (~> 4.28)
     schematist (1.1.0)
     securerandom (0.4.1)
+    selenium-webdriver (4.51.0)
+      base64 (~> 0.2)
+      logger (~> 1.4)
+      rubyzip (>= 1.2.2, < 4.0)
+      websocket (~> 1.0)
     simple_form (5.3.1)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
@@ -417,10 +436,13 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    websocket (1.2.11)
     websocket-driver (0.8.2)
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    xpath (3.2.0)
+      nokogiri (~> 1.8)
     zeitwerk (2.8.3)
 
 PLATFORMS
@@ -441,6 +463,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman (~> 7.1.0)
+  capybara
   dartsass-rails
   debug
   faraday (~> 2.12)
@@ -456,6 +479,7 @@ DEPENDENCIES
   rspec-rails
   rubocop-rails-omakase
   ruby_llm (= 2.1.1)
+  selenium-webdriver
   simple_form
   solid_cable
   solid_cache

@@ -104,3 +104,23 @@ ngrok http 3000
 ## How to check montly costs
 # Cost and billing check (month to-date)
 - `aws ce get-cost-and-usage --time-period Start=$(date +%Y-%m-01),End=$(date +%Y-%m-%d) --granularity MONTHLY --metrics BlendedCost`
+
+## Capybara system testing with selenium
+```
+HEADED=1 bundle exec rspec spec/system/
+```
+
+Check [spec/rails_helper.rb](spec/rails_helper.rb) to confirm setup.
+
+Running with the environment variable HEADED=1 opens Selenium.
+
+```ruby
+config.before(:each, type: :system) do 
+  if ENV["HEADED"] 
+    driven_by :selenium, using: :chrome, screen_size: [1400, 900] 
+  else 
+    driven_by :rack_test 
+  end
+end
+```
+
