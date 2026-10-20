@@ -129,8 +129,8 @@ class NotesController < ApplicationController
   def destroy
     @note.destroy!
     @delete_from_todays_notes = delete_came_from_todays_notes?
-    @all_notes_empty = Current.user&.notes.empty?
-    @todays_notes_empty = Current.user&.notes.next_to_study.empty?
+    @all_notes_empty = Current.user.notes.empty?
+    @todays_notes_empty = Current.user.notes.next_to_study.empty?
 
     respond_to do |format|
       format.html { redirect_to notes_path, status: :see_other, notice: t("note.deleted") }
@@ -149,8 +149,8 @@ class NotesController < ApplicationController
     ).html_safe
 
     if @note.save
-      @due_today = Current.user&.notes.next_to_study.count
-      @todays_notes_empty = @due_today.to_i.zero?
+      @due_today = Current.user.notes.next_to_study.count
+      @todays_notes_empty = @due_today.zero?
       respond_to do |format|
         format.html { redirect_to note_path(@note), status: :see_other, notice: notice }
         format.turbo_stream do
