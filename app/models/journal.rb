@@ -10,26 +10,12 @@ class Journal < ApplicationRecord
   has_many :journal_followups, dependent: :destroy
 
   validates :title, presence: true
-  validates :next_study_date, presence: true
-  validates :last_interval, numericality: true
-  validates :easiness_factor, numericality: true
-  validates :repetitions, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-
-  before_validation :set_initial_next_study_date, on: :create
-
-  def set_initial_next_study_date
-    self.next_study_date ||= Time.current
-  end
 
   scope :ordered, -> { order(:next_study_date) }
   # scope :personal, -> {  }
   # scope :private, -> {  }
   # scope :public, -> {  }
   # scope :shared (either private or publish, not personal), -> {  }
-
-  scope :next_to_study, -> {
-    where(next_study_date: ..Time.current).order(:next_study_date)
-  }
 
   scope :finished_today, -> {
     where(last_studied_at: 24.hours.ago..).order(:last_studied_at)
@@ -58,8 +44,6 @@ class Journal < ApplicationRecord
   end
 
   def previous_journal(journals)
-    return nil if journals.nil? || next_study_date.nil?
-
-    journals.where(next_study_date: ...next_study_date).order(:next_study_date).last
+    previous_in(journals)
   end
 end

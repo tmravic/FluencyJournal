@@ -6,32 +6,16 @@ class Note < ApplicationRecord
   has_many :followups, as: :origin, dependent: :destroy
 
   validates :content, presence: true
-  validates :next_study_date, presence: true
-  validates :last_interval, numericality: true
-  validates :easiness_factor, numericality: true
-  validates :repetitions, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-
-  before_validation :set_initial_next_study_date, on: :create
-
-  def set_initial_next_study_date
-    self.next_study_date ||= Time.current
-  end
 
   enum :category, { vocab: 0, grammar: 1, draft_journal: 2 }
 
   scope :by_user, ->(user = Current.user) { where(user_id: user&.id) }
-
-  scope :next_to_study, -> {
-    where(next_study_date: ..Time.current).order(:next_study_date)
-  }
 
   scope :due_for_study_prompt, -> {
     next_to_study.where.not(category: :draft_journal)
   }
 
   def previous_note(notes)
-    return nil if notes.nil? || next_study_date.nil?
-
-    notes.where(next_study_date: ...next_study_date).order(:next_study_date).last
+    previous_in(notes)
   end
 end
