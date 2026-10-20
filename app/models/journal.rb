@@ -21,22 +21,17 @@ class Journal < ApplicationRecord
     where(last_studied_at: 24.hours.ago..).order(:last_studied_at)
   }
 
-  # after_create_commit -> { broadcast_prepend_later_to "journals" }
-  # after_update_commit -> { broadcast_replace_later_to "journals" }
-  # after_destroy_commit -> { broadcast_remove_to "journals" }
-  broadcasts_to ->(journals) { [ journals.group, "journals" ] }, inserts_by: :append
-  # The signed stream name is generated from the array returned by the lambda
-  # that is the first argument of the broadcasts_to method: [journals.group, "journals"].
+  # The signed stream name comes from the array this lambda returns:
+  # [journal.group, "journals"].
+  broadcasts_to ->(journal) { [ journal.group, "journals" ] }, inserts_by: :append
 
   def entry_at(number)
     entries.find_by(position: number.to_i)
   end
 
+  # Entry texts in position order, e.g. ["今日は雨だった。", "傘を忘れた。"].
   def full_journal
     entries.pluck(:content)
-    # ["先日の日曜日に可愛い女の子と会いました。その子の人生についていろいろ教えてくれました。",
-    #  "その子が年上のお金持ちの男性と遊んでいる話を聞いて驚きました。",
-    #  "東京にいる面白い人との繋がりが多くてうらやましかった。"]
   end
 
   # All entries as one text, in entry order.
