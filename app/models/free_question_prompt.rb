@@ -15,7 +15,7 @@ class FreeQuestionPrompt < Prompt
     if journal
       journal_prompt = "Each item in this array is part of a previous entry in this journal, which you " +
                        "should not correct or comment on but refer to as context to understand the current entry: " +
-                       "#{journal.full_journal}. "
+                       "#{json_list(journal.full_journal)}. "
 
       return prompt1 + journal_prompt + prompt2
     end

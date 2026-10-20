@@ -9,7 +9,7 @@ class EntryPrompt < Prompt
       "If 'Learning Language' contains no #{user.learning_language}, but 'Original Language' has an " +
       "#{user.original_language} entry, then simply translate without any changes. " +
       "Each item in this array is part of a previous entry in this journal, which you " +
-      "should not correct or comment on but refer to as context to understand the current entry: #{journal.full_journal}. " +
+      "should not correct or comment on but refer to as context to understand the current entry: #{json_list(journal.full_journal)}. " +
       "Avoid vague feedback, instead pointing out each change clearly. When the " +
       "'Learning Language' is already grammatical and natural, don't make needless corrections that change the tone, " +
       "nuance, or politeness unless the student asks for it specifically. " +

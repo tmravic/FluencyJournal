@@ -55,4 +55,11 @@ class Prompt < ApplicationRecord
   def response_format(_user, _journal, _quiz)
     raise NotImplementedError, "#{self.class}#response_format"
   end
+
+  private
+
+  # Lists sent to the model are JSON arrays, not Ruby's Array#to_s output.
+  def json_list(values)
+    JSON.generate(Array(values))
+  end
 end

@@ -32,5 +32,16 @@ RSpec.describe EntryPrompt, type: :model do
       expect(text).not_to include("飲みすぎちゃった")
       expect(text).to include("English teacher")
     end
+
+    it "sends previous entries as a JSON array" do
+      journal = instance_double(Journal, full_journal: [ "今日は\"雨\"だった。", "\#{not ruby}" ])
+      text = described_class.new.role_prompt(
+        user_double(learning_language: "Japanese", original_language: "English"),
+        journal
+      )
+
+      expect(text).to include(JSON.generate(journal.full_journal))
+      expect(text).not_to include("\\#")
+    end
   end
 end
