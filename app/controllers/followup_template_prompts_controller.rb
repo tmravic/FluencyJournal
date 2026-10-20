@@ -6,11 +6,11 @@ class FollowupTemplatePromptsController < ApplicationController
   end
 
   def cancel
-    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user, include_due_notes_template: false)
-    @source_tag = params.dig(:source_tag)
+    load_template_options
+    @source_tag = params[:source_tag]
 
     respond_to do |format|
-      format.turbo_stream { flash.now[:notice] = notice }
+      format.turbo_stream
     end
   end
 
@@ -19,7 +19,7 @@ class FollowupTemplatePromptsController < ApplicationController
 
     if prompt&.destroy
       notice = t('prompt_templates.deleted')
-      @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user, include_due_notes_template: false)
+      load_template_options
 
       respond_to do |format|
         format.html { redirect_to followup_template_prompts_path, status: :see_other, notice: notice }
@@ -31,5 +31,12 @@ class FollowupTemplatePromptsController < ApplicationController
         format.turbo_stream { head :unprocessable_entity }
       end
     end
+  end
+
+  private
+
+  # The selectable templates, without the generated due-notes entry.
+  def load_template_options
+    @followup_template_prompts = get_template_prompts_scoped_by_user(Current.user, include_due_notes_template: false)
   end
 end
