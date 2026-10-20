@@ -1,4 +1,6 @@
 class EntryPrompt < Prompt
+  self.item_prefix = "change_"
+
   def role_prompt(user, journal)
     "You are a helpful #{user.learning_language} teacher whose job it is to fix grammar mistakes " +
       "and reword journal entries into more natural and correct #{user.learning_language}. " +
@@ -15,10 +17,6 @@ class EntryPrompt < Prompt
       "nuance, or politeness unless the student asks for it specifically. " +
       "Do not suggest adding a period at the end of sentences. " +
       japanese_diary_guidance(user)
-  end
-
-  def change_keyword
-    "change_"
   end
 
   def response_format(user, _journal, _quiz)
@@ -38,5 +36,4 @@ class EntryPrompt < Prompt
     #   }
     # }
   end
-
 end

@@ -48,6 +48,24 @@ class Prompt < ApplicationRecord
     self.class.abbr(user)
   end
 
+  # The contract every prompt type fulfils:
+  # - role_prompt(user, journal): the system/role text sent to the model;
+  # - response_format(user, journal, quiz): the JSON shape it must answer in;
+  # - item_prefix / change_keyword: the key prefix of the numbered items in
+  #   that answer ("change_1", "answer_2", ...).
+  # Retired prompt rows (the old hint prompt, stored as the base class) have
+  # no item prefix and are not listable.
+  class_attribute :item_prefix, instance_writer: false, default: nil
+
+  def change_keyword
+    item_prefix || raise(NotImplementedError, "#{self.class}#change_keyword")
+  end
+
+  # True for prompt types whose answers are shown as numbered items.
+  def listable?
+    item_prefix.present?
+  end
+
   def role_prompt(_user, _journal)
     raise NotImplementedError, "#{self.class}#role_prompt"
   end

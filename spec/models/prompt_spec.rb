@@ -51,6 +51,15 @@ RSpec.describe Prompt, type: :model do
       end
     end
 
+    it "declares the item prefix on every subclass and not on the retired base class" do
+      expect(subclasses.map { |klass| [ klass.new.change_keyword, klass.new.listable? ] })
+        .to eq([ [ "change_", true ], [ "example_", true ], [ "answer_", true ], [ "line_", true ], [ "entry_", true ] ])
+
+      base = described_class.new
+      expect(base.listable?).to be false
+      expect { base.change_keyword }.to raise_error(NotImplementedError)
+    end
+
     it "lets a note followup omit the journal" do
       text = FreeQuestionPrompt.new.role_prompt(learner, nil)
 

@@ -1,4 +1,6 @@
 class QuizResultPrompt < Prompt
+  self.item_prefix = "entry_"
+
   def role_prompt(user, _journal)
     "You are a helpful translator and #{user.learning_language} teacher who will check the answers of my quiz. " +
       "The quiz was based on a journal entry originally written in #{user.learning_language}, where each part " +
@@ -11,10 +13,6 @@ class QuizResultPrompt < Prompt
       "text. Include an assessment pointing out any grammar points that I seem to not understand or words used " +
       "incorrectly based on my mistakes. " +
       japanese_diary_guidance(user)
-  end
-
-  def change_keyword
-    "entry_"
   end
 
   def response_format(user, journal, quiz)

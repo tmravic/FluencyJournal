@@ -1,4 +1,6 @@
 class ExampleSentencePrompt < Prompt
+  self.item_prefix = "example_"
+
   # Save whatever context the user asked for in their example sentence
   # Use this to quickly make followups
   def role_prompt(user, _journal)
@@ -9,10 +11,6 @@ class ExampleSentencePrompt < Prompt
       "them an example sentence in #{user.learning_language} with a translation in #{user.original_language}. " +
       "Include a reading for languages that contain kanji or something similar like this: (かく.ご) 覚悟 or (い)れました 入れました. " +
       native_japanese_phrasing(user)
-  end
-
-  def change_keyword
-    "example_"
   end
 
   def response_format(user, _journal, _quiz)
@@ -42,13 +40,5 @@ class ExampleSentencePrompt < Prompt
     #     }
     #   }
     # }
-  end
-
-  def followup_question
-    base_content
-  end
-
-  def reference_text
-    user_generated_content
   end
 end

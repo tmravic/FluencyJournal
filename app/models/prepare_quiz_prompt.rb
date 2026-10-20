@@ -1,4 +1,7 @@
 class PrepareQuizPrompt < Prompt
+  # Must match the line_N keys that response_format asks for.
+  self.item_prefix = "line_"
+
   def role_prompt(user, _journal)
     "You are a helpful translator whose job it is to read my journal and translate EACH ENTRY into " +
       "#{user.original_language}, keeping in mind the full content of the journal. " +
@@ -36,10 +39,5 @@ class PrepareQuizPrompt < Prompt
         "line_#{n}": { "translation": "...", "hint": "..." }
       }
     PROMPT
-  end
-
-  # Must match the line_N keys that response_format asks for.
-  def change_keyword
-    "line_"
   end
 end

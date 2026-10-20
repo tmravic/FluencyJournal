@@ -5,7 +5,7 @@ module JournalsHelper
     return false if prompt.is_a?(PrepareQuizPrompt) || prompt.is_a?(QuizResultPrompt)
 
     # Retired hint prompts are the base Prompt class. They have no show page.
-    prompt.respond_to?(:change_keyword)
+    prompt.listable?
   end
 
   def all_or_todays

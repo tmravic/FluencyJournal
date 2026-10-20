@@ -1,4 +1,6 @@
 class FreeQuestionPrompt < Prompt
+  self.item_prefix = "answer_"
+
   # Just save exactly the question asked by the user
   # Use this for free notes followups
   def role_prompt(user, journal)
@@ -23,11 +25,6 @@ class FreeQuestionPrompt < Prompt
     prompt1 + prompt2
   end
 
-
-  def change_keyword
-    "answer_"
-  end
-
   def response_format(user, _journal, _quiz)
     "Include json marker and return json in this exact format (matching the number of feedbacks/readings): " +
       "{ { #{self.change_keyword}1: { content: '...', explanation_#{abbr(user)}: '...' }, " +
@@ -40,13 +37,5 @@ class FreeQuestionPrompt < Prompt
     #     answer_3: { content: '...', explanation_#{abbr(user)}: '...',
     #   }
     # }
-  end
-
-  def followup_question
-    base_content
-  end
-
-  def reference_text
-    user_generated_content
   end
 end
