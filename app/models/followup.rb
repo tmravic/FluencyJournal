@@ -8,6 +8,10 @@ class Followup < ApplicationRecord
 
   after_destroy -> { Prompt.destroy_from(self) }
 
+  def from_note?
+    origin.is_a?(Note)
+  end
+
   # The owner of the material this followup is about. A followup whose
   # origin was deleted (nullified) falls back to the signed-in user. A
   # followup of another followup has no owner and raises NoMethodError, as

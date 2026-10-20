@@ -139,9 +139,7 @@ class FollowupsController < ApplicationController
   end
 
   def show
-    unless @followup.origin.is_a?(Note)
-      @followup_origin = @followup.origin
-    end
+    @followup_origin = @followup.origin unless @followup.from_note?
 
     @source_tag = params.dig(:source_tag)
     set_user_and_journal(@followup.origin)
@@ -158,22 +156,8 @@ class FollowupsController < ApplicationController
   def destroy
     @journal = current_group.journals.find(params.dig(:journal)) if params.dig(:journal)
     @source_tag = params.dig(:source_tag)
-    @display_frames = if params[:display_frame].present?
-                        [ params[:display_frame] ]
-                      else
-                        [ helpers.followup_turbo_frame(@source_tag), @source_tag ].uniq
-                      end
-    # ex: "ai_assistant" or "notes_box"
-    # Used to find the HTML items for turbo streams to delete, ex:
-    # "ai_assistant_answer_1"
-    # "notes_box_answer_2"
-    return_to = if @journal
-      journal_path(@journal)
-    elsif @followup.origin.is_a?(Note)
-      notes_path
-    else
-      root_path
-    end
+    @display_frames = display_frames_for(params[:display_frame], @source_tag)
+    return_to = after_destroy_path
 
     if @followup.destroy
       respond_to do |format|
@@ -189,6 +173,26 @@ class FollowupsController < ApplicationController
   end
 
   private
+
+  # The turbo frames destroy.turbo_stream.erb clears: the one the request
+  # names, or the followup frame plus the source frame (e.g.
+  # "followup_output_notes_box" and "notes_box"). Items inside them are
+  # named like "notes_box_answer_2".
+  def display_frames_for(display_frame, source_tag)
+    return [ display_frame ] if display_frame.present?
+
+    [ helpers.followup_turbo_frame(source_tag), source_tag ].uniq
+  end
+
+  def after_destroy_path
+    if @journal
+      journal_path(@journal)
+    elsif @followup.from_note?
+      notes_path
+    else
+      root_path
+    end
+  end
 
   # Saves the prompt and its followup together. Returns false (and writes
   # nothing) when either is invalid, so create can answer 422 instead of
