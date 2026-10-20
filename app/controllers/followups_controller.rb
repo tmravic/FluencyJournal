@@ -30,21 +30,17 @@ class FollowupsController < ApplicationController
       end
       followup_origin_id = params[:id].to_i
       @followup_origin = find_accessible_origin(klass, followup_origin_id)
-      @reference_text = @followup_origin.content
-
-      if klass == AiOutput
-        @journal = @followup_origin.ai_query.journal
-        if quiz_assessment_followup?(@followup_origin)
-          @reference_text = helpers.quiz_graded_entries_reference_text(@followup_origin.ai_query, Current.user)
-        end
-      elsif klass == Entry
-        @journal = @followup_origin.journal
-      end
+      @journal = @followup_origin.followup_journal
+      @reference_text = if @followup_origin.quiz_assessment?
+                          helpers.quiz_graded_entries_reference_text(@followup_origin.ai_query, Current.user)
+                        else
+                          @followup_origin.content
+                        end
     end
 
     @followup_template_prompts = get_template_prompts_scoped_by_user(
       Current.user,
-      due_notes_dropdown: due_notes_dropdown_format(@followup_origin)
+      due_notes_dropdown: @followup_origin.due_notes_dropdown_format
     )
 
     @uuid = SecureRandom.uuid
@@ -81,7 +77,7 @@ class FollowupsController < ApplicationController
       followup_origin_id = followup_params[:followup_origin_id].to_i
       @followup_origin = find_accessible_origin(followup_origin_class, followup_origin_id)
     end
-    set_user_and_journal_based_on_origin_class(followup_origin_class)
+    set_user_and_journal
 
     if saving_new_template_prompt?
       base_content = followup_params.dig(:followup_prompt, :base_content).to_s.strip
@@ -96,13 +92,13 @@ class FollowupsController < ApplicationController
 
     @followup_template_prompts = get_template_prompts_scoped_by_user(
       Current.user,
-      due_notes_dropdown: due_notes_dropdown_format(@followup_origin)
+      due_notes_dropdown: @followup_origin.due_notes_dropdown_format
     )
 
     # create followup prompt
     followup_prompt_params = followup_params.dig(:followup_prompt).to_h
 
-    if followup_origin_class == JournalFollowup || quiz_assessment_followup?(@followup_origin)
+    if @followup_origin.due_notes_shortcut?
       expanded_base_content = expand_due_notes_prompt(
         followup_prompt_params[:base_content],
         Current.user
@@ -148,7 +144,7 @@ class FollowupsController < ApplicationController
     end
 
     @source_tag = params.dig(:source_tag)
-    set_user_and_journal_based_on_origin_class(@followup.origin.class)
+    set_user_and_journal(@followup.origin)
   end
 
   def cancel
@@ -194,20 +190,6 @@ class FollowupsController < ApplicationController
 
   private
 
-  def quiz_assessment_followup?(followup_origin)
-    followup_origin.is_a?(AiOutput) &&
-      followup_origin.assessment? &&
-      followup_origin.ai_query.prompt.is_a?(QuizResultPrompt)
-  end
-
-  def due_notes_dropdown_format(followup_origin)
-    if followup_origin.is_a?(JournalFollowup) || quiz_assessment_followup?(followup_origin)
-      :short
-    else
-      :full
-    end
-  end
-
   # Saves the prompt and its followup together. Returns false (and writes
   # nothing) when either is invalid, so create can answer 422 instead of
   # raising ActiveRecord::RecordInvalid.
@@ -221,15 +203,11 @@ class FollowupsController < ApplicationController
     params[:save_as_template] == "1"
   end
 
-  def set_user_and_journal_based_on_origin_class(followup_origin_class)
+  # The followup is sent as the signed-in user, in the origin's journal
+  # (none for notes and followups-of-followups).
+  def set_user_and_journal(origin = @followup_origin)
     @user = Current.user
-    if followup_origin_class == AiOutput
-      @journal = @followup_origin.ai_query.journal
-    elsif followup_origin_class == Entry
-      @journal = @followup_origin.journal
-    elsif followup_origin_class == JournalFollowup
-      @journal = @followup_origin.journal
-    end
+    @journal = origin&.followup_journal
   end
 
   # Turns a whitelisted class name from params into the origin model class.

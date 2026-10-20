@@ -1,4 +1,6 @@
 class AiOutput < ApplicationRecord
+  include FollowupOrigin
+
   belongs_to :ai_query
   has_many :followups, as: :origin, dependent: :nullify
   delegate :journal, :change_keyword, to: :ai_query, allow_nil: true
@@ -21,6 +23,18 @@ class AiOutput < ApplicationRecord
   def line_number
     assign_role_from_identifier
     identifier.to_i if line?
+  end
+
+  def followup_journal
+    journal
+  end
+
+  def quiz_assessment?
+    assessment? && ai_query.prompt.is_a?(QuizResultPrompt)
+  end
+
+  def due_notes_shortcut?
+    quiz_assessment?
   end
 
   def assemble_content(change_keyword, user)

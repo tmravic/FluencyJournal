@@ -1,4 +1,6 @@
 class Entry < ApplicationRecord
+  include FollowupOrigin
+
   belongs_to :journal
   has_many :followups, as: :origin, dependent: :nullify
   has_many :quiz_hints, dependent: :destroy
@@ -12,5 +14,9 @@ class Entry < ApplicationRecord
 
   def entry_number
     position
+  end
+
+  def followup_journal
+    journal
   end
 end

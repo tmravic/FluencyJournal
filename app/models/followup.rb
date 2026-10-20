@@ -1,4 +1,6 @@
 class Followup < ApplicationRecord
+  include FollowupOrigin
+
   belongs_to :prompt
   belongs_to :origin, polymorphic: true, optional: true
 
