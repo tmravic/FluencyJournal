@@ -1,4 +1,5 @@
 class JournalsController < ApplicationController
+  include SpeaksText
   before_action :set_journal, only: %i[ edit update destroy open_ai_assistant mark_journal_as_studied reading_mode speak change_due_date update_due_date]
   before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
@@ -139,16 +140,7 @@ class JournalsController < ApplicationController
 
   # GET /journals/:id/speak
   def speak
-    language = Prompt.language_code(Current.user.learning_language, default: "auto")
-    audio = XAiTtsService.new(
-      api_key: @api_key,
-      text: @journal.full_text,
-      language: language
-    ).call
-
-    send_data audio, type: "audio/mpeg", disposition: "inline"
-  rescue XAiTtsService::TtsError
-    head :service_unavailable
+    speak_text(@journal.full_text)
   end
 
   # GET /journals/:id/reading_mode

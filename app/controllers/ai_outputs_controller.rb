@@ -1,21 +1,12 @@
 class AiOutputsController < ApplicationController
+  include SpeaksText
   include AccessibleOwner
 
   before_action :set_ai_output
 
   # GET /ai_outputs/:id/speak
   def speak
-    language = Prompt.language_code(Current.user.learning_language, default: "auto")
-
-    audio = XAiTtsService.new(
-      api_key: @api_key,
-      text: @ai_output.content,
-      language: language
-    ).call
-
-    send_data audio, type: "audio/mpeg", disposition: "inline"
-  rescue XAiTtsService::TtsError
-    head :service_unavailable
+    speak_text(@ai_output.content)
   end
 
   def destroy

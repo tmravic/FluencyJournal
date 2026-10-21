@@ -1,4 +1,5 @@
 class EntriesController < ApplicationController
+  include SpeaksText
   include JournalScoped
   before_action :set_entry, only: %i[ show edit update destroy speak cancel ]
 
@@ -66,17 +67,7 @@ class EntriesController < ApplicationController
 
   # GET /journals/:journal_id/entries/:id/speak
   def speak
-    language = Prompt.language_code(Current.user.learning_language, default: "auto")
-
-    audio = XAiTtsService.new(
-      api_key: @api_key,
-      text: @entry.content,
-      language: language
-    ).call
-
-    send_data audio, type: "audio/mpeg", disposition: "inline"
-  rescue XAiTtsService::TtsError
-    head :service_unavailable
+    speak_text(@entry.content)
   end
 
   # DELETE /entries/1 or /entries/1.json
