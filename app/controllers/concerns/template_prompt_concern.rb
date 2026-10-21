@@ -5,17 +5,14 @@ module TemplatePromptConcern
   # private: public methods in a controller module become routable actions.
   private
 
+  # The followup template dropdown: the due-notes template (when any
+  # notes are due and it is wanted) followed by the user's saved templates.
   def get_template_prompts_scoped_by_user(user, due_notes_dropdown: :full, include_due_notes_template: true)
     db_templates = FollowupTemplatePrompt.by_user(user).pluck(:base_content)
+    return db_templates unless include_due_notes_template
 
-    if include_due_notes_template
-      due_notes_template = build_due_notes_template(user, format: due_notes_dropdown)
-      if due_notes_template.present?
-        return [ due_notes_template ] + db_templates
-      end
-    end
-
-    db_templates
+    due_notes_template = DueNotesTemplate.new(user).text(due_notes_dropdown)
+    due_notes_template.present? ? [ due_notes_template ] + db_templates : db_templates
   end
 
   # Delete form options. The followup picker still uses the text, because that
@@ -24,42 +21,12 @@ module TemplatePromptConcern
     FollowupTemplatePrompt.by_user(user).pluck(:base_content, :id)
   end
 
+  # The full due-notes prompt when +base_content+ picked that template,
+  # else nil.
   def expand_due_notes_prompt(base_content, user)
-    return unless due_notes_prompt_selected?(base_content)
+    template = DueNotesTemplate.new(user)
+    return unless template.selected_by?(base_content)
 
-    build_due_notes_template(user, format: :full)
-  end
-
-  def due_notes_prompt_selected?(base_content)
-    return false if base_content.blank?
-
-    normalized = base_content.strip
-    normalized == due_notes_short_label ||
-      normalized.start_with?(due_notes_prefix)
-  end
-
-  def due_notes_short_label
-    I18n.t("prompt_templates.due_notes_short")
-  end
-
-  def due_notes_prefix
-    I18n.t(
-      "prompt_templates.due_notes_prefix",
-      default: "Create example sentences or explanations for these due notes: "
-    )
-  end
-
-  def build_due_notes_template(user, format: :full)
-    contents = Note.by_user(user).due_for_study_prompt.pluck(:content).compact_blank.uniq
-    return nil if contents.empty?
-
-    return due_notes_short_label if format == :short
-
-    list = contents.join(", ")
-    if list.length > 400
-      list = list[0..397] + "..."
-    end
-
-    "#{due_notes_prefix}#{list}"
+    template.text(:full)
   end
 end
