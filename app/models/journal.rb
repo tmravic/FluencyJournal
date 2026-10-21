@@ -45,6 +45,13 @@ class Journal < ApplicationRecord
     JournalFollowup.find_or_create_by!(journal: self)
   end
 
+  # Journals also remember when they were last studied (for "finished
+  # today").
+  def mark_studied
+    self.last_studied_at = Time.current
+    super
+  end
+
   # All entries as one text, in entry order.
   def full_text(separator = "\n\n")
     full_journal.join(separator)

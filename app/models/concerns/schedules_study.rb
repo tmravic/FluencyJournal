@@ -35,6 +35,13 @@ module SchedulesStudy
     self.next_study_date = interval.to_d.days.from_now
   end
 
+  # Records a successful study session and saves. Returns what save
+  # returns.
+  def mark_studied
+    schedule_after_study
+    save
+  end
+
   # The record in +records+ due just before this one, or nil.
   def previous_in(records)
     return nil if records.nil? || next_study_date.nil?

@@ -1,5 +1,6 @@
 class NotesController < ApplicationController
   include AccessibleOwner
+  include StudyActions
 
   before_action :set_note, only: %i[
     show edit update destroy mark_note_as_studied change_due_date update_due_date
@@ -143,23 +144,9 @@ class NotesController < ApplicationController
 
   def mark_note_as_studied
     @source_tag = SourceTag::NOTES_BOX
-    @note.schedule_after_study
-    notice = t(
-      "note.actions.will_return_html",
-      date: helpers.local_date(@note.next_study_date, format: "%Y-%m-%d")
-    ).html_safe
-
-    if @note.save
+    respond_to_mark_studied(@note, "note.actions.will_return_html", note_path(@note)) do
       @due_today = Current.user.notes.next_to_study.count
       @todays_notes_empty = @due_today.zero?
-      respond_to do |format|
-        format.html { redirect_to note_path(@note), status: :see_other, notice: notice }
-        format.turbo_stream do
-          flash.now[:notice] = notice
-        end
-      end
-    else
-      head :unprocessable_entity
     end
   end
 
@@ -170,13 +157,7 @@ class NotesController < ApplicationController
   end
 
   def update_due_date
-    if @note.update(next_study_date: params.dig(:next_study_date))
-      respond_to do |format|
-        format.turbo_stream
-      end
-    else
-      head :unprocessable_entity
-    end
+    respond_to_due_date_update(@note)
   end
 
   def link_journals

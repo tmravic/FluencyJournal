@@ -1,5 +1,6 @@
 class JournalsController < ApplicationController
   include SpeaksText
+  include StudyActions
   before_action :set_journal, only: %i[ edit update destroy open_ai_assistant mark_journal_as_studied reading_mode speak change_due_date update_due_date]
   before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
@@ -115,26 +116,11 @@ class JournalsController < ApplicationController
   end
 
   def mark_journal_as_studied
-    @journal.schedule_after_study
-    @journal.last_studied_at = Time.current
-    notice = t(
-      "journal.actions.will_return_html",
-      date: helpers.local_date(@journal.next_study_date, format: "%Y-%m-%d")
-    ).html_safe
-
-    if @journal.save
+    respond_to_mark_studied(@journal, "journal.actions.will_return_html", journal_path(@journal)) do
       @due_today = current_group.journals.next_to_study.count
       @journals_finished_today = finished_today_titles
       # All Journals still lists this journal, so it must not get today's empty state.
       @show_todays_journals_empty_state = @from_all_or_todays != "all" && @due_today.zero?
-      respond_to do |format|
-        format.html { redirect_to journal_path(@journal), status: :see_other, notice: notice }
-        format.turbo_stream do
-          flash.now[:notice] = notice
-        end
-      end
-    else
-      head :unprocessable_entity
     end
   end
 
@@ -159,13 +145,7 @@ class JournalsController < ApplicationController
   end
 
   def update_due_date
-    if @journal.update(next_study_date: params.dig(:next_study_date))
-      respond_to do |format|
-        format.turbo_stream
-      end
-    else
-      head :unprocessable_entity
-    end
+    respond_to_due_date_update(@journal)
   end
 
   def compare
