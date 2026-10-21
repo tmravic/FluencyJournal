@@ -6,7 +6,7 @@ class JournalsController < ApplicationController
 
   # GET /journals or /journals.json
   def index
-    @todays_journals = current_group.journals.next_to_study
+    @todays_journals = journals_for("todays")
     @due_today = @todays_journals.count
     @from_all_or_todays = "todays"
     @journals_finished_today = finished_today_titles
@@ -22,7 +22,7 @@ class JournalsController < ApplicationController
   end
 
   def all
-    @all_journals = current_group.journals.ordered
+    @all_journals = journals_for("all")
     @from_all_or_todays = "all"
     respond_to do |format|
       format.html
@@ -92,11 +92,10 @@ class JournalsController < ApplicationController
   def destroy
     @journal.destroy!
     @from_all_or_todays = params.dig("from_all_or_todays")
-    if @from_all_or_todays == "all"
-      @all_journals = current_group.journals.ordered
-    elsif @from_all_or_todays == "todays"
-      @todays_journals = current_group.journals.next_to_study
-    end
+    # The stream checks the list the journal was deleted from for its
+    # empty state.
+    @all_journals = journals_for("all") if @from_all_or_todays == "all"
+    @todays_journals = journals_for("todays") if @from_all_or_todays == "todays"
 
     respond_to do |format|
       # flash[:notice] = "..."
@@ -117,7 +116,7 @@ class JournalsController < ApplicationController
 
   def mark_journal_as_studied
     respond_to_mark_studied(@journal, "journal.actions.will_return_html", journal_path(@journal)) do
-      @due_today = current_group.journals.next_to_study.count
+      @due_today = journals_for("todays").count
       @journals_finished_today = finished_today_titles
     end
   end
@@ -181,6 +180,16 @@ class JournalsController < ApplicationController
     @journal = current_group.journals.find(params.expect(:id))
   end
 
+  # The journal lists, by the from_all_or_todays value the pages pass
+  # around.
+  JOURNAL_LISTS = { "todays" => :next_to_study, "all" => :ordered }.freeze
+
+  def journals_for(list)
+    current_group.journals.public_send(JOURNAL_LISTS.fetch(list))
+  end
+
+  # Forms send the list nested under journal; links send it at the top
+  # level.
   def set_from_all_or_todays
     @from_all_or_todays =
       params.dig("journal", "from_all_or_todays").presence ||
