@@ -6,6 +6,8 @@ class Followup < ApplicationRecord
 
   validates :source_tag, presence: true # string
 
+  # Deleting this also deletes its prompt (and the prompt's other child).
+  # See the comment on Prompt.
   after_destroy -> { Prompt.destroy_from(self) }
 
   def from_note?

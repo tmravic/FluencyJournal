@@ -12,6 +12,8 @@ class AiQuery < ApplicationRecord
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true
   validates :raw_response, presence: true
 
+  # Deleting this also deletes its prompt (and the prompt's other child).
+  # See the comment on Prompt.
   after_destroy -> { Prompt.destroy_from(self) }
 
   # Stored on quiz rows when the model returns fewer lines than expected.

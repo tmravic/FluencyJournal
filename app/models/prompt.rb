@@ -1,3 +1,15 @@
+# One request to the model. A prompt owns what came of it: its answer
+# query (AiQuery) and, for followup questions, its Followup.
+#
+# Deleting works from either end, and the whole group always goes:
+#   - prompt.destroy      -> destroys its ai_query and followup
+#                            (dependent: :destroy below);
+#   - ai_query.destroy or
+#     followup.destroy    -> their after_destroy calls Prompt.destroy_from,
+#                            which destroys the prompt, and with it the
+#                            other child.
+# destroy_from skips the call when the prompt itself is the one deleting
+# the child, so the two paths never loop.
 class Prompt < ApplicationRecord
   include NativeJapaneseGuidance
 
