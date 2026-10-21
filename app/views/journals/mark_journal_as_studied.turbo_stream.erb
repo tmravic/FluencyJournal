@@ -1,7 +1,7 @@
 <% unless @from_all_or_todays == "all" %>
   <%= turbo_stream.remove @journal %>
 <% end %>
-<% if @show_todays_journals_empty_state %>
+<% if todays_journals_empty_after_study? %>
   <%= turbo_stream.update dom_id(Journal.new),
                           partial: "journals/empty_state_today",
                           locals: { from_all_or_todays: @from_all_or_todays.presence || "todays" } %>
