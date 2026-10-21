@@ -75,7 +75,9 @@ class NotesController < ApplicationController
     # Need to be able to create a note from All Notes or Today's notes
     # and stay on the same page with the same view context and header
     notes_list = notes_list_from_view_context(params[:view_context])
-    collection = get_collection_from_view_context(params[:view_context])
+    collection = notes_for(params[:view_context])
+    # notes/_note_display reads @todays_notes to keep the Today's Notes controls.
+    @todays_notes = collection if params[:view_context] == "todays_notes"
     @source_tag = SourceTag::NOTES_BOX
     # The anchor is chosen before save, while this row is still off the list.
     # next_study_date is otherwise unset until validation.
@@ -193,15 +195,17 @@ class NotesController < ApplicationController
     view_context if NotesHeaderComponent::LISTS.include?(view_context) && view_context != "journal"
   end
 
-  def get_collection_from_view_context(view_context)
-    case view_context
-    when "todays_notes"
-      @todays_notes = user_notes.todays_list
-    when "all_notes"
-      @all_notes = user_notes.all_list
-    when "draft_notes"
-      @draft_notes = user_notes.drafts_list
-    end
+  # The note list each view context shows. Other contexts (a journal's
+  # notes, or none) have no list to place the new note in.
+  NOTE_LISTS = {
+    "todays_notes" => :todays_list,
+    "all_notes" => :all_list,
+    "draft_notes" => :drafts_list
+  }.freeze
+
+  def notes_for(view_context)
+    list = NOTE_LISTS[view_context]
+    user_notes.public_send(list) if list
   end
 
   # The signed-in user's notes. Authentication guarantees the user.
