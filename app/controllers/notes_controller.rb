@@ -134,7 +134,7 @@ class NotesController < ApplicationController
     @note.destroy!
     @delete_from_todays_notes = delete_came_from_todays_notes?
     @all_notes_empty = user_notes.empty?
-    @todays_notes_empty = user_notes.next_to_study.empty?
+    @todays_notes_empty = Current.user.no_notes_due?
 
     respond_to do |format|
       format.html { redirect_to notes_path, status: :see_other, notice: t("note.deleted") }
@@ -147,7 +147,7 @@ class NotesController < ApplicationController
   def mark_note_as_studied
     @source_tag = SourceTag::NOTES_BOX
     respond_to_mark_studied(@note, "note.actions.will_return_html", note_path(@note)) do
-      @due_today = user_notes.next_to_study.count
+      @due_today = Current.user.notes_due_count
       @todays_notes_empty = @due_today.zero?
     end
   end

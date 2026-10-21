@@ -12,6 +12,15 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
+  # How many of this user's notes are due for study now.
+  def notes_due_count
+    notes.next_to_study.count
+  end
+
+  def no_notes_due?
+    notes.next_to_study.empty?
+  end
+
   # I should probably change this later
   def name
     email_address.split("@").first.capitalize
