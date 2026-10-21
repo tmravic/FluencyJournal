@@ -10,6 +10,38 @@ class Quiz < ApplicationRecord
     ai_query.ai_outputs.line
   end
 
+  # Every output of the preparing query. The member actions and the
+  # grading prompt use all of them, not only the line questions.
+  def prepared_outputs
+    ai_query.ai_outputs
+  end
+
+  def prepared_output(id)
+    prepared_outputs.find(id)
+  end
+
+  def prepared_texts
+    prepared_outputs.pluck(:content)
+  end
+
+  # The grader's feedback, or none before grading.
+  def feedback_outputs
+    grading_ai_query&.ai_outputs || AiOutput.none
+  end
+
+  def assessment_output
+    feedback_outputs.assessment.first
+  end
+
+  def grading_prompt
+    grading_ai_query&.prompt
+  end
+
+  # The hint for the entry +output+ asks about, or nil.
+  def hint_for(output)
+    quiz_hints.find_by(entry: journal.entry_at(output.line_number))
+  end
+
   # True once every question has at least one saved answer.
   def fully_answered?
     question_ids = questions.ids

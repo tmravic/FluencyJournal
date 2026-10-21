@@ -13,7 +13,7 @@ class QuizAnswersController < ApplicationController
   end
 
   def create
-    @ai_output = @quiz.ai_query.ai_outputs.find(quiz_answer_params[:ai_output_id])
+    @ai_output = @quiz.prepared_output(quiz_answer_params[:ai_output_id])
     @ai_query = @ai_output.ai_query
     @quiz_answer = @quiz.quiz_answers.build(quiz_answer_params)
     @original_entry_text = original_entry_text_for(@ai_output)

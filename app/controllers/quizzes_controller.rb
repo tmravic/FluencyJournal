@@ -59,7 +59,7 @@ class QuizzesController < ApplicationController
     uuid = SecureRandom.uuid
     original_journal = @journal.full_journal
     # ["彼女のお母さんに会いました。", "３人で中目黒にピザを食べました。"]
-    quiz_entries = get_translated_journal_entries
+    quiz_entries = @quiz.prepared_texts
     # ["I met her mother.", "The three of us ate pizza in Nakameguro."]
     user_translation = @quiz.responses
     # ["Test", "Test"]
@@ -96,9 +96,9 @@ class QuizzesController < ApplicationController
     @ai_query = @quiz.ai_query
     @grading_ai_query = @quiz.grading_ai_query
     @user = @journal.user
-    @ai_outputs = @grading_ai_query&.ai_outputs || AiOutput.none
-    @assessment_output = @ai_outputs.assessment.first
-    @prompt = @grading_ai_query&.prompt
+    @ai_outputs = @quiz.feedback_outputs
+    @assessment_output = @quiz.assessment_output
+    @prompt = @quiz.grading_prompt
   end
 
   def reset_quiz
@@ -146,7 +146,7 @@ class QuizzesController < ApplicationController
   end
 
   def show_hint
-    quiz_hint = @quiz.quiz_hints.find_by(entry: @journal.entry_at(@quiz_entry.line_number))
+    quiz_hint = @quiz.hint_for(@quiz_entry)
 
     unless quiz_hint
       head :unprocessable_entity
@@ -177,15 +177,11 @@ class QuizzesController < ApplicationController
   end
 
   def set_quiz_output
-    @ai_output = @quiz.ai_query.ai_outputs.find(params[:ai_output_id])
+    @ai_output = @quiz.prepared_output(params[:ai_output_id])
     @quiz_entry = @ai_output
   end
 
   def combine_original_and_translation(original_journal, quiz_entries)
     (original_journal + quiz_entries).join(', ')
-  end
-
-  def get_translated_journal_entries
-    @quiz.ai_query.ai_outputs.pluck(:content)
   end
 end
