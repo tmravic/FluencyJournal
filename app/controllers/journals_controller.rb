@@ -13,7 +13,7 @@ class JournalsController < ApplicationController
 
     # Open today's notes in the notes_box frame
     @source_tag = SourceTag::NOTES_BOX
-    @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
+    @todays_notes = Current.user.notes.todays_list
 
     respond_to do |format|
       format.html

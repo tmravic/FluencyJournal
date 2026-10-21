@@ -7,7 +7,7 @@
   <%= turbo_stream.update "notes_box" do %>
     <div class="notes-box">
       <%= turbo_frame_tag Note.new %>
-      <% @todays_notes = Current.user&.notes.next_to_study %>
+      <% @todays_notes = Current.user.notes.next_to_study %>
       <%= turbo_frame_tag "note_header" do %>
         <%= render NotesHeaderComponent.new(list: "todays_notes") if @todays_notes.present? %>
       <% end %>

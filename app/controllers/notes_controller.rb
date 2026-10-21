@@ -10,7 +10,7 @@ class NotesController < ApplicationController
 
   def index
     @source_tag = SourceTag::NOTES_BOX
-    @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
+    @todays_notes = user_notes.todays_list
     @due_today = @todays_notes.count
     respond_to do |format|
       format.html
@@ -20,7 +20,7 @@ class NotesController < ApplicationController
 
   def all
     @source_tag = SourceTag::NOTES_BOX
-    @all_notes = Current.user&.notes.order(:next_study_date).includes(:followups, :journals)
+    @all_notes = user_notes.all_list
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -29,7 +29,7 @@ class NotesController < ApplicationController
 
   def drafts
     @source_tag = SourceTag::NOTES_BOX
-    @draft_notes = Current.user&.notes.draft_journal.order(:next_study_date).includes(:followups, :journals)
+    @draft_notes = user_notes.drafts_list
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -39,7 +39,7 @@ class NotesController < ApplicationController
   def for_journal
     @source_tag = SourceTag::NOTES_BOX
     @journal = linkable_journals.find(params[:journal_id])
-    @journal_notes = @journal.notes.order(:next_study_date).includes(:followups, :journals)
+    @journal_notes = @journal.notes.all_list
     respond_to do |format|
       format.html
     end
@@ -65,7 +65,7 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Current.user.notes.build(note_params)
+    @note = user_notes.build(note_params)
 
     if params[:ai_query_id].present?
       @ai_query = find_accessible_ai_query(params[:ai_query_id])
@@ -119,7 +119,7 @@ class NotesController < ApplicationController
         format.turbo_stream do
           flash.now[:notice] = t("note.updated")
           # notes/_note_display reads @todays_notes to keep the Today's Notes controls.
-          @todays_notes = Current.user.notes.next_to_study if boolean_param(:update_from_todays_notes)
+          @todays_notes = user_notes.next_to_study if boolean_param(:update_from_todays_notes)
           render "notes/update"
         end
       else
@@ -131,8 +131,8 @@ class NotesController < ApplicationController
   def destroy
     @note.destroy!
     @delete_from_todays_notes = delete_came_from_todays_notes?
-    @all_notes_empty = Current.user.notes.empty?
-    @todays_notes_empty = Current.user.notes.next_to_study.empty?
+    @all_notes_empty = user_notes.empty?
+    @todays_notes_empty = user_notes.next_to_study.empty?
 
     respond_to do |format|
       format.html { redirect_to notes_path, status: :see_other, notice: t("note.deleted") }
@@ -145,7 +145,7 @@ class NotesController < ApplicationController
   def mark_note_as_studied
     @source_tag = SourceTag::NOTES_BOX
     respond_to_mark_studied(@note, "note.actions.will_return_html", note_path(@note)) do
-      @due_today = Current.user.notes.next_to_study.count
+      @due_today = user_notes.next_to_study.count
       @todays_notes_empty = @due_today.zero?
     end
   end
@@ -196,21 +196,26 @@ class NotesController < ApplicationController
   def get_collection_from_view_context(view_context)
     case view_context
     when "todays_notes"
-      @todays_notes = Current.user&.notes.next_to_study.includes(:followups, :journals)
+      @todays_notes = user_notes.todays_list
     when "all_notes"
-      @all_notes = Current.user&.notes.order(:next_study_date).includes(:followups, :journals)
+      @all_notes = user_notes.all_list
     when "draft_notes"
-      @draft_notes = Current.user&.notes.draft_journal.order(:next_study_date).includes(:followups, :journals)
+      @draft_notes = user_notes.drafts_list
     end
   end
 
+  # The signed-in user's notes. Authentication guarantees the user.
+  def user_notes
+    Current.user.notes
+  end
+
   def set_note
-    @note = Current.user.notes.find(params.expect(:id))
+    @note = user_notes.find(params.expect(:id))
   end
 
   # The journal-link actions re-render the note with its journals and followups.
   def set_note_with_links
-    @note = Current.user.notes.includes(:journals, :followups).find(params.expect(:id))
+    @note = user_notes.includes(:journals, :followups).find(params.expect(:id))
   end
 
   # The journals a note can be linked to and listed under: the user's own.
@@ -223,7 +228,7 @@ class NotesController < ApplicationController
   def set_notes_view_context
     @from_todays_notes = boolean_param(:from_todays_notes)
     @source_tag = SourceTag::NOTES_BOX
-    @todays_notes = @from_todays_notes ? Current.user&.notes.next_to_study : nil
+    @todays_notes = @from_todays_notes ? user_notes.next_to_study : nil
   end
 
   def journal_link_params

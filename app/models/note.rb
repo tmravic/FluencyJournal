@@ -12,6 +12,14 @@ class Note < ApplicationRecord
 
   scope :by_user, ->(user = Current.user) { where(user_id: user&.id) }
 
+  # The note lists. Each loads what a listed note shows (its followups and
+  # journals).
+  scope :for_list, -> { includes(:followups, :journals) }
+  scope :by_due_date, -> { order(:next_study_date) }
+  scope :todays_list, -> { next_to_study.for_list }
+  scope :all_list, -> { by_due_date.for_list }
+  scope :drafts_list, -> { draft_journal.by_due_date.for_list }
+
   scope :due_for_study_prompt, -> {
     next_to_study.where.not(category: :draft_journal)
   }

@@ -8,7 +8,7 @@
   <div class="notes-box">
     <%= turbo_frame_tag Note.new %>
     <%= turbo_frame_tag "note_header" %>
-    <% @todays_notes = Current.user&.notes.next_to_study %>
+    <% @todays_notes = Current.user.notes.next_to_study %>
     <%= turbo_frame_tag "notes" do %>
       <% if @todays_notes.present? %>
         <%= render @todays_notes %>
