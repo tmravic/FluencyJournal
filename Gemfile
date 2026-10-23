@@ -63,7 +63,7 @@ group :staging, :development do
 end
 
 group :test do
-  # System specs (rack_test driver; no browser required)
+  # System specs open a visible Chrome window from spec/rails_helper.rb.
   gem "capybara"
 end
 gem "selenium-webdriver"

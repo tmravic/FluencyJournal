@@ -6,7 +6,7 @@
   <% end %>
 
     <div class="card">
-      <% ai_query = @followup.ai_queries.first %>
+      <% ai_query = @followup.prompt.ai_query %>
       <% change_keyword = ai_query.prompt.change_keyword %>
       <% ai_query.ai_outputs.each_with_index do |output, index| %>
         <% unless index.zero? %>

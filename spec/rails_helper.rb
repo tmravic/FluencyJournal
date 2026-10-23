@@ -67,11 +67,12 @@ RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
   config.include Rails.application.routes.url_helpers, type: :component
 
+  # System specs always open a visible Chrome window. Do not call driven_by
+  # inside a spec. English labels in the specs stay stable in that window.
   config.before(:each, type: :system) do
-    if ENV["HEADED"]
-      driven_by :selenium, using: :chrome, screen_size: [1400, 900]
-    else
-      driven_by :rack_test
+    driven_by :selenium, using: :chrome, screen_size: [1400, 900] do |options|
+      options.add_argument("--lang=en-US")
+      options.add_preference("intl.accept_languages", "en-US,en")
     end
   end
 
