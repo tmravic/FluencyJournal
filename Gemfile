@@ -73,7 +73,7 @@ gem "simple_form"
 
 gem "ruby_llm", "= 2.1.1"
 
-gem "local_time", "= 3.0.2"
+gem "local_time", "3.0.3"
 
 gem "view_component", "= 4.16.0"
 
