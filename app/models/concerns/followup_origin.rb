@@ -5,8 +5,7 @@ module FollowupOrigin
   extend ActiveSupport::Concern
 
   # Each origin also answers followup_owner: the user whose material the
-  # followup is about (Followup#user). Followup itself does not, so a
-  # followup-of-a-followup still has no owner (see Followup#user).
+  # followup is about (Followup#user).
 
   # The journal a followup on this origin belongs to, or nil (notes and
   # followups-of-followups have none).

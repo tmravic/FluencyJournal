@@ -16,9 +16,14 @@ class Followup < ApplicationRecord
 
   # The owner of the material this followup is about. A followup whose
   # origin was deleted (nullified) falls back to the signed-in user. A
-  # followup of another followup has no owner and raises NoMethodError, as
-  # it always has.
+  # followup of another followup is owned by whoever owns the parent's
+  # material (see followup_owner).
   def user
     origin.nil? ? Current.user : origin.followup_owner
+  end
+
+  # Lets this followup be the origin of another one (FollowupOrigin).
+  def followup_owner
+    user
   end
 end

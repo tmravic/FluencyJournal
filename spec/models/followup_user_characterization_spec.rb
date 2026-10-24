@@ -55,9 +55,24 @@ RSpec.describe Followup, "#user (characterization)", type: :model do
     expect(followup_on(nil).user).to eq(viewer)
   end
 
-  it "raises for a followup whose origin is another followup" do
+  # Bug fix: this used to raise NoMethodError (a Followup had no followup_owner).
+  it "is the owner of the parent followup's material for a followup of a followup" do
     parent = Followup.create!(prompt: prompt, origin: entry, source_tag: "ai_assistant")
 
-    expect { followup_on(parent).user }.to raise_error(NoMethodError)
+    expect(followup_on(parent).user).to eq(owner)
+  end
+
+  it "follows a chain of followups to the owner" do
+    parent = Followup.create!(prompt: prompt, origin: entry, source_tag: "ai_assistant")
+    child = Followup.create!(prompt: prompt, origin: parent, source_tag: "ai_assistant")
+
+    expect(followup_on(child).user).to eq(owner)
+  end
+
+  it "falls back to Current.user for a followup of a followup whose origin was deleted" do
+    allow(Current).to receive(:user).and_return(viewer)
+    parent = Followup.create!(prompt: prompt, origin: nil, source_tag: "ai_assistant")
+
+    expect(followup_on(parent).user).to eq(viewer)
   end
 end
