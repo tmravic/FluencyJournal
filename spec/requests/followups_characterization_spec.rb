@@ -90,7 +90,7 @@ RSpec.describe "Followups characterization", type: :request do
 
       text = text.gsub(%r{/#{record.class.model_name.route_key}/#{record.id}\b}, "/#{record.class.model_name.route_key}/<#{label(record)}>")
     end
-    text.gsub(/\d{4,}/, "<id>")
+    text.gsub(%r{/(followups|ai_outputs|ai_queries)/\d+}, '/\1/<id>').gsub(/\d{4,}/, "<id>")
   end
 
   def ivars(*names)
