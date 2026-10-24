@@ -40,6 +40,38 @@ class Quiz < ApplicationRecord
     grading_ai_query&.prompt
   end
 
+  # A grading request that has not produced a result yet is treated as
+  # pending for this long. Past it (a job that died without reporting) the
+  # quiz may be graded again.
+  GRADING_PENDING_FOR = 15.minutes
+
+  def graded?
+    grading_ai_query_id.present?
+  end
+
+  def grading_pending?
+    !graded? && grading_requested_at.present? && grading_requested_at > GRADING_PENDING_FOR.ago
+  end
+
+  # Marks the quiz as being graded and returns true, or returns false when
+  # it is not fully answered, is already graded, or grading is already
+  # pending. The row lock makes two simultaneous requests claim it once.
+  def claim_grading!
+    claimed = false
+    with_lock do
+      if fully_answered? && !graded? && !grading_pending?
+        update!(grading_requested_at: Time.current)
+        claimed = true
+      end
+    end
+    claimed
+  end
+
+  # Lets the quiz be graded again, after a failed request.
+  def release_grading!
+    update_column(:grading_requested_at, nil)
+  end
+
   # The hint for the entry +output+ asks about, or nil.
   def hint_for(output)
     quiz_hints.find_by(entry: journal.entry_at(output.line_number))

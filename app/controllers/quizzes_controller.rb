@@ -56,6 +56,10 @@ class QuizzesController < ApplicationController
   end
 
   def grade_quiz
+    # A partial quiz, an already graded quiz, or a second click while the
+    # first request is still running must not start another grading job.
+    return head :unprocessable_entity unless @quiz.claim_grading!
+
     uuid = SecureRandom.uuid
     original_journal = @journal.entry_texts
     # ["彼女のお母さんに会いました。", "３人で中目黒にピザを食べました。"]
@@ -86,6 +90,7 @@ class QuizzesController < ApplicationController
         format.turbo_stream
       end
     else
+      @quiz.release_grading!
       head :unprocessable_entity
     end
   end

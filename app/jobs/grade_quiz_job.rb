@@ -4,6 +4,14 @@ class GradeQuizJob < ApplicationJob
 
   queue_as :default
 
+  # A job that gave up leaves the quiz gradable again.
+  after_discard do |job, _error|
+    _journal, _prompt, quiz = job.arguments
+    quiz.release_grading! if quiz.respond_to?(:release_grading!)
+  rescue StandardError => e
+    Rails.logger.error("GradeQuizJob could not release the quiz: #{e.class}: #{e.message}")
+  end
+
   def perform(journal, quiz_result_prompt, quiz)
     user = journal.user
     result = XAiChat.complete(

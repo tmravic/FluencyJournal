@@ -2,4 +2,4 @@
               grade_quiz_journal_quiz_path(@journal, @quiz),
               method: :post,
               class: "btn btn--secondary",
-              data: { turbo_frame: "entries", turbo_stream: true } %>
+              data: { turbo_frame: "entries", turbo_stream: true, turbo_submits_with: t("quiz.grading") } %>

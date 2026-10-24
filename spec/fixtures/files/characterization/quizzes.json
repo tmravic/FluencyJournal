@@ -28,7 +28,7 @@
       "</turbo-frame>",
       "</template></turbo-stream>",
       "  <turbo-stream action=\"update\" target=\"grade_quiz_button\"><template>",
-      "    <form class=\"button_to\" method=\"post\" action=\"/journals/JOURNAL/quizzes/QUIZ/grade_quiz\"><button class=\"btn btn--secondary\" data-turbo-frame=\"entries\" data-turbo-stream=\"true\" type=\"submit\">Grade quiz</button></form>",
+      "    <form class=\"button_to\" method=\"post\" action=\"/journals/JOURNAL/quizzes/QUIZ/grade_quiz\"><button class=\"btn btn--secondary\" data-turbo-frame=\"entries\" data-turbo-stream=\"true\" data-turbo-submits-with=\"Quiz grading in progress...\" type=\"submit\">Grade quiz</button></form>",
       "</template></turbo-stream>"
     ]
   },
@@ -49,9 +49,9 @@
       "</turbo-frame></template></turbo-stream>"
     ],
     "prompt": {
-      "raw_prompt": "Original journal entries: [\"彼女のお母さんに会いました。\",\"三人でピザを食べました。\"]\nQuiz questions: [\"I met her mother.\",\"We ate pizza.\",\"Not a question\"]\nQuiz Answers: [\"彼女のお母さんに会った。\"]",
+      "raw_prompt": "Original journal entries: [\"彼女のお母さんに会いました。\",\"三人でピザを食べました。\"]\nQuiz questions: [\"I met her mother.\",\"We ate pizza.\",\"Not a question\"]\nQuiz Answers: [\"彼女のお母さんに会った。\",\"三人でピザを食べた。\"]",
       "base_content": "彼女のお母さんに会いました。, 三人でピザを食べました。, I met her mother., We ate pizza., Not a question",
-      "user_generated_content": "彼女のお母さんに会った。",
+      "user_generated_content": "彼女のお母さんに会った。三人でピザを食べた。",
       "sent_role_prompt": "You are a helpful translator and Japanese teacher who will check the answers of my quiz. The quiz was based on a journal entry originally written in Japanese, where each part was translated into English to create quiz questions, then I tried to rewrite each part in Japanese based roughly on the original. Compare my Japanese Quiz Answers to the Japanese Original journal entries, but just assume that the English Quiz questions are correct and don't grade them. Keep in mind the full content of the journal such that conveying the same meaning overall in grammatically correct Japanese is more important than an exact word-for-word replication of the original text. Include an assessment pointing out any grammar points that I seem to not understand or words used incorrectly based on my mistakes. \nJapanese output style:\nWrite corrected_text the way a native speaker would actually write a personal journal, not the way a textbook or a translator would. Prefer natural diary Japanese over a word-for-word translation of the English original.\n\nMatch the student's register. If they used casual forms (た / だ / んだ / ちゃう), keep that. If they used です/ます, keep that. Do not upgrade casual diary writing into polite textbook Japanese unless they asked for it.\n\nPrefer natural particle choice and Japanese word order. Drop subjects and other obvious context when a native would omit them. Do not add 私は, です/ます, or a sentence-ending period just to look complete. Do not rewrite a grammatical, natural entry just to sound fancier or more complete.\n\nTarget style (copy the register, not the sentences):\nCasual: 今日は仕事終わりに友達と居酒屋行った。刺身が美味しくて、つい飲みすぎちゃった。\nCasual: 電車で席ゆずらなかったおじさんにちょっとイラッとした。まあ疲れてたんだろうけど。\nPolite: 今日は仕事の後、友達と居酒屋に行きました。刺身が美味しくて、つい飲みすぎてしまいました。\n"
     }
   },

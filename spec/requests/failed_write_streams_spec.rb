@@ -112,6 +112,10 @@ RSpec.describe "Failed writes do not render the success stream", type: :request 
     )
     ai_query = AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
     quiz = Quiz.create!(journal: journal, ai_query: ai_query)
+    # Fully answered, so the failure below is the prompt save and not the
+    # grade_quiz guard.
+    output = ai_query.ai_outputs.create!(identifier: "1", content: "One", made_note: false)
+    quiz.quiz_answers.create!(ai_output: output, user_response: "a")
     sign_in(user)
     allow_any_instance_of(QuizResultPrompt).to receive(:save).and_return(false)
 

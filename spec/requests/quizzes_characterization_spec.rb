@@ -138,6 +138,9 @@ RSpec.describe "Quizzes (characterization)", type: :request do
 
   it "grades a quiz with the questions and answers in the prompt" do
     allow(GradeQuizJob).to receive(:perform_later)
+    # Grading needs every question answered (q1 already is). The "extra"
+    # output is not a line question.
+    world[:quiz].quiz_answers.create!(ai_output: world[:q2], user_response: "三人でピザを食べた。")
     post grade_quiz_journal_quiz_path(world[:journal], world[:quiz]), headers: turbo
     prompt = QuizResultPrompt.order(:id).last
     observe("grade_quiz", snapshot, self,
