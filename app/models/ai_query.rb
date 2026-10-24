@@ -110,22 +110,9 @@ class AiQuery < ApplicationRecord
   end
 
   def create_quiz_questions(translated_response, expected_count: nil, quiz: nil)
-    # Filter and sort only the real line_N keys the model actually returned
-    line_keys = translated_response.keys
-      .select { |k| k.match?(/\Aline_\d+\z/) }
-      .sort_by { |k| k[/\d+/].to_i }
-
-    actual = line_keys.size
-    expected = expected_count || actual
-
-    if expected > 0 && actual != expected
-      Rails.logger.warn(
-        "PrepareQuiz line-count mismatch: " \
-        "journal_id=#{journal&.id} ai_query_id=#{id} prompt_id=#{prompt_id} " \
-        "expected=#{expected} actual=#{actual} keys=#{line_keys.inspect} " \
-        "raw_snippet=#{translated_response.to_json[0, LOG_SNIPPET_LENGTH]}"
-      )
-    end
+    line_keys = quiz_line_keys(translated_response)
+    expected = expected_count || line_keys.size
+    log_line_count_mismatch(translated_response, line_keys, expected)
 
     # Always create *exactly* the expected number of quiz questions.
     # Use whatever the model gave us for the first min(actual, expected) items.
@@ -133,22 +120,13 @@ class AiQuery < ApplicationRecord
     (1..expected).each do |count|
       key = line_keys[count - 1] # may be nil if model gave fewer
       line = key ? translated_response[key] : nil
-      translation = if key
-                      translation_from_quiz_line(line)
-                    else
-                      fallback = line_keys.last && translated_response[line_keys.last]
-                      translation_from_quiz_line(fallback) || MISSING_TRANSLATION
-                    end
 
-      ai_outputs.create(
+      ai_outputs.create!(
         made_note: false,
         identifier: count.to_s,
-        role: :line
-      ).tap do |ai_output|
-        content = translation.to_s.split('→ ').last.presence || translation.to_s
-        ai_output.content = content
-        ai_output.save!
-      end
+        role: :line,
+        content: quiz_question_text(translated_response, line_keys, key, line)
+      )
 
       next unless quiz && (entry = journal&.entry_at(count))
 
@@ -313,6 +291,39 @@ class AiQuery < ApplicationRecord
 
   def item_keys(content)
     content.keys.grep(/\A(?:entry|change|line|hint|answer|example)_\d+\z/)
+  end
+
+  # Only the real line_N keys the model returned, in numeric order.
+  def quiz_line_keys(translated_response)
+    translated_response.keys
+      .select { |k| k.match?(/\Aline_\d+\z/) }
+      .sort_by { |k| k[/\d+/].to_i }
+  end
+
+  def log_line_count_mismatch(translated_response, line_keys, expected)
+    actual = line_keys.size
+    return unless expected > 0 && actual != expected
+
+    Rails.logger.warn(
+      "PrepareQuiz line-count mismatch: " \
+      "journal_id=#{journal&.id} ai_query_id=#{id} prompt_id=#{prompt_id} " \
+      "expected=#{expected} actual=#{actual} keys=#{line_keys.inspect} " \
+      "raw_snippet=#{translated_response.to_json[0, LOG_SNIPPET_LENGTH]}"
+    )
+  end
+
+  # The question's text: the model's translation (the part after the last
+  # '→ '), or, for a line the model did not return, the last returned
+  # line's translation, or MISSING_TRANSLATION.
+  def quiz_question_text(translated_response, line_keys, key, line)
+    translation = if key
+                    translation_from_quiz_line(line)
+                  else
+                    fallback = line_keys.last && translated_response[line_keys.last]
+                    translation_from_quiz_line(fallback) || MISSING_TRANSLATION
+                  end
+
+    translation.to_s.split("→ ").last.presence || translation.to_s
   end
 
   def translation_from_quiz_line(line)
