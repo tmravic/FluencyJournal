@@ -8,14 +8,6 @@ module JournalsHelper
     prompt.listable?
   end
 
-  def all_or_todays
-    if @todays_journals.present?
-      "todays"
-    else
-      "all"
-    end
-  end
-
   def all_journals_empty?
     @from_all_or_todays == "all" && @all_journals.empty?
   end

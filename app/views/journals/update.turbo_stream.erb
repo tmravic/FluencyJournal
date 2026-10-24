@@ -1,2 +1,3 @@
-<%= turbo_stream.replace @journal %>
+<%# No page list is rendered here, which is the :none card as before. %>
+<%= turbo_stream.replace @journal, partial: "journals/journal", locals: { journal: @journal, mode: :none } %>
 <%= render_turbo_stream_flash_messages %>

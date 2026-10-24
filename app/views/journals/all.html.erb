@@ -31,6 +31,6 @@
   <% end %>
 
   <%= turbo_frame_tag "journals" do %>
-    <%= render @all_journals %>
+    <%= render partial: "journals/journal", collection: @all_journals, as: :journal, locals: { mode: :all } %>
   <% end %>
 </div>

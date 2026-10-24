@@ -1,26 +1,30 @@
+<%# locals: journal, mode - :todays (Today's journals page: Studied button),
+                          :all (All journals page: next review date),
+                          :none (neither) %>
+<% from_all_or_todays = mode == :todays ? "todays" : "all" %>
 <%= turbo_frame_tag journal do %>
   <div class="journal">
     <%= link_to journal.title,
                 journal_path(journal),
                 data: { turbo_frame: "_top" } %>
     <div class="journal__actions">
-      <% if @todays_journals.present? %>
+      <% if mode == :todays %>
         <%= button_to t('journal.actions.studied'),
                       mark_journal_as_studied_journal_path(journal, from_all_or_todays: "todays"),
                       form: { data: { turbo_confirm: t('journal.actions.studied_warning') } },
                       class: "btn btn--light" %>
-      <% elsif @all_journals.present? %>
+      <% elsif mode == :all %>
         <span class="journal__date">
           <!--Next review: MM/DD/YYYY -->
           <%= t('note.next_review') %>: <br><%= display_next_review_time(journal) %>
         </span>
       <% end %>
       <%= link_to t("edit"),
-                  edit_journal_path(journal, from_all_or_todays: all_or_todays),
+                  edit_journal_path(journal, from_all_or_todays: from_all_or_todays),
                   data: { turbo: true },
                   class: "btn btn--light" %>
       <%= button_to t("delete"),
-                    journal_path(journal, from_all_or_todays: all_or_todays),
+                    journal_path(journal, from_all_or_todays: from_all_or_todays),
                     method: :delete,
                     form: { data: { turbo_confirm: t("journal.really_delete") } },
                     class: "btn btn--light" %>

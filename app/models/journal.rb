@@ -27,7 +27,9 @@ class Journal < ApplicationRecord
 
   # The signed stream name comes from the array this lambda returns:
   # [journal.group, "journals"].
-  broadcasts_to ->(journal) { [ journal.group, "journals" ] }, inserts_by: :append
+  # The card has no page behind it here, so it is told its mode explicitly.
+  broadcasts_to ->(journal) { [ journal.group, "journals" ] }, inserts_by: :append,
+                locals: { mode: :none }
 
   def entry_at(number)
     entries.find_by(position: number.to_i)

@@ -7,7 +7,7 @@
 <% end %>
 
 <%= turbo_stream.update "journals" do %>
-  <%= render @all_journals %>
+  <%= render partial: "journals/journal", collection: @all_journals, as: :journal, locals: { mode: :all } %>
 <% end %>
 
 <%= turbo_stream.update dom_id(Journal.new) do %>
