@@ -33,4 +33,16 @@ RSpec.describe "Production SSL configuration" do
     expect(probe["https_up"]["hsts"]).to be_present
     expect(probe["https_page"]["hsts"]).to be_present
   end
+
+  it "sets explicit HSTS options: one year, subdomains, no preload" do
+    expect(probe["ssl_options_hsts"]).to eq("expires" => 1.year.to_i, "subdomains" => true, "preload" => false)
+  end
+
+  it "sends a one-year HSTS header that includes subdomains and has no preload directive" do
+    %w[https_up https_page].each do |name|
+      header = probe[name]["hsts"]
+      expect(header).to eq("max-age=#{1.year.to_i}; includeSubDomains")
+      expect(header).not_to include("preload")
+    end
+  end
 end

@@ -32,7 +32,11 @@ Rails.application.configure do
 
   # Skip http-to-https redirect for the default health check endpoint.
   # kamal-proxy checks /up over plain HTTP, so it must not be redirected.
-  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  # HSTS: one year, subdomains included, not submitted to the preload list.
+  config.ssl_options = {
+    hsts: { expires: 1.year, subdomains: true, preload: false },
+    redirect: { exclude: ->(request) { request.path == "/up" } }
+  }
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
