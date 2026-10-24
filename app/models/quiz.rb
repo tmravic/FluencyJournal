@@ -20,8 +20,11 @@ class Quiz < ApplicationRecord
     prepared_outputs.find(id)
   end
 
+  # Question texts in the order the outputs were saved (line order). An
+  # unordered pluck lets PostgreSQL return rows in any order, which
+  # misaligns them with #responses in the grading prompt.
   def prepared_texts
-    prepared_outputs.pluck(:content)
+    prepared_outputs.order(:id).pluck(:content)
   end
 
   # The grader's feedback, or none before grading.
