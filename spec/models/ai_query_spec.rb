@@ -1,6 +1,33 @@
 require "rails_helper"
 
 RSpec.describe AiQuery, type: :model do
+  describe ".from_chat" do
+    let(:prompt) { Prompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r") }
+    let(:token_data) { { "prompt_tokens" => 3, "completion_tokens" => 4, "total_tokens" => 7 } }
+
+    it "builds an unsaved query with the reply, token counts and prompt" do
+      query = described_class.from_chat(raw_response: "{}", token_data: token_data, prompt: prompt)
+
+      expect(query).to be_new_record
+      expect(query.attributes.values_at("raw_response", "prompt_tokens", "completion_tokens", "total_tokens"))
+        .to eq([ "{}", 3, 4, 7 ])
+      expect(query.prompt).to eq(prompt)
+      expect(query.journal).to be_nil
+      expect(query.change_count).to be_nil
+    end
+
+    it "sets the journal when there is one" do
+      group = Group.create!(name: "From chat #{SecureRandom.hex(4)}")
+      user = User.create!(email_address: "from-chat-#{SecureRandom.hex(4)}@example.com", password: "password",
+                          original_language: "English", learning_language: "Japanese", group: group)
+      journal = Journal.create!(title: "J", user: user, group: group, last_interval: 1)
+
+      query = described_class.from_chat(raw_response: "{}", token_data: token_data, prompt: prompt, journal: journal)
+
+      expect(query.journal).to eq(journal)
+    end
+  end
+
   describe "#parsed_response" do
     it "parses valid JSON" do
       query = described_class.new(raw_response: '{"change_1":{"content":"a → b"}}')

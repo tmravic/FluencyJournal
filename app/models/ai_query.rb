@@ -21,6 +21,22 @@ class AiQuery < ApplicationRecord
   MISSING_HINT = "Hint missing".freeze
   LOG_SNIPPET_LENGTH = 800
 
+  # An unsaved query for a model reply: the raw body, its token counts
+  # (a hash with "prompt_tokens", "completion_tokens" and "total_tokens",
+  # as XAiChat::Result#token_data), the prompt it answers and, when there is
+  # one, the journal. The callers decide whether to count changes and save.
+  def self.from_chat(raw_response:, token_data:, prompt:, journal: nil)
+    query = build(
+      prompt_tokens: token_data["prompt_tokens"],
+      completion_tokens: token_data["completion_tokens"],
+      total_tokens: token_data["total_tokens"],
+      raw_response: raw_response
+    )
+    query.prompt = prompt
+    query.journal = journal if journal
+    query
+  end
+
   def find_ai_output_by_identifier(identifier)
     ai_outputs.find_by(identifier: identifier)
   end

@@ -1,15 +1,9 @@
 module SharedServiceMethods
   def build_ai_query(response_from_model, token_data, prompt, journal)
-    ai_query = AiQuery.build(
-      prompt_tokens: token_data["prompt_tokens"],
-      completion_tokens: token_data["completion_tokens"],
-      total_tokens: token_data["total_tokens"],
-      raw_response: response_from_model
+    ai_query = AiQuery.from_chat(
+      raw_response: response_from_model, token_data: token_data, prompt: prompt, journal: journal
     )
-
     ai_query.change_count = ai_query.count_changes(prompt.change_keyword)
-    ai_query.prompt = prompt
-    ai_query.journal = journal if journal
     ai_query.save!
     ai_query
   end

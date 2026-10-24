@@ -65,6 +65,9 @@ RSpec.describe GradeQuizJob, type: :job do
     expect(grade_query.quizzes).to be_empty
     expect(grade_query.graded_quizzes).to contain_exactly(quiz)
     expect(grade_query.assessment).to eq("GRADE_ASSESSMENT_UNIQUE")
+    expect(grade_query.attributes.values_at("prompt_tokens", "completion_tokens", "total_tokens", "change_count")).to eq([ 3, 4, 7, 1 ])
+    expect(grade_query.journal).to eq(journal)
+    expect(grade_query.prompt).to eq(grade_prompt)
     expect(Turbo::StreamsChannel).to have_received(:broadcast_update_to).with(
       "channel_#{grade_prompt.uuid}",
       target: "quiz_results",

@@ -17,15 +17,10 @@ class PrepareQuizJob < ApplicationJob
 
     translated_response = result.parsed_object
 
-    ai_query = AiQuery.build(
-      prompt_tokens: result.prompt_tokens,
-      completion_tokens: result.completion_tokens,
-      total_tokens: result.total_tokens,
-      raw_response: result.raw_response
+    ai_query = AiQuery.from_chat(
+      raw_response: result.raw_response, token_data: result.token_data,
+      prompt: prepare_quiz_prompt, journal: journal
     )
-
-    ai_query.prompt = prepare_quiz_prompt
-    ai_query.journal = journal
     # {"line_1"=>
     #    {"translation"=>
     #       "明日、彼女のお母さんに初めて会う予定です。 → Tomorrow, I have plans to meet her mother for the first time."},

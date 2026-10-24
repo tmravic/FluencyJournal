@@ -17,16 +17,11 @@ class GradeQuizJob < ApplicationJob
 
     result.parsed_object
 
-    ai_query = AiQuery.build(
-      prompt_tokens: result.prompt_tokens,
-      completion_tokens: result.completion_tokens,
-      total_tokens: result.total_tokens,
-      raw_response: result.raw_response
+    ai_query = AiQuery.from_chat(
+      raw_response: result.raw_response, token_data: result.token_data,
+      prompt: quiz_result_prompt, journal: journal
     )
-
-    ai_query.prompt = quiz_result_prompt
     ai_query.change_count = ai_query.count_changes(quiz_result_prompt.change_keyword)
-    ai_query.journal = journal
 
     # {"entry_1"=>
     #   {"content"=>"彼女のお母さんに会いました。 → 彼女のお母さんに会いました。",
