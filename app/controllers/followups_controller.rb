@@ -9,7 +9,7 @@ class FollowupsController < ApplicationController
   FORM_PLACEHOLDER_ORIGIN_CLASSES = %w[Unknown 0].freeze
 
   def new
-    @source_tag = params[:source_tag]
+    @source_tag = SourceTag.parse(params[:source_tag])
     return redirect_to(root_path) if params[:class_name].blank?
 
     @followup_prompt = FreeQuestionPrompt.new
@@ -32,7 +32,7 @@ class FollowupsController < ApplicationController
 
   def create
     @uuid = followup_params.dig(:followup_prompt, :uuid)
-    @source_tag = followup_params[:source_tag]
+    @source_tag = SourceTag.parse(followup_params[:source_tag])
     # need to know whether this came from "notes_box" or "ai_assistant"
     # when I render the turbo_streams view
 
@@ -81,7 +81,7 @@ class FollowupsController < ApplicationController
     # create followup
     @followup_prompt.followup = Followup.new(
       origin: @followup_origin,
-      source_tag: followup_params[:source_tag]
+      source_tag: @source_tag
     )
     @followup_prompt.followup_template_prompt = followup_template_prompt if followup_template_prompt
 
@@ -106,12 +106,12 @@ class FollowupsController < ApplicationController
   def show
     @followup_origin = @followup.origin unless @followup.from_note?
 
-    @source_tag = params.dig(:source_tag)
+    @source_tag = SourceTag.parse(params[:source_tag])
     set_user_and_journal(@followup.origin)
   end
 
   def cancel
-    @source_tag = params[:source_tag].presence || SourceTag::AI_ASSISTANT
+    @source_tag = SourceTag.parse(params[:source_tag]) || SourceTag::AI_ASSISTANT
 
     respond_to do |format|
       format.turbo_stream
@@ -120,7 +120,7 @@ class FollowupsController < ApplicationController
 
   def destroy
     @journal = current_group.journals.find(params.dig(:journal)) if params.dig(:journal)
-    @source_tag = params.dig(:source_tag)
+    @source_tag = SourceTag.parse(params[:source_tag])
     @display_frames = display_frames_for(params[:display_frame], @source_tag)
     return_to = after_destroy_path
 

@@ -7,7 +7,7 @@ class FollowupTemplatePromptsController < ApplicationController
 
   def cancel
     load_template_options
-    @source_tag = params[:source_tag]
+    @source_tag = SourceTag.parse(params[:source_tag])
 
     respond_to do |format|
       format.turbo_stream
