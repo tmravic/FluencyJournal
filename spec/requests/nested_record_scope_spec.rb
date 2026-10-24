@@ -67,11 +67,11 @@ RSpec.describe "Nested record scope", type: :request do
     records = two_groups
     sign_in(records[:user_a])
 
-    get journal_entry_path(records[:journal_a], records[:entry_b])
+    get edit_journal_entry_path(records[:journal_a], records[:entry_b])
 
     expect(response).to have_http_status(:not_found)
 
-    get journal_entry_path(records[:journal_a], records[:entry_a])
+    get edit_journal_entry_path(records[:journal_a], records[:entry_a])
 
     expect(response).to have_http_status(:ok)
   end

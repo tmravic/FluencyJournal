@@ -1,11 +1,8 @@
 class EntriesController < ApplicationController
   include SpeaksText
   include JournalScoped
-  before_action :set_entry, only: %i[ show edit update destroy speak cancel ]
-
-  # GET /entries/1 or /entries/1.json
-  def show
-  end
+  include HtmlResponsesOnly
+  before_action :set_entry, only: %i[ edit update destroy speak cancel ]
 
   # GET /entries/new
   def new
@@ -33,7 +30,7 @@ class EntriesController < ApplicationController
     end
   end
 
-  # POST /entries or /entries.json
+  # POST /entries
   def create
     @entry = @journal.entries.build(entry_params)
     @source_tag = SourceTag::AI_ASSISTANT
@@ -41,26 +38,22 @@ class EntriesController < ApplicationController
     respond_to do |format|
       if @entry.save
         format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.created") }
-        format.json { render :show, status: :created, location: @entry }
         format.turbo_stream { flash.now[:notice] = t("entry.created") }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /entries/1 or /entries/1.json
+  # PATCH/PUT /entries/1
   def update
     @source_tag = SourceTag::AI_ASSISTANT
     respond_to do |format|
       if @entry.update(entry_params)
         format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.updated") }
-        format.json { render :show, status: :ok, location: @entry }
         format.turbo_stream { flash.now[:notice] = t("entry.updated") }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @entry.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -70,14 +63,13 @@ class EntriesController < ApplicationController
     speak_text(@entry.content)
   end
 
-  # DELETE /entries/1 or /entries/1.json
+  # DELETE /entries/1
   def destroy
     @entry.destroy!
     @entries = @journal.entries.ordered
 
     respond_to do |format|
       format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("entry.deleted") }
-      format.json { head :no_content }
       format.turbo_stream { flash.now[:notice] = t("entry.deleted") }
     end
   end

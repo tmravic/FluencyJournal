@@ -1,10 +1,11 @@
 class JournalsController < ApplicationController
   include SpeaksText
   include StudyActions
+  include HtmlResponsesOnly
   before_action :set_journal, only: %i[ edit update destroy open_ai_assistant mark_journal_as_studied reading_mode speak change_due_date update_due_date]
   before_action :set_from_all_or_todays, only: %i[ show edit new create mark_journal_as_studied]
 
-  # GET /journals or /journals.json
+  # GET /journals
   def index
     @todays_journals = journals_for("todays")
     @due_today = @todays_journals.count
@@ -30,7 +31,7 @@ class JournalsController < ApplicationController
     end
   end
 
-  # GET /journals/1 or /journals/1.json
+  # GET /journals/1
   def show
     # One query, with what _previous_queries.html.erb needs preloaded.
     @journal = current_group.journals.with_query_history.find(params.expect(:id))
@@ -55,7 +56,7 @@ class JournalsController < ApplicationController
   def edit
   end
 
-  # POST /journals or /journals.json
+  # POST /journals
   def create
     @journal = current_group.journals.build(journal_params)
     @journal.user = Current.user
@@ -64,31 +65,27 @@ class JournalsController < ApplicationController
       if @journal.save
         # flash[:notice] = "..."
         format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("journal.created") }
-        format.json { render :show, status: :created, location: @journal }
         format.turbo_stream { flash.now[:notice] = t("journal.created") }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @journal.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /journals/1 or /journals/1.json
+  # PATCH/PUT /journals/1
   def update
     respond_to do |format|
       if @journal.update(journal_params)
         # flash[:notice] = "..."
         format.html { redirect_to journals_path, status: :see_other, notice: t("journal.updated") }
-        format.json { render :show, status: :ok, location: @journal }
         format.turbo_stream { flash.now[:notice] = t("journal.updated") }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @journal.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /journals/1 or /journals/1.json
+  # DELETE /journals/1
   def destroy
     @journal.destroy!
     @from_all_or_todays = params.dig("from_all_or_todays")
@@ -100,7 +97,6 @@ class JournalsController < ApplicationController
     respond_to do |format|
       # flash[:notice] = "..."
       format.html { redirect_to journals_path, status: :see_other, notice: t("journal.deleted") }
-      format.json { head :no_content }
       format.turbo_stream { flash.now[:notice] = t("journal.deleted") }
     end
   end

@@ -6,8 +6,6 @@ RSpec.describe "inline styles" do
     app/views/journals/reading_mode.html.erb
     app/views/journals/compare.html.erb
     app/views/pages/home.html.erb
-    app/views/entries/show.html.erb
-    app/views/entries/index.html.erb
     app/views/notes/show.html.erb
   ].freeze
 

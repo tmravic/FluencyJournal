@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       post :update_due_date
       get :compare
     end
-    resources :entries do
+    resources :entries, only: [ :new, :create, :edit, :update, :destroy ] do
       member do
         get :speak
         get :cancel
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
         get :show_hint
         get :hide_hint
       end
-      resources :quiz_answers, except: [:index, :destroy, :update] do
+      resources :quiz_answers, only: [ :create, :show, :edit ] do
         member do
           get :retry
         end
