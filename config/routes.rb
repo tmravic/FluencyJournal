@@ -78,8 +78,8 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :session
-  resources :passwords, param: :token
+  resource :session, only: %i[ new create destroy ]
+  resources :passwords, param: :token, only: %i[ new create edit update ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root "pages#home"
