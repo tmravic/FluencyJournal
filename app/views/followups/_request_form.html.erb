@@ -1,16 +1,16 @@
 <div class="request-form">
   <div>
-    <label for="base_content">
+    <label for="<%= dom_id(followup, :base_content) %>">
       <%= t("followup.followup_question") %>
     </label>
-    <textarea id="base_content" readonly><%= followup.prompt.base_content %></textarea>
+    <textarea id="<%= dom_id(followup, :base_content) %>" readonly><%= followup.prompt.base_content %></textarea>
   </div>
 
   <div>
-    <label for="user_generated_content">
+    <label for="<%= dom_id(followup, :user_generated_content) %>">
       <%= t('followup.reference_text') %>
     </label>
-    <textarea id="user_generated_content" readonly><%= followup.prompt.user_generated_content %></textarea>
+    <textarea id="<%= dom_id(followup, :user_generated_content) %>" readonly><%= followup.prompt.user_generated_content %></textarea>
   </div>
   <div class="followup__request-form">
     <% if followup.origin.is_a?(Note) %>

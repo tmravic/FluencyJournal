@@ -4,7 +4,7 @@
     <%= form_error_notification(followup) %>
 
     <%= f.fields_for :followup_prompt do |followup_prompt| %>
-      <%= followup_prompt.label t('followup.followup_question') %>
+      <%= followup_prompt.label :base_content, t('followup.followup_question') %>
       <div data-controller="template-prompt-select">
         <%= followup_prompt.text_area :base_content,
                                       class: "followup__question",
@@ -16,7 +16,7 @@
           followup_template_prompts: @followup_template_prompts
         } %>
       </div>
-      <%= followup_prompt.label t('followup.reference_text') %>
+      <%= followup_prompt.label :user_generated_content, t('followup.reference_text') %>
       <%= followup_prompt.text_area :user_generated_content,
                                     html5: true,
                                     class: 'form__actions',

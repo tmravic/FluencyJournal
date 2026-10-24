@@ -96,13 +96,13 @@
   </div>
   <div class="request-form">
     <div>
-      <label for="base_content"><%= t('ai_query.original_language') %>:</label>
-      <textarea id="base_content" readonly><%= @prompt.base_content if @prompt %></textarea>
+      <label for="<%= dom_id(@ai_query, :base_content) %>"><%= t('ai_query.original_language') %>:</label>
+      <textarea id="<%= dom_id(@ai_query, :base_content) %>" readonly><%= @prompt.base_content if @prompt %></textarea>
 
     </div>
     <div>
-      <label for="user_generated_content"><%= t('ai_query.learning_language') %>:</label>
-      <textarea id="user_generated_content" readonly><%= @prompt.user_generated_content if @prompt %></textarea>
+      <label for="<%= dom_id(@ai_query, :user_generated_content) %>"><%= t('ai_query.learning_language') %>:</label>
+      <textarea id="<%= dom_id(@ai_query, :user_generated_content) %>" readonly><%= @prompt.user_generated_content if @prompt %></textarea>
     </div>
     <div class="request-form__delete">
       <%= button_to t('ai_query.delete'),
