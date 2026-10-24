@@ -11,11 +11,11 @@ class QuizzesController < ApplicationController
   def prepare_quiz
     uuid = SecureRandom.uuid
     prepare_quiz_prompt = PrepareQuizPrompt.build(
-      raw_prompt: JSON.generate(@journal.full_journal),
+      raw_prompt: JSON.generate(@journal.entry_texts),
       ai_model: "grok-4-fast-non-reasoning",
       uuid: uuid,
-      base_content: @journal.full_journal.join,
-      user_generated_content: @journal.full_journal.join
+      base_content: @journal.entry_texts.join,
+      user_generated_content: @journal.entry_texts.join
     )
 
     prepare_quiz_prompt.sent_role_prompt = prepare_quiz_prompt.role_prompt(@journal.user, @journal)
@@ -57,7 +57,7 @@ class QuizzesController < ApplicationController
 
   def grade_quiz
     uuid = SecureRandom.uuid
-    original_journal = @journal.full_journal
+    original_journal = @journal.entry_texts
     # ["彼女のお母さんに会いました。", "３人で中目黒にピザを食べました。"]
     quiz_entries = @quiz.prepared_texts
     # ["I met her mother.", "The three of us ate pizza in Nakameguro."]

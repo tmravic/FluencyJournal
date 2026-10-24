@@ -34,7 +34,7 @@ class Journal < ApplicationRecord
   end
 
   # Entry texts in position order, e.g. ["今日は雨だった。", "傘を忘れた。"].
-  def full_journal
+  def entry_texts
     entries.pluck(:content)
   end
 
@@ -53,11 +53,11 @@ class Journal < ApplicationRecord
 
   # All entries as one text, in entry order.
   def full_text(separator = "\n\n")
-    full_journal.join(separator)
+    entry_texts.join(separator)
   end
 
   def char_count
-    self.full_journal.join.length
+    self.entry_texts.join.length
   end
 
   def previous_journal(journals)

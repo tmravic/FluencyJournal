@@ -10,7 +10,7 @@ RSpec.describe NativeJapaneseGuidance do
   end
 
   def journal_double
-    instance_double(Journal, full_journal: [ "今日は雨だった。" ])
+    instance_double(Journal, entry_texts: [ "今日は雨だった。" ])
   end
 
   it "adds native phrasing to Japanese example-sentence prompts" do
@@ -32,7 +32,7 @@ RSpec.describe NativeJapaneseGuidance do
     expect(text).to include("not textbook Japanese")
     expect(text).to include("short question in Japanese")
 
-    journal = instance_double(Journal, full_journal: [ "今日は雨だった。" ], user: user)
+    journal = instance_double(Journal, entry_texts: [ "今日は雨だった。" ], user: user)
     format = PrepareQuizPrompt.new.response_format(user, journal, nil)
 
     expect(format).to include("exactly 1")

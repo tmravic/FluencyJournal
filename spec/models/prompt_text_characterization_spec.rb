@@ -14,7 +14,7 @@ RSpec.describe "Prompt text characterization", type: :model do
   }
 
   def journal
-    instance_double(Journal, full_journal: [ "今日は雨だった。", "傘を忘れた。\n\"困った\"", "two  spaces, 100% sure" ])
+    instance_double(Journal, entry_texts: [ "今日は雨だった。", "傘を忘れた。\n\"困った\"", "two  spaces, 100% sure" ])
   end
 
   def quiz

@@ -6,7 +6,7 @@ RSpec.describe Prompt, type: :model do
   end
 
   def journal_for(user)
-    instance_double(Journal, full_journal: [ "今日は雨だった。" ], user: user)
+    instance_double(Journal, entry_texts: [ "今日は雨だった。" ], user: user)
   end
 
   def quiz_double

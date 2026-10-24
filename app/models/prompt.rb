@@ -117,7 +117,7 @@ class Prompt < ApplicationRecord
   def journal_context(journal)
     "Each item in this array is part of a previous entry in this journal, which you " \
       "should not correct or comment on but refer to as context to understand the current entry: " \
-      "#{json_list(journal.full_journal)}. "
+      "#{json_list(journal.entry_texts)}. "
   end
 
   # Lists sent to the model are JSON arrays, not Ruby's Array#to_s output.

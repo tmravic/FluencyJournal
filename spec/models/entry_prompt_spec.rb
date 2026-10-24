@@ -6,7 +6,7 @@ RSpec.describe EntryPrompt, type: :model do
   end
 
   def journal_double
-    instance_double(Journal, full_journal: [ "今日は雨だった。" ])
+    instance_double(Journal, entry_texts: [ "今日は雨だった。" ])
   end
 
   describe "#role_prompt" do
@@ -34,13 +34,13 @@ RSpec.describe EntryPrompt, type: :model do
     end
 
     it "sends previous entries as a JSON array" do
-      journal = instance_double(Journal, full_journal: [ "今日は\"雨\"だった。", "\#{not ruby}" ])
+      journal = instance_double(Journal, entry_texts: [ "今日は\"雨\"だった。", "\#{not ruby}" ])
       text = described_class.new.role_prompt(
         user_double(learning_language: "Japanese", original_language: "English"),
         journal
       )
 
-      expect(text).to include(JSON.generate(journal.full_journal))
+      expect(text).to include(JSON.generate(journal.entry_texts))
       expect(text).not_to include("\\#")
     end
   end

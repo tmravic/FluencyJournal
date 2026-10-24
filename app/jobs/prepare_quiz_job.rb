@@ -34,7 +34,7 @@ class PrepareQuizJob < ApplicationJob
     #    {"translation"=>
     #       "明日のどこかで、聞きたい質問のリストを作ろうと思っています。 → I think I'll make a list of questions I want to ask somewhere tomorrow."}}
 
-    expected = journal.full_journal.count
+    expected = journal.entry_texts.count
     # Query, quiz, questions, and hints commit together. A deadlock rolls
     # the query back, and reset cannot see hints that are still inserting.
     quiz = ActiveRecord::Base.transaction do

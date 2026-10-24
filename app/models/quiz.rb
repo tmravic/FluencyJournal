@@ -53,7 +53,7 @@ class Quiz < ApplicationRecord
     quiz_answers.where(ai_output_id: question_ids).distinct.count(:ai_output_id) == question_ids.size
   end
 
-  # Student answers in entry-position order. Journal#full_journal is the entry text.
+  # Student answers in entry-position order. Journal#entry_texts is the entry text.
   def responses
     quiz_answers
       .joins(:ai_output)

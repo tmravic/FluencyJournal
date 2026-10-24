@@ -22,7 +22,7 @@ RSpec.describe "entry position" do
     expect(first.entry_number).to eq(1)
     expect(second.reload.entry_number).to eq(2)
     expect(journal.entries.ordered.map(&:content)).to eq([ "one", "two" ])
-    expect(journal.full_journal).to eq([ "one", "two" ])
+    expect(journal.entry_texts).to eq([ "one", "two" ])
   end
 
   it "joins entries in position order for full_text and the journal followup" do
@@ -45,7 +45,7 @@ RSpec.describe "entry position" do
 
     expect(second.reload.entry_number).to eq(1)
     expect(third.reload.entry_number).to eq(2)
-    expect(journal.full_journal).to eq([ "two", "three" ])
+    expect(journal.entry_texts).to eq([ "two", "three" ])
   end
 
   it "uses the same sequence for a quiz line lookup" do

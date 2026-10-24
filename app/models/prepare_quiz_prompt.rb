@@ -16,7 +16,7 @@ class PrepareQuizPrompt < Prompt
   end
 
   def response_format(user, journal, _quiz)
-    entries = journal.full_journal
+    entries = journal.entry_texts
     n = entries.size
     learning_language = user.learning_language
     entries_block = entries.map.with_index(1) { |entry, i| "ENTRY #{i}:\n#{entry}" }.join("\n\n")
