@@ -1,7 +1,7 @@
 <% content_for :title, t("note.editing_title") %>
 
 <div class="container">
-  <%= link_to sanitize("&larr; #{t("note.back_to_notes")}"), note_path(@note) %>
+  <%= back_link t("note.back_to_notes"), note_path(@note) %>
 
   <div class="header">
     <h1><%= t("note.editing_title") %></h1>

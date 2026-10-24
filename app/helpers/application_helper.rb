@@ -54,6 +54,11 @@ module ApplicationHelper
     end
   end
 
+  # The "← Back to …" link at the top of the form and detail pages.
+  def back_link(text, path)
+    link_to sanitize("&larr; #{text}"), path
+  end
+
   private
 
   def has_content_for_ai_output?(contents_hash)

@@ -1,7 +1,7 @@
 <% content_for :title, t("followup.editing_title") %>
 
 <main class="container">
-  <%= link_to sanitize("&larr; #{t("followup.back_to_followups")}"), followup_path(@followup) %>
+  <%= back_link t("followup.back_to_followups"), followup_path(@followup) %>
 
   <div class="header">
     <h1><%= t("followup.editing_title") %></h1>

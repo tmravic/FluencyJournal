@@ -1,7 +1,7 @@
 <% content_for :title, t("quiz_answer.new_title") %>
 
 <main class="container">
-  <%= link_to sanitize("&larr; #{t("quiz_answer.back_to_journal")}"), journal_path(@journal) %>
+  <%= back_link t("quiz_answer.back_to_journal"), journal_path(@journal) %>
 
   <div class="header">
     <h1><%= t("quiz_answer.new_title") %></h1>
