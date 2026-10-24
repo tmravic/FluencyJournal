@@ -144,7 +144,7 @@ class AiQuery < ApplicationRecord
     result = parsed.dig("#{change_keyword}#{num}", "content")
     return present_change(result) if result
 
-    backup_key = parsed.keys[num.to_i - 1]
+    backup_key = positional_key(parsed, num)
     result = backup_key && parsed.dig(backup_key, "content")
     return if result.nil? || (result.is_a?(String) && result.blank?)
     return result if result.is_a?(String)
@@ -170,7 +170,7 @@ class AiQuery < ApplicationRecord
     end
 
     if explanation.nil?
-      backup_key = parsed.keys[num.to_i - 1]
+      backup_key = positional_key(parsed, num)
       explanation = explanation_value(parsed, backup_key, abbr)
     end
 
@@ -219,6 +219,12 @@ class AiQuery < ApplicationRecord
     return hash unless hash.is_a?(Hash) && hash["answers"]
 
     hash["answers"].to_h { |old_key, value| [ "#{prefix}#{old_key}", value ] }
+  end
+
+  # When the model numbers its items differently than asked, the Nth item
+  # is the Nth key of the response, whatever its name.
+  def positional_key(parsed, num)
+    parsed.keys[num.to_i - 1]
   end
 
   def explanation_value(parsed, key, abbr)
