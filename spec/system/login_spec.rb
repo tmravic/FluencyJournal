@@ -13,15 +13,6 @@ RSpec.describe "Login", type: :system do
     )
   end
 
-  # PagesController#home calls get_ai_models (external xAI HTTP). Stub it so
-  # successful login can render the post-auth root page without network/credentials
-  # beyond what ApplicationController#set_api_key already needs in this suite.
-  before do
-    allow_any_instance_of(PagesController).to receive(:get_ai_models) do |controller|
-      controller.instance_variable_set(:@ai_models, [])
-    end
-  end
-
   it "signs in with valid credentials and shows the homepage for the user" do
     user = create_user(email: "login-ok@example.com", password: "password")
 
