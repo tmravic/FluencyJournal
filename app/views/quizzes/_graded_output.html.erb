@@ -64,18 +64,19 @@
               <%= t("entry.entry", number: output.identifier) %>
             </h4>
             <div>
-              <% quiz_number = output.identifier.to_i - 1 %>
-              <% quiz_answer = quiz.quiz_answers.slice(quiz_number) %>
-              <%= link_to t("quiz.retry"),
-                            retry_journal_quiz_quiz_answer_path(ai_query.journal, quiz, quiz_answer),
-                            data: {
-                              turbo_frame: "quiz_answer_#{output.identifier}",
-                              controller: "scroll",
-                              action: "click->scroll#scrollToTarget",
-                              scroll_target_value: "quiz_answer_#{output.identifier}",
-                              turbo_confirm: t("quiz_answer.retry")
-                            },
-                            class: "btn btn--dark" %>
+              <% quiz_answer = quiz.answer_for(output.identifier) %>
+              <% if quiz_answer %>
+                <%= link_to t("quiz.retry"),
+                              retry_journal_quiz_quiz_answer_path(ai_query.journal, quiz, quiz_answer),
+                              data: {
+                                turbo_frame: "quiz_answer_#{output.identifier}",
+                                controller: "scroll",
+                                action: "click->scroll#scrollToTarget",
+                                scroll_target_value: "quiz_answer_#{output.identifier}",
+                                turbo_confirm: t("quiz_answer.retry")
+                              },
+                              class: "btn btn--dark" %>
+              <% end %>
               <%= button_to t("delete"),
                             ai_output_path(output.id, source_tag: source_tag),
                             method: :delete,

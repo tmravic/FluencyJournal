@@ -15,10 +15,20 @@ class QuizAnswersController < ApplicationController
   def create
     @ai_output = @quiz.prepared_output(quiz_answer_params[:ai_output_id])
     @ai_query = @ai_output.ai_query
-    @quiz_answer = @quiz.quiz_answers.build(quiz_answer_params)
     @original_entry_text = original_entry_text_for(@ai_output)
 
-    unless @quiz_answer.save
+    # A retry replaces the earlier answer to the same question. The lock
+    # serialises two submissions for one quiz, and a failed save rolls the
+    # deletion back so the old answer is kept.
+    saved = false
+    @quiz.with_lock do
+      @quiz.quiz_answers.where(ai_output_id: @ai_output.id).destroy_all
+      @quiz_answer = @quiz.quiz_answers.build(quiz_answer_params)
+      saved = @quiz_answer.save
+      raise ActiveRecord::Rollback unless saved
+    end
+
+    unless saved
       head :unprocessable_entity
       return
     end

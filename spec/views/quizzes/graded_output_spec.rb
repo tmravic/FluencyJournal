@@ -22,8 +22,6 @@ RSpec.describe "quizzes/graded_output", type: :view do
     quiz = Quiz.create!(journal: journal, ai_query: grading_query)
     quiz_answer = quiz.quiz_answers.create!(ai_output: output, user_response: "会いました")
 
-    expect(quiz.quiz_answers.slice(0)).to eq(quiz_answer)
-
     render partial: "quizzes/graded_output", locals: {
       assessment: "",
       ai_query_id: grading_query.id,
@@ -45,5 +43,33 @@ RSpec.describe "quizzes/graded_output", type: :view do
     expect(link).to include(%(class="btn btn--dark"))
     expect(link).not_to include("data-method")
     expect(link).not_to include("turbo-method")
+  end
+
+  it "renders without a retry link for an output that has no saved answer" do
+    group = Group.create!(name: "Unanswered group #{SecureRandom.hex(4)}")
+    user = User.create!(
+      email_address: "unanswered-#{SecureRandom.hex(4)}@example.com",
+      password: "password",
+      original_language: "English",
+      learning_language: "Japanese",
+      group: group
+    )
+    journal = Journal.create!(title: "Unanswered", user: user, group: group, last_interval: 1)
+    prompt = QuizResultPrompt.create!(
+      raw_prompt: "grade",
+      ai_model: "grok-4-fast-non-reasoning",
+      uuid: SecureRandom.uuid,
+      sent_role_prompt: "role"
+    )
+    grading_query = AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
+    grading_query.ai_outputs.create!(identifier: "1", content: "entry card", made_note: false)
+    quiz = Quiz.create!(journal: journal, ai_query: grading_query)
+
+    render partial: "quizzes/graded_output", locals: {
+      assessment: "", ai_query_id: grading_query.id, source_tag: "ai_assistant", user: user, quiz: quiz
+    }
+
+    expect(rendered).to include("Entry 1")
+    expect(rendered).not_to include("/retry")
   end
 end
