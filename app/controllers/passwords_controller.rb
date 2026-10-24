@@ -1,5 +1,6 @@
 class PasswordsController < ApplicationController
   allow_unauthenticated_access
+  rate_limit to: 10, within: 3.minutes, only: %i[ create update ], with: -> { redirect_to new_password_url, alert: I18n.t("session.try_again_later") }
   before_action :set_user_by_token, only: %i[ edit update ]
 
   def new

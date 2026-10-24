@@ -37,4 +37,34 @@ RSpec.describe "Password reset", type: :request do
       expect(user.sessions.count).to eq(1)
     end
   end
+
+  describe "rate limiting" do
+    # The test cache is a null store, which never counts. Give the store the
+    # controller captured a real counter so the limit can fire.
+    before do
+      counts = Hash.new(0)
+      allow(ActionController::Base.cache_store).to receive(:increment) do |key, amount = 1, **|
+        counts[key] += amount
+      end
+    end
+
+    it "redirects with an alert after 10 reset requests in the window" do
+      10.times do
+        post passwords_path, params: { email_address: "nobody@example.com" }
+        expect(flash[:notice]).to eq(I18n.t("password.reset_sent"))
+      end
+
+      post passwords_path, params: { email_address: "nobody@example.com" }
+
+      expect(response).to redirect_to(new_password_url)
+      expect(flash[:alert]).to eq(I18n.t("session.try_again_later"))
+    end
+
+    it "queues no email once the limit is hit" do
+      user = create_user
+      11.times { post passwords_path, params: { email_address: user.email_address } }
+
+      expect(ActionMailer::MailDeliveryJob).to have_been_enqueued.exactly(10).times
+    end
+  end
 end
