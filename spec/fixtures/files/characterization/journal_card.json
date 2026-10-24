@@ -1,0 +1,77 @@
+{
+  "broadcast/create": {
+    "streams": [
+      [
+        "<turbo-stream action=\"append\" target=\"journals\"><template><turbo-frame id=\"journal_JID\">",
+        "  <div class=\"journal\">",
+        "    <a data-turbo-frame=\"_top\" href=\"/journals/JID\">Created</a>",
+        "    <div class=\"journal__actions\">",
+        "      <a data-turbo=\"true\" class=\"btn btn--light\" href=\"/journals/JID/edit?from_all_or_todays=all\">Edit</a>",
+        "      <form data-turbo-confirm=\"Really delete this journal?\" class=\"button_to\" method=\"post\" action=\"/journals/JID?from_all_or_todays=all\"><input type=\"hidden\" name=\"_method\" value=\"delete\" autocomplete=\"off\" /><button class=\"btn btn--light\" type=\"submit\">Delete</button></form>",
+        "    </div>",
+        "  </div>",
+        "</turbo-frame></template></turbo-stream>"
+      ]
+    ]
+  },
+  "broadcast/update": {
+    "streams": [
+      [
+        "<turbo-stream action=\"replace\" target=\"journal_JID\"><template><turbo-frame id=\"journal_JID\">",
+        "  <div class=\"journal\">",
+        "    <a data-turbo-frame=\"_top\" href=\"/journals/JID\">Renamed</a>",
+        "    <div class=\"journal__actions\">",
+        "      <a data-turbo=\"true\" class=\"btn btn--light\" href=\"/journals/JID/edit?from_all_or_todays=all\">Edit</a>",
+        "      <form data-turbo-confirm=\"Really delete this journal?\" class=\"button_to\" method=\"post\" action=\"/journals/JID?from_all_or_todays=all\"><input type=\"hidden\" name=\"_method\" value=\"delete\" autocomplete=\"off\" /><button class=\"btn btn--light\" type=\"submit\">Delete</button></form>",
+        "    </div>",
+        "  </div>",
+        "</turbo-frame></template></turbo-stream>"
+      ]
+    ]
+  },
+  "editor/update": {
+    "status": 200,
+    "card": [
+      "<turbo-frame id=\"journal_JID\">",
+      "  <div class=\"journal\">",
+      "    <a data-turbo-frame=\"_top\" href=\"/journals/JID\">Edited</a>",
+      "    <div class=\"journal__actions\">",
+      "      <a data-turbo=\"true\" class=\"btn btn--light\" href=\"/journals/JID/edit?from_all_or_todays=all\">Edit</a>",
+      "      <form data-turbo-confirm=\"Really delete this journal?\" class=\"button_to\" method=\"post\" action=\"/journals/JID?from_all_or_todays=all\"><input type=\"hidden\" name=\"_method\" value=\"delete\" autocomplete=\"off\" /><button class=\"btn btn--light\" type=\"submit\">Delete</button></form>",
+      "    </div>",
+      "  </div>",
+      "</turbo-frame>"
+    ]
+  },
+  "page/all": {
+    "card": [
+      "<turbo-frame id=\"journal_JID\">",
+      "  <div class=\"journal\">",
+      "    <a data-turbo-frame=\"_top\" href=\"/journals/JID\">Card journal</a>",
+      "    <div class=\"journal__actions\">",
+      "        <span class=\"journal__date\">",
+      "          <!--Next review: MM/DD/YYYY -->",
+      "          Next review: <br><time datetime=\"2026-03-09T23:00:00Z\" data-local=\"weekday-or-date\">2026-03-09</time>",
+      "        </span>",
+      "      <a data-turbo=\"true\" class=\"btn btn--light\" href=\"/journals/JID/edit?from_all_or_todays=all\">Edit</a>",
+      "      <form data-turbo-confirm=\"Really delete this journal?\" class=\"button_to\" method=\"post\" action=\"/journals/JID?from_all_or_todays=all\"><input type=\"hidden\" name=\"_method\" value=\"delete\" autocomplete=\"off\" /><button class=\"btn btn--light\" type=\"submit\">Delete</button></form>",
+      "    </div>",
+      "  </div>",
+      "</turbo-frame>"
+    ]
+  },
+  "page/todays": {
+    "card": [
+      "<turbo-frame id=\"journal_JID\">",
+      "  <div class=\"journal\">",
+      "    <a data-turbo-frame=\"_top\" href=\"/journals/JID\">Card journal</a>",
+      "    <div class=\"journal__actions\">",
+      "        <form data-turbo-confirm=\"A journal is studied if you used the quiz feature to review its contents. Mark this journal as studied and set it to return on a future date?\" class=\"button_to\" method=\"post\" action=\"/journals/JID/mark_journal_as_studied?from_all_or_todays=todays\"><button class=\"btn btn--light\" type=\"submit\">Studied</button></form>",
+      "      <a data-turbo=\"true\" class=\"btn btn--light\" href=\"/journals/JID/edit?from_all_or_todays=todays\">Edit</a>",
+      "      <form data-turbo-confirm=\"Really delete this journal?\" class=\"button_to\" method=\"post\" action=\"/journals/JID?from_all_or_todays=todays\"><input type=\"hidden\" name=\"_method\" value=\"delete\" autocomplete=\"off\" /><button class=\"btn btn--light\" type=\"submit\">Delete</button></form>",
+      "    </div>",
+      "  </div>",
+      "</turbo-frame>"
+    ]
+  }
+}
