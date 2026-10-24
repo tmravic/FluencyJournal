@@ -18,6 +18,8 @@ class PasswordsController < ApplicationController
 
   def update
     if @user.update(params.permit(:password, :password_confirmation))
+      # Whoever knew the old password must sign in again with the new one.
+      @user.sessions.destroy_all
       redirect_to new_session_path, notice: t("password.reset_success"), status: :see_other
     else
       flash.now[:alert] = t("password.mismatch")
