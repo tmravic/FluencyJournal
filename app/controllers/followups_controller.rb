@@ -126,17 +126,19 @@ class FollowupsController < ApplicationController
 
     @followup_prompt.sent_role_prompt = @followup_prompt.role_prompt(@user, @journal)
 
-    if @followup_prompt.save! && @followup_prompt.followup.save!
+    unless save_followup_prompt
+      head :unprocessable_entity
+      return
+    end
 
-      FollowupRequestJob.perform_later(
-        @user, @journal, @followup_prompt, @followup_origin, @source_tag
-      )
+    FollowupRequestJob.perform_later(
+      @user, @journal, @followup_prompt, @followup_origin, @source_tag
+    )
 
-      notice = t("followup.request_sent")
-      respond_to do |format|
-        format.html { redirect_to followup_path(@followup_prompt.followup), status: :see_other, notice: notice }
-        format.turbo_stream { flash.now[:notice] = notice }
-      end
+    notice = t("followup.request_sent")
+    respond_to do |format|
+      format.html { redirect_to followup_path(@followup_prompt.followup), status: :see_other, notice: notice }
+      format.turbo_stream { flash.now[:notice] = notice }
     end
   end
 
@@ -204,6 +206,15 @@ class FollowupsController < ApplicationController
     else
       :full
     end
+  end
+
+  # Saves the prompt and its followup together. Returns false (and writes
+  # nothing) when either is invalid, so create can answer 422 instead of
+  # raising ActiveRecord::RecordInvalid.
+  def save_followup_prompt
+    Prompt.transaction do
+      (@followup_prompt.save && @followup_prompt.followup.save) || raise(ActiveRecord::Rollback)
+    end.present?
   end
 
   def saving_new_template_prompt?
