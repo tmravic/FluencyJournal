@@ -1121,10 +1121,7 @@
     "followup_origin": null
   },
   "show/assessment": {
-    "error": {
-      "error": "NoMethodError",
-      "message": "undefined method 'ai_queries'"
-    },
+    "error": null,
     "journal": "journal",
     "followup_origin": "assessment",
     "user": "me",
@@ -1132,10 +1129,7 @@
     "followup_user": "me"
   },
   "show/change_output": {
-    "error": {
-      "error": "NoMethodError",
-      "message": "undefined method 'ai_queries'"
-    },
+    "error": null,
     "journal": "journal",
     "followup_origin": "change_output",
     "user": "me",
@@ -1143,10 +1137,7 @@
     "followup_user": "me"
   },
   "show/entry": {
-    "error": {
-      "error": "NoMethodError",
-      "message": "undefined method 'ai_queries'"
-    },
+    "error": null,
     "journal": "journal",
     "followup_origin": "entry",
     "user": "me",
@@ -1154,10 +1145,7 @@
     "followup_user": "me"
   },
   "show/journal_followup": {
-    "error": {
-      "error": "NoMethodError",
-      "message": "undefined method 'ai_queries'"
-    },
+    "error": null,
     "journal": "journal",
     "followup_origin": "journal_followup",
     "user": "me",
@@ -1165,10 +1153,7 @@
     "followup_user": "me"
   },
   "show/note": {
-    "error": {
-      "error": "NoMethodError",
-      "message": "undefined method 'ai_queries'"
-    },
+    "error": null,
     "journal": null,
     "followup_origin": null,
     "user": "me",
