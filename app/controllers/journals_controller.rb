@@ -149,30 +149,17 @@ class JournalsController < ApplicationController
     @journal = current_group.journals.find(params[:id])
     @todays_filter = boolean_param(:todays)
 
-    @journals =
-      if @todays_filter
-        current_group.journals.next_to_study.reorder(:title)
-      else
-        current_group.journals.order(:title)
-      end
+    @journals = current_group.journals.due_or_all(@todays_filter).alphabetical
 
     if boolean_param(:cancel)
       render html: helpers.turbo_frame_tag("compare"), layout: false
       return
     end
 
-    selected_ids = Array(params[:journal_ids]).map(&:presence).compact
-    @compared_journals =
-      if selected_ids.any?
-        current_group.journals
-                     .where(id: selected_ids)
-                     .includes(:entries)
-                     .order(:title)
-      else
-        Journal.none
-      end
+    # where(id: []) matches nothing, so no selection compares nothing.
+    selected_ids = Array(params[:journal_ids]).compact_blank
+    @compared_journals = current_group.journals.where(id: selected_ids).includes(:entries).alphabetical
   end
-
 
   private
 

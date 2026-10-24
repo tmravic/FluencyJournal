@@ -12,6 +12,9 @@ class Journal < ApplicationRecord
   validates :title, presence: true
 
   scope :ordered, -> { order(:next_study_date) }
+  scope :alphabetical, -> { reorder(:title) }
+  # The journals due for study when due_only, otherwise all of them.
+  scope :due_or_all, ->(due_only) { due_only ? next_to_study : all }
   # scope :personal, -> {  }
   # scope :private, -> {  }
   # scope :public, -> {  }
