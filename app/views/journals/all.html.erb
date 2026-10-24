@@ -1,5 +1,5 @@
 <% content_for :title, "#{t("app_name")} - #{t("journal.journals")}" %>
-<%= turbo_stream_from current_group, "journals" %>
+<%= turbo_stream_from current_group, "journals", "all", id: "journals_stream_source" %>
 
 <div class="container">
 

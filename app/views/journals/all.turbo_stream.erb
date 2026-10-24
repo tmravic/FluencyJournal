@@ -19,3 +19,7 @@
 <%= turbo_stream.update "close_journal_button", "" %>
 <%= turbo_stream.update "start_journal_button", partial: "journals/start_journal_button", locals: { from_all_or_todays: @from_all_or_todays } %>
 <%= render_turbo_stream_flash_messages %>
+<%# The page now shows this list, so follow its card stream. %>
+<%= turbo_stream.replace "journals_stream_source" do %>
+  <%= turbo_stream_from current_group, "journals", "all", id: "journals_stream_source" %>
+<% end %>
