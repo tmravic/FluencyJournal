@@ -70,16 +70,4 @@ module QuizzesHelper
   def quiz_entry_has_two_sides?(contents_hash)
     contents_hash[:content_first].present? || contents_hash[:content_last].present?
   end
-
-  def create_contents_hash(ai_query, identifier, change_keyword, user = nil)
-    if identifier == "corrected_text"
-      learning_language, corrected_sentence = get_ai_output_correction_variables(ai_query)
-    elsif rendering_followup?(ai_query, identifier, change_keyword)
-      content, explanation = get_followup_variables(ai_query, identifier, change_keyword, user)
-    else
-      content_first, content_last, explanation = get_ai_output_change_variables(ai_query, identifier, change_keyword)
-    end
-
-    { learning_language:, corrected_sentence:, content_first:, content_last:, content:, explanation: }
-  end
 end
