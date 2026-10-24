@@ -38,23 +38,12 @@ class GradeQuizJob < ApplicationJob
       ai_query.save!
 
       # Make an AiOutput for each change in the journal query
-      count = ai_query.change_count.to_i
-      if count >= 1
-        (1..count).each do |number|
-          ai_query.ai_outputs.build(
-            made_note: false,
-            identifier: number.to_s,
-            role: :line
-          ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
-        end
+      (1..ai_query.change_count.to_i).each do |number|
+        ai_query.add_assembled_output(identifier: number.to_s, role: :line, user: journal.user)
       end
 
       # Make one more AiOutput for the Assessment
-      ai_query.ai_outputs.build(
-        made_note: false,
-        identifier: "assessment",
-        role: :assessment
-      ).save_assembled_content(quiz_result_prompt.change_keyword, journal.user)
+      ai_query.add_assembled_output(identifier: "assessment", role: :assessment, user: journal.user)
 
       quiz.update(grading_ai_query_id: ai_query.id)
     end

@@ -134,6 +134,19 @@ RSpec.describe AiOutput, type: :model do
     end
   end
 
+  describe "a change line with nothing to show" do
+    it "leaves no unsaved card on the query's association" do
+      user, prompt, query = assistant_records(
+        { "change_1" => { "content" => "", "explanation_en" => "Blank." },
+          "change_2" => { "content" => "A → B", "explanation_en" => "Kept." } }.to_json
+      )
+      XAiService.new.create_ai_outputs_for_each_change(query, prompt, user)
+
+      expect(query.ai_outputs.to_a.map(&:identifier)).to eq([ "2" ])
+      expect(query.ai_outputs.to_a).to all(be_persisted)
+    end
+  end
+
   describe "a corrected_japanese body" do
     let(:corrected_japanese_body) do
       {

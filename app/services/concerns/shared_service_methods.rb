@@ -9,23 +9,12 @@ module SharedServiceMethods
   end
 
   def create_ai_outputs_for_each_change(ai_query, prompt, user)
-    count = ai_query.change_count.to_i
-    return if count < 1
-
-    (1..count).each do |number|
-      ai_query.ai_outputs.build(
-        made_note: false,
-        identifier: number.to_s,
-        role: :line
-      ).save_assembled_content(prompt.change_keyword, user)
+    (1..ai_query.change_count.to_i).each do |number|
+      ai_query.add_assembled_output(identifier: number.to_s, role: :line, user: user)
     end
   end
 
   def create_ai_output_for_corrected_text(ai_query, prompt, user)
-    ai_query.ai_outputs.build(
-      made_note: false,
-      identifier: "corrected_text",
-      role: :corrected_text
-    ).save_assembled_content(prompt.change_keyword, user)
+    ai_query.add_assembled_output(identifier: "corrected_text", role: :corrected_text, user: user)
   end
 end

@@ -37,6 +37,19 @@ class AiQuery < ApplicationRecord
     query
   end
 
+  # Builds the card for one item of the reply (a change line, the corrected
+  # sentence or the assessment), assembles its text for user and saves it.
+  # When the reply has nothing to show for it, nothing is saved and the
+  # unsaved build is dropped from ai_outputs, so the query never lists a
+  # card that did not reach the database. Returns the saved output or nil.
+  def add_assembled_output(identifier:, role:, user:)
+    output = ai_outputs.build(made_note: false, identifier: identifier, role: role)
+    return output if output.save_assembled_content(change_keyword, user)
+
+    ai_outputs.target.delete(output)
+    nil
+  end
+
   def find_ai_output_by_identifier(identifier)
     ai_outputs.find_by(identifier: identifier)
   end

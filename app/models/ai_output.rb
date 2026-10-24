@@ -65,16 +65,14 @@ class AiOutput < ApplicationRecord
     end
   end
 
-  # Persists the card when there is something to show. A blank change line
-  # returns nil from assemble_content. Saving that would fail the job before
-  # the corrected sentence is stored, and leaving the unsaved build on the
-  # query would look like a card that never made it to the database.
+  # Persists the card when there is something to show and returns true. A
+  # blank change line returns nil from assemble_content; saving that would
+  # fail the job before the corrected sentence is stored, so nothing is saved
+  # and the result is false. (AiQuery#add_assembled_output also drops the
+  # unsaved build from its association.)
   def save_assembled_content(change_keyword, user)
     assembled = assemble_content(change_keyword, user)
-    if assembled.blank?
-      ai_query.ai_outputs.target.delete(self) if new_record? && ai_query
-      return
-    end
+    return false if assembled.blank?
 
     self.content = assembled
     save!
