@@ -201,9 +201,6 @@
     "location": null,
     "body": [
       "    <header class=\"navbar\">",
-      "<!--    <div class=\"navbar__group\">-->",
-      "        <!--Member count: -->",
-      "<!--    </div>-->",
       "    <div class=\"navbar__languages\">",
       "      En → Ja",
       "    </div>",
@@ -270,9 +267,6 @@
     "location": null,
     "body": [
       "    <header class=\"navbar\">",
-      "<!--    <div class=\"navbar__group\">-->",
-      "        <!--Member count: -->",
-      "<!--    </div>-->",
       "    <div class=\"navbar__languages\">",
       "      En → Ja",
       "    </div>",

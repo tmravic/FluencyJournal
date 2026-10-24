@@ -15,10 +15,6 @@ class Journal < ApplicationRecord
   scope :alphabetical, -> { reorder(:title) }
   # The journals due for study when due_only, otherwise all of them.
   scope :due_or_all, ->(due_only) { due_only ? next_to_study : all }
-  # scope :personal, -> {  }
-  # scope :private, -> {  }
-  # scope :public, -> {  }
-  # scope :shared (either private or publish, not personal), -> {  }
 
   # Preloads the query history shown on the journal page (quizzes, followups).
   scope :with_query_history, -> {
