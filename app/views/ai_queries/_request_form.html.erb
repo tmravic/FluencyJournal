@@ -1,7 +1,6 @@
 <%= simple_form_for EntryPrompt.new, url: ai_request_journal_ai_queries_path(@journal),
              method: :post, html: { class: "request-form" } do |f| %>
   <%= f.hidden_field :uuid, value: @uuid %>
-  <%= f.hidden_field :journal_id, value: @journal.id %>
 
   <div>
     <%= f.text_area :base_content, label: t('ai_query.original_language'),

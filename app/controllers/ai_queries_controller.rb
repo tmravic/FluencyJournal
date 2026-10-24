@@ -56,7 +56,7 @@ class AiQueriesController < ApplicationController
 
   def entry_prompt_params
     params.expect(
-      entry_prompt: [ :base_content, :user_generated_content, :ai_model, :uuid, :journal_id ]
+      entry_prompt: [ :base_content, :user_generated_content, :ai_model, :uuid ]
     )
   end
 
