@@ -1,5 +1,2 @@
-class OpenAiAssistantButtonComponent < ApplicationComponent
-  def initialize(journal:)
-    @journal = journal
-  end
+class OpenAiAssistantButtonComponent < JournalButtonComponent
 end

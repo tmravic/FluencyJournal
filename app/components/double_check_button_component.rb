@@ -1,5 +1,2 @@
-class DoubleCheckButtonComponent < ApplicationComponent
-  def initialize(journal:)
-    @journal = journal
-  end
+class DoubleCheckButtonComponent < JournalButtonComponent
 end

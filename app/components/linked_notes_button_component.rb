@@ -1,5 +1,2 @@
-class LinkedNotesButtonComponent < ApplicationComponent
-  def initialize(journal:)
-    @journal = journal
-  end
+class LinkedNotesButtonComponent < JournalButtonComponent
 end

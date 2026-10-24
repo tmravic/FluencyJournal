@@ -1,5 +1,2 @@
-class QuizButtonsComponent < ApplicationComponent
-  def initialize(journal:)
-    @journal = journal
-  end
+class QuizButtonsComponent < JournalButtonComponent
 end

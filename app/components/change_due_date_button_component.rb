@@ -1,5 +1,2 @@
-class ChangeDueDateButtonComponent < ApplicationComponent
-  def initialize(journal:)
-    @journal = journal
-  end
+class ChangeDueDateButtonComponent < JournalButtonComponent
 end
