@@ -28,11 +28,20 @@ export default class extends Controller {
 
     if (this.audio) {
       this.audio.currentTime = 0
-      await this.audio.play()
+      await this.replay()
       return
     }
 
     await this.loadAndPlay()
+  }
+
+  async replay() {
+    try {
+      await this.audio.play()
+    } catch (error) {
+      console.error("TTS playback failed:", error)
+      this.stop()
+    }
   }
 
   isPlaying() {
