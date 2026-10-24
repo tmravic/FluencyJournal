@@ -15,11 +15,17 @@ class ApplicationController < ActionController::Base
     # 1. Allow manual override in URL: ?locale=ja or ?locale=en
     # 2. Otherwise read the browser's Accept-Language header
     # 3. Fall back to default (:en)
-    locale = params[:locale].presence ||
+    locale = requested_locale ||
              extract_locale_from_accept_language_header ||
              I18n.default_locale
 
     I18n.with_locale(locale, &action)
+  end
+
+  # Ignores ?locale= values we don't ship, instead of letting
+  # I18n.with_locale raise I18n::InvalidLocale (a 500).
+  def requested_locale
+    params[:locale].presence_in(I18n.available_locales.map(&:to_s))
   end
 
   def current_group
