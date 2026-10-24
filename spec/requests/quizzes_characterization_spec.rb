@@ -17,6 +17,22 @@ RSpec.describe "Quizzes (characterization)", type: :request do
     klass.create!(raw_prompt: raw, ai_model: "grok-4-fast-non-reasoning", uuid: SecureRandom.uuid, sent_role_prompt: "role")
   end
 
+  # Every table starts at its own band of ids, so an id never equals one from
+  # another table and can be labelled without guessing which record it is.
+  # (Sequences only move forward, so this is safe for other examples.)
+  ID_BANDS = { groups: 1, users: 2, journals: 3, entries: 4, ai_queries: 5, ai_outputs: 6,
+               prompts: 7, quizzes: 8, quiz_answers: 9, quiz_hints: 10 }.freeze
+
+  def separate_id_ranges
+    connection = ActiveRecord::Base.connection
+    ID_BANDS.each do |table, band|
+      sequence = connection.pk_and_sequence_for(table).last
+      connection.execute("SELECT setval('#{sequence}', GREATEST((SELECT last_value FROM #{sequence}), #{band * 1_000_000}))")
+    end
+  end
+
+  before { separate_id_ranges }
+
   let!(:world) do
     group = Group.create!(name: "QC #{SecureRandom.hex(4)}")
     me = User.create!(email_address: "qc-#{SecureRandom.hex(4)}@example.com", password: "password",
@@ -59,14 +75,19 @@ RSpec.describe "Quizzes (characterization)", type: :request do
     labels = labels.merge(AiOutput.where.not(id: labels.keys).pluck(:id).index_with { "OUT_NEW" })
     labels = labels.merge(QuizAnswer.pluck(:id).index_with { "ANSWER" })
     labels = labels.merge(world[:journal].entries.pluck(:id, :position).to_h { |id, pos| [ id, "ENTRY#{pos}" ] })
-    labels.sort_by { |id, _| -id.to_s.length }.each do |id, label|
-      text.gsub!(/(?<!\d)#{id}(?!\d)/, label)
-    end
+    # Random hex (tokens, uuids, the user name) can contain an id as a
+    # number, so mask it before ids are replaced.
     text.gsub!(/(name="authenticity_token" value=")[^"]*/, '\1TOKEN')
     text.gsub!(/(name="csrf-token" content=")[^"]*/, '\1TOKEN')
     text.gsub!(/(signed-stream-name=")[^"]*/, '\1SIGNED')
     text.gsub!(/\b(qc|Qc)-\h{8}/, '\1-USER')
     text.gsub!(/\h{8}-\h{4}-\h{4}-\h{4}-\h{12}/, "UUID")
+    # Table sequences are not reset between examples, so the journal id can
+    # equal an entry id. Paths name the journal unambiguously.
+    text.gsub!(%r{/journals/#{world[:journal].id}(?!\d)}, "/journals/JOURNAL")
+    labels.sort_by { |id, _| -id.to_s.length }.each do |id, label|
+      text.gsub!(/(?<!\d)#{id}(?!\d)/, label)
+    end
     text
   end
 
