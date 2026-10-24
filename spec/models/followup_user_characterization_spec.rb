@@ -15,7 +15,7 @@ RSpec.describe Followup, "#user (characterization)", type: :model do
   end
 
   def prompt
-    FreeQuestionPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+    FreeQuestionPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
   end
 
   def followup_on(origin)
@@ -23,7 +23,7 @@ RSpec.describe Followup, "#user (characterization)", type: :model do
   end
 
   def output_on(query_journal)
-    query = AiQuery.create!(journal: query_journal, prompt: EntryPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r"), raw_response: "{}")
+    query = AiQuery.create!(journal: query_journal, prompt: EntryPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r"), raw_response: "{}")
     query.ai_outputs.create!(identifier: "1", content: "c", made_note: false)
   end
 

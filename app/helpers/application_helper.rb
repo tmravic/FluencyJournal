@@ -59,6 +59,11 @@ module ApplicationHelper
     link_to sanitize("&larr; #{text}"), path
   end
 
+  # [label, model id] pairs for the model select, from Prompt::MODELS.
+  def ai_model_options
+    Prompt::MODEL_LABEL_KEYS.map { |model, label_key| [ t(label_key), model ] }
+  end
+
   private
 
   def has_content_for_ai_output?(contents_hash)

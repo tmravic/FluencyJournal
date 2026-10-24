@@ -23,7 +23,7 @@ RSpec.describe "Note lists (characterization)", type: :request do
     later = me.notes.create!(content: "Later grammar", category: :grammar, next_study_date: 3.days.from_now)
     draft = me.notes.create!(content: "Draft note", category: :draft_journal, next_study_date: 1.day.ago)
     due.journals << journal
-    prompt = FreeQuestionPrompt.create!(raw_prompt: "Followup Question: why?", ai_model: "m",
+    prompt = FreeQuestionPrompt.create!(raw_prompt: "Followup Question: why?", ai_model: Prompt::DEFAULT_MODEL,
                                         uuid: SecureRandom.uuid, sent_role_prompt: "r")
     Followup.create!(prompt: prompt, origin: due, source_tag: "notes_box")
     labels = { journal.id => "J_LINKED", due.id => "N_DUE", later.id => "N_LATER", draft.id => "N_DRAFT" }

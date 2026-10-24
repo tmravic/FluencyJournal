@@ -15,7 +15,7 @@ RSpec.describe "GET /followups/new for a followup origin", type: :request do
   let(:parent) do
     prompt = FreeQuestionPrompt.create!(
       raw_prompt: "Followup Question: why?\nReference text: 雨", user_generated_content: "雨",
-      ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r"
+      ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r"
     )
     Followup.create!(prompt: prompt, origin: entry, source_tag: "ai_assistant")
   end

@@ -22,12 +22,8 @@
                                     class: 'form__actions',
                                     value: @reference_text %>
       <%= followup_prompt.hidden_field :uuid, value: @uuid %>
-      <% model_options = [
-        [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
-        [t("ai_query.model.higher_quality"), "grok-4.6"]
-      ] %>
       <%= followup_prompt.select :ai_model,
-                                 options_for_select(model_options, "grok-4-fast-non-reasoning") %>
+                                 options_for_select(ai_model_options, Prompt::DEFAULT_MODEL) %>
     <% end %>
 
     <% if @followup_origin.present? %>

@@ -43,7 +43,7 @@ RSpec.describe "Form labels and ids", type: :request do
   it "gives the read-only request form on followups#show labelled, unique textareas" do
     prompt = FreeQuestionPrompt.create!(
       raw_prompt: "Followup Question: why?", base_content: "why?", user_generated_content: "雨",
-      ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r"
+      ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r"
     )
     followup = Followup.create!(prompt: prompt, origin: entry, source_tag: "ai_assistant")
     AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
@@ -58,7 +58,7 @@ RSpec.describe "Form labels and ids", type: :request do
 
   it "gives the read-only request form on ai_queries#show labelled textareas named after the query" do
     prompt = EntryPrompt.create!(
-      raw_prompt: "x", base_content: "I rain", user_generated_content: "雨", ai_model: "m",
+      raw_prompt: "x", base_content: "I rain", user_generated_content: "雨", ai_model: Prompt::DEFAULT_MODEL,
       uuid: SecureRandom.uuid, sent_role_prompt: "r"
     )
     query = AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")

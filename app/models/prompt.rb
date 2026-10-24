@@ -17,6 +17,15 @@ class Prompt < ApplicationRecord
   # Older cards stored explanation_jp; AiQuery still reads that key.
   LANGUAGE_ABBREVIATIONS = { "English" => "en", "Japanese" => "ja" }.freeze
 
+  # The models a request may use, with the locale key of the label shown in
+  # the model select. The first is the default.
+  MODEL_LABEL_KEYS = {
+    "grok-4-fast-non-reasoning" => "ai_query.model.fast",
+    "grok-4.6" => "ai_query.model.higher_quality"
+  }.freeze
+  MODELS = MODEL_LABEL_KEYS.keys.freeze
+  DEFAULT_MODEL = MODELS.first
+
   has_one :ai_query, dependent: :destroy
   delegate :user, to: :ai_query, allow_nil: true
   has_one :followup, dependent: :destroy
@@ -40,6 +49,9 @@ class Prompt < ApplicationRecord
 
   validates :raw_prompt, presence: true
   validates :ai_model, presence: true
+  # Only checked when the model is being set, so older rows that hold a model
+  # id that is no longer offered can still be loaded and saved.
+  validates :ai_model, inclusion: { in: MODELS }, allow_blank: true, if: :will_save_change_to_ai_model?
   validates :uuid, presence: true
   validates :sent_role_prompt, presence: true
 

@@ -21,7 +21,7 @@ RSpec.describe AccessibleOwner, "(characterization)", type: :model do
   end
 
   def prompt(klass = FreeQuestionPrompt)
-    klass.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+    klass.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
   end
 
   # Builds the same graph for one owner and returns labelled records.

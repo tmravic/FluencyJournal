@@ -14,7 +14,7 @@ RSpec.describe "Speak endpoints (characterization)", type: :request do
     journal = Journal.create!(title: "Spoken", user: user, group: group, last_interval: 1)
     entry = journal.entries.create!(content: "一行目")
     journal.entries.create!(content: "二行目")
-    prompt = EntryPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+    prompt = EntryPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
     query = AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
     output = query.ai_outputs.create!(identifier: "1", content: "出力の文", made_note: false)
     { journal: journal, entry: entry, output: output }

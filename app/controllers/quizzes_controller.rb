@@ -12,7 +12,7 @@ class QuizzesController < ApplicationController
     uuid = SecureRandom.uuid
     prepare_quiz_prompt = PrepareQuizPrompt.build(
       raw_prompt: JSON.generate(@journal.entry_texts),
-      ai_model: "grok-4-fast-non-reasoning",
+      ai_model: Prompt::DEFAULT_MODEL,
       uuid: uuid,
       base_content: @journal.entry_texts.join,
       user_generated_content: @journal.entry_texts.join
@@ -72,7 +72,7 @@ class QuizzesController < ApplicationController
 
     quiz_result_prompt = QuizResultPrompt.build(
       raw_prompt: prompt_content,
-      ai_model: "grok-4-fast-non-reasoning",
+      ai_model: Prompt::DEFAULT_MODEL,
       uuid: uuid,
       base_content: combine_original_and_translation(original_journal, quiz_entries),
       user_generated_content: user_translation.join

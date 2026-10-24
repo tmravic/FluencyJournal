@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe AiQuery, type: :model do
   describe ".from_chat" do
-    let(:prompt) { Prompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r") }
+    let(:prompt) { Prompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r") }
     let(:token_data) { { "prompt_tokens" => 3, "completion_tokens" => 4, "total_tokens" => 7 } }
 
     it "builds an unsaved query with the reply, token counts and prompt" do

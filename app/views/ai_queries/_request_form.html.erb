@@ -14,11 +14,7 @@
 
   <%= turbo_frame_tag "ai_request_form_delete_buttons" do %>
     <div class="request-form__submit-box">
-      <% model_options = [
-        [t("ai_query.model.fast"), "grok-4-fast-non-reasoning"],
-        [t("ai_query.model.higher_quality"), "grok-4.6"]
-      ] %>
-        <%= f.select :ai_model, options_for_select(model_options, "grok-4-fast-non-reasoning") %>
+        <%= f.select :ai_model, options_for_select(ai_model_options, Prompt::DEFAULT_MODEL) %>
 
       <%= f.submit t('ai_query.send'), class: "btn btn--primary request-form__submit",
                    data: {

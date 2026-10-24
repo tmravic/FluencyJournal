@@ -40,7 +40,7 @@ RSpec.describe "Followups characterization", type: :request do
     outsider_journal = Journal.create!(title: "Outside", user: outsider, group: other_group, last_interval: 1)
     outsider_entry = outsider_journal.entries.create!(content: "外の文。")
 
-    correction_prompt = EntryPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+    correction_prompt = EntryPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
     correction = AiQuery.create!(
       journal: journal, prompt: correction_prompt,
       raw_response: { "change_1" => { "content" => "雨だ → 雨だった", "explanation_en" => "Past tense." },
@@ -48,7 +48,7 @@ RSpec.describe "Followups characterization", type: :request do
     )
     change_output = output!(correction, "1", "雨だ\n↓\n雨だった")
 
-    grading_prompt = QuizResultPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+    grading_prompt = QuizResultPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
     grading = AiQuery.create!(
       journal: journal, prompt: grading_prompt,
       raw_response: { "entry_1" => { "content" => "It rain → It rained", "explanation_en" => "Tense." },
@@ -63,7 +63,7 @@ RSpec.describe "Followups characterization", type: :request do
     me.notes.create!(content: "傘 (かさ) umbrella")
     journal_followup = journal.journal_followups.create!
 
-    parent_prompt = FreeQuestionPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+    parent_prompt = FreeQuestionPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
     parent_followup = Followup.create!(prompt: parent_prompt, origin: entry, source_tag: "ai_assistant")
     FollowupTemplatePrompt.create!(user: me, base_content: "Explain the grammar.")
 
@@ -227,7 +227,7 @@ RSpec.describe "Followups characterization", type: :request do
 
   describe "GET show and DELETE destroy" do
     def followup_on(origin, tag = "ai_assistant")
-      prompt = FreeQuestionPrompt.create!(raw_prompt: "x", ai_model: "m", uuid: SecureRandom.uuid, sent_role_prompt: "r")
+      prompt = FreeQuestionPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
       AiQuery.create!(journal: origin.try(:journal), prompt: prompt, raw_response: { "answer_1" => { "content" => "A", "explanation_en" => "E" } }.to_json)
       Followup.create!(prompt: prompt, origin: origin, source_tag: tag)
     end
