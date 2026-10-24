@@ -48,7 +48,7 @@ class QuizzesController < ApplicationController
   end
 
   def unpeek
-    @frame = helpers.dom_id(@ai_output)
+    @quiz_entry_frame = helpers.dom_id(@ai_output)
 
     respond_to do |format|
       format.turbo_stream
