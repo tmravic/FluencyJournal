@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="theme"
 export default class extends Controller {
   static targets = ["icon"]
+  static values = { lightLabel: String, darkLabel: String }
 
   connect() {
     this.updateIcon()
@@ -24,7 +25,7 @@ export default class extends Controller {
     const root = document.documentElement
     const current = root.dataset.theme || this.systemPreference()
     this.iconTarget.textContent = current === "dark" ? "☀️" : "🌙"
-    this.element.setAttribute("aria-label", current === "dark" ? "Switch to light mode" : "Switch to dark mode")
+    this.element.setAttribute("aria-label", current === "dark" ? this.lightLabelValue : this.darkLabelValue)
   }
 
   systemPreference() {

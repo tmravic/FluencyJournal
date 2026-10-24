@@ -23,6 +23,8 @@
     <button type="button"
             data-controller="theme"
             data-action="click->theme#toggle"
+            data-theme-light-label-value="<%= t("theme.switch_to_light") %>"
+            data-theme-dark-label-value="<%= t("theme.switch_to_dark") %>"
             class="btn btn--light theme-toggle"
             aria-label="<%= t("toggle_dark_mode") %>">
       <span data-theme-target="icon">🌙</span>
@@ -36,6 +38,8 @@
     <button type="button"
             data-controller="theme"
             data-action="click->theme#toggle"
+            data-theme-light-label-value="<%= t("theme.switch_to_light") %>"
+            data-theme-dark-label-value="<%= t("theme.switch_to_dark") %>"
             class="btn btn--light theme-toggle"
             aria-label="<%= t("toggle_dark_mode") %>">
       <span data-theme-target="icon">🌙</span>
