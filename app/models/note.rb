@@ -31,4 +31,12 @@ class Note < ApplicationRecord
   def previous_note(notes)
     previous_in(notes)
   end
+
+  # The note a new note is inserted after in a list. The study date is set
+  # first because the position depends on it and it is otherwise unset until
+  # validation, which runs after the controller needs the anchor.
+  def insertion_anchor_in(notes)
+    set_initial_next_study_date
+    previous_note(notes)
+  end
 end

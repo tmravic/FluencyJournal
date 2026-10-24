@@ -80,9 +80,7 @@ class NotesController < ApplicationController
     @todays_notes = collection if params[:view_context] == "todays_notes"
     @source_tag = SourceTag::NOTES_BOX
     # The anchor is chosen before save, while this row is still off the list.
-    # next_study_date is otherwise unset until validation.
-    @note.set_initial_next_study_date
-    previous_note = @note.previous_note(collection)
+    previous_note = @note.insertion_anchor_in(collection)
 
     respond_to do |format|
       if @note.save
