@@ -22,6 +22,12 @@ class Followup < ApplicationRecord
     origin.nil? ? Current.user : origin.followup_owner
   end
 
+  # The text a followup asked about another followup is pre-filled with: the
+  # reference text of the parent's question ("" when it had none).
+  def content
+    prompt.user_generated_content.to_s
+  end
+
   # Lets this followup be the origin of another one (FollowupOrigin).
   def followup_owner
     user

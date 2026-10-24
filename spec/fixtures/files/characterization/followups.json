@@ -1001,8 +1001,18 @@
     "followup_origin": "entry"
   },
   "new/followup": {
-    "error": "NoMethodError",
-    "message": "undefined method 'content'"
+    "status": 200,
+    "location": null,
+    "layout": false,
+    "source_tag": "ai_assistant",
+    "reference_text": "",
+    "followup_template_prompts": [
+      "Show me how to edit an existing sentence or add a new one using words from this list in my journal: 雨 (あめ) rain, 傘 (かさ) umbrella",
+      "Explain the grammar."
+    ],
+    "followup_from_todays_notes": false,
+    "journal": null,
+    "followup_origin": "parent_followup"
   },
   "new/group_mate_entry": {
     "status": 200,
