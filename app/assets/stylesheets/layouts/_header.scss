@@ -23,3 +23,16 @@
     }
   }
 }
+
+// Journal page toolbar: the title and nine turbo frames that each hold one
+// button. Without these rules `space-between` spread the leftovers of every
+// wrapped row into uneven gaps and the empty frames (for example
+// #close_ai_assistant_button) still took a flex slot plus a gap.
+#workspace > .header {
+  justify-content: flex-start;
+
+  // Frames with no button inside take no space.
+  > turbo-frame:not(:has(*)) {
+    display: none;
+  }
+}
