@@ -6,7 +6,13 @@ class Note < ApplicationRecord
   has_and_belongs_to_many :journals
   has_many :followups, as: :origin, dependent: :destroy
 
+  # Longer text is refused when it is typed or pasted in. A row that is
+  # already longer stays readable and editable: the limit is only checked
+  # when the content itself changes.
+  MAX_CONTENT_LENGTH = 5_000
+
   validates :content, presence: true
+  validates :content, length: { maximum: MAX_CONTENT_LENGTH }, if: :will_save_change_to_content?
 
   enum :category, { vocab: 0, grammar: 1, draft_journal: 2 }
 

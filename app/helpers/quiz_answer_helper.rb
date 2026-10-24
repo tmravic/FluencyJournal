@@ -1,5 +1,15 @@
 module QuizAnswerHelper
+  # The match highlight compares every character of one text with every
+  # character of the other, so its cost grows with the product of the two
+  # lengths. Past this many characters in either text the answer is shown
+  # as plain text instead.
+  MAX_HIGHLIGHT_LENGTH = 2_000
+
   def highlighted_quiz_answer(original, user_response)
+    if original.to_s.length > MAX_HIGHLIGHT_LENGTH || user_response.to_s.length > MAX_HIGHLIGHT_LENGTH
+      return content_tag(:span, user_response.to_s)
+    end
+
     segments = quiz_answer_match_segments(original, user_response)
 
     safe_join(segments.map { |segment| render_quiz_answer_segment(segment) })

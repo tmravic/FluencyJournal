@@ -254,6 +254,7 @@ en:
               inclusion: "%{value} is not a valid category"
       messages:
         blank: " is blank."
+        too_long: "is too long (maximum is %{count} characters)."
     attributes:
       note:
         categories:

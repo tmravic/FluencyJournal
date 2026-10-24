@@ -43,6 +43,34 @@ RSpec.describe QuizAnswerHelper, type: :helper do
     end
   end
 
+  describe "#highlighted_quiz_answer with long text" do
+    it "shows plain escaped text, without comparing, past the length threshold" do
+      limit = QuizAnswerHelper::MAX_HIGHLIGHT_LENGTH
+      original = "あ" * (limit + 1)
+      user_response = "<b>い</b>" + ("あ" * 10)
+
+      expect(helper).not_to receive(:quiz_answer_match_segments)
+      result = helper.highlighted_quiz_answer(original, user_response)
+
+      expect(result).to eq(%(<span>&lt;b&gt;い&lt;/b&gt;#{"あ" * 10}</span>))
+    end
+
+    it "also falls back when only the answer is over the threshold" do
+      limit = QuizAnswerHelper::MAX_HIGHLIGHT_LENGTH
+      user_response = "あ" * (limit + 1)
+
+      expect(helper).not_to receive(:quiz_answer_match_segments)
+      expect(helper.highlighted_quiz_answer("あ", user_response)).to eq("<span>#{user_response}</span>")
+    end
+
+    it "still highlights at exactly the threshold" do
+      limit = QuizAnswerHelper::MAX_HIGHLIGHT_LENGTH
+      text = "あ" * limit
+
+      expect(helper.highlighted_quiz_answer(text, text)).to include("quiz-answer__match")
+    end
+  end
+
   describe "#quiz_answer_entry" do
     it "returns the journal entry at that position" do
       second_entry = instance_double(Entry)

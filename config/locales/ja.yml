@@ -254,6 +254,7 @@ ja:
               inclusion: "%{value} は有効なカテゴリではありません"
       messages:
         blank: "を入力してください"
+        too_long: "は%{count}文字以内で入力してください"
     attributes:
       note:
         categories:

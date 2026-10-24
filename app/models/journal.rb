@@ -9,7 +9,12 @@ class Journal < ApplicationRecord
   has_many :quizzes, dependent: :destroy
   has_many :journal_followups, dependent: :destroy
 
+  # Only checked when the title changes, so an existing longer title can
+  # still be opened and its journal edited.
+  MAX_TITLE_LENGTH = 255
+
   validates :title, presence: true
+  validates :title, length: { maximum: MAX_TITLE_LENGTH }, if: :will_save_change_to_title?
 
   scope :ordered, -> { order(:next_study_date) }
   scope :alphabetical, -> { reorder(:title) }
