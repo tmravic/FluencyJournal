@@ -108,6 +108,11 @@ class FollowupsController < ApplicationController
 
     @source_tag = SourceTag.parse(params[:source_tag])
     set_user_and_journal(@followup.origin)
+
+    # The request job creates the AiQuery; until it has (or if it failed)
+    # there is nothing to show, so render the processing state instead of
+    # raising on a nil ai_query.
+    render :pending if @followup.prompt.ai_query.nil?
   end
 
   def cancel

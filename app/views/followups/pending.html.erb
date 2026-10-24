@@ -1,0 +1,17 @@
+<% followup_frame = @source_tag == "notes_box" ? "notes_box" : followup_turbo_frame(@source_tag) %>
+<%= turbo_frame_tag followup_frame do %>
+
+  <% if @source_tag == "notes_box" %>
+    <div class="notes-box">
+  <% end %>
+
+    <div class="card">
+      <h4><%= t("ai_query.processing") %></h4>
+      <p><%= t("followup.not_ready") %></p>
+    </div>
+
+  <% if @source_tag == "notes_box" %>
+    </div>
+  <% end %>
+
+<% end %>
