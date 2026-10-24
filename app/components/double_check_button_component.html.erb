@@ -1,9 +1,9 @@
 <%= link_to t("followup.followup"),
-            new_followup_path(class_name: "JournalFollowup", journal_id: @journal.id, source_tag: "ai_assistant"),
+            new_followup_path(class_name: "JournalFollowup", journal_id: @journal.id, source_tag: SourceTag::AI_ASSISTANT),
             class: "btn btn--light",
             data: {
-              turbo_frame: helpers.followup_turbo_frame("ai_assistant"),
+              turbo_frame: helpers.followup_turbo_frame(SourceTag::AI_ASSISTANT),
               controller: "scroll",
               action: "click->scroll#scrollToTarget",
-              scroll_target_value: helpers.followup_turbo_frame("ai_assistant")
+              scroll_target_value: helpers.followup_turbo_frame(SourceTag::AI_ASSISTANT)
             } %>

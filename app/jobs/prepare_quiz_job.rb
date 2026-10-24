@@ -44,7 +44,7 @@ class PrepareQuizJob < ApplicationJob
       created
     end
 
-    source_tag = "ai_assistant"
+    source_tag = SourceTag::AI_ASSISTANT
     ai_query_id = quiz.ai_query.id
     ai_outputs = ai_query.ai_outputs.sort_by { |output| output.identifier.to_i }
 

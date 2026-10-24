@@ -9,7 +9,7 @@ class AiRequestJob < ApplicationJob
     x_ai_service = XAiService.new(api_key: xai_api_key, prompt: entry_prompt, user: user, journal: journal)
     ai_query = x_ai_service.call
 
-    source_tag = "ai_assistant"
+    source_tag = SourceTag::AI_ASSISTANT
     corrected_text = ai_query.corrected_text
     ai_query_id = ai_query.id
 

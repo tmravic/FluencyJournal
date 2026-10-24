@@ -48,7 +48,7 @@ class GradeQuizJob < ApplicationJob
       quiz.update(grading_ai_query_id: ai_query.id)
     end
 
-    source_tag = "ai_assistant"
+    source_tag = SourceTag::AI_ASSISTANT
     assessment = ai_query.assessment
     ai_query_id = ai_query.id
 

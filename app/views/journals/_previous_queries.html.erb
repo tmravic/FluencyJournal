@@ -8,13 +8,13 @@
   <% followup = query.prompt&.followup %>
   <% if followup %>
     <%= link_to t("followup.short"),
-                followup_path(followup, source_tag: "ai_assistant"),
+                followup_path(followup, source_tag: SourceTag::AI_ASSISTANT),
                 class: "btn btn--primary",
                 data: {
-                  turbo_frame: followup_turbo_frame("ai_assistant"),
+                  turbo_frame: followup_turbo_frame(SourceTag::AI_ASSISTANT),
                   controller: "scroll",
                   action: "click->scroll#scrollToTarget",
-                  scroll_target_value: followup_turbo_frame("ai_assistant")
+                  scroll_target_value: followup_turbo_frame(SourceTag::AI_ASSISTANT)
                 } %>
   <% elsif query_unrelated_to_quizzes?(query) %>
     <%= link_to t("ai_query.short"),
