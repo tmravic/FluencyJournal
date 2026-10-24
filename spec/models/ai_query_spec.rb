@@ -218,6 +218,50 @@ RSpec.describe AiQuery, type: :model do
       expect(query.ai_outputs.order(:identifier).map(&:content)).to eq([ "first line", "first line" ])
       expect(quiz.quiz_hints.order(:entry_id).map(&:hint_content)).to eq([ "Hint missing", "Hint missing" ])
     end
+
+    it "orders lines numerically, keeps text after the last arrow, and ignores other keys" do
+      query, = quiz_records
+
+      query.create_quiz_questions(
+        {
+          "line_10" => { "translation" => "ten" },
+          "line_2" => { "translation" => "二 → two → deux" },
+          "line_1" => "one",
+          "note" => "ignored"
+        },
+        expected_count: 3
+      )
+
+      expect(query.ai_outputs.order(:identifier).map { |o| [ o.identifier, o.role, o.content ] }).to eq(
+        [ [ "1", "line", "one" ], [ "2", "line", "deux" ], [ "3", "line", "ten" ] ]
+      )
+    end
+
+    it "uses the placeholder text when no line came back and logs the mismatch" do
+      query, quiz = quiz_records
+      allow(Rails.logger).to receive(:warn)
+
+      query.create_quiz_questions({}, expected_count: 1, quiz: quiz)
+
+      expect(query.ai_outputs.map(&:content)).to eq([ "Translation missing" ])
+      expect(Rails.logger).to have_received(:warn).with(/line-count mismatch.*expected=1 actual=0/)
+    end
+
+    it "creates one question per returned line when no count is given and skips hints without a quiz" do
+      query, = quiz_records
+
+      query.create_quiz_questions({ "line_1" => "a", "line_2" => "b" })
+
+      expect(query.ai_outputs.order(:identifier).map(&:content)).to eq(%w[a b])
+      expect(QuizHint.count).to eq(0)
+    end
+
+    it "raises when a returned line has no translation text" do
+      query, = quiz_records
+
+      expect { query.create_quiz_questions({ "line_1" => { "hint" => "h" } }, expected_count: 1) }
+        .to raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   describe "#assessment" do
