@@ -59,7 +59,11 @@ RSpec.describe "Quiz member UI actions", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(%(target="ai_output_#{output.id}"))
-    expect(response.body).to include("I met her mother.")
+    # Unpeeking restores the answer form and hides the answer again. (This
+    # used to match the answer inside the form's data-turbo-frame JSON.)
+    expect(response.body).to include(%(id="new_quiz_answer"))
+    expect(response.body).to include(%(data-turbo-frame="ai_output_#{output.id}"))
+    expect(response.body).not_to include("I met her mother.")
     expect(response.body).to include("/journals/#{journal.id}/quizzes/#{quiz.id}/peek?ai_output_id=#{output.id}")
     expect(response.body).not_to match(/[?&]frame=/)
 

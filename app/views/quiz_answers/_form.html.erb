@@ -2,7 +2,7 @@
 <%= simple_form_for [journal, quiz, quiz_answer],
                     html: {
                       data: {
-                        turbo_frame: quiz_answer.ai_output,
+                        turbo_frame: dom_id(quiz_answer.ai_output),
                         controller: "quiz-draft",
                         quiz_draft_output_id_value: quiz_entry.id,
                         action: "submit->quiz-draft#clear"
