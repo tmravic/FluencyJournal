@@ -14,7 +14,7 @@ en:
   helpers:
     submit:
       journal:
-        create: Start writing
+        create: Create title
         update: Change title
       entry:
         create: Add entry

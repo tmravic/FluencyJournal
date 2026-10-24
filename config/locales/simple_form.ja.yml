@@ -14,7 +14,7 @@ ja:
   helpers:
     submit:
       journal:
-        create: "日記を始める"
+        create: "題名を作成"
         update: "題名を変更"
       entry:
         create: "条を作成"
