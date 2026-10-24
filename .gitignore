@@ -42,3 +42,4 @@
 .kamal/postgres_password
 /config/credentials/staging.key
 *.dump
+patches/

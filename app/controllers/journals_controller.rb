@@ -109,7 +109,6 @@ class JournalsController < ApplicationController
   end
 
   def open_ai_assistant
-    @ai_models = get_ai_models
     @uuid = SecureRandom.uuid
 
     respond_to do |format|

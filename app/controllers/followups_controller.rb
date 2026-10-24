@@ -48,7 +48,6 @@ class FollowupsController < ApplicationController
     )
 
     @uuid = SecureRandom.uuid
-    @ai_models = get_ai_models
 
     if @journal.nil?
       # Cancel chooses today's notes or all notes from this flag.

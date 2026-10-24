@@ -65,7 +65,6 @@ RSpec.describe "Successful write redirects", type: :request do
     user = create_user
     journal = create_journal(user)
     sign_in(user)
-    allow_any_instance_of(EntriesController).to receive(:get_ai_models)
 
     post journal_entries_path(journal), params: { entry: { content: "A new line" } }
 
@@ -78,7 +77,6 @@ RSpec.describe "Successful write redirects", type: :request do
     journal = create_journal(user)
     entry = journal.entries.create!(content: "Original line")
     sign_in(user)
-    allow_any_instance_of(EntriesController).to receive(:get_ai_models)
 
     patch journal_entry_path(journal, entry), params: { entry: { content: "Revised line" } }
 

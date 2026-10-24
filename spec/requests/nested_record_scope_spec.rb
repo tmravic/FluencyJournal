@@ -66,7 +66,6 @@ RSpec.describe "Nested record scope", type: :request do
   it "returns 404 for another group's entry and 200 for this journal's entry" do
     records = two_groups
     sign_in(records[:user_a])
-    allow_any_instance_of(EntriesController).to receive(:get_ai_models)
 
     get journal_entry_path(records[:journal_a], records[:entry_b])
 
@@ -80,7 +79,6 @@ RSpec.describe "Nested record scope", type: :request do
   it "keeps the entry on the journal in the URL when journal_id is posted" do
     records = two_groups
     sign_in(records[:user_a])
-    allow_any_instance_of(EntriesController).to receive(:get_ai_models)
 
     patch journal_entry_path(records[:journal_a], records[:entry_a]),
           params: { entry: { content: "kept", journal_id: records[:journal_b].id } }
