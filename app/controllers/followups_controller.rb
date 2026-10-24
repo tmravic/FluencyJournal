@@ -13,7 +13,7 @@ class FollowupsController < ApplicationController
       redirect_to(@journal ? journal_path(@journal) : root_path) && return
     end
 
-    @followup_prompt = set_correct_prompt_type(class_name)
+    @followup_prompt = FreeQuestionPrompt.new
     @followup = @followup_prompt.build_followup
 
     klass = check_allowed_classes_for_followup(class_name)
@@ -24,8 +24,6 @@ class FollowupsController < ApplicationController
       @followup_origin = journal.journal_followups.build
       @reference_text = journal.full_journal.join("\n\n")
       @journal = journal
-
-      @followup = @followup_prompt.build_followup if @followup.nil?
     else
       if params[:id].blank?
         redirect_to(@journal ? journal_path(@journal) : root_path) && return
@@ -56,25 +54,6 @@ class FollowupsController < ApplicationController
       # Cancel chooses today's notes or all notes from this flag.
       @followup_from_todays_notes = ActiveModel::Type::Boolean.new.cast(params[:followup_from_todays_notes])
     end
-
-
-    # Belt-and-suspenders safety net (temporary for debugging this nil followup issue)
-    @followup ||= @followup_prompt&.build_followup
-    @followup_template_prompts ||= []
-
-    # Safety for @followup_origin (especially important for JournalFollowup / Double Check)
-    if @followup_origin.nil? && @journal.present?
-      @followup_origin = @journal.journal_followups.build
-    end
-
-    if @followup.nil?
-      raise "DEBUG: @followup is still nil at end of FollowupsController#new. " \
-            "class_name=#{class_name.inspect}, " \
-            "@followup_prompt=#{@followup_prompt.inspect}, " \
-            "@source_tag=#{@source_tag.inspect}"
-    end
-
-
     render layout: false if @source_tag == "ai_assistant"
   end
 
@@ -132,11 +111,7 @@ class FollowupsController < ApplicationController
       followup_prompt_params[:base_content] = expanded_base_content if expanded_base_content
     end
 
-    # FreeQuestionPrompt
-    @followup_prompt = set_correct_prompt_type(
-      followup_origin_class,
-      params: followup_prompt_params
-    )
+    @followup_prompt = FreeQuestionPrompt.new(followup_prompt_params)
     base_content = "Followup Question: #{followup_prompt_params[:base_content]}"
     user_generated_content = "Reference text: #{followup_prompt_params.dig(:user_generated_content)}"
     raw_prompt = base_content + "\n" + user_generated_content
@@ -245,23 +220,6 @@ class FollowupsController < ApplicationController
     elsif followup_origin_class == JournalFollowup
       @journal = @followup_origin.journal
     end
-  end
-
-  def set_correct_prompt_type(class_name, params = {})
-    set_prompt_type_based_on_params(params, FreeQuestionPrompt)
-    # if is_vocab_or_grammar_note?(class_name)
-    #   set_prompt_type_based_on_params(params, ExampleSentencePrompt)
-    # else
-    #   set_prompt_type_based_on_params(params, FreeQuestionPrompt)
-    # end
-  end
-
-  def is_vocab_or_grammar_note?(class_name)
-    class_name == Note && %w[vocab grammar].include?(@followup_origin.category)
-  end
-
-  def set_prompt_type_based_on_params(params, prompt_subclass_name)
-    params.present? ? prompt_subclass_name.new(params[:params]) : prompt_subclass_name.new
   end
 
   def check_allowed_classes_for_followup(class_name)
