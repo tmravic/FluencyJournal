@@ -46,7 +46,7 @@
             <%= journal.title %>
           </h2>
 
-          <% journal.entries.ordered.each do |entry| %>
+          <% journal.entries.each do |entry| %>
             <p>
               <%= simple_format(entry.content) %>
             </p>

@@ -60,6 +60,20 @@ RSpec.describe "GET /journals/:id/compare", type: :request do
     expect(response.body).not_to include("外の本文")
   end
 
+  it "loads the entries of all compared journals with one query" do
+    entry_queries = []
+    counter = lambda do |*, payload|
+      entry_queries << payload[:sql] if payload[:sql].match?(/FROM "entries"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record") do
+      get compare_journal_path(current, journal_ids: [ zebra.id.to_s, apple.id.to_s, mango.id.to_s ])
+    end
+
+    expect(response.body).to include("Zebraの本文", "Appleの本文", "Mangoの本文")
+    expect(entry_queries.size).to eq(1)
+  end
+
   it "answers only the empty compare frame on cancel" do
     get compare_journal_path(current, cancel: true)
 
