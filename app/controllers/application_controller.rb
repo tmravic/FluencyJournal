@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   # allow_browser versions: :modern
 
   around_action :switch_locale
-  before_action :set_api_key
   helper_method :current_group
 
   private
@@ -39,10 +38,6 @@ class ApplicationController < ActionController::Base
     request.env['HTTP_ACCEPT_LANGUAGE'].scan(/[a-z]{2}/).find do |code|
       I18n.available_locales.include?(code.to_sym)
     end&.to_sym
-  end
-
-  def set_api_key
-    @api_key = Rails.application.credentials.xai[:api_key]
   end
 
   # "1", "true", "on" etc. become true; anything else (including a missing key) is false.

@@ -1,6 +1,5 @@
 class UpController < ApplicationController
   allow_unauthenticated_access
-  skip_before_action :set_api_key
 
   def index
     head :ok

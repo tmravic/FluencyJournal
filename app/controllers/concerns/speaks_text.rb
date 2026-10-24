@@ -6,7 +6,7 @@ module SpeaksText
   private
 
   def speak_text(text)
-    audio = XAiTtsService.new(api_key: @api_key, text: text, language: speech_language).call
+    audio = XAiTtsService.new(api_key: Rails.application.credentials.xai[:api_key], text: text, language: speech_language).call
     send_data audio, type: "audio/mpeg", disposition: "inline"
   rescue XAiTtsService::TtsError
     head :service_unavailable
