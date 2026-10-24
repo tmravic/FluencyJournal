@@ -195,14 +195,14 @@ class AiQuery < ApplicationRecord
 
   def corrected_text
     content = parsed_response
-    return textual(content) unless content.is_a?(Hash)
+    return Prose.from(content) unless content.is_a?(Hash)
 
     CORRECTED_TEXT_KEYS.each do |key|
-      text = textual(content[key])
+      text = Prose.from(content[key])
       return text if content.key?(key) && text
     end
 
-    mirrored = content.find { |key, value| sentence_key?(key) && key == value.to_s }
+    mirrored = content.find { |key, value| Prose.sentence_key?(key) && key == value.to_s }
     return mirrored.first if mirrored
 
     prose_from
@@ -251,7 +251,7 @@ class AiQuery < ApplicationRecord
   end
 
   def present_change(result)
-    text = result.is_a?(String) ? result : textual(result)
+    text = result.is_a?(String) ? result : Prose.from(result)
     return if text.blank?
 
     split_change_content(text)
@@ -259,13 +259,13 @@ class AiQuery < ApplicationRecord
 
   def prose_from(wrapper_key = nil)
     content = parsed_response
-    return textual(content) unless content.is_a?(Hash)
+    return Prose.from(content) unless content.is_a?(Hash)
 
     if wrapper_key && content.key?(wrapper_key)
-      return textual(content[wrapper_key])
+      return Prose.from(content[wrapper_key])
     end
 
-    textual(content.except(*item_keys(content)))
+    Prose.from(content.except(*item_keys(content)))
   end
 
   def text_from_explanation(value)
@@ -273,40 +273,11 @@ class AiQuery < ApplicationRecord
     return unless value.is_a?(Hash)
 
     picked = value.select { |key, _| key.to_s.match?(/explanation|reason|comment/i) }
-    textual(picked.presence || value.except("content", "reading"))
-  end
-
-  def textual(value)
-    case value
-    when String
-      value.strip.presence
-    when Array
-      value.filter_map { |item| textual(item) }.uniq.join("\n").presence
-    when Hash
-      value.flat_map { |key, item|
-        text = textual(item)
-        if text
-          [ text ]
-        elsif sentence_key?(key)
-          [ key.strip ]
-        else
-          []
-        end
-      }.uniq.join("\n").presence
-    end
+    Prose.from(picked.presence || value.except("content", "reading"))
   end
 
   def item_keys(content)
     content.keys.grep(/\A(?:entry|change|line|hint|answer|example)_\d+\z/)
-  end
-
-  def sentence_key?(key)
-    return false unless key.is_a?(String)
-
-    text = key.strip
-    return false if text.blank? || text.match?(/\A\w+\z/)
-
-    text.match?(/\p{Hiragana}|\p{Katakana}|\p{Han}/) || text.include?(" ")
   end
 
   def translation_from_quiz_line(line)
