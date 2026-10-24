@@ -25,7 +25,6 @@ class QuizzesController < ApplicationController
       @uuid = prepare_quiz_prompt.uuid
 
       @ai_query_id = I18n.t("quiz.preparing")
-      set_answered_status_in_session
 
       respond_to do |format|
         format.html { redirect_to journal_path(@journal), status: :see_other, notice: t("quiz.preparing") }
@@ -190,15 +189,5 @@ class QuizzesController < ApplicationController
 
   def set_quiz_id_in_session
     session[:quiz_id] = @quiz.id
-  end
-
-  def set_answered_status_in_session
-    session[:answered_quiz_questions] = {}
-    @journal.entries.ordered.pluck(:position).each do |position|
-      session[:answered_quiz_questions]["question_#{position}"] = false
-    end
-    # session.to_h
-    # ...
-    # "answered_quiz_questions"=>{"question_1"=>false, "question_2"=>false}
   end
 end

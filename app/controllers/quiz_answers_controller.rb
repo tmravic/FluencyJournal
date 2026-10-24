@@ -20,8 +20,7 @@ class QuizAnswersController < ApplicationController
     identifier = find_identifier
     @original_entry_text = get_original_language_from_journal(identifier)
     if @quiz_answer.save!
-      mark_question_as_answered(identifier)
-      @show_grade_quiz_button = true if all_questions_are_answered?
+      @show_grade_quiz_button = @quiz.fully_answered?
       respond_to do |format|
         format.turbo_stream
       end
@@ -35,16 +34,6 @@ class QuizAnswersController < ApplicationController
   end
 
   private
-
-  def mark_question_as_answered(identifier)
-    # pp session.to_h
-    # "answered_quiz_questions"=>{"question_1"=>false, "question_2"=>false}
-    session["answered_quiz_questions"]["question_#{identifier}"] = true
-  end
-
-  def all_questions_are_answered?
-    session["answered_quiz_questions"].values.all?(true)
-  end
 
   def get_original_language_from_journal(identifier)
     @journal.entry_at(identifier)&.content

@@ -130,8 +130,6 @@ RSpec.describe "Nested record scope", type: :request do
   it "returns a turbo stream for an output on this quiz" do
     records = two_groups
     sign_in(records[:user_a])
-    allow_any_instance_of(QuizAnswersController).to receive(:mark_question_as_answered)
-    allow_any_instance_of(QuizAnswersController).to receive(:all_questions_are_answered?).and_return(false)
 
     post journal_quiz_quiz_answers_path(records[:journal_a], records[:quiz_a]),
          params: {
