@@ -58,7 +58,20 @@ RSpec.describe "DELETE followup template prompts", type: :request do
            params: { prompt_template: theirs.id },
            headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
-    expect(response).to have_http_status(:ok)
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(FollowupTemplatePrompt.exists?(theirs.id)).to be(true)
+  end
+
+  it "redirects a non-Turbo delete of another user's template back with the no-selection alert" do
+    user = create_user("owner")
+    other = create_user("other")
+    theirs = FollowupTemplatePrompt.create!(base_content: "Same words", user: other)
+    sign_in(user)
+
+    delete destroy_selected_followup_template_prompts_path, params: { prompt_template: theirs.id }
+
+    expect(response).to have_http_status(:see_other)
+    expect(response).to redirect_to(followup_template_prompts_path)
     expect(flash[:alert]).to eq(I18n.t("prompt_templates.no_selection"))
     expect(FollowupTemplatePrompt.exists?(theirs.id)).to be(true)
   end
