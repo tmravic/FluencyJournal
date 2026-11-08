@@ -42,24 +42,15 @@ RSpec.describe "Nested record scope", type: :request do
     entry_b = journal_b.entries.create!(content: "line b")
     query_a = create_query(journal_a)
     query_b = create_query(journal_b)
-    output_a = query_a.ai_outputs.create!(identifier: "1", content: "output a", made_note: false)
-    output_b = query_b.ai_outputs.create!(identifier: "1", content: "output b", made_note: false)
-    quiz_a = Quiz.create!(journal: journal_a, ai_query: query_a)
-    quiz_b = Quiz.create!(journal: journal_b, ai_query: query_b)
-    answer_b = quiz_b.quiz_answers.create!(ai_output: output_b, user_response: "answer b")
 
     {
       user_a: user_a,
       journal_a: journal_a,
       entry_a: entry_a,
       query_a: query_a,
-      output_a: output_a,
-      quiz_a: quiz_a,
       journal_b: journal_b,
       entry_b: entry_b,
-      query_b: query_b,
-      output_b: output_b,
-      answer_b: answer_b
+      query_b: query_b
     }
   end
 
@@ -97,51 +88,5 @@ RSpec.describe "Nested record scope", type: :request do
     get journal_ai_query_path(records[:journal_a], records[:query_b])
 
     expect(response).to have_http_status(:not_found)
-  end
-
-  it "returns 404 for a quiz answer that belongs to another quiz" do
-    records = two_groups
-    sign_in(records[:user_a])
-
-    get journal_quiz_quiz_answer_path(records[:journal_a], records[:quiz_a], records[:answer_b])
-
-    expect(response).to have_http_status(:not_found)
-  end
-
-  it "returns 404 and does not save when the posted output belongs to another quiz" do
-    records = two_groups
-    sign_in(records[:user_a])
-
-    expect {
-      post journal_quiz_quiz_answers_path(records[:journal_a], records[:quiz_a]),
-           params: {
-             quiz_answer: {
-               user_response: "x",
-               ai_output_id: records[:output_b].id,
-               identifier: "1"
-             }
-           },
-           headers: { "Accept" => "text/vnd.turbo-stream.html" }
-    }.not_to change(QuizAnswer, :count)
-
-    expect(response).to have_http_status(:not_found)
-  end
-
-  it "returns a turbo stream for an output on this quiz" do
-    records = two_groups
-    sign_in(records[:user_a])
-
-    post journal_quiz_quiz_answers_path(records[:journal_a], records[:quiz_a]),
-         params: {
-           quiz_answer: {
-             user_response: "x",
-             ai_output_id: records[:output_a].id,
-             identifier: "1"
-           }
-         },
-         headers: { "Accept" => "text/vnd.turbo-stream.html" }
-
-    expect(response).not_to have_http_status(:not_found)
-    expect(response.media_type).to eq("text/vnd.turbo-stream.html")
   end
 end

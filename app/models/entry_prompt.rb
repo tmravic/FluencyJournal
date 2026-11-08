@@ -21,7 +21,7 @@ class EntryPrompt < Prompt
       japanese_diary_guidance(user)
   end
 
-  def response_format(user, _journal, _quiz)
+  def response_format(user, _journal)
     "Include json marker and return json in this exact format (matching the number of changes/corrections and including the full corrected_text in #{user.learning_language}): " +
       example_answer(3, correction_item(user), extra: "corrected_text: { '...' }")
   end

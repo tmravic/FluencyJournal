@@ -24,7 +24,7 @@ RSpec.describe XAiService do
 
     it "sends the role prompt, the entry, and the response format through XAiChat" do
       allow(prompt).to receive(:role_prompt).with(user, journal).and_return("role")
-      allow(prompt).to receive(:response_format).with(user, journal, nil).and_return("format")
+      allow(prompt).to receive(:response_format).with(user, journal).and_return("format")
       service = described_class.new(api_key: "key", prompt: prompt, user: user, journal: journal)
       ai_query = instance_double(AiQuery)
       allow(XAiChat).to receive(:complete).and_return(result)
@@ -49,7 +49,7 @@ RSpec.describe XAiService do
     it "does not write a second followup link when the request has an origin" do
       origin = instance_double(Entry)
       allow(prompt).to receive(:role_prompt).with(user, journal).and_return("role")
-      allow(prompt).to receive(:response_format).with(user, journal, nil).and_return("format")
+      allow(prompt).to receive(:response_format).with(user, journal).and_return("format")
       service = described_class.new(
         api_key: "key",
         prompt: prompt,
@@ -75,7 +75,7 @@ RSpec.describe XAiService do
       )
       error = RubyLLM::ForbiddenError.new(response.body, response: response)
       allow(prompt).to receive(:role_prompt).with(user, journal).and_return("role")
-      allow(prompt).to receive(:response_format).with(user, journal, nil).and_return("format")
+      allow(prompt).to receive(:response_format).with(user, journal).and_return("format")
       service = described_class.new(api_key: "key", prompt: prompt, user: user, journal: journal)
       allow(XAiChat).to receive(:complete).and_raise(error)
 

@@ -34,12 +34,6 @@
       <% end %>
     <% end %>
 
-    <%= turbo_frame_tag "quiz_buttons" do %>
-      <% if @entries.present? %>
-        <%= render QuizButtonsComponent.new(journal: @journal) %>
-      <% end %>
-    <% end %>
-
     <%= turbo_frame_tag "mark_studied_button" do %>
       <% if @entries.present? %>
         <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>

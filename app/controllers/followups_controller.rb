@@ -170,12 +170,9 @@ class FollowupsController < ApplicationController
     current_group.journals.find(journal_id)
   end
 
-  # What the form pre-fills as the reference text: the origin's content,
-  # or for a graded-quiz assessment the whole graded quiz.
+  # What the form pre-fills as the reference text: the origin's content.
   def followup_reference_text(origin)
-    return origin.content unless origin.quiz_assessment?
-
-    helpers.quiz_graded_entries_reference_text(origin.ai_query, Current.user)
+    origin.content
   end
 
   # A blank or placeholder origin class means the form never had an origin.

@@ -1,6 +1,6 @@
 <!---------------------------------------->
 <!--Previous AI Questions and Followups-->
-<!--Q Q F Q F F T T T-->
+<!--Q Q F Q F F-->
 <!---------------------------------------->
 
 <h4><%= t("followup.previous") %></h4>
@@ -16,20 +16,10 @@
                   action: "click->scroll#scrollToTarget",
                   scroll_target_value: followup_turbo_frame(SourceTag::AI_ASSISTANT)
                 } %>
-  <% elsif query_unrelated_to_quizzes?(query) %>
+  <% elsif query.prompt&.listable? %>
     <%= link_to t("ai_query.short"),
                 journal_ai_query_path(journal, query),
                 class: "btn btn--secondary",
-                data: {
-                  turbo_frame: "ai_assistant",
-                  controller: "scroll",
-                  action: "click->scroll#scrollToTarget",
-                  scroll_target_value: "ai_assistant"
-                } %>
-  <% elsif query.prompt.is_a?(QuizResultPrompt) && (graded_quiz = query.graded_quizzes.last) %>
-    <%= link_to t("quiz.short"),
-                journal_quiz_path(journal, graded_quiz),
-                class: "btn btn--dark",
                 data: {
                   turbo_frame: "ai_assistant",
                   controller: "scroll",

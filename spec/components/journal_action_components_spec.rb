@@ -5,19 +5,6 @@ RSpec.describe "journal action components", type: :component do
     Journal.new(id: 12, title: "Action journal")
   end
 
-  it "posts Quiz to prepare_quiz for the given journal" do
-    render_inline(QuizButtonsComponent.new(journal: journal))
-
-    expect(rendered_content).to include(prepare_quiz_journal_quizzes_path(journal))
-    expect(rendered_content).to include('method="post"')
-    expect(rendered_content).to include(I18n.t("journal.actions.quiz_me"))
-    expect(rendered_content).not_to include('value="delete"')
-  end
-
-  it "requires a journal" do
-    expect { QuizButtonsComponent.new }.to raise_error(ArgumentError)
-  end
-
   it "shows listen and the dark exit link while reading" do
     render_inline(ReadingModeButtonComponent.new(journal: journal, reading_mode: true))
 
@@ -53,23 +40,5 @@ RSpec.describe "journal action components", type: :component do
     render_inline(MarkStudiedButtonComponent.new(journal: journal, from_all_or_todays: nil))
 
     expect(rendered_content).not_to include("from_all_or_todays")
-  end
-
-  it "posts Grade quiz for the journal and quiz" do
-    quiz = Quiz.new(id: 4)
-
-    render_inline(GradeQuizButtonComponent.new(journal: journal, quiz: quiz))
-
-    expect(rendered_content).to include(grade_quiz_journal_quiz_path(journal, quiz))
-    expect(rendered_content).to include('method="post"')
-    expect(rendered_content).to include(I18n.t("quiz.grade"))
-  end
-
-  it "sends Reset as DELETE" do
-    render_inline(ResetQuizButtonComponent.new(journal: journal))
-
-    expect(rendered_content).to include(reset_quiz_journal_quizzes_path(journal))
-    expect(rendered_content).to include('value="delete"')
-    expect(rendered_content).to include(I18n.t("quiz.reset"))
   end
 end

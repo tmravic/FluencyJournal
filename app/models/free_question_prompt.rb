@@ -19,7 +19,7 @@ class FreeQuestionPrompt < Prompt
       native_japanese_phrasing(user)
   end
 
-  def response_format(user, _journal, _quiz)
+  def response_format(user, _journal)
     "Include json marker and return json in this exact format (matching the number of feedbacks/readings): " +
       example_answer(3, "content: '...', explanation_#{explanation_language_code(user)}: '...'")
   end

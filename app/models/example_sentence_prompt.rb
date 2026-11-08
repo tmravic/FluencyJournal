@@ -16,7 +16,7 @@ class ExampleSentencePrompt < Prompt
     fill(ROLE_TEMPLATE, user) + native_japanese_phrasing(user)
   end
 
-  def response_format(user, _journal, _quiz)
+  def response_format(user, _journal)
     sentence = "content: { reading: '( xx.xx )', " \
                "#{user.original_language}_example_sentence: '...', " \
                "#{user.learning_language}_example_sentence: '...' }"

@@ -1,8 +1,8 @@
 require "rails_helper"
 
-# Scaffold leftovers that the app never linked to: entry index/show pages,
-# the quiz answer "new" page and the JSON variants. They answer 404 (or 406
-# for JSON on a route that remains) instead of rendering unused templates.
+# Scaffold leftovers that the app never linked to: entry index/show pages
+# and the JSON variants. They answer 404 (or 406 for JSON on a route that
+# remains) instead of rendering unused templates.
 RSpec.describe "removed scaffold leftovers", type: :request do
   def sign_in(user)
     post session_path, params: { email_address: user.email_address, password: "password" }
@@ -23,16 +23,6 @@ RSpec.describe "removed scaffold leftovers", type: :request do
     expect(response).to have_http_status(:not_found)
 
     get "/journals/#{journal.id}/entries/#{entry.id}"
-    expect(response).to have_http_status(:not_found)
-  end
-
-  it "has no quiz answer new page" do
-    prompt = PrepareQuizPrompt.create!(raw_prompt: "p", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
-    query = AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
-    quiz = Quiz.create!(journal: journal, ai_query: query)
-
-    get "/journals/#{journal.id}/quizzes/#{quiz.id}/quiz_answers/new"
-
     expect(response).to have_http_status(:not_found)
   end
 

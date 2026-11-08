@@ -110,28 +110,6 @@ RSpec.describe AiOutput, type: :model do
 
       expect(query.ai_outputs).to be_empty
     end
-
-    it "stores a quiz line that has both sides and skips one that does not" do
-      user, prompt, query = assistant_records(
-        {
-          "entry_1" => { "content" => "", "explanation_en" => "Blank." },
-          "entry_2" => { "content" => "Test → 本当の文", "explanation_en" => "Kept." },
-          "assessment" => "One line was blank."
-        }.to_json
-      )
-      prompt.define_singleton_method(:change_keyword) { "entry_" }
-      blank = query.ai_outputs.build(made_note: false, identifier: "1")
-      kept = query.ai_outputs.build(made_note: false, identifier: "2")
-      assessment = query.ai_outputs.build(made_note: false, identifier: "assessment")
-
-      expect(blank.assemble_content("entry_", user)).to be_nil
-      kept.save_assembled_content("entry_", user)
-      assessment.save_assembled_content("entry_", user)
-
-      expect(query.ai_outputs.pluck(:identifier)).to contain_exactly("2", "assessment")
-      expect(kept.content).to include("Test").and include("本当の文")
-      expect(assessment.content).to eq("One line was blank.")
-    end
   end
 
   describe "a change line with nothing to show" do

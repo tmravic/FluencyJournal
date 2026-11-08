@@ -24,27 +24,6 @@ Rails.application.routes.draw do
         get :cancel
       end
     end
-    resources :quizzes, only: [:show, :destroy] do
-      collection do
-        post :prepare_quiz
-        delete :reset_quiz
-        get :close_quiz
-      end
-      member do
-        post :grade_quiz
-        get :peek
-        get :unpeek
-        get :show_original_language
-        get :hide_original_language
-        get :show_hint
-        get :hide_hint
-      end
-      resources :quiz_answers, only: [ :create, :show, :edit ] do
-        member do
-          get :retry
-        end
-      end
-    end
     resources :ai_queries, only: [ :show, :destroy ] do
       collection do
         post :ai_request

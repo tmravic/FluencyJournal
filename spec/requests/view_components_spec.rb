@@ -29,15 +29,12 @@ RSpec.describe "ViewComponent pages", type: :request do
     get journal_path(journal)
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include(%(id="quiz_buttons"))
-    expect(response.body).to include(prepare_quiz_journal_quizzes_path(journal))
     expect(response.body).to include(mark_journal_as_studied_journal_path(journal))
-    expect(response.body).to include(I18n.t("journal.actions.quiz_me"))
     expect(response.body).to include(I18n.t("journal.actions.reading_mode"))
     expect(response.body).to include("followup_output_ai_assistant")
   end
 
-  it "leaves the quiz and reading-mode buttons off a journal with no entries" do
+  it "leaves the reading-mode button off a journal with no entries" do
     user = create_user
     journal = Journal.create!(title: "Empty journal", user: user, group: user.group, last_interval: 1)
     sign_in(user)
@@ -46,7 +43,6 @@ RSpec.describe "ViewComponent pages", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(open_ai_assistant_journal_path(journal))
-    expect(response.body).not_to include(prepare_quiz_journal_quizzes_path(journal))
     expect(response.body).not_to include(reading_mode_journal_path(journal, reading_mode: true))
   end
 

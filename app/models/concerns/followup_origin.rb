@@ -14,14 +14,8 @@ module FollowupOrigin
   end
 
   # True when the followup form offers the short due-notes shortcut and
-  # create expands it (journal followups and graded-quiz assessments).
+  # create expands it (journal followups).
   def due_notes_shortcut?
-    false
-  end
-
-  # The graded-quiz assessment card, whose reference text is the whole
-  # graded quiz rather than its own content.
-  def quiz_assessment?
     false
   end
 

@@ -55,32 +55,4 @@ RSpec.describe "Length limits", type: :request do
     get journal_path(journal)
     expect(response).to have_http_status(:ok)
   end
-
-  describe "quiz answers" do
-    let(:query) do
-      prompt = PrepareQuizPrompt.create!(raw_prompt: "p", ai_model: Prompt::DEFAULT_MODEL,
-                                         uuid: SecureRandom.uuid, sent_role_prompt: "r")
-      AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
-    end
-    let(:question) { query.ai_outputs.create!(identifier: "1", role: :line, content: "Sentence", made_note: false) }
-    let(:quiz) do
-      journal.entries.create!(content: "文。")
-      question
-      Quiz.create!(journal: journal, ai_query: query)
-    end
-
-    it "refuses an over-long answer, keeps the earlier one, and caps the input in the form" do
-      earlier = quiz.quiz_answers.create!(ai_output: question, user_response: "first try")
-      path = journal_quiz_quiz_answers_path(journal, quiz)
-
-      post path, params: { quiz_answer: { user_response: "a" * 5_001, ai_output_id: question.id } },
-                 as: :turbo_stream
-
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(quiz.quiz_answers.reload.pluck(:user_response)).to eq([ "first try" ])
-
-      get retry_journal_quiz_quiz_answer_path(journal, quiz, earlier)
-      expect(response.body).to include('maxlength="5000"')
-    end
-  end
 end

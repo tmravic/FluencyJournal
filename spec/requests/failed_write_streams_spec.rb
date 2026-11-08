@@ -98,37 +98,6 @@ RSpec.describe "Failed writes do not render the success stream", type: :request 
     expect(response.body).not_to include(%(action="remove"))
   end
 
-  it "does not render quiz results or enqueue grading when the prompt does not save" do
-    original_adapter = ActiveJob::Base.queue_adapter
-    ActiveJob::Base.queue_adapter = :test
-
-    user = create_user
-    journal = create_journal(user)
-    prompt = PrepareQuizPrompt.create!(
-      raw_prompt: "prepare",
-      ai_model: "grok-4-fast-non-reasoning",
-      uuid: SecureRandom.uuid,
-      sent_role_prompt: "role"
-    )
-    ai_query = AiQuery.create!(journal: journal, prompt: prompt, raw_response: "{}")
-    quiz = Quiz.create!(journal: journal, ai_query: ai_query)
-    # Fully answered, so the failure below is the prompt save and not the
-    # grade_quiz guard.
-    output = ai_query.ai_outputs.create!(identifier: "1", content: "One", made_note: false)
-    quiz.quiz_answers.create!(ai_output: output, user_response: "a")
-    sign_in(user)
-    allow_any_instance_of(QuizResultPrompt).to receive(:save).and_return(false)
-
-    expect do
-      post grade_quiz_journal_quiz_path(journal, quiz), headers: turbo_stream_headers
-    end.not_to have_enqueued_job(GradeQuizJob)
-
-    expect(response).to have_http_status(:unprocessable_entity)
-    expect(response.body).not_to include("quiz_results")
-  ensure
-    ActiveJob::Base.queue_adapter = original_adapter
-  end
-
   it "does not empty the template picker when no template is selected" do
     user = create_user
     sign_in(user)

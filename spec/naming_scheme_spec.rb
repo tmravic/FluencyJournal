@@ -4,8 +4,6 @@ RSpec.describe "naming scheme" do
   FORBIDDEN = [
     "notes_box_scroll",
     "note__change_due_date",
-    "quiz_delete_buttons",
-    "quiz_answer__match",
     "send_button_box",
     "navbar__notes_button",
     "followup__request_form",

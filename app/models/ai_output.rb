@@ -4,7 +4,6 @@ class AiOutput < ApplicationRecord
   belongs_to :ai_query
   has_many :followups, as: :origin, dependent: :nullify
   delegate :journal, :change_keyword, to: :ai_query, allow_nil: true
-  has_many :quiz_answers, dependent: :destroy
 
   validates :identifier, presence: true # string
   validates :content, presence: true # text
@@ -34,14 +33,6 @@ class AiOutput < ApplicationRecord
     ai_query.user
   end
 
-  def quiz_assessment?
-    assessment? && ai_query.prompt.is_a?(QuizResultPrompt)
-  end
-
-  def due_notes_shortcut?
-    quiz_assessment?
-  end
-
   def assemble_content(change_keyword, user)
     assign_role_from_identifier
     parsed = ai_query.parsed_response
@@ -55,7 +46,7 @@ class AiOutput < ApplicationRecord
       assemble_corrected_text(corrected_sentence, learning_language)
 
     elsif assessment?
-      assemble_graded_quiz_assessment(assessment)
+      assemble_assessment(assessment)
 
     elsif used_on_a_followup?(change_keyword)
       assemble_followup_content(abbr, change_keyword)
@@ -113,7 +104,7 @@ class AiOutput < ApplicationRecord
     "#{content}\n(#{explanation})"
   end
 
-  def assemble_graded_quiz_assessment(assessment)
+  def assemble_assessment(assessment)
     assessment || ai_query.error_message
   end
 

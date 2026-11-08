@@ -5,9 +5,6 @@ class AiQuery < ApplicationRecord
   delegate :change_keyword, to: :prompt
   has_many :ai_outputs, dependent: :destroy
   has_many :followups, as: :origin, dependent: :nullify
-  has_many :quizzes, dependent: :destroy, inverse_of: :ai_query
-  has_many :graded_quizzes, class_name: "Quiz", foreign_key: :grading_ai_query_id, dependent: :nullify, inverse_of: :grading_ai_query
-  has_many :quiz_hints, dependent: :destroy
 
   validates :prompt_tokens, :completion_tokens, :total_tokens, numericality: { only_integer: true }, allow_blank: true
   validates :raw_response, presence: true
@@ -15,11 +12,6 @@ class AiQuery < ApplicationRecord
   # Deleting this also deletes its prompt (and the prompt's other child).
   # See the comment on Prompt.
   after_destroy -> { Prompt.destroy_from(self) }
-
-  # Stored on quiz rows when the model returns fewer lines than expected.
-  MISSING_TRANSLATION = "Translation missing".freeze
-  MISSING_HINT = "Hint missing".freeze
-  LOG_SNIPPET_LENGTH = 800
 
   # An unsaved query for a model reply: the raw body, its token counts
   # (a hash with "prompt_tokens", "completion_tokens" and "total_tokens",
@@ -102,40 +94,6 @@ class AiQuery < ApplicationRecord
 
   def model_used
     prompt.ai_model
-  end
-
-  # Prepared or graded a quiz (deleting it changes the quiz UI).
-  def quiz_related?
-    quizzes.exists? || graded_quizzes.exists?
-  end
-
-  def create_quiz_questions(translated_response, expected_count: nil, quiz: nil)
-    line_keys = quiz_line_keys(translated_response)
-    expected = expected_count || line_keys.size
-    log_line_count_mismatch(translated_response, line_keys, expected)
-
-    # Always create *exactly* the expected number of quiz questions.
-    # Use whatever the model gave us for the first min(actual, expected) items.
-    # Hints are stored on quiz_hints, not as extra ai_outputs.
-    (1..expected).each do |count|
-      key = line_keys[count - 1] # may be nil if model gave fewer
-      line = key ? translated_response[key] : nil
-
-      ai_outputs.create!(
-        made_note: false,
-        identifier: count.to_s,
-        role: :line,
-        content: quiz_question_text(translated_response, line_keys, key, line)
-      )
-
-      next unless quiz && (entry = journal&.entry_at(count))
-
-      quiz.quiz_hints.create!(
-        hint_content: hint_from_quiz_line(line) || MISSING_HINT,
-        ai_query: self,
-        entry: entry
-      )
-    end
   end
 
   def error_message
@@ -291,55 +249,5 @@ class AiQuery < ApplicationRecord
 
   def item_keys(content)
     content.keys.grep(/\A(?:entry|change|line|hint|answer|example)_\d+\z/)
-  end
-
-  # Only the real line_N keys the model returned, in numeric order.
-  def quiz_line_keys(translated_response)
-    translated_response.keys
-      .select { |k| k.match?(/\Aline_\d+\z/) }
-      .sort_by { |k| k[/\d+/].to_i }
-  end
-
-  def log_line_count_mismatch(translated_response, line_keys, expected)
-    actual = line_keys.size
-    return unless expected > 0 && actual != expected
-
-    Rails.logger.warn(
-      "PrepareQuiz line-count mismatch: " \
-      "journal_id=#{journal&.id} ai_query_id=#{id} prompt_id=#{prompt_id} " \
-      "expected=#{expected} actual=#{actual} keys=#{line_keys.inspect} " \
-      "raw_snippet=#{translated_response.to_json[0, LOG_SNIPPET_LENGTH]}"
-    )
-  end
-
-  # The question's text: the model's translation (the part after the last
-  # '→ '), or, for a line the model did not return, the last returned
-  # line's translation, or MISSING_TRANSLATION.
-  def quiz_question_text(translated_response, line_keys, key, line)
-    translation = if key
-                    translation_from_quiz_line(line)
-                  else
-                    fallback = line_keys.last && translated_response[line_keys.last]
-                    translation_from_quiz_line(fallback) || MISSING_TRANSLATION
-                  end
-
-    translation.to_s.split("→ ").last.presence || translation.to_s
-  end
-
-  def translation_from_quiz_line(line)
-    case line
-    when Hash
-      line["translation"]
-    when String
-      line
-    end
-  end
-
-  def hint_from_quiz_line(line)
-    return unless line.is_a?(Hash)
-
-    hint = line["hint"]
-    hint = hint["content"] if hint.is_a?(Hash)
-    hint.to_s.presence
   end
 end

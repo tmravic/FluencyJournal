@@ -5,9 +5,6 @@
 <%= turbo_stream.update "mark_studied_button" do %>
   <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>
 <% end %>
-<%= turbo_stream.update "quiz_buttons" do %>
-  <%= render QuizButtonsComponent.new(journal: @journal) %>
-<% end %>
 <%= turbo_stream.update "character_count", partial: 'journals/character_count', locals: { journal: @journal } %>
 <%= turbo_stream.update "reading_mode_button" do %>
   <%= render ReadingModeButtonComponent.new(journal: @journal, reading_mode: @reading_mode) %>

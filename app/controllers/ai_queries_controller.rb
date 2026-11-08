@@ -9,7 +9,6 @@ class AiQueriesController < ApplicationController
   end
 
   def destroy
-    @deleting_a_quiz = @ai_query.quiz_related?
     @ai_query.destroy!
 
     respond_to do |format|

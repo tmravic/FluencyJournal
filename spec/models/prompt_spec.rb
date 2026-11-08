@@ -9,25 +9,19 @@ RSpec.describe Prompt, type: :model do
     instance_double(Journal, entry_texts: [ "今日は雨だった。" ], user: user)
   end
 
-  def quiz_double
-    instance_double(Quiz, responses: [ "It rained today." ])
-  end
-
   describe "substitutable prompts" do
     let(:subclasses) do
       [
         EntryPrompt,
         ExampleSentencePrompt,
-        FreeQuestionPrompt,
-        PrepareQuizPrompt,
-        QuizResultPrompt
+        FreeQuestionPrompt
       ]
     end
 
     it "gives Prompt and every subclass the same two arities" do
       ([ described_class ] + subclasses).each do |prompt_class|
         expect(prompt_class.instance_method(:role_prompt).arity).to eq(2)
-        expect(prompt_class.instance_method(:response_format).arity).to eq(3)
+        expect(prompt_class.instance_method(:response_format).arity).to eq(2)
       end
     end
 
@@ -35,25 +29,24 @@ RSpec.describe Prompt, type: :model do
       prompt = described_class.new
 
       expect { prompt.role_prompt(learner, nil) }.to raise_error(NotImplementedError)
-      expect { prompt.response_format(learner, nil, nil) }.to raise_error(NotImplementedError)
+      expect { prompt.response_format(learner, nil) }.to raise_error(NotImplementedError)
     end
 
     it "answers both methods on every subclass" do
       user = learner
       journal = journal_for(user)
-      quiz = quiz_double
 
       subclasses.each do |prompt_class|
         prompt = prompt_class.new
 
         expect(prompt.role_prompt(user, journal)).to be_a(String)
-        expect(prompt.response_format(user, journal, quiz)).to be_a(String)
+        expect(prompt.response_format(user, journal)).to be_a(String)
       end
     end
 
     it "declares the item prefix on every subclass and not on the retired base class" do
       expect(subclasses.map { |klass| [ klass.new.change_keyword, klass.new.listable? ] })
-        .to eq([ [ "change_", true ], [ "example_", true ], [ "answer_", true ], [ "line_", true ], [ "entry_", true ] ])
+        .to eq([ [ "change_", true ], [ "example_", true ], [ "answer_", true ] ])
 
       base = described_class.new
       expect(base.listable?).to be false
@@ -74,7 +67,7 @@ RSpec.describe Prompt, type: :model do
 
       expect(described_class.explanation_language_code(user)).to eq("ja")
       expect(described_class.language_code("Japanese")).to eq("ja")
-      expect(EntryPrompt.new.response_format(user, nil, nil)).to include("explanation_ja")
+      expect(EntryPrompt.new.response_format(user, nil)).to include("explanation_ja")
     end
 
     it "falls back to en for an unknown language" do
@@ -82,7 +75,7 @@ RSpec.describe Prompt, type: :model do
 
       expect(described_class.explanation_language_code(user)).to eq("en")
       expect(described_class.language_code("Thai", default: "auto")).to eq("auto")
-      expect(EntryPrompt.new.response_format(user, nil, nil)).to include("explanation_en")
+      expect(EntryPrompt.new.response_format(user, nil)).to include("explanation_en")
     end
 
     it "is the one language-code map (no copies elsewhere)" do

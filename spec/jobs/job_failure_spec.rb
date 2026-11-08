@@ -36,30 +36,20 @@ RSpec.describe "AI job failures", type: :job do
       job_class.perform_now(instance_double(User), nil, prompt, nil, "ai_assistant")
     when "AiRequestJob"
       job_class.perform_now(journal, prompt)
-    when "PrepareQuizJob"
-      job_class.perform_now(journal, prompt)
-    when "GradeQuizJob"
-      job_class.perform_now(journal, prompt, double("quiz"))
     end
   end
 
-  def stub_failure(job_class, error)
-    if job_class == PrepareQuizJob || job_class == GradeQuizJob
-      allow(XAiChat).to receive(:complete).and_raise(error)
-    else
-      allow(XAiService).to receive(:new).and_raise(error)
-    end
+  def stub_failure(error)
+    allow(XAiService).to receive(:new).and_raise(error)
   end
 
   describe "a permanent failure" do
     {
       FollowupRequestJob => "followup_output_ai_assistant",
-      AiRequestJob => "ai_output",
-      PrepareQuizJob => "quizzes",
-      GradeQuizJob => "quiz_results"
+      AiRequestJob => "ai_output"
     }.each do |job_class, target|
       it "raises from #{job_class} and updates #{target}" do
-        stub_failure(job_class, StandardError.new("boom"))
+        stub_failure(StandardError.new("boom"))
 
         expect { run_job(job_class) }.to raise_error(StandardError, "boom")
         expect(Turbo::StreamsChannel).to have_received(:broadcast_update_to).with(
@@ -73,33 +63,11 @@ RSpec.describe "AI job failures", type: :job do
   end
 
   it "retries a rate limit without updating the page" do
-    stub_failure(FollowupRequestJob, RubyLLM::RateLimitError.new("slow down"))
+    stub_failure(RubyLLM::RateLimitError.new("slow down"))
     expect_any_instance_of(FollowupRequestJob).to receive(:retry_job)
 
     expect { run_job(FollowupRequestJob) }.not_to raise_error
     expect(Turbo::StreamsChannel).not_to have_received(:broadcast_update_to)
-  end
-
-  it "retries a Faraday timeout without updating the page" do
-    stub_failure(PrepareQuizJob, Faraday::TimeoutError.new("timed out"))
-    expect_any_instance_of(PrepareQuizJob).to receive(:retry_job)
-
-    expect { run_job(PrepareQuizJob) }.not_to raise_error
-    expect(Turbo::StreamsChannel).not_to have_received(:broadcast_update_to)
-  end
-
-  it "updates the page when the rate-limit retries are finished" do
-    stub_failure(GradeQuizJob, RubyLLM::RateLimitError.new("slow down"))
-    job = GradeQuizJob.new(journal, prompt, double("quiz"))
-    job.exception_executions[ApplicationJob::TRANSIENT_AI_ERRORS.to_s] = 4
-
-    expect { job.perform_now }.to raise_error(RubyLLM::RateLimitError)
-    expect(Turbo::StreamsChannel).to have_received(:broadcast_update_to).with(
-      "channel_job-uuid",
-      target: "quiz_results",
-      partial: "shared/job_failure",
-      locals: { message: "The request failed. Please try again." }
-    )
   end
 
   it "renders the failure in the same card the processing state uses" do

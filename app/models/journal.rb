@@ -6,7 +6,6 @@ class Journal < ApplicationRecord
   has_many :entries, -> { order(:position) }, dependent: :destroy
   has_and_belongs_to_many :notes
   has_many :ai_queries, dependent: :destroy
-  has_many :quizzes, dependent: :destroy
   has_many :journal_followups, dependent: :destroy
 
   # Only checked when the title changes, so an existing longer title can
@@ -21,9 +20,9 @@ class Journal < ApplicationRecord
   # The journals due for study when due_only, otherwise all of them.
   scope :due_or_all, ->(due_only) { due_only ? next_to_study : all }
 
-  # Preloads the query history shown on the journal page (quizzes, followups).
+  # Preloads the query history shown on the journal page (prompts and their followups).
   scope :with_query_history, -> {
-    includes(ai_queries: [ :quizzes, :graded_quizzes, { prompt: :followup } ])
+    includes(ai_queries: { prompt: :followup })
   }
 
   scope :finished_today, -> {

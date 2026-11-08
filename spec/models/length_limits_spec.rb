@@ -1,6 +1,6 @@
 require "rails_helper"
 
-# Entry and note content and quiz answers are limited to 5,000 characters and
+# Entry and note content are limited to 5,000 characters and
 # journal titles to 255. Rows that are already longer must stay editable, so
 # the limit is only checked when the attribute changes.
 RSpec.describe "Length limits", type: :model do
@@ -68,18 +68,6 @@ RSpec.describe "Length limits", type: :model do
       expect(journal).to be_valid
       expect(journal.update(last_interval: 2)).to be(true)
       expect(journal.update(title: "b" * 300)).to be(false)
-    end
-  end
-
-  describe QuizAnswer do
-    it "limits user_response to 5,000 characters when it is set" do
-      answer = QuizAnswer.new(user_response: "a" * 5_001)
-      answer.valid?
-      expect(answer.errors.of_kind?(:user_response, :too_long)).to be(true)
-
-      answer = QuizAnswer.new(user_response: "a" * 5_000)
-      answer.valid?
-      expect(answer.errors.of_kind?(:user_response, :too_long)).to be(false)
     end
   end
 

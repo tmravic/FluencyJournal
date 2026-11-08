@@ -139,21 +139,6 @@ RSpec.describe "Successful write redirects", type: :request do
     expect(response).to redirect_to(journals_path)
   end
 
-  it "redirects prepare quiz to the journal with 303" do
-    user = create_user
-    journal = create_journal(user)
-    journal.entries.create!(content: "一行目")
-    sign_in(user)
-    allow(PrepareQuizJob).to receive(:perform_later)
-
-    with_test_queue do
-      post prepare_quiz_journal_quizzes_path(journal)
-    end
-
-    expect(response).to have_http_status(:see_other)
-    expect(response).to redirect_to(journal_path(journal))
-  end
-
   it "redirects a successful login with 303" do
     user = create_user
 

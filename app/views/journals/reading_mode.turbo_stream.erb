@@ -13,7 +13,6 @@
   <%= turbo_stream.update "ai_assistant", '' %>
   <%= turbo_stream.update "open_ai_assistant_button", '' %>
   <%= turbo_stream.update "start_entry_button", '' %>
-  <%= turbo_stream.update "quiz_buttons", '' %>
   <%= turbo_stream.update "mark_studied_button", '' %>
   <%= turbo_stream.update "change_journal_due_date_button", '' %>
   <%= turbo_stream.update "double_check_button", '' %>
@@ -38,9 +37,6 @@
   <% end %>
 
   <% if @journal.entries.present? %>
-    <%= turbo_stream.update "quiz_buttons" do %>
-      <%= render QuizButtonsComponent.new(journal: @journal) %>
-    <% end %>
     <%= turbo_stream.update "mark_studied_button" do %>
       <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>
     <% end %>

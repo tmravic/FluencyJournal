@@ -76,7 +76,7 @@ class Prompt < ApplicationRecord
 
   # The contract every prompt type fulfils:
   # - role_prompt(user, journal): the system/role text sent to the model;
-  # - response_format(user, journal, quiz): the JSON shape it must answer in;
+  # - response_format(user, journal): the JSON shape it must answer in;
   # - item_prefix / change_keyword: the key prefix of the numbered items in
   #   that answer ("change_1", "answer_2", ...).
   # Retired prompt rows (the old hint prompt, stored as the base class) have
@@ -96,7 +96,7 @@ class Prompt < ApplicationRecord
     raise NotImplementedError, "#{self.class}#role_prompt"
   end
 
-  def response_format(_user, _journal, _quiz)
+  def response_format(_user, _journal)
     raise NotImplementedError, "#{self.class}#response_format"
   end
 

@@ -48,17 +48,6 @@ RSpec.describe "Followups characterization", type: :request do
     )
     change_output = output!(correction, "1", "雨だ\n↓\n雨だった")
 
-    grading_prompt = QuizResultPrompt.create!(raw_prompt: "x", ai_model: Prompt::DEFAULT_MODEL, uuid: SecureRandom.uuid, sent_role_prompt: "r")
-    grading = AiQuery.create!(
-      journal: journal, prompt: grading_prompt,
-      raw_response: { "entry_1" => { "content" => "It rain → It rained", "explanation_en" => "Tense." },
-                      "entry_2" => { "content" => "umbrella", "explanation_en" => "Fine." },
-                      "assessment" => { "text" => "Watch your tenses." } }.to_json
-    )
-    output!(grading, "1", "It rain\n↓\nIt rained")
-    output!(grading, "2", "umbrella")
-    assessment = output!(grading, "assessment", "Watch your tenses.")
-
     note = me.notes.create!(content: "雨 (あめ) rain")
     me.notes.create!(content: "傘 (かさ) umbrella")
     journal_followup = journal.journal_followups.create!
@@ -69,7 +58,7 @@ RSpec.describe "Followups characterization", type: :request do
 
     {
       me: me, journal: journal, entry: entry, mate_entry: mate_entry, outsider_entry: outsider_entry,
-      change_output: change_output, assessment: assessment, note: note,
+      change_output: change_output, note: note,
       journal_followup: journal_followup, parent_followup: parent_followup, mate_journal: mate_journal
     }
   end
@@ -128,7 +117,6 @@ RSpec.describe "Followups characterization", type: :request do
       "entry/notes_box" => -> { { class_name: "Entry", id: world[:entry].id, source_tag: "notes_box" } },
       "group_mate_entry" => -> { { class_name: "Entry", id: world[:mate_entry].id, source_tag: "ai_assistant" } },
       "ai_output/change" => -> { { class_name: "AiOutput", id: world[:change_output].id, source_tag: "ai_assistant" } },
-      "ai_output/quiz_assessment" => -> { { class_name: "AiOutput", id: world[:assessment].id, source_tag: "ai_assistant" } },
       "note/todays" => -> { { class_name: "Note", id: world[:note].id, source_tag: "notes_box", followup_from_todays_notes: "true" } },
       "note/all" => -> { { class_name: "Note", id: world[:note].id, source_tag: "notes_box" } },
       "journal_followup/journal_id" => -> { { class_name: "JournalFollowup", journal_id: world[:journal].id, source_tag: "ai_assistant" } },
@@ -182,9 +170,6 @@ RSpec.describe "Followups characterization", type: :request do
     {
       "entry" => -> { create_params(origin_class: "Entry", origin_id: world[:entry].id) },
       "ai_output/change" => -> { create_params(origin_class: "AiOutput", origin_id: world[:change_output].id) },
-      "ai_output/quiz_assessment_due_notes" => -> {
-        create_params(origin_class: "AiOutput", origin_id: world[:assessment].id, base: I18n.t("prompt_templates.due_notes_short"))
-      },
       "note" => -> { create_params(origin_class: "Note", origin_id: world[:note].id, tag: "notes_box") },
       "note/due_notes_label_not_expanded" => -> {
         create_params(origin_class: "Note", origin_id: world[:note].id, tag: "notes_box", base: I18n.t("prompt_templates.due_notes_short"))
@@ -232,7 +217,7 @@ RSpec.describe "Followups characterization", type: :request do
       Followup.create!(prompt: prompt, origin: origin, source_tag: tag)
     end
 
-    %i[entry change_output assessment note journal_followup].each do |origin_name|
+    %i[entry change_output note journal_followup].each do |origin_name|
       it "show for a #{origin_name} origin" do
         followup = followup_on(world[origin_name])
 
