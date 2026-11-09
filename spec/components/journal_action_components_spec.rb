@@ -5,6 +5,15 @@ RSpec.describe "journal action components", type: :component do
     Journal.new(id: 12, title: "Action journal")
   end
 
+  it "posts Rewrite for the journal" do
+    render_inline(RewriteButtonComponent.new(journal: journal))
+
+    expect(rendered_content).to include(journal_rewrites_path(journal))
+    expect(rendered_content).to include("btn--light")
+    expect(rendered_content).to include('method="post"')
+    expect(rendered_content).to include(I18n.t("journal.actions.rewrite"))
+  end
+
   it "shows listen and the dark exit link while reading" do
     render_inline(ReadingModeButtonComponent.new(journal: journal, reading_mode: true))
 

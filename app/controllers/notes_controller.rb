@@ -224,7 +224,7 @@ class NotesController < ApplicationController
   # Groups share journals for viewing only; nobody links notes to a
   # group-mate's journal.
   def linkable_journals
-    Current.user.journals
+    Current.user.journals.without_rewrites
   end
 
   def set_notes_view_context

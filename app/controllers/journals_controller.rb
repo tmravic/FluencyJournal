@@ -145,7 +145,7 @@ class JournalsController < ApplicationController
     @journal = current_group.journals.find(params[:id])
     @todays_filter = boolean_param(:todays)
 
-    @journals = current_group.journals.due_or_all(@todays_filter).alphabetical
+    @journals = current_group.journals.without_rewrites.due_or_all(@todays_filter).alphabetical
 
     if boolean_param(:cancel)
       render html: helpers.turbo_frame_tag("compare"), layout: false
@@ -154,7 +154,7 @@ class JournalsController < ApplicationController
 
     # where(id: []) matches nothing, so no selection compares nothing.
     selected_ids = Array(params[:journal_ids]).compact_blank
-    @compared_journals = current_group.journals.where(id: selected_ids).includes(:entries).alphabetical
+    @compared_journals = current_group.journals.without_rewrites.where(id: selected_ids).includes(:entries).alphabetical
   end
 
   private
@@ -168,7 +168,7 @@ class JournalsController < ApplicationController
   JOURNAL_LISTS = { "todays" => :next_to_study, "all" => :ordered }.freeze
 
   def journals_for(list)
-    current_group.journals.public_send(JOURNAL_LISTS.fetch(list))
+    current_group.journals.without_rewrites.public_send(JOURNAL_LISTS.fetch(list))
   end
 
   # Forms send the list nested under journal; links send it at the top
@@ -184,6 +184,6 @@ class JournalsController < ApplicationController
   end
 
   def finished_today_titles
-    current_group.journals.finished_today.pluck(:title).join(", ")
+    current_group.journals.without_rewrites.finished_today.pluck(:title).join(", ")
   end
 end

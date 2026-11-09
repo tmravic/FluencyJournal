@@ -18,6 +18,7 @@
   <%= turbo_stream.update "double_check_button", '' %>
   <%= turbo_stream.update "linked_notes_button", '' %>
   <%= turbo_stream.update "compare_button", '' %>
+  <%= turbo_stream.update "rewrite_button", '' %>
   <%= turbo_stream.update "reading_mode_button" do %>
     <%= render ReadingModeButtonComponent.new(journal: @journal, reading_mode: @reading_mode) %>
   <% end %>
@@ -29,11 +30,12 @@
     <%= render "entries/entries_list" %>
   <% end %>
 
+  <% writing_journal = @writing_journal || @journal %>
   <%= turbo_stream.update "open_ai_assistant_button" do %>
-    <%= render OpenAiAssistantButtonComponent.new(journal: @journal) %>
+    <%= render OpenAiAssistantButtonComponent.new(journal: writing_journal) %>
   <% end %>
   <%= turbo_stream.update "start_entry_button" do %>
-    <%= render StartEntryButtonComponent.new(journal: @journal) %>
+    <%= render StartEntryButtonComponent.new(journal: writing_journal) %>
   <% end %>
 
   <% if @journal.entries.present? %>
@@ -55,9 +57,12 @@
     <%= turbo_stream.update "compare_button" do %>
       <%= render CompareButtonComponent.new(journal: @journal) %>
     <% end %>
+    <%= turbo_stream.update "rewrite_button" do %>
+      <%= render RewriteButtonComponent.new(journal: @journal) %>
+    <% end %>
   <% end %>
 
-  <% if @journal.ai_queries.any? %>
+  <% if @journal.ai_queries.any? || @journal.rewrites.any? %>
     <%= turbo_stream.update "previous_queries",
                             partial: "journals/previous_queries",
                             locals: { journal: @journal } %>

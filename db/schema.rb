@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_08_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_09_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -92,8 +92,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_150000) do
     t.datetime "last_studied_at"
     t.decimal "easiness_factor", precision: 4, scale: 2, default: "2.5", null: false
     t.integer "repetitions", default: 0, null: false
+    t.bigint "source_journal_id"
     t.index ["group_id"], name: "index_journals_on_group_id"
     t.index ["last_studied_at"], name: "index_journals_on_last_studied_at"
+    t.index ["source_journal_id"], name: "index_journals_on_source_journal_id"
     t.index ["user_id"], name: "index_journals_on_user_id"
   end
 
@@ -163,6 +165,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_150000) do
   add_foreign_key "followups", "prompts"
   add_foreign_key "journal_followups", "journals"
   add_foreign_key "journals", "groups"
+  add_foreign_key "journals", "journals", column: "source_journal_id"
   add_foreign_key "journals", "users"
   add_foreign_key "notes", "users"
   add_foreign_key "prompts", "followup_template_prompts"

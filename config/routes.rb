@@ -18,6 +18,11 @@ Rails.application.routes.draw do
       post :update_due_date
       get :compare
     end
+    resources :rewrites, only: [ :create, :show ] do
+      collection do
+        get :original
+      end
+    end
     resources :entries, only: [ :new, :create, :edit, :update, :destroy ] do
       member do
         get :speak

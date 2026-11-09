@@ -3,6 +3,8 @@ class Journal < ApplicationRecord
 
   belongs_to :user
   belongs_to :group
+  belongs_to :source_journal, class_name: "Journal", optional: true
+  has_many :rewrites, class_name: "Journal", foreign_key: :source_journal_id, dependent: :destroy
   has_many :entries, -> { order(:position) }, dependent: :destroy
   has_and_belongs_to_many :notes
   has_many :ai_queries, dependent: :destroy
@@ -28,6 +30,8 @@ class Journal < ApplicationRecord
   scope :finished_today, -> {
     where(last_studied_at: 24.hours.ago..).order(:last_studied_at)
   }
+  # Rewrite rows belong to another journal and are not study cards.
+  scope :without_rewrites, -> { where(source_journal_id: nil) }
 
   # The signed stream name comes from the array this lambda returns:
   # [journal.group, "journals"].
@@ -44,6 +48,15 @@ class Journal < ApplicationRecord
   after_create_commit  :broadcast_cards_created
   after_update_commit  :broadcast_cards_updated
   after_destroy_commit :broadcast_cards_removed
+
+  # A new child journal for this click of Rewrite.
+  def writing_rewrite
+    rewrites.create!(title: title, user: user, group: group)
+  end
+
+  def rewrite?
+    source_journal_id.present?
+  end
 
   def entry_at(number)
     entries.find_by(position: number.to_i)
@@ -83,6 +96,8 @@ class Journal < ApplicationRecord
   private
 
   def broadcast_cards_created
+    return if rewrite?
+
     CARD_MODES.each do |mode|
       next unless shown_on?(mode)
 
@@ -93,6 +108,8 @@ class Journal < ApplicationRecord
   end
 
   def broadcast_cards_updated
+    return if rewrite?
+
     CARD_MODES.each do |mode|
       stream = self.class.card_stream(group, mode)
       if shown_on?(mode)
@@ -107,6 +124,8 @@ class Journal < ApplicationRecord
   end
 
   def broadcast_cards_removed
+    return if rewrite?
+
     CARD_MODES.each { |mode| broadcast_remove_to(*self.class.card_stream(group, mode)) }
   end
 

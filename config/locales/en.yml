@@ -137,6 +137,8 @@ en:
     editing_title: "Editing journal"
     due_today_count: "Due today: %{count}"
     finished_today: "Finished today: %{titles}"
+    rewrites: "Rewrites"
+    rewrite_short: "R"
     actions:
       studied: "Studied"
       mark_studied: "Mark Studied"
@@ -147,6 +149,7 @@ en:
       double_check: "Double Check"
       linked_notes: "Linked Notes"
       compare: "Compare"
+      rewrite: "Rewrite"
   entry:
     entry: "Entry %{number}"
     listen: "Listen"

@@ -18,6 +18,10 @@
       <%= render CompareButtonComponent.new(journal: @journal) %>
     <% end %>
 
+    <%= turbo_frame_tag "rewrite_button" do %>
+      <%= render RewriteButtonComponent.new(journal: @journal) %>
+    <% end %>
+
     <%= turbo_frame_tag "double_check_button" do %>
       <% if @entries.present? %>
         <%= render DoubleCheckButtonComponent.new(journal: @journal) %>
@@ -77,7 +81,7 @@
     <% end %>
     <hr>
     <%= turbo_frame_tag "previous_queries" do %>
-      <% if @journal.ai_queries.any? %>
+      <% if @journal.ai_queries.any? || @journal.rewrites.any? %>
         <%= render partial: "journals/previous_queries", locals: { journal: @journal } %>
       <% end %>
     <% end %>

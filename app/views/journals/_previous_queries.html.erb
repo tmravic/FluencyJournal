@@ -3,6 +3,7 @@
 <!--Q Q F Q F F-->
 <!---------------------------------------->
 
+<% if journal.ai_queries.any? %>
 <h4><%= t("followup.previous") %></h4>
 <% journal.ai_queries.each do |query| %>
   <% followup = query.prompt&.followup %>
@@ -26,5 +27,16 @@
                   action: "click->scroll#scrollToTarget",
                   scroll_target_value: "ai_assistant"
                 } %>
+  <% end %>
+<% end %>
+<% end %>
+
+<% if journal.rewrites.any? %>
+  <h4><%= t("journal.rewrites") %></h4>
+  <% journal.rewrites.each do |rewrite| %>
+    <%= link_to t("journal.rewrite_short"),
+                journal_rewrite_path(journal, rewrite),
+                class: "btn btn--light",
+                data: { turbo_stream: true } %>
   <% end %>
 <% end %>

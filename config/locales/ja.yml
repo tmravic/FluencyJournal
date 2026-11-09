@@ -137,6 +137,8 @@ ja:
     editing_title: "日記編集"
     due_today_count: "本日復習期限: %{count}"
     finished_today: "本日学習済み: %{titles}"
+    rewrites: "書き直し"
+    rewrite_short: "R"
     actions:
       studied: "学習済み"
       mark_studied: "学習済み"
@@ -147,6 +149,7 @@ ja:
       double_check: "追加質問"
       linked_notes: "リンクノート"
       compare: "比較"
+      rewrite: "書き直す"
   entry:
     entry: "%{number}文章"
     listen: "聞く"

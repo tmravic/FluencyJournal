@@ -1,7 +1,9 @@
 <%= turbo_stream.remove @entry %>
 <% if @entries.empty? %>
-  <%= turbo_stream.update "entries" do %>
-    <%= render 'entries/empty_state' %>
+  <% unless @journal.rewrite? %>
+    <%= turbo_stream.update "entries" do %>
+      <%= render 'entries/empty_state' %>
+    <% end %>
   <% end %>
   <%= turbo_stream.update "reading_mode_button", '' %>
   <%= turbo_stream.update "double_check_button", '' %>
