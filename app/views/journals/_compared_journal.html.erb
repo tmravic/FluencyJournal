@@ -1,0 +1,9 @@
+<div class="compare-results__journal stack">
+  <h2>
+    <%= journal.title %>
+  </h2>
+
+  <% journal.entries.each do |entry| %>
+    <%= simple_format(entry.content) %>
+  <% end %>
+</div>

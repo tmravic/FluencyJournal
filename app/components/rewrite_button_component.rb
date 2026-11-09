@@ -1,0 +1,2 @@
+class RewriteButtonComponent < JournalButtonComponent
+end

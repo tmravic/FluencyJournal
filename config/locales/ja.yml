@@ -106,7 +106,7 @@ ja:
       meaning_optional: "※任意：必要なら母語での意味を入力"
       extras: "※任意：例文など追加情報"
     actions:
-      journal: "日記"
+      link: "リンク"
       studied: "学習済み"
       studied_warning: "今日の日記の文章で内容を使用した場合、ノートを学習としてマークします。学習済みにマークし、将来の日に設定しますか？"
       will_return_html: "このノートは%{date}に復習が再開されます。"
@@ -120,7 +120,7 @@ ja:
     journals: "日記一覧"
     all_journals: "全ての日記"
     todays_journals: "今日の日記"
-    start: "日記開始"
+    start: "新しい日記"
     back_to_journals: "日記一覧に戻る"
     open_ai_assistant: "AI質問欄を開く"
     close_ai_assistant: "AI質問欄を閉じる"
@@ -230,7 +230,10 @@ ja:
       messages:
         blank: "を入力してください"
         too_long: "は%{count}文字以内で入力してください"
+        taken: "はすでに存在します"
     attributes:
+      journal:
+        title: "タイトル"
       note:
         categories:
           vocab: "単語"

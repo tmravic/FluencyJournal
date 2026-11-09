@@ -2,6 +2,8 @@
 <!--Previous AI Questions and Followups-->
 <!--Q Q F Q F F-->
 <!---------------------------------------->
+<%# A rewrite shows its own questions. The R chips stay on the parent. %>
+<% rewrites_journal = journal.rewrite? ? journal.source_journal : journal %>
 
 <% if journal.ai_queries.any? %>
 <h4><%= t("followup.previous") %></h4>
@@ -31,11 +33,11 @@
 <% end %>
 <% end %>
 
-<% if journal.rewrites.any? %>
+<% if rewrites_journal.rewrites.any? %>
   <h4><%= t("journal.rewrites") %></h4>
-  <% journal.rewrites.each do |rewrite| %>
+  <% rewrites_journal.rewrites.each do |rewrite| %>
     <%= link_to t("journal.rewrite_short"),
-                journal_rewrite_path(journal, rewrite),
+                journal_rewrite_path(rewrites_journal, rewrite),
                 class: "btn btn--light",
                 data: { turbo_stream: true } %>
   <% end %>

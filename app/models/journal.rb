@@ -16,6 +16,8 @@ class Journal < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: MAX_TITLE_LENGTH }, if: :will_save_change_to_title?
+  # Rewrites copy the parent title, so only journals the user names must be unique.
+  validates :title, uniqueness: { scope: :user_id }, unless: :rewrite?
 
   scope :ordered, -> { order(:next_study_date) }
   scope :alphabetical, -> { reorder(:title) }

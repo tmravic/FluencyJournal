@@ -12,10 +12,6 @@ class JournalsController < ApplicationController
     @from_all_or_todays = "todays"
     @journals_finished_today = finished_today_titles
 
-    # Open today's notes in the notes_box frame
-    @source_tag = SourceTag::NOTES_BOX
-    @todays_notes = Current.user.notes.todays_list
-
     respond_to do |format|
       format.html
       format.turbo_stream

@@ -1,0 +1,2 @@
+class OriginalJournalButtonComponent < JournalButtonComponent
+end

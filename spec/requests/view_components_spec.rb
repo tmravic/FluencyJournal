@@ -20,6 +20,30 @@ RSpec.describe "ViewComponent pages", type: :request do
     { "Accept" => "text/vnd.turbo-stream.html" }
   end
 
+  def create_followup_chip(journal, entry)
+    prompt = FreeQuestionPrompt.create!(
+      raw_prompt: "prompt",
+      sent_role_prompt: "role",
+      ai_model: Prompt::DEFAULT_MODEL,
+      uuid: SecureRandom.uuid,
+      base_content: "Question",
+      user_generated_content: entry.content
+    )
+    followup = Followup.create!(origin: entry, prompt: prompt, source_tag: "ai_assistant")
+    AiQuery.create!(raw_response: "{}", prompt: prompt, journal: journal)
+    followup
+  end
+
+  def create_query_chip(journal)
+    prompt = EntryPrompt.create!(
+      raw_prompt: "prompt",
+      sent_role_prompt: "role",
+      ai_model: Prompt::DEFAULT_MODEL,
+      uuid: SecureRandom.uuid
+    )
+    AiQuery.create!(raw_response: "{}", prompt: prompt, journal: journal)
+  end
+
   it "renders the journal action row when the journal has an entry" do
     user = create_user
     journal = Journal.create!(title: "Action row", user: user, group: user.group, last_interval: 1)
@@ -134,6 +158,71 @@ RSpec.describe "ViewComponent pages", type: :request do
     expect(response.body).to include("First rewrite line")
     expect(response.body).to include(new_journal_entry_path(first_rewrite))
     expect(response.body).not_to include("Second rewrite line")
+    expect(response.body).to include('target="followup_output_ai_assistant"')
+  end
+
+  it "loads the open rewrite into Followup when its chip was clicked" do
+    user = create_user
+    journal = Journal.create!(title: "Rewrite", user: user, group: user.group, last_interval: 1)
+    journal.entries.create!(content: "Parent line")
+    sign_in(user)
+    post journal_rewrites_path(journal), headers: turbo_stream_headers
+    rewrite = journal.rewrites.sole
+    rewrite.entries.create!(content: "Rewrite line")
+
+    get journal_rewrite_path(journal, rewrite), headers: turbo_stream_headers
+
+    expect(response.body).to include("journal_id=#{rewrite.id}")
+    expect(response.body).not_to include("journal_id=#{journal.id}")
+
+    get new_followup_path(class_name: "JournalFollowup", journal_id: rewrite.id, source_tag: "ai_assistant")
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Rewrite line")
+    expect(response.body).not_to include("Parent line")
+  end
+
+  it "shows the open rewrite's question chips and restores the parent's" do
+    user = create_user
+    journal = Journal.create!(title: "Rewrite", user: user, group: user.group, last_interval: 1)
+    parent_entry = journal.entries.create!(content: "Parent line")
+    parent_followup = create_followup_chip(journal, parent_entry)
+    parent_query = create_query_chip(journal)
+    sign_in(user)
+    post journal_rewrites_path(journal), headers: turbo_stream_headers
+    post journal_rewrites_path(journal), headers: turbo_stream_headers
+    first_rewrite, second_rewrite = journal.rewrites.order(:id).to_a
+    first_entry = first_rewrite.entries.create!(content: "First rewrite line")
+    second_entry = second_rewrite.entries.create!(content: "Second rewrite line")
+    first_followup = create_followup_chip(first_rewrite, first_entry)
+    second_followup = create_followup_chip(second_rewrite, second_entry)
+    first_query = create_query_chip(first_rewrite)
+    second_query = create_query_chip(second_rewrite)
+
+    get journal_rewrite_path(journal, first_rewrite), headers: turbo_stream_headers
+
+    expect(response.body).to include(followup_path(first_followup))
+    expect(response.body).to include(journal_ai_query_path(first_rewrite, first_query))
+    expect(response.body).to include(journal_rewrite_path(journal, second_rewrite))
+    expect(response.body).not_to include(followup_path(parent_followup))
+    expect(response.body).not_to include(followup_path(second_followup))
+    expect(response.body).not_to include(journal_ai_query_path(journal, parent_query))
+    expect(response.body).not_to include(journal_ai_query_path(second_rewrite, second_query))
+
+    get journal_rewrite_path(journal, second_rewrite), headers: turbo_stream_headers
+
+    expect(response.body).to include(followup_path(second_followup))
+    expect(response.body).to include(journal_ai_query_path(second_rewrite, second_query))
+    expect(response.body).to include(journal_rewrite_path(journal, first_rewrite))
+    expect(response.body).not_to include(followup_path(first_followup))
+    expect(response.body).not_to include(followup_path(parent_followup))
+
+    get original_journal_rewrites_path(journal), headers: turbo_stream_headers
+
+    expect(response.body).to include(followup_path(parent_followup))
+    expect(response.body).to include(journal_ai_query_path(journal, parent_query))
+    expect(response.body).not_to include(followup_path(first_followup))
+    expect(response.body).not_to include(followup_path(second_followup))
   end
 
   it "returns to the original journal and restores the hidden buttons" do
@@ -153,6 +242,7 @@ RSpec.describe "ViewComponent pages", type: :request do
     expect(response.body).to include(I18n.t("journal.actions.mark_studied"))
     expect(response.body).to include(I18n.t("journal.actions.change_date"))
     expect(response.body).to include(journal_rewrites_path(journal))
+    expect(response.body).to include("journal_id=#{journal.id}")
     expect(response.body).not_to include(original_journal_rewrites_path(journal))
     expect(journal.rewrites).to be_empty
   end
@@ -220,6 +310,21 @@ RSpec.describe "ViewComponent pages", type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(ERB::Util.html_escape(I18n.t("note.linked_to_journal", title: journal.title)))
     expect(response.body).not_to include("view_context=")
+  end
+
+  it "offers All Notes beside Close when a journal has no linked notes" do
+    user = create_user
+    journal = Journal.create!(title: "Unlinked", user: user, group: user.group, last_interval: 1)
+    sign_in(user)
+
+    get for_journal_notes_path(journal_id: journal.id)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(ERB::Util.html_escape(I18n.t("note.empty_state_linked", title: journal.title)))
+    body = response.body
+    all_notes_at = body.index(all_notes_path)
+    close_at = body.index(journals_path(close_notes: true))
+    expect(all_notes_at).to be < close_at
   end
 
   it "appends a today's note and refreshes that header" do

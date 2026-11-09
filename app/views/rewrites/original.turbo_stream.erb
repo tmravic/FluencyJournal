@@ -1,0 +1,40 @@
+<%= turbo_stream.update "entries" do %>
+  <%= render "entries/entries_list" %>
+<% end %>
+<% if @entries.present? %>
+  <%= turbo_stream.update "new_entry", "" %>
+<% else %>
+  <%= turbo_stream.update "new_entry", partial: "entries/empty_state" %>
+<% end %>
+<%= turbo_stream.update "start_entry_button" do %>
+  <%= render StartEntryButtonComponent.new(journal: @journal) %>
+<% end %>
+<%= turbo_stream.update "open_ai_assistant_button" do %>
+  <%= render OpenAiAssistantButtonComponent.new(journal: @journal) %>
+<% end %>
+<%= turbo_stream.update "ai_assistant", "" %>
+<%= turbo_stream.update "close_ai_assistant_button", "" %>
+<% if @entries.present? %>
+  <%= turbo_stream.update "reading_mode_button" do %>
+    <%= render ReadingModeButtonComponent.new(journal: @journal, reading_mode: false) %>
+  <% end %>
+  <%= turbo_stream.update "mark_studied_button" do %>
+    <%= render MarkStudiedButtonComponent.new(journal: @journal, from_all_or_todays: @from_all_or_todays) %>
+  <% end %>
+  <%= turbo_stream.update "change_journal_due_date_button" do %>
+    <%= render ChangeDueDateButtonComponent.new(journal: @journal) %>
+  <% end %>
+  <%= turbo_stream.update "double_check_button" do %>
+    <%= render DoubleCheckButtonComponent.new(journal: @journal) %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.update "double_check_button", "" %>
+<% end %>
+<%= turbo_stream.update "rewrite_button" do %>
+  <%= render RewriteButtonComponent.new(journal: @journal) %>
+<% end %>
+<%= turbo_stream.update "previous_queries" do %>
+  <% if @journal.ai_queries.any? || @journal.rewrites.any? %>
+    <%= render "journals/previous_queries", journal: @journal %>
+  <% end %>
+<% end %>

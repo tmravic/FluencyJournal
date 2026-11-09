@@ -25,7 +25,7 @@
         <% end %>
       <% end %>
 
-      <%= link_to t("note.actions.journal"),
+      <%= link_to t("note.actions.link"),
                   link_journals_note_path(note, from_todays_notes: @todays_notes.present?),
                   class: "btn btn--light",
                   data: { turbo_frame: dom_id(note) } %>

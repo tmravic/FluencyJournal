@@ -106,7 +106,7 @@ en:
       meaning_optional: "*Optional - Input the meaning in your language if needed."
       extras: "*Optional - Anything extra like an example sentence"
     actions:
-      journal: "Journal"
+      link: "Link"
       studied: "Studied"
       studied_warning: "A note is studied if you used its contents in a journal entry today. Mark this note as studied and set it to return on a future date?"
       will_return_html: "Note will return on %{date}"
@@ -120,7 +120,7 @@ en:
     journals: "Journals"
     all_journals: "All Journals"
     todays_journals: "Today's Journals"
-    start: "Start Journal"
+    start: "New Journal"
     back_to_journals: "Back to journals"
     open_ai_assistant: "Open AI Assistant"
     close_ai_assistant: "Close AI Assistant"
