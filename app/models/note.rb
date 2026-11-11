@@ -22,8 +22,8 @@ class Note < ApplicationRecord
   # journals).
   scope :for_list, -> { includes(:followups, :journals) }
   scope :by_due_date, -> { order(:next_study_date) }
-  scope :todays_list, -> { next_to_study.for_list }
-  scope :all_list, -> { by_due_date.for_list }
+  scope :todays_list, -> { next_to_study.not_draft_journal.for_list }
+  scope :all_list, -> { by_due_date.not_draft_journal.for_list }
   scope :drafts_list, -> { draft_journal.by_due_date.for_list }
 
   scope :due_for_study_prompt, -> {
