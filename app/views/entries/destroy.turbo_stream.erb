@@ -1,6 +1,8 @@
 <%= turbo_stream.remove @entry %>
 <% if @entries.empty? %>
-  <% unless @journal.rewrite? %>
+  <% if @journal.rewrite? %>
+    <%= turbo_stream.update "rewrite_reading_mode", "" %>
+  <% else %>
     <%= turbo_stream.update "entries" do %>
       <%= render 'entries/empty_state' %>
     <% end %>

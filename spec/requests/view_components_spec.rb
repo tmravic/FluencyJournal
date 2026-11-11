@@ -127,6 +127,49 @@ RSpec.describe "ViewComponent pages", type: :request do
     expect(response.body).to include(journal_rewrite_path(journal, second_rewrite))
   end
 
+  it "reads the open rewrite from the button under the parent text" do
+    user = create_user
+    journal = Journal.create!(title: "Rewrite", user: user, group: user.group, last_interval: 1)
+    journal.entries.create!(content: "Parent line")
+    sign_in(user)
+    post journal_rewrites_path(journal), headers: turbo_stream_headers
+    rewrite = journal.rewrites.sole
+    line = rewrite.entries.create!(content: "Rewrite line")
+
+    get journal_rewrite_path(journal, rewrite), headers: turbo_stream_headers
+
+    expect(response).to have_http_status(:ok)
+    compare_at = response.body.index('id="compare_results"')
+    button_at = response.body.index('id="rewrite_reading_mode"')
+    expect(compare_at).to be_present
+    expect(button_at).to be > compare_at
+    expect(response.body).to include("Parent line")
+    expect(response.body).to include(reading_mode_journal_path(rewrite, reading_mode: true))
+    expect(response.body).not_to include(reading_mode_journal_path(journal, reading_mode: true))
+
+    get reading_mode_journal_path(rewrite, reading_mode: true), headers: turbo_stream_headers
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Rewrite line")
+    expect(response.body).to include("Parent line")
+    expect(response.body).to include(reading_mode_journal_path(rewrite, reading_mode: false))
+    expect(response.body).to include(speak_journal_path(rewrite))
+    expect(response.body).not_to include(new_journal_entry_path(rewrite))
+    expect(response.body).not_to include(edit_journal_entry_path(rewrite, line))
+    expect(response.body).not_to include(I18n.t("journal.actions.mark_studied"))
+
+    get reading_mode_journal_path(rewrite, reading_mode: false), headers: turbo_stream_headers
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(reading_mode_journal_path(rewrite, reading_mode: true))
+    expect(response.body).to include(edit_journal_entry_path(rewrite, line))
+    expect(response.body).to include(original_journal_rewrites_path(journal))
+    expect(response.body).to include(new_journal_entry_path(rewrite))
+    expect(response.body).to include("Parent line")
+    expect(response.body).not_to include(I18n.t("journal.actions.mark_studied"))
+    expect(response.body).not_to include(journal_rewrites_path(rewrite))
+  end
+
   it "keeps the parent journal on screen when starting a rewrite entry" do
     user = create_user
     journal = Journal.create!(title: "Source", user: user, group: user.group, last_interval: 1)
@@ -292,8 +335,9 @@ RSpec.describe "ViewComponent pages", type: :request do
   it "renders the all, drafts, and journal note headers" do
     user = create_user
     journal = Journal.create!(title: "Linked journal", user: user, group: user.group, last_interval: 1)
-    note = user.notes.create!(content: "Draft line", category: :draft_journal)
+    note = user.notes.create!(content: "Linked word", category: :vocab)
     note.journals << journal
+    user.notes.create!(content: "Draft line", category: :draft_journal)
     sign_in(user)
 
     get all_notes_path

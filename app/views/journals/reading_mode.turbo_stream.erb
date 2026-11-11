@@ -1,4 +1,18 @@
-<% if @reading_mode %>
+<% if @journal.rewrite? %>
+  <%= render "rewrites/screen",
+             journal: @journal.source_journal,
+             rewrite: @journal,
+             source_tag: @source_tag,
+             reading_mode: @reading_mode %>
+  <% unless @reading_mode %>
+    <%= turbo_stream.update "linked_notes_button" do %>
+      <%= render LinkedNotesButtonComponent.new(journal: @journal.source_journal) %>
+    <% end %>
+    <%= turbo_stream.update "compare_button" do %>
+      <%= render CompareButtonComponent.new(journal: @journal.source_journal) %>
+    <% end %>
+  <% end %>
+<% elsif @reading_mode %>
 
   <%= turbo_stream.update "entries" do %>
     <% @entries.each do |entry| %>

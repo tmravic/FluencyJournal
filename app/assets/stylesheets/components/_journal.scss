@@ -38,3 +38,16 @@
     }
   }
 }
+
+// The rewrite's Reading Mode control sits under the parent text. An empty
+// frame takes no space, so a rewrite with no lines does not show a gap.
+.rewrite-reading-mode:not(:has(*)) {
+  display: none;
+}
+
+.rewrite-reading-mode:has(*) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  margin-block: var(--space-s);
+}
