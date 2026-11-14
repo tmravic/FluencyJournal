@@ -39,7 +39,7 @@ class NotesController < ApplicationController
   def for_journal
     @source_tag = SourceTag::NOTES_BOX
     @journal = linkable_journals.find(params[:journal_id])
-    @journal_notes = @journal.notes.all_list
+    @journal_notes = @journal.notes.by_due_date.for_list
     respond_to do |format|
       format.html
     end
