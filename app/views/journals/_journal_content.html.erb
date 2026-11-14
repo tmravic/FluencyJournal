@@ -18,10 +18,6 @@
       <%= render CompareButtonComponent.new(journal: @journal) %>
     <% end %>
 
-    <%= turbo_frame_tag "rewrite_button" do %>
-      <%= render RewriteButtonComponent.new(journal: @journal) %>
-    <% end %>
-
     <%= turbo_frame_tag "double_check_button" do %>
       <% if @entries.present? %>
         <%= render DoubleCheckButtonComponent.new(journal: @journal) %>
@@ -48,6 +44,10 @@
       <% if @entries.present? %>
         <%= render ChangeDueDateButtonComponent.new(journal: @journal) %>
       <% end %>
+    <% end %>
+
+    <%= turbo_frame_tag "rewrite_button" do %>
+      <%= render RewriteButtonComponent.new(journal: @journal) %>
     <% end %>
   </div>
   <br>
