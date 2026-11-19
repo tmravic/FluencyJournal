@@ -34,10 +34,33 @@ RSpec.describe Journal, type: :model do
     expect(other).to be_valid
   end
 
-  it "allows a rewrite to keep its parent title" do
+  it "names rewrites with the parent title and the next free number" do
     user = create_user("rewrite")
     journal = Journal.create!(title: "Birthday", user: user, group: user.group, last_interval: 1)
+    Journal.create!(title: "Birthday (1)", user: user, group: user.group, last_interval: 1)
 
-    expect(journal.writing_rewrite).to be_persisted
+    first = journal.writing_rewrite
+    second = journal.writing_rewrite
+    first.destroy!
+
+    expect(first.title).to eq("Birthday (2)")
+    expect(second.title).to eq("Birthday (3)")
+    expect(journal.writing_rewrite.title).to eq("Birthday (2)")
+    expect(journal.mark_studied).to be(true)
+  end
+
+  it "keeps a numbered rewrite title within the title limit" do
+    user = create_user("long")
+    journal = Journal.create!(
+      title: "あ" * Journal::MAX_TITLE_LENGTH,
+      user: user,
+      group: user.group,
+      last_interval: 1
+    )
+
+    rewrite = journal.writing_rewrite
+
+    expect(rewrite.title.length).to be <= Journal::MAX_TITLE_LENGTH
+    expect(rewrite.title).to end_with(" (1)")
   end
 end

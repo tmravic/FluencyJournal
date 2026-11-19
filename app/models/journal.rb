@@ -16,7 +16,8 @@ class Journal < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: MAX_TITLE_LENGTH }, if: :will_save_change_to_title?
-  # Rewrites copy the parent title, so only journals the user names must be unique.
+  # A rewrite is named after its parent ("Title (1)"), so this check is for
+  # journals the user names. The numbered title keeps the parent saveable.
   validates :title, uniqueness: { scope: :user_id }, unless: :rewrite?
 
   scope :ordered, -> { order(:next_study_date) }
@@ -51,9 +52,18 @@ class Journal < ApplicationRecord
   after_update_commit  :broadcast_cards_updated
   after_destroy_commit :broadcast_cards_removed
 
+  # "Birthday (1)". The number is the smallest one this user does not already use.
+  def self.rewrite_title(base, number)
+    suffix = " (#{number})"
+    text = base.to_s
+    overflow = text.length + suffix.length - MAX_TITLE_LENGTH
+    text = text[0, text.length - overflow] if overflow.positive?
+    "#{text}#{suffix}"
+  end
+
   # A new child journal for this click of Rewrite.
   def writing_rewrite
-    rewrites.create!(title: title, user: user, group: group)
+    rewrites.create!(title: next_rewrite_title, user: user, group: group)
   end
 
   def rewrite?
@@ -96,6 +106,15 @@ class Journal < ApplicationRecord
   end
 
   private
+
+  def next_rewrite_title
+    number = 1
+    loop do
+      candidate = self.class.rewrite_title(title, number)
+      return candidate unless user.journals.exists?(title: candidate)
+      number += 1
+    end
+  end
 
   def broadcast_cards_created
     return if rewrite?
