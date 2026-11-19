@@ -39,6 +39,11 @@
   }
 }
 
+// Space under Cancel / Todays / Show so they do not sit on the compared title.
+.compare-form {
+  margin-bottom: var(--space-m);
+}
+
 // The rewrite's Reading Mode control sits under the parent text. An empty
 // frame takes no space, so a rewrite with no lines does not show a gap.
 .rewrite-reading-mode:not(:has(*)) {

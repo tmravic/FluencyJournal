@@ -30,6 +30,7 @@ RSpec.describe "GET /journals/:id/compare", type: :request do
     get compare_journal_path(current)
 
     expect(response).to have_http_status(:ok)
+    expect(response.body).to include('class="compare-form"')
     expect(option_titles(response.body)).to eq(%w[Apple Mango Zebra])
     expect(response.body).not_to include("の本文")
   end

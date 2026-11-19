@@ -3,6 +3,7 @@
 
   <%= form_with url: compare_journal_path(@journal),
                 method: :get,
+                class: "compare-form",
                 data: { turbo_frame: "compare" } do |f| %>
     <% if @todays_filter %>
       <%= hidden_field_tag :todays, true %>
