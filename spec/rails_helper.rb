@@ -81,3 +81,36 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
+# Chrome 158 rejects Capybara's Storage.clearDataForOrigin origin "*".
+# Clear the page origin first, then ignore that wildcard call.
+module ChromeOriginReset
+  def reset!
+    clear_page_origin
+    super
+  rescue Selenium::WebDriver::Error::InvalidArgumentError => error
+    raise unless error.message.include?("is not a valid URL")
+  end
+
+  private
+
+  def clear_page_origin
+    return unless @browser
+
+    url = current_url
+    return if url.nil? || url.empty? || url.start_with?("about:")
+
+    uri = URI.parse(url)
+    return if uri.host.nil?
+
+    execute_cdp(
+      "Storage.clearDataForOrigin",
+      origin: "#{uri.scheme}://#{uri.host}:#{uri.port}",
+      storageTypes: storage_types_to_clear
+    )
+  rescue Selenium::WebDriver::Error::WebDriverError, URI::InvalidURIError
+    nil
+  end
+end
+
+Capybara::Selenium::Driver::ChromeDriver.prepend(ChromeOriginReset)

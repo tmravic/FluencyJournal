@@ -7,5 +7,6 @@
 
   <%= link_to t("close"),
               journal_path(journal),
-              class: "btn btn--dark", data: { turbo_frame: "workspace" } %>
+              class: "btn btn--dark",
+              data: { turbo_frame: "ai_assistant", turbo_stream: true } %>
 </div>
