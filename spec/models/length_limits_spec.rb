@@ -85,7 +85,7 @@ RSpec.describe "Length limits", type: :model do
     end
 
     it "are friendly in Japanese" do
-      expect(message(:ja)).to eq("Content は5000文字以内で入力してください")
+      expect(message(:ja)).to eq("文は5000文字以内で入力してください")
     end
   end
 end

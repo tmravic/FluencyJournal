@@ -21,7 +21,7 @@ RSpec.describe Journal, type: :model do
     expect(duplicate.errors.of_kind?(:title, :taken)).to be(true)
     I18n.with_locale(:ja) do
       duplicate.valid?
-      expect(duplicate.errors.full_messages_for(:title).first).to eq("タイトル はすでに存在します")
+      expect(duplicate.errors.full_messages_for(:title).first).to eq("題名はすでに存在します")
     end
   end
 

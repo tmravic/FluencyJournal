@@ -4,21 +4,21 @@ ja:
       journal:
         title: "日記の題名"
       entry:
-        content: "ここに日記の条を一つずつ書きましょう。\nAI機能を使って間違いを確認できます。"
+        content: "ここに日記を一文ずつ書きましょう。\nAI質問欄で間違いを確認できます。"
     labels:
       journal:
         title: "題名"
       entry:
-        content: "条"
+        content: "文"
 
   helpers:
     submit:
       journal:
-        create: "題名を作成"
+        create: "題名を付ける"
         update: "題名を変更"
       entry:
-        create: "条を作成"
-        update: "条を編集"
+        create: "文を作成"
+        update: "文を編集"
       followup:
         create: "追加質問を作成"
       note:
