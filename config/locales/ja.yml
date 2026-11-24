@@ -69,6 +69,7 @@ ja:
     reset_success: "パスワードを変更しました。"
     mismatch: "パスワードが一致しません。"
     invalid_token: "パスワード再設定のリンクが無効か、有効期限が切れています。"
+    mailer_subject: "パスワードを再設定してください"
     mailer_body_html: "15分以内であれば、%{link}からパスワードを再設定できます。"
     mailer_link: "パスワード再設定ページ"
     mailer_body_text: "15分以内であれば、次のページからパスワードを再設定できます："

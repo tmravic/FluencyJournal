@@ -67,6 +67,7 @@ en:
     reset_success: "Password has been reset."
     mismatch: "Passwords did not match."
     invalid_token: "Password reset link is invalid or has expired."
+    mailer_subject: "Reset your password"
     mailer_body_html: "You can reset your password within the next 15 minutes on %{link}."
     mailer_link: "this password reset page"
     mailer_body_text: "You can reset your password within the next 15 minutes on this password reset page:"

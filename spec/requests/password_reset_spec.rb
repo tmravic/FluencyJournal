@@ -67,4 +67,52 @@ RSpec.describe "Password reset", type: :request do
       expect(ActionMailer::MailDeliveryJob).to have_been_enqueued.exactly(10).times
     end
   end
+
+  describe "reset email subject" do
+    include ActiveJob::TestHelper
+
+    around do |example|
+      original = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :test
+      ActionMailer::Base.deliveries.clear
+      example.run
+    ensure
+      ActiveJob::Base.queue_adapter = original
+      ActionMailer::Base.deliveries.clear
+    end
+
+    # The subject is translated when the job runs, from the locale stored at enqueue.
+    it "uses the Japanese subject when the browser asks for Japanese" do
+      user = create_user
+
+      post passwords_path,
+           params: { email_address: user.email_address },
+           headers: { "Accept-Language" => "ja" }
+      perform_enqueued_jobs
+
+      expect(ActionMailer::Base.deliveries.last.subject).to eq("パスワードを再設定してください")
+    end
+
+    it "uses the Japanese subject when ?locale=ja wins over Accept-Language" do
+      user = create_user
+
+      post "#{passwords_path}?locale=ja",
+           params: { email_address: user.email_address },
+           headers: { "Accept-Language" => "en" }
+      perform_enqueued_jobs
+
+      expect(ActionMailer::Base.deliveries.last.subject).to eq("パスワードを再設定してください")
+    end
+
+    it "uses the English subject when the browser asks for English" do
+      user = create_user
+
+      post passwords_path,
+           params: { email_address: user.email_address },
+           headers: { "Accept-Language" => "en-US,ja" }
+      perform_enqueued_jobs
+
+      expect(ActionMailer::Base.deliveries.last.subject).to eq("Reset your password")
+    end
+  end
 end
